@@ -15,6 +15,8 @@ status](https://travis-ci.com/asshah4/marksman.svg?branch=main)](https://travis-
 frequency](https://img.shields.io/github/commit-activity/w/asshah4/marksman)](https://github.com/asshah4/marksman/graphs/commit-activity)
 [![Codecov test
 coverage](https://codecov.io/gh/asshah4/marksman/branch/main/graph/badge.svg)](https://codecov.io/gh/asshah4/marksman?branch=main)
+[![Travis build
+status](https://travis-ci.com/asshah4/marksman.svg?branch=master)](https://travis-ci.com/asshah4/marksman)
 <!-- badges: end -->
 
 The goal of `marksman` is to help organize data, hypotheses, and

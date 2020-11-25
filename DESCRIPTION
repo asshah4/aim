@@ -26,4 +26,6 @@ Imports:
     tidyr,
     methods,
     card
+Remotes:
+    asshah4/card
 VignetteBuilder: knitr
