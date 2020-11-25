@@ -1,9 +1,11 @@
 # Marksman's Bullets ====
 
 #' @title Create bullets to be loaded
+#'
 #' @param f Formula showing relationship of outcomes to predictors
-#' @param exposure Variable(s) that is forced to be maintained in every model as a
-#'   predictor.
+#'
+#' @param exposure Variable(s) that is forced to be maintained in every model as
+#'   a predictor.
 #' @param approach The modeling approach that will be used. The options are:
 #'
 #'   * `sequential` will build y ~ x1, y ~ x1 + x2 models
@@ -13,16 +15,20 @@
 #' @param model A model specified by the [`parsnip`
 #'   package](https://parsnip.tidymodels.org/articles/parsnip_Intro.html), which
 #'   includes the mode and computational engine
+#'
 #' @param ... For extensibility
+#'
 #' @examples
-#' library(card)
 #' library(parsnip)
-#' data(geh)
-#' f <- svg_mag + qrs_tang ~ lab_hba1c + age + sex + bmi + cad + htn
+#' f <- mpg + cyl ~ wt + hp + gear
 #' lm_mod <- linear_reg() %>% set_engine("lm")
-#' b <- bullet(f, exposure = "lab_hba1c", approach = "sequential", model = lm_mod)
-#' @return List of hypothesis characteristics needed for analysis
+#' b <- bullet(f, exposure = "wt", approach = "sequential", model = lm_mod)
+#'
+#' @return Object of type `bullet` that contains hypothesis characteristics
+#'   needed for analysis
+#'
 #' @importFrom magrittr %>%
+#'
 #' @export
 bullet <- function(f, exposure = NULL, approach = "sequential", model, ...) {
 

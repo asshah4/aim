@@ -7,7 +7,11 @@ Authors@R:
            role = c("aut", "cre"),
            email = "asshah4@emory.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: Creates a structure specific aims object that collects all 
+    specified hypotheses, data, and background for a research project. This 
+    serves as a parallel pipeline to organize analyses, and guides the user 
+    away from exploratory analyses. Its themed after the idea of setting your 
+    sights on a hypothesis, aiming, and firing!
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
