@@ -17,7 +17,8 @@ Suggests:
     testthat,
     knitr,
     rmarkdown,
-    covr
+    covr,
+    circular,
 Imports: 
     dplyr,
     magrittr,
@@ -26,7 +27,9 @@ Imports:
     tibble,
     tidyr,
     methods,
-    card
+    card,
+    tidyverse,
+    tidymodels
 Remotes:
     asshah4/card
 VignetteBuilder: knitr
