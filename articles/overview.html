@@ -46,23 +46,21 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/overview.html">Meet the Marksman</a>
-    </li>
-  </ul>
+  <a href="../articles/index.html">Articles</a>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/asshah4/marksman/">
+    <span class="fab fa fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -86,14 +84,198 @@
 
     
     
+<p>The <code>marksman</code> package is intended to used to aid alongside any research paper or project as a mechanism to organize the research aims.</p>
+<div id="a-simple-example" class="section level1">
+<h1 class="hasAnchor">
+<a href="#a-simple-example" class="anchor"></a>A Simple Example</h1>
+<p>First, we are setting up the needed libraries.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">marksman</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/card">card</a></span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/card">card</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span>
+<span class="co">#&gt; ── Attaching packages ────────────────────────────────────── tidymodels 0.1.2 ──</span>
+<span class="co">#&gt; ✔ broom     0.7.2      ✔ recipes   0.1.15</span>
+<span class="co">#&gt; ✔ dials     0.0.9      ✔ rsample   0.0.8 </span>
+<span class="co">#&gt; ✔ dplyr     1.0.2      ✔ tibble    3.0.4 </span>
+<span class="co">#&gt; ✔ ggplot2   3.3.2      ✔ tidyr     1.1.2 </span>
+<span class="co">#&gt; ✔ infer     0.5.3      ✔ tune      0.1.2 </span>
+<span class="co">#&gt; ✔ modeldata 0.1.0      ✔ workflows 0.2.1 </span>
+<span class="co">#&gt; ✔ parsnip   0.1.4      ✔ yardstick 0.0.7 </span>
+<span class="co">#&gt; ✔ purrr     0.3.4</span>
+<span class="co">#&gt; ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──</span>
+<span class="co">#&gt; ✖ purrr::discard() masks scales::discard()</span>
+<span class="co">#&gt; ✖ dplyr::filter()  masks stats::filter()</span>
+<span class="co">#&gt; ✖ dplyr::lag()     masks stats::lag()</span>
+<span class="co">#&gt; ✖ recipes::step()  masks stats::step()</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span>
+<span class="co">#&gt; ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.0 ──</span>
+<span class="co">#&gt; ✔ readr   1.4.0     ✔ forcats 0.5.0</span>
+<span class="co">#&gt; ✔ stringr 1.4.0</span>
+<span class="co">#&gt; ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──</span>
+<span class="co">#&gt; ✖ readr::col_factor() masks scales::col_factor()</span>
+<span class="co">#&gt; ✖ purrr::discard()    masks scales::discard()</span>
+<span class="co">#&gt; ✖ dplyr::filter()     masks stats::filter()</span>
+<span class="co">#&gt; ✖ stringr::fixed()    masks recipes::fixed()</span>
+<span class="co">#&gt; ✖ dplyr::lag()        masks stats::lag()</span>
+<span class="co">#&gt; ✖ readr::spec()       masks yardstick::spec()</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">circular</span><span class="op">)</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Attaching package: 'circular'</span>
+<span class="co">#&gt; The following objects are masked from 'package:stats':</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt;     sd, var</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Trying out aims</span>
+<span class="va">f</span> <span class="op">&lt;-</span> <span class="va">az_svg</span> <span class="op">~</span> <span class="va">lab_hba1c</span> <span class="op">+</span> <span class="va">age</span> <span class="op">+</span> <span class="va">sex</span> <span class="op">+</span> <span class="va">bmi</span> <span class="op">+</span> <span class="va">cad</span> <span class="op">+</span> <span class="va">htn</span>
+<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html">model.frame</a></span><span class="op">(</span><span class="va">f</span>, data <span class="op">=</span> <span class="va">geh</span><span class="op">)</span>
+<span class="va">df</span><span class="op">$</span><span class="va">az_svg</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/circular/man/circular.html">circular</a></span><span class="op">(</span><span class="va">df</span><span class="op">$</span><span class="va">az_svg</span>, units <span class="op">=</span> <span class="st">"degrees"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/circular/man/conversion.circular.html">conversion.circular</a></span><span class="op">(</span><span class="va">.</span>, units <span class="op">=</span> <span class="st">"radians"</span><span class="op">)</span>
+<span class="va">mat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.frame.html">model.frame</a></span><span class="op">(</span><span class="va">f</span>, data <span class="op">=</span> <span class="va">df</span><span class="op">)</span>
+<span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/model.matrix.html">model.matrix</a></span><span class="op">(</span><span class="va">f</span>, data <span class="op">=</span> <span class="va">mat</span><span class="op">)</span>
+<span class="va">y</span> <span class="op">&lt;-</span> <span class="va">mat</span><span class="op">[[</span><span class="st">"az_svg"</span><span class="op">]</span><span class="op">]</span>
+
+<span class="co"># Circular regression spec</span>
+<span class="va">circ_mod</span> <span class="op">&lt;-</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/card/man/circular_reg.html">circular_reg</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"c-l"</span>, tolerance <span class="op">=</span> <span class="fl">1e-1</span>, initial <span class="op">=</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/varying.html">varying</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"circular"</span><span class="op">)</span>
+
+<span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bullet.html">bullet</a></span><span class="op">(</span><span class="va">f</span>, exposure <span class="op">=</span> <span class="st">"lab_hba1c"</span>, approach <span class="op">=</span> <span class="st">"sequential"</span>, model <span class="op">=</span> <span class="va">circ_mod</span><span class="op">)</span>
+<span class="va">aims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aim.html">aim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>circ <span class="op">=</span> <span class="va">b</span><span class="op">)</span><span class="op">)</span>
+<span class="fu"><a href="../reference/ballistics.html">ballistics</a></span><span class="op">(</span><span class="va">aims</span><span class="op">$</span><span class="va">circ</span><span class="op">)</span>
+<span class="co">#&gt; Putting the aim in sight. Checking if models can be fit.</span>
+<span class="co">#&gt; # A tibble: 5 x 6</span>
+<span class="co">#&gt;   outcomes model_num predictors formulas  model_spec checkpoint</span>
+<span class="co">#&gt; * &lt;chr&gt;        &lt;int&gt; &lt;list&gt;     &lt;list&gt;    &lt;list&gt;     &lt;lgl&gt;     </span>
+<span class="co">#&gt; 1 az_svg           1 &lt;chr [2]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE     </span>
+<span class="co">#&gt; 2 az_svg           2 &lt;chr [3]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE     </span>
+<span class="co">#&gt; 3 az_svg           3 &lt;chr [4]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE     </span>
+<span class="co">#&gt; 4 az_svg           4 &lt;chr [5]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE     </span>
+<span class="co">#&gt; 5 az_svg           5 &lt;chr [6]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE</span>
+<span class="va">circ</span> <span class="op">&lt;-</span>
+    <span class="va">aims</span><span class="op">$</span><span class="va">circ</span> <span class="op">%&gt;%</span>
+    <span class="fu">mutate</span><span class="op">(</span>model_spec <span class="op">=</span> <span class="fu">map2</span><span class="op">(</span><span class="va">model_spec</span>, <span class="va">formulas</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span><span class="op">(</span><span class="va">.x</span>, initial <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/allnames.html">all.vars</a></span><span class="op">(</span><span class="va">.y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/ballistics.html">ballistics</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Putting the aim in sight. Checking if models can be fit.</span>
+<span class="va">final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fire.html">fire</a></span><span class="op">(</span><span class="va">circ</span>, <span class="va">df</span><span class="op">)</span>
+<span class="co">#&gt; Warning: Problem with `mutate()` input `fit`.</span>
+<span class="co">#&gt; ℹ an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; ℹ Input `fit` is `purrr::map2(model_spec, formulas, ~fit(.x, .y, data = data))`.</span>
+<span class="co">#&gt; Warning in as.circular(x): an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; Iteration  1 :    Log-Likelihood =  544.4955</span>
+<span class="co">#&gt; Warning: Problem with `mutate()` input `fit`.</span>
+<span class="co">#&gt; ℹ an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; ℹ Input `fit` is `purrr::map2(model_spec, formulas, ~fit(.x, .y, data = data))`.</span>
+
+<span class="co">#&gt; Warning: an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; Iteration  1 :    Log-Likelihood =  545.054</span>
+<span class="co">#&gt; Warning: Problem with `mutate()` input `fit`.</span>
+<span class="co">#&gt; ℹ an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; ℹ Input `fit` is `purrr::map2(model_spec, formulas, ~fit(.x, .y, data = data))`.</span>
+
+<span class="co">#&gt; Warning: an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; Iteration  1 :    Log-Likelihood =  545.0539</span>
+<span class="co">#&gt; Warning: Problem with `mutate()` input `fit`.</span>
+<span class="co">#&gt; ℹ an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; ℹ Input `fit` is `purrr::map2(model_spec, formulas, ~fit(.x, .y, data = data))`.</span>
+
+<span class="co">#&gt; Warning: an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; Iteration  1 :    Log-Likelihood =  545.1826</span>
+<span class="co">#&gt; Warning: Problem with `mutate()` input `fit`.</span>
+<span class="co">#&gt; ℹ an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; ℹ Input `fit` is `purrr::map2(model_spec, formulas, ~fit(.x, .y, data = data))`.</span>
+
+<span class="co">#&gt; Warning: an object is coerced to the class 'circular' using default value for the following components:</span>
+<span class="co">#&gt;   type: 'angles'</span>
+<span class="co">#&gt;   units: 'radians'</span>
+<span class="co">#&gt;   template: 'none'</span>
+<span class="co">#&gt;   modulo: 'asis'</span>
+<span class="co">#&gt;   zero: 0</span>
+<span class="co">#&gt;   rotation: 'counter'</span>
+<span class="co">#&gt; conversion.circularyradians0counter2pi</span>
+<span class="co">#&gt; Iteration  1 :    Log-Likelihood =  545.2841</span>
+<span class="fu"><a href="../reference/ballistics.html">ballistics</a></span><span class="op">(</span><span class="va">final</span><span class="op">)</span>
+<span class="co">#&gt; Aimed and fired. Model statistics have been added.</span>
+<span class="co">#&gt; # A tibble: 5 x 9</span>
+<span class="co">#&gt;   outcomes model_num predictors formulas model_spec checkpoint fit   runtime</span>
+<span class="co">#&gt; * &lt;chr&gt;        &lt;int&gt; &lt;list&gt;     &lt;list&gt;   &lt;list&gt;     &lt;lgl&gt;      &lt;lis&gt;   &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 az_svg           1 &lt;chr [2]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      50</span>
+<span class="co">#&gt; 2 az_svg           2 &lt;chr [3]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      23</span>
+<span class="co">#&gt; 3 az_svg           3 &lt;chr [4]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      23</span>
+<span class="co">#&gt; 4 az_svg           4 &lt;chr [5]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      26</span>
+<span class="co">#&gt; 5 az_svg           5 &lt;chr [6]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      28</span>
+<span class="co">#&gt; # … with 1 more variable: tidy &lt;list&gt;</span></code></pre></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
