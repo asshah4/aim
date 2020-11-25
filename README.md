@@ -9,14 +9,12 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R build
 status](https://github.com/asshah4/marksman/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/marksman/actions)
-[![Travis build
-status](https://travis-ci.com/asshah4/marksman.svg?branch=main)](https://travis-ci.com/asshah4/marksman)
 [![Github commit
 frequency](https://img.shields.io/github/commit-activity/w/asshah4/marksman)](https://github.com/asshah4/marksman/graphs/commit-activity)
-[![Codecov test
-coverage](https://codecov.io/gh/asshah4/marksman/branch/main/graph/badge.svg)](https://codecov.io/gh/asshah4/marksman?branch=main)
 [![Travis build
 status](https://travis-ci.com/asshah4/marksman.svg?branch=master)](https://travis-ci.com/asshah4/marksman)
+[![Codecov test
+coverage](https://codecov.io/gh/asshah4/marksman/branch/master/graph/badge.svg)](https://codecov.io/gh/asshah4/marksman?branch=master)
 <!-- badges: end -->
 
 The goal of `marksman` is to help organize data, hypotheses, and
