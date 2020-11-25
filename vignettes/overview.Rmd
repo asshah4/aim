@@ -45,13 +45,13 @@ circ_mod <-
 	set_engine("circular")
 
 b <- bullet(f, exposure = "lab_hba1c", approach = "sequential", model = circ_mod)
-aims <- aim(list(circ = b))
-ballistics(aims$circ)
-circ <-
-	aims$circ %>%
+a <- aim(b)
+ballistics(a)
+c <-
+	a %>%
 	mutate(model_spec = map2(model_spec, formulas, ~update(.x, initial = rep(0, length(all.vars(.y)))))) %>%
 	ballistics()
-final <- fire(circ, df)
+final <- fire(c, df)
 ballistics(final)
 ```
 

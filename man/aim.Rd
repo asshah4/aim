@@ -2,34 +2,31 @@
 % Please edit documentation in R/aim.R
 \name{aim}
 \alias{aim}
-\title{Aiming For Target Hypothesis}
+\title{Aiming For Target Hypotheses}
 \usage{
-aim(bullets, ...)
+aim(bullet, ...)
 }
 \arguments{
-\item{bullets}{List object of bullets that are to be thought of as the
-statistical plan, as defined by each individual bullet. The list can be
-named to make it simpler.}
+\item{bullet}{Bullet object that is a hypothesis with permutations of how a
+model is built, based on the statistical plan.}
 
 \item{...}{For extensibility}
 }
 \value{
-List of \code{aims} that contain all the relevant hypothesis that were
-pre-specified, including workflows and model specifications from
-\code{tidymodels}
+An \code{aim} object that contain all the relevant hypothesis that were
+pre-specified, including model specifications from \code{tidymodels}, in a table
+format.
 }
 \description{
 This creates the hypothesis that are being prepared for
-analysis. These contain model specifications and the workflows, along with
+analysis. These contain model specifications and the pipeline, along with
 model identifiers.
 }
 \examples{
-library(card)
 library(parsnip)
-data(geh)
-f <- svg_mag + qrs_tang ~ lab_hba1c + age + sex + bmi + cad + htn
+f <- mpg + cyl ~ wt + hp + gear
 lm_mod <- linear_reg() \%>\% set_engine("lm")
-b1 <- bullet(f, exposure = "lab_hba1c", approach = "sequential", model = lm_mod)
-b2 <- bullet(f, exposure = "lab_hba1c", approach = "parallel", model = lm_mod)
-bullets <- list(seq = b1, par = b2)
+b <- bullet(f, exposure = "wt", approach = "sequential", model = lm_mod)
+a <- aim(b)
+
 }

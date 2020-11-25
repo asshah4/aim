@@ -141,8 +141,9 @@
     <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"circular"</span><span class="op">)</span>
 
 <span class="va">b</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bullet.html">bullet</a></span><span class="op">(</span><span class="va">f</span>, exposure <span class="op">=</span> <span class="st">"lab_hba1c"</span>, approach <span class="op">=</span> <span class="st">"sequential"</span>, model <span class="op">=</span> <span class="va">circ_mod</span><span class="op">)</span>
-<span class="va">aims</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aim.html">aim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>circ <span class="op">=</span> <span class="va">b</span><span class="op">)</span><span class="op">)</span>
-<span class="fu"><a href="../reference/ballistics.html">ballistics</a></span><span class="op">(</span><span class="va">aims</span><span class="op">$</span><span class="va">circ</span><span class="op">)</span>
+<span class="va">a</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aim.html">aim</a></span><span class="op">(</span><span class="va">b</span><span class="op">)</span>
+<span class="co">#&gt; Putting the aim in sight. Checking if models can be fit.</span>
+<span class="fu"><a href="../reference/ballistics.html">ballistics</a></span><span class="op">(</span><span class="va">a</span><span class="op">)</span>
 <span class="co">#&gt; Putting the aim in sight. Checking if models can be fit.</span>
 <span class="co">#&gt; # A tibble: 5 x 6</span>
 <span class="co">#&gt;   outcomes model_num predictors formulas  model_spec checkpoint</span>
@@ -152,12 +153,12 @@
 <span class="co">#&gt; 3 az_svg           3 &lt;chr [4]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE     </span>
 <span class="co">#&gt; 4 az_svg           4 &lt;chr [5]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE     </span>
 <span class="co">#&gt; 5 az_svg           5 &lt;chr [6]&gt;  &lt;formula&gt; &lt;spec[?]&gt;  FALSE</span>
-<span class="va">circ</span> <span class="op">&lt;-</span>
-    <span class="va">aims</span><span class="op">$</span><span class="va">circ</span> <span class="op">%&gt;%</span>
+<span class="va">c</span> <span class="op">&lt;-</span>
+    <span class="va">a</span> <span class="op">%&gt;%</span>
     <span class="fu">mutate</span><span class="op">(</span>model_spec <span class="op">=</span> <span class="fu">map2</span><span class="op">(</span><span class="va">model_spec</span>, <span class="va">formulas</span>, <span class="op">~</span><span class="fu"><a href="https://rdrr.io/r/stats/update.html">update</a></span><span class="op">(</span><span class="va">.x</span>, initial <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/allnames.html">all.vars</a></span><span class="op">(</span><span class="va">.y</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="../reference/ballistics.html">ballistics</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Putting the aim in sight. Checking if models can be fit.</span>
-<span class="va">final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fire.html">fire</a></span><span class="op">(</span><span class="va">circ</span>, <span class="va">df</span><span class="op">)</span>
+<span class="va">final</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fire.html">fire</a></span><span class="op">(</span><span class="va">c</span>, <span class="va">df</span><span class="op">)</span>
 <span class="co">#&gt; Warning: Problem with `mutate()` input `fit`.</span>
 <span class="co">#&gt; ℹ an object is coerced to the class 'circular' using default value for the following components:</span>
 <span class="co">#&gt;   type: 'angles'</span>
@@ -262,10 +263,10 @@
 <span class="co">#&gt; # A tibble: 5 x 9</span>
 <span class="co">#&gt;   outcomes model_num predictors formulas model_spec checkpoint fit   runtime</span>
 <span class="co">#&gt; * &lt;chr&gt;        &lt;int&gt; &lt;list&gt;     &lt;list&gt;   &lt;list&gt;     &lt;lgl&gt;      &lt;lis&gt;   &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 az_svg           1 &lt;chr [2]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      22</span>
+<span class="co">#&gt; 1 az_svg           1 &lt;chr [2]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      21</span>
 <span class="co">#&gt; 2 az_svg           2 &lt;chr [3]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      17</span>
-<span class="co">#&gt; 3 az_svg           3 &lt;chr [4]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      20</span>
-<span class="co">#&gt; 4 az_svg           4 &lt;chr [5]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      21</span>
+<span class="co">#&gt; 3 az_svg           3 &lt;chr [4]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      16</span>
+<span class="co">#&gt; 4 az_svg           4 &lt;chr [5]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      19</span>
 <span class="co">#&gt; 5 az_svg           5 &lt;chr [6]&gt;  &lt;formul… &lt;spec[+]&gt;  TRUE       &lt;fit…      21</span>
 <span class="co">#&gt; # … with 1 more variable: tidy &lt;list&gt;</span></code></pre></div>
 </div>
