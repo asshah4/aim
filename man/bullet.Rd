@@ -7,7 +7,7 @@
 bullet(f, exposure = NULL, approach = "sequential", model, ...)
 }
 \arguments{
-\item{f}{Formula showing relationship of outcomes to predictors}
+\item{f}{Formula showing relationship of outcomes and predictors}
 
 \item{exposure}{Variable(s) that is forced to be maintained in every model as
 a predictor.}
@@ -24,11 +24,15 @@ includes the mode and computational engine}
 \item{...}{For extensibility}
 }
 \value{
-Object of type \code{bullet} that contains hypothesis characteristics
-needed for analysis
+Object of type \code{bullet} that contains the hypothesis and the
+characteristics of how to put the analysis together. needed for analysis
 }
 \description{
-Create bullets to be loaded
+A \code{bullet} object is a pre-specified hypothesis, with a formula
+that helps to identify the individual variables and their roles. It
+requires the use of a model specification from \code{parsnip} (or any other
+similarly specified models). It also determines what sequence of models to
+put together.
 }
 \examples{
 library(parsnip)

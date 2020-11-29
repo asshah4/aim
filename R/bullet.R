@@ -2,10 +2,17 @@
 
 #' @title Create bullets to be loaded
 #'
-#' @param f Formula showing relationship of outcomes to predictors
+#' @description A `bullet` object is a pre-specified hypothesis, with a formula
+#'   that helps to identify the individual variables and their roles. It
+#'   requires the use of a model specification from `parsnip` (or any other
+#'   similarly specified models). It also determines what sequence of models to
+#'   put together.
+#'
+#' @param f Formula showing relationship of outcomes and predictors
 #'
 #' @param exposure Variable(s) that is forced to be maintained in every model as
 #'   a predictor.
+#'
 #' @param approach The modeling approach that will be used. The options are:
 #'
 #'   * `sequential` will build y ~ x1, y ~ x1 + x2 models
@@ -18,14 +25,14 @@
 #'
 #' @param ... For extensibility
 #'
+#' @return Object of type `bullet` that contains the hypothesis and the
+#'   characteristics of how to put the analysis together. needed for analysis
+#'
 #' @examples
 #' library(parsnip)
 #' f <- mpg + cyl ~ wt + hp + gear
 #' lm_mod <- linear_reg() %>% set_engine("lm")
 #' b <- bullet(f, exposure = "wt", approach = "sequential", model = lm_mod)
-#'
-#' @return Object of type `bullet` that contains hypothesis characteristics
-#'   needed for analysis
 #'
 #' @importFrom magrittr %>%
 #'
@@ -64,23 +71,5 @@ new_bullet <- function(shell) {
 
 	# Final structure defined
 	structure(shell, class = "bullet")
-
-}
-
-# Print Method
-
-#' @description Generic print method
-#' @param x Object of class `bullet`
-#' @param ... arguments to pass on
-#' @noRd
-#' @export
-print.bullet <- function(x, ...) {
-
-	cat("Hypothetical bullet... \n \n")
-	cat("Outcomes: ", length(x$outcomes), "\n")
-	cat("Exposures: ", length(x$exposures), "\n")
-	cat("Covariates: ", length(x$covariates), "\n")
-	cat("Approach: ", length(x$approach), "\n")
-	cat("Model: ", x$model$engine, x$model$mode, "\n")
 
 }

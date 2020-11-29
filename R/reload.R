@@ -1,8 +1,10 @@
 # Reload the Ammo ====
 
 #' @title Reload either the bullets or the aims
+#'
 #' @description If, after an `aim` or `bullet` object has been made, it can be
 #'   revised or reloaded with new characteristics
+#'
 #' @param mark Represents either a `bullet` or `aim` object to be analyzed for
 #'   further information or characteristics
 #'

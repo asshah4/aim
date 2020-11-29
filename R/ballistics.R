@@ -100,7 +100,6 @@ ballistics.bullet <- function(mark, ...) {
 		mutate(formulas = purrr::map(formulas, ~formula(.x))) %>%
 		mutate(model_spec = list(model))
 
-
 	# Return
 	return(tbl)
 
@@ -121,7 +120,6 @@ ballistics.aim <- function(mark, ...) {
 		message("Aimed and fired. Model statistics have been added.")
 		aim <-
 			aim %>%
-			tibble::as_tibble() %>%
 			dplyr::mutate(runtime = purrr::map_dbl(fit, function(x) {
 				signif(1000 * (x$elapsed[1] + x$elapsed[3]), digits = 2)
 			})) %>%
@@ -131,15 +129,16 @@ ballistics.aim <- function(mark, ...) {
 		message("Putting the aim in sight. Checking if models can be fit.")
 		aim <-
 			aim %>%
-			tibble::as_tibble() %>%
 			dplyr::mutate(checkpoint = purrr::map_lgl(model_spec, function(x) {
 
+				# Seeing if model spec is missing data
 				status <-
 					x %>%
 					parsnip::varying_args() %>%
 					dplyr::filter(varying == TRUE) %>%
 					nrow()
 
+				# If its not, then the test should work
 				if (status == 0) {return(TRUE)} else {return(FALSE)}
 			})) %>%
 			new_aim()

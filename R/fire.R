@@ -1,16 +1,23 @@
 # Fire ====
 
 #' @title Firing using the Aims at Target Hypotheses
+#'
 #' @description As the analysis time can be quite long, this function separates
 #'   out model runtime until after the workflows for analysis are completed.
 #'   This function works on a single `aim` object at a time, allowing for list
 #'   methods such as [purrr::map] to apply.
+#'
 #' @param aim A single `aim` object
+#'
 #' @param data Data frame that contains the variables that were planned for in
 #'   the specific aims generated prior.
+#'
 #' @param ... For extensibility
+#'
 #' @return Returns the fitted models in an expanded table, still of the `aim` class
+#'
 #' @importFrom magrittr %>%
+#'
 #' @export
 fire <- function(aim, data, ...) {
 

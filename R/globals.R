@@ -2,6 +2,7 @@
 #' @noRd
 utils::globalVariables(c(
 	".",
+	"...",
 	"predictors",
 	"outcomes",
 	"formulas",

@@ -2,13 +2,14 @@
 % Please edit documentation in R/aim.R
 \name{aim}
 \alias{aim}
-\title{Aiming For Target Hypotheses}
+\title{Aiming For Targeted Hypotheses}
 \usage{
-aim(bullet, ...)
+aim(bullets, ...)
 }
 \arguments{
-\item{bullet}{Bullet object that is a hypothesis with permutations of how a
-model is built, based on the statistical plan.}
+\item{bullets}{A \code{list} of \code{bullet} objects (preferably named) that will be
+used to generate a specific aim. Each bullet should be from the same
+dataset to be able to run the analysis in the pre-specified models.}
 
 \item{...}{For extensibility}
 }
@@ -18,15 +19,17 @@ pre-specified, including model specifications from \code{tidymodels}, in a table
 format.
 }
 \description{
-This creates the hypothesis that are being prepared for
-analysis. These contain model specifications and the pipeline, along with
-model identifiers.
+The \code{aim} function arranges the characteristics returned from
+\code{bullet} objects into a table of hypothesis that can be tested in the model
+specifications. It creates model identifiers, and collects both the
+pre-analysis inputs and the post-analysis attributes. It allows for
+organizing several related hypotheses together.
 }
 \examples{
 library(parsnip)
 f <- mpg + cyl ~ wt + hp + gear
 lm_mod <- linear_reg() \%>\% set_engine("lm")
 b <- bullet(f, exposure = "wt", approach = "sequential", model = lm_mod)
-a <- aim(b)
+a <- aim(list(lin = b))
 
 }

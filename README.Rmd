@@ -27,7 +27,7 @@ The goal of `marksman` is to help organize data, hypotheses, and analyses during
 
 The inspiration came from the fact that when applying for any research project, specific aims were required, which came with their own hypotheses. The results of these were important, whether or not they were significant. This is a more _supervised learning_ approach, compared to the _unsupervised learning_ in more machine learning / statistical schools of thought. 
 
-It heavily borrows from the `tidymodels` approach to modeling, and sharpens the focus to help with specific research projects.
+It relies on and borrows from the `tidymodels` approach to modeling, and sharpens the focus to help with specific research projects.
 
 ## Installation
 
@@ -42,4 +42,73 @@ And the development version from [GitHub](https://github.com/) with:
 ``` r
 # install.packages("devtools")
 devtools::install_github("asshah4/marksman")
+```
+
+# A Brief Example
+
+The `marksman` package is intended to used to aid alongside any research paper or project as a mechanism to organize the research aims.
+
+Let's run through a brief example of the process of using `marksman`. First select the libraries needed. The `card` package has the datasets that will be used.
+
+```{r intro}
+library(marksman)
+library(card)
+library(tidymodels)
+library(tidyverse)
+library(circular)
+```
+
+Next, setting up the regression model the traditional way. This example uses an angle as an outcome, and requires use of the `circular` package for the regression analysis.
+
+```{r}
+# Setup of variables
+f1 <- az_svg ~ lab_hba1c + age + sex + bmi + cad + htn
+f2 <- log_wvg ~ lab_hba1c + age + sex + bmi + cad + htn
+df <- geh
+df$az_svg <-
+	circular(df$az_svg, units = "degrees") %>%
+	conversion.circular(., units = "radians")
+```
+
+The __az_svg__ variable is angular. The __log_wvg__ variable is linear (after its been log-transformed). We can use the model specification for circular regressions, using the `parnsip` approach along with a linear model approach.
+
+```{r}
+# Circular regression spec
+circ_mod <-
+	circular_reg(pattern = "c-l", tolerance = 1e-0, initial = varying()) %>%
+	set_engine("circular")
+
+# Linear models
+lm_mod <-
+	linear_reg() %>%
+	set_engine("lm")
+```
+
+This next portion uses the functions `marksman::bullet()` and `marksman::aim()` to create the modeling scaffolding needed.
+
+```{r}
+# Creating the bullets
+b1 <- bullet(f1, exposure = "lab_hba1c", approach = "sequential", model = circ_mod)
+b2 <- bullet(f2, exposure = "lab_hba1c", approach = "sequential", model = lm_mod)
+a <- aim(list(circ = b1, lin = b2))
+print(a)
+```
+
+There is a __checkpoint__ column from the `aim()` function that shows whether the model is ready to use. In this case, the circular regression is not. The `varying()` element of the argument requires us to stop and check, or make modifications to the aims table.
+
+```{r}
+# Fix the circular regression
+c <- 
+	a[a$ammo == "circ", ] %>%
+	mutate(model_spec = map2(model_spec, formulas, ~update(.x, initial = rep(0, length(all.vars(.y)))))) %>%
+	ballistics()
+
+a[a$ammo == "circ", ] <- c
+print(a)
+
+# Now run the analyses
+final <- suppressWarnings(fire(a, geh))
+
+# Tidy them up and see what they look like
+ballistics(final)
 ```

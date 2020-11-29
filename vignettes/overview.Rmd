@@ -14,44 +14,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-The `marksman` package is intended to used to aid alongside any research paper or project as a mechanism to organize the research aims.
+The `marksman` package is intended to used to aid alongside any research paper or project as a mechanism to organize the research aims. The major components are:
 
-# A Simple Example
-
-First, we are setting up the needed libraries.
-
-```{r intro}
-library(marksman)
-library(card)
-library(tidymodels)
-library(tidyverse)
-library(circular)
-```
-
-```{r}
-# Trying out aims
-f <- az_svg ~ lab_hba1c + age + sex + bmi + cad + htn
-df <- model.frame(f, data = geh)
-df$az_svg <-
-	circular(df$az_svg, units = "degrees") %>%
-	conversion.circular(., units = "radians")
-mat <- model.frame(f, data = df)
-x <- model.matrix(f, data = mat)
-y <- mat[["az_svg"]]
-
-# Circular regression spec
-circ_mod <-
-	circular_reg(pattern = "c-l", tolerance = 1e-1, initial = varying()) %>%
-	set_engine("circular")
-
-b <- bullet(f, exposure = "lab_hba1c", approach = "sequential", model = circ_mod)
-a <- aim(b)
-ballistics(a)
-c <-
-	a %>%
-	mutate(model_spec = map2(model_spec, formulas, ~update(.x, initial = rep(0, length(all.vars(.y)))))) %>%
-	ballistics()
-final <- fire(c, df)
-ballistics(final)
-```
-
+- `bullet()`
+- `aim()`
+- `fire()`
+- `ballistics()`
