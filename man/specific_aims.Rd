@@ -6,6 +6,9 @@
 \usage{
 specific_aims(...)
 }
+\arguments{
+\item{...}{Variable number of \code{aim} objects. The name of the objects will be retained.}
+}
 \value{
 An \code{aims} object that is a collection of the related individual \code{aim} objects from a project.
 }
