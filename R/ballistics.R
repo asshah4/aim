@@ -40,12 +40,10 @@
 #'   including a tidied fitted object
 #'
 #' @examples
-#' library(card)
 #' library(parsnip)
-#' data(geh)
-#' f <- svg_mag + qrs_tang ~ lab_hba1c + age + sex + bmi + cad + htn
+#' f <- mpg + cyl ~ wt + hp + gear
 #' lm_mod <- linear_reg() %>% set_engine("lm")
-#' b <- bullet(f, exposure = "lab_hba1c", approach = "parallel", model = lm_mod)
+#' b <- bullet(f, exposure = "wt", approach = "parallel", model = lm_mod)
 #' ballistics(b)
 #' @family ballistics
 #' @export
@@ -70,9 +68,9 @@ ballistics.bullet <- function(mark, ...) {
 	# Major variables
 	out <- bullet$outcomes
 	exp <- bullet$exposures
-	covar <- bullet$covariates
+	pred <- bullet$predictors
 	approach <- bullet$approach
-	nc <- length(bullet$covariates)
+	num <- length(bullet$predictors)
 	model <- bullet$model
 
 	# Based on approach
@@ -80,14 +78,17 @@ ballistics.bullet <- function(mark, ...) {
 		approach,
 		sequential = {
 			tbl <-
-				tibble::tibble(model_num = 1:nc) %>%
-				mutate(predictors = purrr::map(model_num, ~ c(exp, covar[1:.]))) %>%
+				tibble::tibble(model_num = 1:num) %>%
+				#mutate(predictors = purrr::map(model_num, ~ c(exp, covar[1:.]))) %>%
+				mutate(predictors = purrr::map(model_num, ~ pred[1:.])) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		},
 		parallel = {
 			tbl <-
-				tibble::tibble(model_num = 1:nc) %>%
-				mutate(predictors = purrr::map(model_num, ~ c(exp, covar[.]))) %>%
+				tibble::tibble(model_num = 1:num) %>%
+				mutate(
+					predictors = purrr::map(model_num, ~ unique(c(exp, pred[.])))
+				) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		}
 	)

@@ -45,6 +45,9 @@ bullet <- function(f, exposure = NULL, approach = "sequential", model, ...) {
 	exposures <- exposure
 	covariates <- setdiff(predictors, exposures)
 
+	# Exposure should always be first variables
+	predictors <- c(exposures, covariates)
+
 	# Items that will be loaded
 	shell <- list(
 		outcomes = outcomes,

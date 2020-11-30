@@ -57,12 +57,10 @@ approach. Is used to evaluate the objects created by \code{bullet()} and by
 matrix).
 }
 \examples{
-library(card)
 library(parsnip)
-data(geh)
-f <- svg_mag + qrs_tang ~ lab_hba1c + age + sex + bmi + cad + htn
+f <- mpg + cyl ~ wt + hp + gear
 lm_mod <- linear_reg() \%>\% set_engine("lm")
-b <- bullet(f, exposure = "lab_hba1c", approach = "parallel", model = lm_mod)
+b <- bullet(f, exposure = "wt", approach = "parallel", model = lm_mod)
 ballistics(b)
 }
 \concept{ballistics}
