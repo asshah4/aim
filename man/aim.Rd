@@ -7,11 +7,12 @@
 aim(bullets, ...)
 }
 \arguments{
-\item{bullets}{A \code{list} of \code{bullet} objects (preferably named) that will be
-used to generate a specific aim. Each bullet should be from the same
-dataset to be able to run the analysis in the pre-specified models.}
-
 \item{...}{For extensibility}
+
+\item{`bullets`}{A \strong{list} of \code{bullet} object(s) that will be used to generate a specific
+aim. Several bullet objects can be given in the list. The object names should
+be informative for the user. Each bullet should be from the same dataset to
+be able to run the analysis in the pre-specified models.}
 }
 \value{
 An \code{aim} object that contain all the relevant hypothesis that were
@@ -19,9 +20,11 @@ pre-specified, including model specifications from \code{tidymodels}, in a table
 format.
 }
 \description{
-The \code{aim} function arranges the characteristics returned from
-\code{bullet} objects into a table of hypothesis that can be tested in the model
-specifications. It creates model identifiers, and collects both the
+The \code{aim} function does as described, and aims the \code{bullet} at
+the appropriate target. It allows for additional specification of how the
+hypothesis should be tested. It arranges these hypothesis into a table that
+outlines the trajectory of that bullet. Each part of the hypothesis ends up
+being a single row. It creates model identifiers, and collects both the
 pre-analysis inputs and the post-analysis attributes. It allows for
 organizing several related hypotheses together.
 }

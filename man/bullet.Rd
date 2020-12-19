@@ -2,42 +2,54 @@
 % Please edit documentation in R/bullet.R
 \name{bullet}
 \alias{bullet}
-\title{Create bullets to be loaded}
+\title{Create Hypothetical Bullets}
 \usage{
-bullet(f, exposure = NULL, approach = "sequential", model, ...)
+bullet(f, exposure = NULL, approach = "simple", spec, ...)
 }
 \arguments{
 \item{f}{Formula showing relationship of outcomes and predictors}
 
-\item{exposure}{Variable(s) that is forced to be maintained in every model as
+\item{exposure}{Variable(s) that are forced to be maintained in every model as
 a predictor.}
 
-\item{approach}{The modeling approach that will be used. The options are:
+\item{approach}{The variable relationship approach that will be used. The
+options are:
 \itemize{
-\item \code{sequential} will build y ~ x1, y ~ x1 + x2 models
-\item \code{parallel} will build y ~ x1, y ~ x2 models
+\item \code{plain} will define a relationship as y ~ x (however not necessary that x
+predicts y)
+\item \code{sequential} will defines relationship as y ~ x1, y ~ x1 + x2
+\item \code{parallel} will define relationships as  y ~ x1, y ~ x2
 }}
 
-\item{model}{A model specified by the \href{https://parsnip.tidymodels.org/articles/parsnip_Intro.html}{\code{parsnip} package}, which
-includes the mode and computational engine}
+\item{spec}{This describes the analysis plan that should be used to
+help aim the bullet. There are several options on specifications to use,
+anywhere from regression modeling to inferential statistics. The
+specification applies to the entire list of bullets being used.
+\itemize{
+\item A model specified by the \href{https://parsnip.tidymodels.org}{\code{parsnip} package}, which includes the mode and
+computational engine
+\item A statistical test, such as a \code{t.test}, which may require additional
+parameters. These can be given as additional, unmatched arguments. This
+option currently supports only hypothesis tests, of class \code{htest}.
+}}
 
 \item{...}{For extensibility}
 }
 \value{
 Object of type \code{bullet} that contains the hypothesis and the
-characteristics of how to put the analysis together. needed for analysis
+characteristics of how to put the analysis together.
 }
 \description{
 A \code{bullet} object is a pre-specified hypothesis, with a formula
-that helps to identify the individual variables and their roles. It
-requires the use of a model specification from \code{parsnip} (or any other
-similarly specified models). It also determines what sequence of models to
-put together.
+that helps to identify the individual variables and their roles. It also
+asks for the how the \code{outcome ~ exposure} relationship(s) should be
+defined. The purpose of this is to simplify the creating of a project,
+where the relationships are defined early, and tested later on.
 }
 \examples{
 library(parsnip)
 f <- mpg + cyl ~ wt + hp + gear
 lm_mod <- linear_reg() \%>\% set_engine("lm")
-b <- bullet(f, exposure = "wt", approach = "sequential", model = lm_mod)
+b <- bullet(f, exposure = "wt", approach = "sequential")
 
 }

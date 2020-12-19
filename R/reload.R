@@ -74,7 +74,7 @@ reload.aim <- function(mark, ...) {
 	new_terms <- names(new_arg)
 
 	# Make sure the term matches and is compatible
-	if(length(aim[[new_terms]]) != length(new_arg[[new_terms]]) | length(intersect(old_terms, new_terms)) != 1) {
+	if (length(aim[[new_terms]]) != length(new_arg[[new_terms]]) | length(intersect(old_terms, new_terms)) != 1) {
 		stop("The new data given to `reload` is either not the same length or does not match with an existing aim term.", call. = FALSE)
 	}
 

@@ -1,5 +1,5 @@
-Package: marksman
-Title: Shoot Down Your Specific Aims
+Package: octomod
+Title: A Many-Handed Approach to Multiple Models
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
@@ -7,11 +7,12 @@ Authors@R:
            role = c("aut", "cre"),
            email = "asshah4@emory.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: Creates a structure specific aims object that collects all 
-    specified hypotheses, data, and background for a research project. This 
-    serves as a parallel pipeline to organize analyses, and guides the user 
-    away from exploratory analyses. Its themed after the idea of setting your 
-    sights on a hypothesis, aiming, and firing!
+Description: A simple and tidy way to organize the many models built during a 
+    research project. The package consists of individual hypothesis objects that 
+    are all linked together around a single data set. In causality-based 
+    research, such as epidemiology, the focus is on specific hypothesis that can
+    be tested. However, the number of models can become unruly. This serves as a 
+    way to organize the many.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -33,7 +34,8 @@ Imports:
     methods,
     card,
     tidyverse,
-    tidymodels
+    tidymodels,
+    progress
 Remotes:
     asshah4/card
 VignetteBuilder: knitr
