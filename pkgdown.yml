@@ -2,7 +2,7 @@ pandoc: 2.7.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles: {}
-last_built: 2020-12-19T19:45Z
+last_built: 2020-12-19T19:49Z
 urls:
   reference: https://asshah4.github.io/marksman//reference
   article: https://asshah4.github.io/marksman//articles
