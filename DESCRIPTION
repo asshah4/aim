@@ -39,3 +39,5 @@ Imports:
 Remotes:
     asshah4/card
 VignetteBuilder: knitr
+URL: https://github.com/asshah4/octomod
+BugReports: https://github.com/asshah4/octomod/issues
