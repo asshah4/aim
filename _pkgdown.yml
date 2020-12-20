@@ -1,10 +1,10 @@
-url: https://asshah4.github.io/marksman/
+url: https://asshah4.github.io/octomod/
 
 destination: docs
 
 home:
-  title: An R package for Specific Aims
-  description: An epidemiological approach to project hypotheses.
+  title: A Many-Handed Approach to Multiple Models
+  description: A way to handle multiple models, with an emphasis on hypothesis testing
 
 navbar:
   structure:
@@ -25,22 +25,5 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/asshah4/marksman/
+      href: https://github.com/asshah4/octomod/
 
-reference:
-- title: "Loading the Gun"
-  desc: "Functions to help prepare for the analyses."
-  contents:
-    - bullet
-    - aim
-- title: "Firing the Round"
-  desc: "Functions to run the analyses."
-  contents:
-    - fire
-    - ballistics
-    - reload
-
-articles:
-- title: Using Marksman
-  contents:
-  - overview

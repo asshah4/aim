@@ -1,4 +1,4 @@
 library(testthat)
-library(marksman)
+library(octomod)
 
-test_check("marksman")
+test_check("octomod")

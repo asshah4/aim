@@ -1,27 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://asshah4.github.io/marksman//index.html</loc>
+    <loc>https://asshah4.github.io/octomod//index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/marksman//reference/aim.html</loc>
+    <loc>https://asshah4.github.io/octomod//reference/arm.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/marksman//reference/ballistics.html</loc>
+    <loc>https://asshah4.github.io/octomod//reference/core.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/marksman//reference/bullet.html</loc>
+    <loc>https://asshah4.github.io/octomod//reference/octomod.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/marksman//reference/fire.html</loc>
+    <loc>https://asshah4.github.io/octomod//reference/outfit.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/marksman//reference/reload.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/marksman//reference/specific_aims.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/marksman//articles/overview.html</loc>
+    <loc>https://asshah4.github.io/octomod//articles/octomod.html</loc>
   </url>
 </urlset>

@@ -35,7 +35,9 @@ Imports:
     card,
     tidyverse,
     tidymodels,
-    progress
+    progress,
+    rlang,
+    broom
 Remotes:
     asshah4/card
 VignetteBuilder: knitr

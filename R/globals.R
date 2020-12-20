@@ -3,11 +3,13 @@
 utils::globalVariables(c(
 	".",
 	"...",
-	"predictors",
 	"outcomes",
 	"formulas",
-	"model_num",
-	"model_spec",
+	"test_num",
 	"fit",
-	"varying"
+	"varying",
+	"type",
+	"approach",
+	"vars",
+	"pars"
 ))
