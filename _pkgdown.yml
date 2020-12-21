@@ -27,3 +27,12 @@ navbar:
       icon: fab fa-github fa-lg
       href: https://github.com/asshah4/octomod/
 
+reference:
+- title: "Creating an Octomod"
+  desc: Basic functions for making an `octomod` object
+- contents:
+  - arm
+  - core
+  - octomod
+  - outfit
+
