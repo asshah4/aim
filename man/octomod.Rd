@@ -23,3 +23,18 @@ octopus has, and in this case, it can be used to hold specific models or
 ideas. This \emph{modeling beast} can help us tackle complex research projects
 sensibly and flexibly.
 }
+\examples{
+library(magrittr)
+octobeast <-
+  octomod() \%>\%
+  add_core(iris) \%>\%
+  add_arm(
+    title = "flowers_test",
+    f = Sepal.Length ~ Sepal.Width,
+    exposure = NULL,
+    pattern = "direct",
+    approach = "t.test"
+  ) \%>\%
+  add_outfit()
+
+}

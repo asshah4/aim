@@ -14,6 +14,20 @@
 #'
 #' @return `octomod` object
 #'
+#' @examples
+#' library(magrittr)
+#' octobeast <-
+#'   octomod() %>%
+#'   add_core(iris) %>%
+#'   add_arm(
+#'     title = "flowers_test",
+#'     f = Sepal.Length ~ Sepal.Width,
+#'     exposure = NULL,
+#'     pattern = "direct",
+#'     approach = "t.test"
+#'   ) %>%
+#'   add_outfit()
+#'
 #' @export
 octomod <- function() {
 
@@ -38,5 +52,56 @@ new_octomod <- function(octomod) {
 
 	# Final structure defined
 	structure(octomod, class = "octomod")
+
+}
+
+
+#' @description Generic print method
+#' @param x Object of class `octomod`
+#' @param ... arguments to pass on
+#' @noRd
+#' @export
+print.octomod <- function(x, ...) {
+
+	# Intro
+	cat(
+		"\nThis `octomod` has the following components.",
+		"\n"
+	)
+
+	# Core
+	cat(
+		"\nCore Variables",
+		"\n--------------",
+		"\n"
+	)
+	print(names(x$core))
+
+	# Arms
+	cat(
+		"\nArms",
+		"\n----",
+		"\n"
+	)
+	print(names(x$arms))
+
+	# Outfit
+	cat(
+		"\nEquipment",
+		"\n----",
+		"\n"
+	)
+	print(names(x$outfit))
+
+	# If its been appropriately outfitted
+	if (length(x$core) > 0 &&
+			length(x$arms) == length(x$outfit) &&
+			length(x$arms) > 0) {
+		cat(
+			"\n------------------------------------------------",
+			"\nThis `octomod` is an OCTOBEAST, armed and ready!",
+			"\n------------------------------------------------"
+		)
+	}
 
 }

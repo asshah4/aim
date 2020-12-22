@@ -61,7 +61,7 @@
 #'
 #' @export
 #' @rdname arm
-add_arm <- function(octomod, title = NULL, f = NULL, exposure = NULL, pattern = "direct", approach = NULL, ...) {
+add_arm <- function(octomod, title = NULL, f = NULL, exposure = NULL, pattern = "direct", approach, ...) {
 
 	# Check if its octomod in pipeline
 	if (!inherits(octomod, "octomod")) {
