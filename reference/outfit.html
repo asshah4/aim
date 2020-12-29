@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Outfit the octomod With Hypothesis Tests — outfit • octomod</title>
+<title>Equip the octomod With Hypothesis Testing — outfit • octomod</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Outfit the octomod With Hypothesis Tests — outfit" />
+<meta property="og:title" content="Equip the octomod With Hypothesis Testing — outfit" />
 <meta property="og:description" content="This function allows for fitting the many arms of the octomod object,
-outfitting them with the correct test methods. For modeling, this heavily
+equipping them with the correct test methods. For modeling, this heavily
 leans on the tidymodels approach which allows for unified model
 specification. For inferential statistics, which do not yet have a unified
 testing approach, this provides the ability to run these somewhat simpler
@@ -90,10 +90,19 @@ tests in a cohesive manner." />
   </a>
 </li>
 <li>
-  <a href="../articles/octomod.html">Get started</a>
-</li>
-<li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/octobeast.html">The Octobeast</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">Changelog</a>
@@ -119,21 +128,21 @@ tests in a cohesive manner." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Outfit the <code>octomod</code> With Hypothesis Tests</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/octomod/blob/master/R/outfit.R'><code>R/outfit.R</code></a></small>
+    <h1>Equip the <code>octomod</code> With Hypothesis Testing</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/octomod/blob/master/R/equip.R'><code>R/equip.R</code></a></small>
     <div class="hidden name"><code>outfit.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p>This function allows for fitting the many arms of the <code>octomod</code> object,
-outfitting them with the correct test methods. For modeling, this heavily
+equipping them with the correct test methods. For modeling, this heavily
 leans on the <code>tidymodels</code> approach which allows for unified model
 specification. For inferential statistics, which do not yet have a unified
 testing approach, this provides the ability to run these somewhat simpler
 tests in a cohesive manner.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_outfit</span><span class='op'>(</span><span class='va'>octomod</span>, which_arms <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>equip</span><span class='op'>(</span><span class='va'>octomod</span>, which_arms <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -145,7 +154,7 @@ tests in a cohesive manner.</p>
     <tr>
       <th>which_arms</th>
       <td><p>Vector of names of arms that should be run. Defaults to all
-arms that have not yet been outfitted.</p></td>
+arms that have not yet been equipped..</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -178,7 +187,7 @@ arms that have not yet been outfitted.</p></td>
     pattern <span class='op'>=</span> <span class='st'>"sequential"</span>,
     approach <span class='op'>=</span> <span class='va'>lm_mod</span>
   <span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>add_outfit</span><span class='op'>(</span><span class='op'>)</span>
+  <span class='fu'>equip</span><span class='op'>(</span><span class='op'>)</span>
 
 </div></pre>
   </div>

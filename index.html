@@ -44,10 +44,19 @@
   </a>
 </li>
 <li>
-  <a href="articles/octomod.html">Get started</a>
-</li>
-<li>
   <a href="reference/index.html">Reference</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+<li>
+      <a href="articles/octobeast.html">The Octobeast</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="news/index.html">Changelog</a>
@@ -77,6 +86,7 @@
 <a href="#octomod" class="anchor"></a>octomod</h1></div>
 <!-- badges: start -->
 
+<!-- badges: end -->
 <div id="overview" class="section level2">
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
@@ -96,7 +106,9 @@
 <p>You can see that <code>parsnip</code> is used, as this allows <strong>many</strong> model specifications to be called in a very similar manner, making modeling much easier.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://magrittr.tidyverse.org">magrittr</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'magrittr' was built under R version 4.0.3</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://parsnip.tidymodels.org">parsnip</a></span><span class="op">)</span>
+<span class="co">#&gt; Warning: package 'parsnip' was built under R version 4.0.3</span>
 <span class="va">lm_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/linear_reg.html">linear_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span></code></pre></div>
 <p>To use the <code>octomod</code>, simply initialize the structure and add data. The steps are:</p>
 <ol>
@@ -106,10 +118,10 @@
 </li>
 <li>Add the specific hypothetical arms with <code><a href="reference/add_arm.html">add_arm()</a></code>
 </li>
-<li>Equip or outfit each arm with the appropriate test results with <code><a href="reference/outfit.html">add_outfit()</a></code>
+<li>Equip or outfit each arm with the appropriate test results with <code>add_outfit()</code>
 </li>
 </ol>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/octomod">octomod</a></span><span class="op">)</span>
 <span class="va">om</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="reference/octomod.html">octomod</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -127,7 +139,7 @@
     pattern <span class="op">=</span> <span class="st">"sequential"</span>,
     approach <span class="op">=</span> <span class="va">lm_mod</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/outfit.html">add_outfit</a></span><span class="op">(</span><span class="op">)</span>
+    <span class="fu"><a href="reference/outfit.html">equip</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Showcase the findings</span>
 <span class="va">om</span><span class="op">$</span><span class="va">outfit</span>
@@ -135,17 +147,17 @@
 <span class="co">#&gt; # A tibble: 2 x 4</span>
 <span class="co">#&gt;   outcomes     test_num fit     tidied          </span>
 <span class="co">#&gt;   &lt;chr&gt;           &lt;int&gt; &lt;list&gt;  &lt;list&gt;          </span>
-<span class="co">#&gt; 1 Sepal.Length        1 &lt;htest&gt; &lt;tibble [1 × 8]&gt;</span>
-<span class="co">#&gt; 2 Sepal.Width         1 &lt;htest&gt; &lt;tibble [1 × 8]&gt;</span>
+<span class="co">#&gt; 1 Sepal.Length        1 &lt;htest&gt; &lt;tibble [1 x 8]&gt;</span>
+<span class="co">#&gt; 2 Sepal.Width         1 &lt;htest&gt; &lt;tibble [1 x 8]&gt;</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; $linear</span>
 <span class="co">#&gt; # A tibble: 3 x 4</span>
 <span class="co">#&gt;   outcomes    test_num fit      tidied          </span>
 <span class="co">#&gt;   &lt;chr&gt;          &lt;int&gt; &lt;list&gt;   &lt;list&gt;          </span>
-<span class="co">#&gt; 1 Petal.Width        1 &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
-<span class="co">#&gt; 2 Petal.Width        2 &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
-<span class="co">#&gt; 3 Petal.Width        3 &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span></code></pre></div>
-<p>The functions are relatively simple, but the ability to specify <strong>how</strong> the relationship between outcomes and exposures should be built is quite powerful. It allows a different combination of hypothesis-based formulas to be built, and allows for multiple outcomes to specified (a feature not yet built into other modeling packages).</p>
+<span class="co">#&gt; 1 Petal.Width        1 &lt;fit[+]&gt; &lt;tibble [2 x 7]&gt;</span>
+<span class="co">#&gt; 2 Petal.Width        2 &lt;fit[+]&gt; &lt;tibble [3 x 7]&gt;</span>
+<span class="co">#&gt; 3 Petal.Width        3 &lt;fit[+]&gt; &lt;tibble [4 x 7]&gt;</span></code></pre></div>
+<p>The functions are relatively simple, but the ability to specify <strong>how</strong> the relationship between outcomes and exposures should be built is quite powerful. It allows a different combination of hypothesis-based formulas to be built, and allows for multiple outcomes to specified (a feature not yet built into other modeling packages). Please see the vignettes for a more thorough breakdown!</p>
 </div>
 </div>
   </div>
