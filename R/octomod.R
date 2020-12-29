@@ -26,7 +26,7 @@
 #'     pattern = "direct",
 #'     approach = "t.test"
 #'   ) %>%
-#'   add_outfit()
+#'   equip()
 #'
 #' @export
 octomod <- function() {
@@ -54,7 +54,6 @@ new_octomod <- function(octomod) {
 	structure(octomod, class = "octomod")
 
 }
-
 
 #' @description Generic print method
 #' @param x Object of class `octomod`

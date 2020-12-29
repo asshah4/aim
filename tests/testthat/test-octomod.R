@@ -10,3 +10,7 @@ test_that("octomod() creates appropriate list objects", {
 test_that("octomod() is of appropriate class", {
 	expect_s3_class(om, "octomod")
 })
+
+test_that("octomod() prints appropriately", {
+	expect_output(str(om), "List of 3")
+})

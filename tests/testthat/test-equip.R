@@ -11,17 +11,17 @@ om2 <-
   )
 om3 <-
 	om2 %>%
-	add_outfit()
+	equip()
 
 test_that("add_outfit() should error if octomod isn't ready", {
 	expect_error(
 		om1 %>%
-			add_outfit()
+			equip()
 	)
 	expect_error(
 		om1 %>%
 			add_core(iris) %>%
-			add_outfit
+			equip()
 	)
 })
 

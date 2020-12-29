@@ -180,7 +180,6 @@ generate <- function(approach) {
 }
 
 #' @description Organize the `arm` by coiling it together
-#' @importFrom dplyr mutate
 #' @noRd
 coil <- function(arm) {
 
@@ -200,19 +199,19 @@ coil <- function(arm) {
 		direct = {
 			tbl <-
 				tibble::tibble(test_num = 1:num) %>%
-				mutate(vars = purrr::map(test_num, ~ pred[1:.])) %>%
+				dplyr::mutate(vars = purrr::map(test_num, ~ pred[1:.])) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		},
 		sequential = {
 			tbl <-
 				tibble::tibble(test_num = 1:num) %>%
-				mutate(vars = purrr::map(test_num, ~ pred[1:.])) %>%
+				dplyr::mutate(vars = purrr::map(test_num, ~ pred[1:.])) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		},
 		parallel = {
 			tbl <-
 				tibble::tibble(test_num = 1:num) %>%
-				mutate(
+				dplyr::mutate(
 					vars = purrr::map(test_num, ~ unique(c(exp, pred[.])))
 				) %>%
 				tidyr::expand_grid(outcomes = out, .)
@@ -222,10 +221,10 @@ coil <- function(arm) {
 	# Now can re-create appropriate formulas
 	tbl <-
 		tbl %>%
-		mutate(formulas = purrr::map_chr(vars, ~paste(unlist(.x), collapse = " + "))) %>%
-		mutate(formulas = paste(out, formulas, sep = " ~ ")) %>%
-		mutate(formulas = purrr::map(formulas, ~formula(.x))) %>%
-		mutate(
+		dplyr::mutate(formulas = purrr::map_chr(vars, ~paste(unlist(.x), collapse = " + "))) %>%
+		dplyr::mutate(formulas = paste(out, formulas, sep = " ~ ")) %>%
+		dplyr::mutate(formulas = purrr::map(formulas, ~formula(.x))) %>%
+		dplyr::mutate(
 			approach = list(approach),
 			type = type,
 			pars = list(pars)

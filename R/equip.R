@@ -1,7 +1,7 @@
-#' Outfit the `octomod` With Hypothesis Tests
+#' Equip the `octomod` With Hypothesis Testing
 #'
 #' This function allows for fitting the many arms of the `octomod` object,
-#' outfitting them with the correct test methods. For modeling, this heavily
+#' equipping them with the correct test methods. For modeling, this heavily
 #' leans on the `tidymodels` approach which allows for unified model
 #' specification. For inferential statistics, which do not yet have a unified
 #' testing approach, this provides the ability to run these somewhat simpler
@@ -12,7 +12,7 @@
 #' @param octomod Object of class `octomod`
 #'
 #' @param which_arms Vector of names of arms that should be run. Defaults to all
-#'   arms that have not yet been outfitted.
+#'   arms that have not yet been equipped..
 #'
 #' @param ... To pass additional parameters as needed
 #'
@@ -37,12 +37,12 @@
 #'     pattern = "sequential",
 #'     approach = lm_mod
 #'   ) %>%
-#'   add_outfit()
+#'   equip()
 #'
 #' @importFrom magrittr %>%
 #' @export
 #' @name outfit
-add_outfit <- function(octomod, which_arms = NULL, ...) {
+equip <- function(octomod, which_arms = NULL, ...) {
 
 	# Check if its octomod in pipeline
 	if (!inherits(octomod, "octomod")) {
@@ -109,7 +109,7 @@ add_outfit <- function(octomod, which_arms = NULL, ...) {
 	outfit <-
 		dplyr::bind_rows(parsnips, tests) %>%
 		split(.$arm) %>%
-		purrr::map(., ~ dplyr::select(.x, c(outcomes, test_num, fit))) %>%
+		purrr::map(., ~ dplyr::select(.x, c(outcomes, vars, test_num, fit))) %>%
 		purrr::map(., ~ dplyr::mutate(.x, tidied = purrr::map(
 			fit, ~ broom::tidy(.x, conf.int = TRUE, exponentiate = TRUE)
 		)))

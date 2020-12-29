@@ -10,6 +10,7 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![Github commit
 frequency](https://img.shields.io/github/commit-activity/w/asshah4/octomod)](https://github.com/asshah4/octomod/graphs/commit-activity)
 [![R-CMD-check](https://github.com/asshah4/octomod/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/octomod/actions)
+
 <!-- badges: end -->
 
 ## Overview
@@ -53,7 +54,9 @@ much easier.
 
 ``` r
 library(magrittr)
+#> Warning: package 'magrittr' was built under R version 4.0.3
 library(parsnip)
+#> Warning: package 'parsnip' was built under R version 4.0.3
 lm_mod <- linear_reg() %>% set_engine("lm")
 ```
 
@@ -66,6 +69,8 @@ steps are:
 3.  Add the specific hypothetical arms with `add_arm()`
 4.  Equip or outfit each arm with the appropriate test results with
     `add_outfit()`
+
+<!-- end list -->
 
 ``` r
 library(octomod)
@@ -85,7 +90,7 @@ om <-
     pattern = "sequential",
     approach = lm_mod
   ) %>%
-    add_outfit()
+    equip()
 
 # Showcase the findings
 om$outfit
@@ -93,20 +98,21 @@ om$outfit
 #> # A tibble: 2 x 4
 #>   outcomes     test_num fit     tidied          
 #>   <chr>           <int> <list>  <list>          
-#> 1 Sepal.Length        1 <htest> <tibble [1 × 8]>
-#> 2 Sepal.Width         1 <htest> <tibble [1 × 8]>
+#> 1 Sepal.Length        1 <htest> <tibble [1 x 8]>
+#> 2 Sepal.Width         1 <htest> <tibble [1 x 8]>
 #> 
 #> $linear
 #> # A tibble: 3 x 4
 #>   outcomes    test_num fit      tidied          
 #>   <chr>          <int> <list>   <list>          
-#> 1 Petal.Width        1 <fit[+]> <tibble [2 × 7]>
-#> 2 Petal.Width        2 <fit[+]> <tibble [3 × 7]>
-#> 3 Petal.Width        3 <fit[+]> <tibble [4 × 7]>
+#> 1 Petal.Width        1 <fit[+]> <tibble [2 x 7]>
+#> 2 Petal.Width        2 <fit[+]> <tibble [3 x 7]>
+#> 3 Petal.Width        3 <fit[+]> <tibble [4 x 7]>
 ```
 
 The functions are relatively simple, but the ability to specify **how**
 the relationship between outcomes and exposures should be built is quite
 powerful. It allows a different combination of hypothesis-based formulas
 to be built, and allows for multiple outcomes to specified (a feature
-not yet built into other modeling packages).
+not yet built into other modeling packages). Please see the vignettes
+for a more thorough breakdown\!

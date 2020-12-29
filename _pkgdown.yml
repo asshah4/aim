@@ -31,8 +31,8 @@ reference:
 - title: "Creating an Octomod"
   desc: Basic functions for making an `octomod` object
 - contents:
-  - arm
-  - core
+  - add_arm
+  - add_core
   - octomod
-  - outfit
+  - equip
 

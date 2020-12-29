@@ -35,6 +35,6 @@ octobeast <-
     pattern = "direct",
     approach = "t.test"
   ) \%>\%
-  add_outfit()
+  equip()
 
 }

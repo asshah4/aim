@@ -1,9 +1,9 @@
-pandoc: 2.11.2
+pandoc: 2.9.2.1
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
-  octomod: octomod.html
-last_built: 2020-12-21T01:59Z
+  octobeast: octobeast.html
+last_built: 2020-12-26T00:45Z
 urls:
   reference: https://asshah4.github.io/octomod//reference
   article: https://asshah4.github.io/octomod//articles

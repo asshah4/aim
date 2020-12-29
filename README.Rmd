@@ -16,9 +16,9 @@ knitr::opts_chunk$set(
 # octomod
 
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Github commit frequency](https://img.shields.io/github/commit-activity/w/asshah4/octomod)](https://github.com/asshah4/octomod/graphs/commit-activity)
-[![R-CMD-check](https://github.com/asshah4/octomod/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/octomod/actions)
+
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental) [![Github commit frequency](https://img.shields.io/github/commit-activity/w/asshah4/octomod)](https://github.com/asshah4/octomod/graphs/commit-activity) [![R-CMD-check](https://github.com/asshah4/octomod/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/octomod/actions)
+
 <!-- badges: end -->
 
 ## Overview
@@ -27,7 +27,7 @@ The `octomod` package provides a simple and tidy way to organize the many models
 
 ## Story
 
-The reason why this was developed, as listed above, was based on the struggle of trying to hold many hypotheses together for a thesis project. The multiple datasets, the multiple inferential and supervised learning models, and the gaps in times before revisiting areas created this sticky situation. 
+The reason why this was developed, as listed above, was based on the struggle of trying to hold many hypotheses together for a thesis project. The multiple datasets, the multiple inferential and supervised learning models, and the gaps in times before revisiting areas created this sticky situation.
 
 The *metaphor* that seemed to fit the best was that of the *octopus*, in that it was a central breathing organism, with multiple arms. The metaphor expanded that to modeling, in that each arm is a family of hypotheses encircling a central data structure. The end of each arm could be equipped with the test findings. If an arm needed to be removed or revised, it should be easy to regenerate without effecting the hole.
 
@@ -35,7 +35,7 @@ Forgive the misdirected creativity, but as the metaphor seemed to hold true, the
 
 ## Usage
 
-The package is very simple to use. First, lets load the basic packages. The two hypotheses in this case are a linear model, and a paired t-test. The `iris` dataset will serve as the example. 
+The package is very simple to use. First, lets load the basic packages. The two hypotheses in this case are a linear model, and a paired t-test. The `iris` dataset will serve as the example.
 
 You can see that `parsnip` is used, as this allows **many** model specifications to be called in a very similar manner, making modeling much easier.
 
@@ -47,10 +47,10 @@ lm_mod <- linear_reg() %>% set_engine("lm")
 
 To use the `octomod`, simply initialize the structure and add data. The steps are:
 
-1. Create the `octomod`
-1. Add the core or central data that the hypotheses revolve around using `add_core()`
-1. Add the specific hypothetical arms with `add_arm()`
-1. Equip or outfit each arm with the appropriate test results with `add_outfit()`
+1.  Create the `octomod`
+2.  Add the core or central data that the hypotheses revolve around using `add_core()`
+3.  Add the specific hypothetical arms with `add_arm()`
+4.  Equip or outfit each arm with the appropriate test results with `add_outfit()`
 
 ```{r}
 library(octomod)
@@ -70,12 +70,10 @@ om <-
     pattern = "sequential",
     approach = lm_mod
   ) %>%
-	add_outfit()
+	equip()
 
 # Showcase the findings
 om$outfit
 ```
 
-The functions are relatively simple, but the ability to specify **how** the relationship between outcomes and exposures should be built is quite powerful. It allows a different combination of hypothesis-based formulas to be built, and allows for multiple outcomes to specified (a feature not yet built into other modeling packages).
-
-
+The functions are relatively simple, but the ability to specify **how** the relationship between outcomes and exposures should be built is quite powerful. It allows a different combination of hypothesis-based formulas to be built, and allows for multiple outcomes to specified (a feature not yet built into other modeling packages). Please see the vignettes for a more thorough breakdown!

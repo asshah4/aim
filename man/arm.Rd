@@ -10,7 +10,7 @@ add_arm(
   f = NULL,
   exposure = NULL,
   pattern = "direct",
-  approach = NULL,
+  approach,
   ...
 )
 }
