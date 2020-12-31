@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add Core Data to the octomod — add_core • octomod</title>
+<title>Add Core Data to the octomod — core • octomod</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,13 @@
 
 
 
-<meta property="og:title" content="Add Core Data to the octomod — add_core" />
+<meta property="og:title" content="Add Core Data to the octomod — core" />
 <meta property="og:description" content="Add the shared dataset for this research question to the central octomod
 structure. Whenever this is used, it will replace the prior or old data.
-add_core() adds a new dataset to the octomod object. It checks to see if
+core() adds a new dataset to the octomod object. It checks to see if
 data is already present.
-update_core() changes the old dataset from the octomod object to an
-updated dataset. It does not re-do the hypothesis testing.
-remove_core() removes the data from the octomod object. This is usually
-not needed." />
+change_core() changes the old dataset from the octomod object to an
+updated dataset. It does not re-do the hypothesis testing." />
 
 
 
@@ -138,17 +136,15 @@ not needed." />
     <div class="ref-description">
     <p>Add the shared dataset for this research question to the central <code>octomod</code>
 structure. Whenever this is used, it will replace the prior or old data.</p>
-<p><code>add_core()</code> adds a new dataset to the <code>octomod</code> object. It checks to see if
+<p><code>core()</code> adds a new dataset to the <code>octomod</code> object. It checks to see if
 data is already present.</p>
-<p><code>update_core()</code> changes the old dataset from the <code>octomod</code> object to an
+<p><code>change_core()</code> changes the old dataset from the <code>octomod</code> object to an
 updated dataset. It does not re-do the hypothesis testing.</p>
-<p><code>remove_core()</code> removes the data from the <code>octomod</code> object. This is usually
-not needed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_core</span><span class='op'>(</span><span class='va'>octomod</span>, <span class='va'>core</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>core</span><span class='op'>(</span><span class='va'>octomod</span>, <span class='va'>core</span><span class='op'>)</span>
 
-<span class='fu'>update_core</span><span class='op'>(</span><span class='va'>octomod</span>, <span class='va'>new_core</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>change_core</span><span class='op'>(</span><span class='va'>octomod</span>, <span class='va'>new_core</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='fu'>remove_core</span><span class='op'>(</span><span class='va'>octomod</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
@@ -181,14 +177,14 @@ not needed.</p>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
 
 <span class='fu'><a href='octomod.html'>octomod</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>add_core</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span>
+  <span class='fu'>core</span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>change_core</span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span>
 </div><div class='output co'>#&gt; 
 #&gt; This `octomod` has the following components. 
 #&gt; 
 #&gt; Core Variables 
 #&gt; -------------- 
-#&gt;  [1] "mpg"  "cyl"  "disp" "hp"   "drat" "wt"   "qsec" "vs"   "am"   "gear"
-#&gt; [11] "carb"
+#&gt; [1] "Sepal.Length" "Sepal.Width"  "Petal.Length" "Petal.Width"  "Species"     
 #&gt; 
 #&gt; Arms 
 #&gt; ---- 

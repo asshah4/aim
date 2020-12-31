@@ -1,4 +1,5 @@
 om <- octomod()
+printed <- print.octomod(om)
 
 test_that("octomod() creates appropriate list objects", {
 	expect_length(om, 3)
@@ -13,4 +14,5 @@ test_that("octomod() is of appropriate class", {
 
 test_that("octomod() prints appropriately", {
 	expect_output(str(om), "List of 3")
+	expect_null(printed)
 })

@@ -27,8 +27,8 @@ sensibly and flexibly.
 library(magrittr)
 octobeast <-
   octomod() \%>\%
-  add_core(iris) \%>\%
-  add_arm(
+  core(iris) \%>\%
+  arm(
     title = "flowers_test",
     f = Sepal.Length ~ Sepal.Width,
     exposure = NULL,

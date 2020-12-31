@@ -50,8 +50,8 @@
 #'
 #' om <-
 #'   octomod() %>%
-#'   add_core(mtcars) %>%
-#'   add_arm(
+#'   core(mtcars) %>%
+#'   arm(
 #'     title = "Horsepower",
 #'     f = disp ~ hp,
 #'     pattern = "direct",
@@ -61,7 +61,7 @@
 #'
 #' @export
 #' @rdname arm
-add_arm <- function(octomod, title = NULL, f = NULL, exposure = NULL, pattern = "direct", approach, ...) {
+arm <- function(octomod, title = NULL, f = NULL, exposure = NULL, pattern = "direct", approach, ...) {
 
 	# Check if its octomod in pipeline
 	if (!inherits(octomod, "octomod")) {
@@ -107,7 +107,7 @@ add_arm <- function(octomod, title = NULL, f = NULL, exposure = NULL, pattern = 
 	}
 
 	# Items that will be loaded
-	arm <- list(
+	tentacle <- list(
 		out = out,
 		pred = pred,
 		exp = exp,
@@ -119,10 +119,10 @@ add_arm <- function(octomod, title = NULL, f = NULL, exposure = NULL, pattern = 
 	)
 
 	# Add to octomod
-	octomod[["arms"]][[title]] <- coil(arm)
+	octomod[["arms"]][[title]] <- coil(tentacle)
 
 	# Return
-	octomod
+	new_octomod(octomod)
 
 }
 
@@ -181,17 +181,17 @@ generate <- function(approach) {
 
 #' @description Organize the `arm` by coiling it together
 #' @noRd
-coil <- function(arm) {
+coil <- function(tentacle) {
 
 	# Major variables
-	out <- arm$out
-	exp <- arm$exp
-	pred <- arm$pred
-	approach <- arm$approach
-	num <- length(arm$pred)
-	pattern <- arm$pattern
-	type <- arm$type
-	pars <- arm$pars
+	out <- tentacle$out
+	exp <- tentacle$exp
+	pred <- tentacle$pred
+	approach <- tentacle$approach
+	num <- length(tentacle$pred)
+	pattern <- tentacle$pattern
+	type <- tentacle$type
+	pars <- tentacle$pars
 
 	# Based on approach
 	switch(
@@ -222,7 +222,7 @@ coil <- function(arm) {
 	tbl <-
 		tbl %>%
 		dplyr::mutate(formulas = purrr::map_chr(vars, ~paste(unlist(.x), collapse = " + "))) %>%
-		dplyr::mutate(formulas = paste(out, formulas, sep = " ~ ")) %>%
+		dplyr::mutate(formulas = paste(outcomes, formulas, sep = " ~ ")) %>%
 		dplyr::mutate(formulas = purrr::map(formulas, ~formula(.x))) %>%
 		dplyr::mutate(
 			approach = list(approach),

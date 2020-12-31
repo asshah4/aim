@@ -11,5 +11,6 @@ utils::globalVariables(c(
 	"type",
 	"approach",
 	"vars",
-	"pars"
+	"pars",
+	"pred"
 ))

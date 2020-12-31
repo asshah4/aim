@@ -31,8 +31,9 @@ reference:
 - title: "Creating an Octomod"
   desc: Basic functions for making an `octomod` object
 - contents:
-  - add_arm
-  - add_core
+  - arm
+  - core
   - octomod
   - equip
+  - sharpen
 

@@ -33,15 +33,15 @@ lm_mod <- linear_reg() \%>\% set_engine("lm")
 
 om <-
   octomod() \%>\%
-  add_core(iris) \%>\%
-  add_arm(
+  core(iris) \%>\%
+  arm(
     title = "t_test",
     f = Sepal.Length + Sepal.Width ~ Petal.Length,
     pattern = "direct",
     approach = "t.test",
     paired = TRUE
   ) \%>\%
-  add_arm(
+  arm(
     title = "linear",
     f = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
     pattern = "sequential",

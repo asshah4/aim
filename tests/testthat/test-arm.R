@@ -2,8 +2,8 @@ library(magrittr)
 
 om <-
   octomod() %>%
-  add_core(mtcars) %>%
-  add_arm(
+  core(mtcars) %>%
+  arm(
     title = "Horsepower",
     f = disp ~ hp,
     pattern = "direct",
@@ -11,7 +11,7 @@ om <-
     paired = TRUE
   )
 
-test_that("add_arm() creates the correct objects", {
+test_that("arm() creates the correct objects", {
 	expect_s3_class(om$arms$Horsepower, "tbl")
 	expect_true(inherits(om$arms, "list"))
 })

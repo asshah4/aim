@@ -1,33 +1,41 @@
-om1 <- octomod()
-om2 <-
-	om1 %>%
-  add_core(iris) %>%
-  add_arm(
-    title = "t_test",
-    f = Sepal.Length + Sepal.Width ~ Petal.Length,
-    pattern = "direct",
-    approach = "t.test",
-    paired = TRUE
+library(magrittr)
+library(parsnip)
+
+df <- mtcars
+df$am <- factor(df$am)
+
+om <-
+	octomod() %>%
+	core(df) %>%
+  arm(
+  	title = "log_model",
+  	f = am ~ mpg,
+  	pattern = "direct",
+  	approach = logistic_reg() %>% set_engine("glm")
   )
-om3 <-
-	om2 %>%
-	equip()
 
-test_that("add_outfit() should error if octomod isn't ready", {
+equipped <- om %>% equip()
+
+test_that("equip() should error if octomod isn't ready", {
 	expect_error(
-		om1 %>%
+		octomod() %>%
 			equip()
 	)
 	expect_error(
-		om1 %>%
-			add_core(iris) %>%
+		octomod() %>%
+			core(iris) %>%
 			equip()
 	)
 })
 
-test_that("add_outfi() should have correct output", {
-	expect_true(inherits(om3$outfit, "list"))
-	expect_true(inherits(om3$outfit[[1]], "tbl_df"))
-	expect_true(inherits(om3$outfit[[1]]$tidied, "list"))
-	expect_true(inherits(om3$outfit[[1]]$tidied[[1]], "tbl_df"))
+test_that("equip() should have correct input", {
+	expect_length(om$outft, 0)
 })
+
+test_that("equip() should have correct output", {
+	expect_true(inherits(equipped$outfit, "list"))
+	expect_true(inherits(equipped$outfit[[1]], "tbl_df"))
+	expect_true(inherits(equipped$outfit[[1]]$tidied, "list"))
+	expect_true(inherits(equipped$outfit[[1]]$tidied[[1]], "tbl_df"))
+})
+

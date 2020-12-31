@@ -30,12 +30,12 @@ There are several basic functions:
 
 -   `octomod()` initializes the modeling structure
 -   `core()` defines the core data of the `octomod` structure, allowing tests to be performed from a centralized data set
--   `add_arm()` creates individual arms to the `octomod`, which reference a specific family of hypotheses
+-   `arm()` creates individual arms to the `octomod`, which reference a specific family of hypotheses
 -   `equip()` gives each of the arms a *tidied* output including model fit and parameters, which can subsequently be called
 
 ## Arms of the `octomod`
 
-The idea that each *arm* is a collection of hypothesis is important, as usually modeling involves testing several related hypotheses. The `add_arm()` function is nice because it allows a modular way to specify mulitple hypotheses.
+The idea that each *arm* is a collection of hypothesis is important, as usually modeling involves testing several related hypotheses. The `arm()` function is nice because it allows a modular way to specify mulitple hypotheses.
 
 For example, we could guess that in `iris`, the `Petal.Length` is likely dependent on both `Sepal.Length` and `Sepal.Width`. We could also guess that `Sepal.Length` and `Sepal.Width` may have the same distribution. This suggests two tests:
 
@@ -62,7 +62,7 @@ lm(Petal.Width ~ Species + Sepal.Width + Sepal.Length, data = iris)
 
 This gives us three different tests for a single data set. The testing would be more elaborate in a larger dataset perhaps. The approach with `octomod` is to place each of these testing groups into an hypothetical *arm* and recall this data when needed.
 
-The **approach** parameter allows for (currently), only either a *model\_spec* object from `parsnip`, or a simple statistical test from base `R` (e.g. `stats`) such as a t-test. If its a test from `stats`, can pass additional parameters within the `add_arm()` function.
+The **approach** parameter allows for (currently), only either a *model\_spec* object from `parsnip`, or a simple statistical test from base `R` (e.g. `stats`) such as a t-test. If its a test from `stats`, can pass additional parameters within the `arm()` function.
 
 ```{r}
 # Declare model type with parsnip
@@ -75,23 +75,23 @@ lm_mod <-
 octobeast <-
   octomod() %>%
   # Add core data
-  add_core(iris) %>%
+  core(iris) %>%
   # Propose first hypothesis
-  add_arm(
+  arm(
     title = "sepal_paired",
     f = Sepal.Length ~ Sepal.Width,
     approach = "t.test",
     paired = TRUE
   ) %>%
   # Specify first regression
-  add_arm(
+  arm(
     title = "petal_length",
     f = Petal.Length ~ Sepal.Length + Sepal.Width,
     pattern = "parallel",
     approach = lm_mod
   ) %>%
   # Specify second regression
-  add_arm(
+  arm(
     title = "petal_width",
     f = Petal.Width ~ Species + Sepal.Length + Sepal.Width,
     exposure = "Species",

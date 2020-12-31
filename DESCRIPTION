@@ -37,7 +37,8 @@ Imports:
     tidymodels,
     progress,
     rlang,
-    broom
+    broom,
+    yardstick
 Remotes:
     asshah4/card
 VignetteBuilder: knitr

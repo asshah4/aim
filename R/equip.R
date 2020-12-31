@@ -23,15 +23,15 @@
 #'
 #' om <-
 #'   octomod() %>%
-#'   add_core(iris) %>%
-#'   add_arm(
+#'   core(iris) %>%
+#'   arm(
 #'     title = "t_test",
 #'     f = Sepal.Length + Sepal.Width ~ Petal.Length,
 #'     pattern = "direct",
 #'     approach = "t.test",
 #'     paired = TRUE
 #'   ) %>%
-#'   add_arm(
+#'   arm(
 #'     title = "linear",
 #'     f = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
 #'     pattern = "sequential",
@@ -60,17 +60,7 @@ equip <- function(octomod, which_arms = NULL, ...) {
 	}
 
 	# Which arms to bear
-	# Are the arms given contained within the octomod?
-	# If so, capture the arms beared
-	if (is.null(which_arms)) {
-		bear <- names(octomod$arms)
-	} else {
-		if (!which_arms %in% names(octomod$arms)) {
-			stop("The named arms are not available in the `octomod`", call. = FALSE)
-		} else {
-			bear <- which_arms
-		}
-	}
+	bear <- bear_arms(octomod, which_arms)
 
 	# Get core data
 	core <- octomod$core
@@ -118,7 +108,6 @@ equip <- function(octomod, which_arms = NULL, ...) {
 	octomod[["outfit"]][bear] <- outfit[bear]
 
 	# Return
-	octomod
+	new_octomod(octomod)
 
 }
-

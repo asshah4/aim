@@ -18,8 +18,8 @@
 #' library(magrittr)
 #' octobeast <-
 #'   octomod() %>%
-#'   add_core(iris) %>%
-#'   add_arm(
+#'   core(iris) %>%
+#'   arm(
 #'     title = "flowers_test",
 #'     f = Sepal.Length ~ Sepal.Width,
 #'     exposure = NULL,
@@ -50,10 +50,13 @@ new_octomod <- function(octomod) {
 	# Confirm that the object is a list structure
 	stopifnot(is.list(octomod))
 
+	# Check to see if core exists
+
 	# Final structure defined
 	structure(octomod, class = "octomod")
 
 }
+
 
 #' @description Generic print method
 #' @param x Object of class `octomod`
