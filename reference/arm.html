@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add Arms to the octomod — add_arm • octomod</title>
+<title>Add Arms to the octomod — arm • octomod</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Add Arms to the octomod — add_arm" />
+<meta property="og:title" content="Add Arms to the octomod — arm" />
 <meta property="og:description" content="Add a new hypothesis arm to the octomod object. The hypothesis collected
 here are all directed at the core dataset specified by the add_core()
 function." />
@@ -132,11 +132,11 @@ function." />
 
     <div class="ref-description">
     <p>Add a new hypothesis arm to the <code>octomod</code> object. The hypothesis collected
-here are all directed at the core dataset specified by the <code><a href='add_core.html'>add_core()</a></code>
+here are all directed at the core dataset specified by the <code>add_core()</code>
 function.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_arm</span><span class='op'>(</span>
+    <pre class="usage"><span class='fu'>arm</span><span class='op'>(</span>
   <span class='va'>octomod</span>,
   title <span class='op'>=</span> <span class='cn'>NULL</span>,
   f <span class='op'>=</span> <span class='cn'>NULL</span>,
@@ -210,8 +210,8 @@ between variables is defined at this stage.</p>
 
 <span class='va'>om</span> <span class='op'>&lt;-</span>
   <span class='fu'><a href='octomod.html'>octomod</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='add_core.html'>add_core</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>add_arm</span><span class='op'>(</span>
+  <span class='fu'><a href='core.html'>core</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>arm</span><span class='op'>(</span>
     title <span class='op'>=</span> <span class='st'>"Horsepower"</span>,
     f <span class='op'>=</span> <span class='va'>disp</span> <span class='op'>~</span> <span class='va'>hp</span>,
     pattern <span class='op'>=</span> <span class='st'>"direct"</span>,

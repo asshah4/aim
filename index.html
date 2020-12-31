@@ -114,9 +114,9 @@
 <ol>
 <li>Create the <code>octomod</code>
 </li>
-<li>Add the core or central data that the hypotheses revolve around using <code><a href="reference/add_core.html">add_core()</a></code>
+<li>Add the core or central data that the hypotheses revolve around using <code>add_core()</code>
 </li>
-<li>Add the specific hypothetical arms with <code><a href="reference/add_arm.html">add_arm()</a></code>
+<li>Add the specific hypothetical arms with <code>add_arm()</code>
 </li>
 <li>Equip or outfit each arm with the appropriate test results with <code>add_outfit()</code>
 </li>
@@ -125,15 +125,15 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/octomod">octomod</a></span><span class="op">)</span>
 <span class="va">om</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="reference/octomod.html">octomod</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/add_core.html">add_core</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/add_arm.html">add_arm</a></span><span class="op">(</span>
+  <span class="fu">add_core</span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">add_arm</span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"t_test"</span>,
     f <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span> <span class="op">~</span> <span class="va">Petal.Length</span>,
     pattern <span class="op">=</span> <span class="st">"direct"</span>,
     approach <span class="op">=</span> <span class="st">"t.test"</span>,
     paired <span class="op">=</span> <span class="cn">TRUE</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="reference/add_arm.html">add_arm</a></span><span class="op">(</span>
+  <span class="fu">add_arm</span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"linear"</span>,
     f <span class="op">=</span> <span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span> <span class="op">+</span> <span class="va">Petal.Length</span>,
     pattern <span class="op">=</span> <span class="st">"sequential"</span>,

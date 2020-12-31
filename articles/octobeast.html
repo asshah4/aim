@@ -115,9 +115,9 @@
 <li>
 <code><a href="../reference/octomod.html">octomod()</a></code> initializes the modeling structure</li>
 <li>
-<code>core()</code> defines the core data of the <code>octomod</code> structure, allowing tests to be performed from a centralized data set</li>
+<code><a href="../reference/core.html">core()</a></code> defines the core data of the <code>octomod</code> structure, allowing tests to be performed from a centralized data set</li>
 <li>
-<code><a href="../reference/add_arm.html">add_arm()</a></code> creates individual arms to the <code>octomod</code>, which reference a specific family of hypotheses</li>
+<code><a href="../reference/arm.html">arm()</a></code> creates individual arms to the <code>octomod</code>, which reference a specific family of hypotheses</li>
 <li>
 <code><a href="../reference/outfit.html">equip()</a></code> gives each of the arms a <em>tidied</em> output including model fit and parameters, which can subsequently be called</li>
 </ul>
@@ -125,7 +125,7 @@
 <h2 class="hasAnchor">
 <a href="#arms-of-the-octomod" class="anchor"></a>Arms of the <code>octomod</code>
 </h2>
-<p>The idea that each <em>arm</em> is a collection of hypothesis is important, as usually modeling involves testing several related hypotheses. The <code><a href="../reference/add_arm.html">add_arm()</a></code> function is nice because it allows a modular way to specify mulitple hypotheses.</p>
+<p>The idea that each <em>arm</em> is a collection of hypothesis is important, as usually modeling involves testing several related hypotheses. The <code><a href="../reference/arm.html">arm()</a></code> function is nice because it allows a modular way to specify mulitple hypotheses.</p>
 <p>For example, we could guess that in <code>iris</code>, the <code>Petal.Length</code> is likely dependent on both <code>Sepal.Length</code> and <code>Sepal.Width</code>. We could also guess that <code>Sepal.Length</code> and <code>Sepal.Width</code> may have the same distribution. This suggests two tests:</p>
 <ol style="list-style-type: decimal">
 <li>Paired t-test to compare t-distribution of <code>Sepal.Length</code> and <code>Sepal.Width</code>
@@ -212,7 +212,7 @@
 <span class="co">#&gt;      Sepal.Length  </span>
 <span class="co">#&gt;            0.0636</span></code></pre></div>
 <p>This gives us three different tests for a single data set. The testing would be more elaborate in a larger dataset perhaps. The approach with <code>octomod</code> is to place each of these testing groups into an hypothetical <em>arm</em> and recall this data when needed.</p>
-<p>The <strong>approach</strong> parameter allows for (currently), only either a <em>model_spec</em> object from <code>parsnip</code>, or a simple statistical test from base <code>R</code> (e.g. <code>stats</code>) such as a t-test. If its a test from <code>stats</code>, can pass additional parameters within the <code><a href="../reference/add_arm.html">add_arm()</a></code> function.</p>
+<p>The <strong>approach</strong> parameter allows for (currently), only either a <em>model_spec</em> object from <code>parsnip</code>, or a simple statistical test from base <code>R</code> (e.g. <code>stats</code>) such as a t-test. If its a test from <code>stats</code>, can pass additional parameters within the <code><a href="../reference/arm.html">arm()</a></code> function.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Declare model type with parsnip</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://parsnip.tidymodels.org">parsnip</a></span><span class="op">)</span>
@@ -224,23 +224,23 @@
 <span class="va">octobeast</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="../reference/octomod.html">octomod</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Add core data</span>
-  <span class="fu"><a href="../reference/add_core.html">add_core</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="../reference/core.html">core</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Propose first hypothesis</span>
-  <span class="fu"><a href="../reference/add_arm.html">add_arm</a></span><span class="op">(</span>
+  <span class="fu"><a href="../reference/arm.html">arm</a></span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"sepal_paired"</span>,
     f <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>,
     approach <span class="op">=</span> <span class="st">"t.test"</span>,
     paired <span class="op">=</span> <span class="cn">TRUE</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Specify first regression</span>
-  <span class="fu"><a href="../reference/add_arm.html">add_arm</a></span><span class="op">(</span>
+  <span class="fu"><a href="../reference/arm.html">arm</a></span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"petal_length"</span>,
     f <span class="op">=</span> <span class="va">Petal.Length</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,
     pattern <span class="op">=</span> <span class="st">"parallel"</span>,
     approach <span class="op">=</span> <span class="va">lm_mod</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Specify second regression</span>
-  <span class="fu"><a href="../reference/add_arm.html">add_arm</a></span><span class="op">(</span>
+  <span class="fu"><a href="../reference/arm.html">arm</a></span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"petal_width"</span>,
     f <span class="op">=</span> <span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Species</span> <span class="op">+</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,
     exposure <span class="op">=</span> <span class="st">"Species"</span>,
