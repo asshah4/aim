@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   octobeast: octobeast.html
-last_built: 2020-12-31T03:34Z
+last_built: 2021-01-04T00:06Z
 urls:
   reference: https://asshah4.github.io/octomod//reference
   article: https://asshah4.github.io/octomod//articles
