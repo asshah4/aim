@@ -1,11 +1,15 @@
 library(magrittr)
+library(parsnip)
 
+# Pattern Testing -------------------------------------------------------------
+
+# Direct pattern
 om <-
   octomod() %>%
   core(mtcars) %>%
   arm(
     title = "Horsepower",
-    f = disp ~ hp,
+    f = mpg + hp ~ wt + cyl,
     pattern = "direct",
     approach = "t.test",
     paired = TRUE
@@ -14,4 +18,30 @@ om <-
 test_that("arm() creates the correct objects", {
 	expect_s3_class(om$arms$Horsepower, "tbl")
 	expect_true(inherits(om$arms, "list"))
+})
+title = "mileage"
+f = mpg ~ hp + cyl + wt + disp + qsec
+pattern = "parallel"
+approach = linear_reg() %>% set_engine("lm")
+exposure = c("hp", "wt")
+
+# Parallel pattern
+om <-
+  octomod() %>%
+  core(mtcars) %>%
+  arm(
+    title = "mileage",
+    f = mpg ~ hp + cyl + wt + disp + qsec,
+    pattern = "parallel",
+    approach = linear_reg() %>% set_engine("lm"),
+    exposure = c("hp", "wt")
+  )
+
+test_that("arm() can use formula appropriately", {
+
+  f <- om$arms$mileage$formulas[[1]]
+	out <- unlist(strsplit(deparse(f[[2]]), "\ \\+\ "))
+  om_out <- om$arms$mileage$outcomes[1]
+  expect_equal(om_out, out)
+
 })

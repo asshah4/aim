@@ -69,7 +69,7 @@ om <-
   core(mtcars) \%>\%
   arm(
     title = "Horsepower",
-    f = disp ~ hp,
+    f = hp ~ cyl,
     pattern = "direct",
     approach = "t.test",
     paired = TRUE
