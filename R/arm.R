@@ -53,7 +53,7 @@
 #'   core(mtcars) %>%
 #'   arm(
 #'     title = "Horsepower",
-#'     f = disp ~ hp,
+#'     f = hp ~ cyl,
 #'     pattern = "direct",
 #'     approach = "t.test",
 #'     paired = TRUE
@@ -82,9 +82,9 @@ arm <- function(octomod, title = NULL, f = NULL, exposure = NULL, pattern = "dir
 	mc <- match.call()
 	dots <- rlang::dots_list(...)
 
-	# Break apart formula
-	out <- all.vars(f[[2]])
-	pred <- all.vars(f[[3]])
+	# Break apart formula (deparsing to help with Surv objects)
+	out <- gsub(" ", "", unlist(strsplit(deparse(f[[2]]), "\ \\+\ ")))
+	pred <- gsub(" ", "", unlist(strsplit(deparse(f[[3]]), "\ \\+\ ")))
 	exp <- exposure
 	covar <- setdiff(pred, exp)
 
@@ -151,7 +151,9 @@ type_of_approach <- function(approach) {
 	type
 }
 
-#' @description Regenerate a new function from the approach if needed. Should only be called if the approach is not already a model call (e.g. parsnip model).
+#' @description Regenerate a new function from the approach if needed. Should
+#'   only be called if the approach is not already a model call (e.g. parsnip
+#'   model).
 #' @noRd
 generate <- function(approach) {
 
@@ -187,32 +189,49 @@ coil <- function(tentacle) {
 	out <- tentacle$out
 	exp <- tentacle$exp
 	pred <- tentacle$pred
+	covar <- tentacle$covar
 	approach <- tentacle$approach
-	num <- length(tentacle$pred)
 	pattern <- tentacle$pattern
 	type <- tentacle$type
 	pars <- tentacle$pars
+
+	# Number of tests per outcome is number of covariates +/- exposure x 1
+	num <- length(covar) + !is.null(exp)
+
+	# If exposure are present...
+	if (is.null(exp)) {
+		nexp <- 1
+	} else {
+		nexp <- length(exp)
+	}
+
 
 	# Based on approach
 	switch(
 		pattern,
 		direct = {
 			tbl <-
-				tibble::tibble(test_num = 1:num) %>%
-				dplyr::mutate(vars = purrr::map(test_num, ~ pred[1:.])) %>%
-				tidyr::expand_grid(outcomes = out, .)
+				tibble::tibble(test_num = 1:length(out)) %>%
+				dplyr::mutate(vars = list(pred[1:num])) %>%
+				dplyr::mutate(outcomes = out) %>%
+				dplyr::relocate(outcomes)
 		},
 		sequential = {
 			tbl <-
 				tibble::tibble(test_num = 1:num) %>%
-				dplyr::mutate(vars = purrr::map(test_num, ~ pred[1:.])) %>%
+				dplyr::mutate(
+					vars = purrr::map(
+						test_num,
+						~ unique(c(exp, pred[nexp:(nexp + .x - 1)]))
+					)
+				) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		},
 		parallel = {
 			tbl <-
 				tibble::tibble(test_num = 1:num) %>%
 				dplyr::mutate(
-					vars = purrr::map(test_num, ~ unique(c(exp, pred[.])))
+					vars = purrr::map(test_num, ~ c(exp, covar[.x - 1 + is.null(exp)]))
 				) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		}
