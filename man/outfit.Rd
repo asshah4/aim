@@ -36,14 +36,14 @@ om <-
   core(iris) \%>\%
   arm(
     title = "t_test",
-    f = Sepal.Length + Sepal.Width ~ Petal.Length,
+    plan = Sepal.Length + Sepal.Width ~ Petal.Length,
     pattern = "direct",
     approach = "t.test",
     paired = TRUE
   ) \%>\%
   arm(
     title = "linear",
-    f = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
+    plan = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
     pattern = "sequential",
     approach = lm_mod
   ) \%>\%

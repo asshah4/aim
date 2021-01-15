@@ -9,7 +9,7 @@ om <-
   core(mtcars) %>%
   arm(
     title = "Horsepower",
-    f = mpg + hp ~ wt + cyl,
+    plan = mpg + hp ~ wt + cyl,
     pattern = "direct",
     approach = "t.test",
     paired = TRUE
@@ -19,11 +19,6 @@ test_that("arm() creates the correct objects", {
 	expect_s3_class(om$arms$Horsepower, "tbl")
 	expect_true(inherits(om$arms, "list"))
 })
-title = "mileage"
-f = mpg ~ hp + cyl + wt + disp + qsec
-pattern = "parallel"
-approach = linear_reg() %>% set_engine("lm")
-exposure = c("hp", "wt")
 
 # Parallel pattern
 om <-
@@ -31,7 +26,7 @@ om <-
   core(mtcars) %>%
   arm(
     title = "mileage",
-    f = mpg ~ hp + cyl + wt + disp + qsec,
+    plan = mpg ~ hp + cyl + wt + disp + qsec,
     pattern = "parallel",
     approach = linear_reg() %>% set_engine("lm"),
     exposure = c("hp", "wt")

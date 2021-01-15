@@ -9,7 +9,7 @@ om <-
 	core(df) %>%
   arm(
   	title = "log_model",
-  	f = am ~ mpg,
+  	plan = am ~ mpg,
   	pattern = "direct",
   	approach = logistic_reg() %>% set_engine("glm")
   )

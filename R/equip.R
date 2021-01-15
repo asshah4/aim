@@ -7,7 +7,7 @@
 #' testing approach, this provides the ability to run these somewhat simpler
 #' tests in a cohesive manner.
 #'
-#' @return An `octomod` object with arms outfitted with the test statistics.
+#' @return An `octomod` object with arms equipped with the test statistics.
 #'
 #' @param octomod Object of class `octomod`
 #'
@@ -26,14 +26,14 @@
 #'   core(iris) %>%
 #'   arm(
 #'     title = "t_test",
-#'     f = Sepal.Length + Sepal.Width ~ Petal.Length,
+#'     plan = Sepal.Length + Sepal.Width ~ Petal.Length,
 #'     pattern = "direct",
 #'     approach = "t.test",
 #'     paired = TRUE
 #'   ) %>%
 #'   arm(
 #'     title = "linear",
-#'     f = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
+#'     plan = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
 #'     pattern = "sequential",
 #'     approach = lm_mod
 #'   ) %>%
@@ -41,7 +41,7 @@
 #'
 #' @importFrom magrittr %>%
 #' @export
-#' @name outfit
+#' @name equip
 equip <- function(octomod, which_arms = NULL, ...) {
 
 	# Check if its octomod in pipeline
@@ -51,18 +51,18 @@ equip <- function(octomod, which_arms = NULL, ...) {
 
 	# Check if core data is present
 	if ("list" %in% class(octomod$core)) {
-		stop("Cannot outfit the `octomod` without `core` data.", call. = FALSE)
+		stop("Cannot equip the `octomod` without `core` data.", call. = FALSE)
 	}
 
 	# Check arms
 	if (length(octomod$arms) == 0) {
-		stop("There are no arms to outfit at this time.")
+		stop("There are no arms to equip at this time.")
 	}
 
 	# Which arms to bear
 	bear <- bear_arms(octomod, which_arms)
 
-	# Get core data
+	# Get core data, which may need to be split by arm
 	core <- octomod$core
 
 	# Appropriate fit based on type, tibble to make it easier to split
@@ -96,7 +96,7 @@ equip <- function(octomod, which_arms = NULL, ...) {
 		))
 
 	# Format for output
-	outfit <-
+	equip <-
 		dplyr::bind_rows(parsnips, tests) %>%
 		split(.$arm) %>%
 		purrr::map(., ~ dplyr::select(.x, c(outcomes, vars, test_num, fit))) %>%
@@ -105,7 +105,7 @@ equip <- function(octomod, which_arms = NULL, ...) {
 		)))
 
 	# Add to octomod
-	octomod[["outfit"]][bear] <- outfit[bear]
+	octomod[["equipment"]][bear] <- equip[bear]
 
 	# Return
 	new_octomod(octomod)

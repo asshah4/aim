@@ -6,36 +6,42 @@
 \usage{
 arm(
   octomod,
-  title = NULL,
-  f = NULL,
+  title,
+  plan,
   exposure = NULL,
   pattern = "direct",
   approach,
+  split = NULL,
   ...
 )
 }
 \arguments{
 \item{octomod}{Object of class \code{octomod}}
 
-\item{title}{Character string to identify this arm}
+\item{title}{Character string to identify this arm. Must be unique and not
+previously specified.}
 
-\item{f}{Formula showing relationship of outcomes and predictors, and is the essentially the hypothesis.}
+\item{plan}{Formula showing relationship of outcomes and predictors, and is
+the essentially the hypothesis. As it allows for complex formulas (e.g.
+multiple outcomes), it is referred to as the \code{plan} instead.}
 
 \item{exposure}{Variable(s) that are forced to be maintained in every model as
 a predictor.}
 
-\item{pattern}{The variable relationship approach that will be used. The
-options for the \code{pattern} are:
+\item{pattern}{The building pattern for how to put together the overall plan.
+It defines variable relationships that will be used. The options for the
+\code{pattern} currently include:
 \itemize{
 \item \code{direct} will define the relationship as y ~ x
 \item \code{sequential} will define the relationship as y ~ x1, y ~ x1 + x2
 \item \code{parallel} will define the relationship as y ~ x1, y ~ x2
 }}
 
-\item{approach}{This describes the analysis plan that should be used. There
-are several options on which specification to use, anywhere from regression
-modeling to inferential statistics. The approach applies to the entirety of
-the growing arm.
+\item{approach}{The testing approach that should be used, defined as how the
+analysis or hypothesis testing should be performed. There are several
+options on which specification to use, anywhere from regression modeling to
+inferential statistics. The approach applies to the entirety of the growing
+arm.
 \itemize{
 \item A model specified by the \href{https://parsnip.tidymodels.org}{\code{parsnip} package}, which includes the mode and
 computational engine
@@ -43,6 +49,12 @@ computational engine
 parameters. These can be given as additional, unmatched arguments. This
 option currently supports only hypothesis tests, of class \code{htest}.
 }}
+
+\item{split}{How the data should be split. References the name of the
+variable in the \code{core} data that the models will be with fit against,
+splitting the data into subsets. This helps to perform hypothesis testing
+on subsets or strata of the data. It defaults to NULL (which means the full
+data will be used) \strong{experimental}}
 
 \item{...}{This should reflect the additional parameters that may need to be
 given to the \code{approach} argument, such as \code{paired = TRUE} for \code{t.test}. The
@@ -54,7 +66,7 @@ An \code{octomod} object with arms attached
 }
 \description{
 Add a new hypothesis arm to the \code{octomod} object. The hypothesis collected
-here are all directed at the core dataset specified by the \code{add_core()}
+here are all directed at the core dataset specified by the \code{core()}
 function.
 }
 \details{
@@ -69,10 +81,11 @@ om <-
   core(mtcars) \%>\%
   arm(
     title = "Horsepower",
-    f = hp ~ cyl,
+    plan = hp ~ wt,
     pattern = "direct",
     approach = "t.test",
-    paired = TRUE
+    paired = TRUE,
+    group = "carb"
   )
 
 }

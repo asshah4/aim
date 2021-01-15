@@ -36,7 +36,7 @@ octomod <- function() {
 	octomod <- list(
 		core = list(),   # The core data to be used throughout
 		arms = list(),   # The hypothesis families that are supplied
-		outfit = list()  # The tested hypothesis and outcomes, tidied
+		equipment = list()  # The tested hypothesis and outcomes, tidied
 	)
 
 	# Return
@@ -87,17 +87,17 @@ print.octomod <- function(x, ...) {
 	)
 	print(names(x$arms))
 
-	# Outfit
+	# Equipment
 	cat(
 		"\nEquipment",
 		"\n----",
 		"\n"
 	)
-	print(names(x$outfit))
+	print(names(x$equipment))
 
-	# If its been appropriately outfitted
+	# If its been appropriately equipmentted
 	if (length(x$core) > 0 &&
-			length(x$arms) == length(x$outfit) &&
+			length(x$arms) == length(x$equipment) &&
 			length(x$arms) > 0) {
 		cat(
 			"\n------------------------------------------------",
