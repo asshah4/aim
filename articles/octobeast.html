@@ -119,7 +119,7 @@
 <li>
 <code><a href="../reference/arm.html">arm()</a></code> creates individual arms to the <code>octomod</code>, which reference a specific family of hypotheses</li>
 <li>
-<code><a href="../reference/outfit.html">equip()</a></code> gives each of the arms a <em>tidied</em> output including model fit and parameters, which can subsequently be called</li>
+<code><a href="../reference/equip.html">equip()</a></code> gives each of the arms a <em>tidied</em> output including model fit and parameters, which can subsequently be called</li>
 </ul>
 <div id="arms-of-the-octomod" class="section level2">
 <h2 class="hasAnchor">
@@ -228,27 +228,27 @@
   <span class="co"># Propose first hypothesis</span>
   <span class="fu"><a href="../reference/arm.html">arm</a></span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"sepal_paired"</span>,
-    f <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>,
+    plan <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>,
     approach <span class="op">=</span> <span class="st">"t.test"</span>,
     paired <span class="op">=</span> <span class="cn">TRUE</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Specify first regression</span>
   <span class="fu"><a href="../reference/arm.html">arm</a></span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"petal_length"</span>,
-    f <span class="op">=</span> <span class="va">Petal.Length</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,
+    plan <span class="op">=</span> <span class="va">Petal.Length</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,
     pattern <span class="op">=</span> <span class="st">"parallel"</span>,
     approach <span class="op">=</span> <span class="va">lm_mod</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Specify second regression</span>
   <span class="fu"><a href="../reference/arm.html">arm</a></span><span class="op">(</span>
     title <span class="op">=</span> <span class="st">"petal_width"</span>,
-    f <span class="op">=</span> <span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Species</span> <span class="op">+</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,
-    exposure <span class="op">=</span> <span class="st">"Species"</span>,
+    plan <span class="op">=</span> <span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,
     pattern <span class="op">=</span> <span class="st">"sequential"</span>,
-    approach <span class="op">=</span> <span class="va">lm_mod</span>
+    approach <span class="op">=</span> <span class="va">lm_mod</span>,
+    split <span class="op">=</span> <span class="st">"Species"</span>
   <span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="co"># Get the model and test fits</span>
-  <span class="fu"><a href="../reference/outfit.html">equip</a></span><span class="op">(</span><span class="op">)</span>
+  <span class="fu"><a href="../reference/equip.html">equip</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Here is what we've set up so far</span>
 <span class="va">octobeast</span>
@@ -265,11 +265,7 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Equipment </span>
 <span class="co">#&gt; ---- </span>
-<span class="co">#&gt; [1] "sepal_paired" "petal_length" "petal_width" </span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ------------------------------------------------ </span>
-<span class="co">#&gt; This `octomod` is an OCTOBEAST, armed and ready! </span>
-<span class="co">#&gt; ------------------------------------------------</span></code></pre></div>
+<span class="co">#&gt; [1] "sepal_paired" "petal_length" "petal_width"</span></code></pre></div>
 <p>This structure holds the hypothesis we’ve declared, but we haven’t fit or tested them yet. This allows flexibility in that it allows us to focus more on the planning component of hypothesis testing. It also highlights the <strong>pattern</strong> parameter, which reshapes the formulas into how the tests should be run, including having a fixed <strong>exposure</strong> parameter that doesn’t vary. The <strong>test_num</strong> states which iteration was run.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Parallel pattern</span>
@@ -286,17 +282,20 @@
 <span class="va">octobeast</span><span class="op">$</span><span class="va">arms</span><span class="op">$</span><span class="va">petal_width</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">test_num</span>, <span class="va">formulas</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>formulas <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">formulas</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 3 x 2</span>
-<span class="co">#&gt;   test_num formulas                                          </span>
-<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;                                             </span>
-<span class="co">#&gt; 1        1 Petal.Width ~ Species                             </span>
-<span class="co">#&gt; 2        2 Petal.Width ~ Species + Sepal.Length              </span>
-<span class="co">#&gt; 3        3 Petal.Width ~ Species + Sepal.Length + Sepal.Width</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 6 x 2</span>
+<span class="co">#&gt;   test_num formulas                                </span>
+<span class="co">#&gt;      &lt;int&gt; &lt;chr&gt;                                   </span>
+<span class="co">#&gt; 1        1 Petal.Width ~ Sepal.Length              </span>
+<span class="co">#&gt; 2        1 Petal.Width ~ Sepal.Length              </span>
+<span class="co">#&gt; 3        1 Petal.Width ~ Sepal.Length              </span>
+<span class="co">#&gt; 4        2 Petal.Width ~ Sepal.Length + Sepal.Width</span>
+<span class="co">#&gt; 5        2 Petal.Width ~ Sepal.Length + Sepal.Width</span>
+<span class="co">#&gt; 6        2 Petal.Width ~ Sepal.Length + Sepal.Width</span></code></pre></div>
 <p>Now, we see how the fit all of the data at once (or in parts if we so choose using the <strong>which_arms</strong> argument). We <em>equipped</em> each <em>arm</em> with the appropriate tested data. We can filter this down to what ever tests are most interesting.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># List of fit</span>
 <span class="va">outfitted</span> <span class="op">&lt;-</span>
-  <span class="va">octobeast</span><span class="op">$</span><span class="va">outfit</span> <span class="op">%&gt;%</span>
+  <span class="va">octobeast</span><span class="op">$</span><span class="va">equipment</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/bind.html">bind_rows</a></span><span class="op">(</span>.id <span class="op">=</span> <span class="st">"arm"</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span><span class="op">(</span><span class="va">tidied</span><span class="op">)</span>
 
@@ -311,18 +310,12 @@
 <span class="co">#&gt; #   alternative &lt;chr&gt;, term &lt;chr&gt;, std.error &lt;dbl&gt;</span>
   
 <span class="co"># See the significant regression results</span>
-<span class="va">octobeast</span><span class="op">$</span><span class="va">outfit</span><span class="op">$</span><span class="va">petal_width</span> <span class="op">%&gt;%</span>
+<span class="va">octobeast</span><span class="op">$</span><span class="va">equipment</span><span class="op">$</span><span class="va">petal_width</span> <span class="op">%&gt;%</span>
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">test_num</span> <span class="op">==</span> <span class="fl">3</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/nest.html">unnest</a></span><span class="op">(</span><span class="va">tidied</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 5 x 11</span>
-<span class="co">#&gt;   outcomes vars  test_num fit   term  estimate std.error statistic  p.value</span>
-<span class="co">#&gt;   &lt;chr&gt;    &lt;lis&gt;    &lt;int&gt; &lt;lis&gt; &lt;chr&gt;    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 Petal.W… &lt;chr…        3 &lt;fit… (Int…  -0.869     0.170      -5.12 9.73e- 7</span>
-<span class="co">#&gt; 2 Petal.W… &lt;chr…        3 &lt;fit… Spec…   1.17      0.0676     17.4  3.04e-37</span>
-<span class="co">#&gt; 3 Petal.W… &lt;chr…        3 &lt;fit… Spec…   1.78      0.0778     22.9  4.12e-50</span>
-<span class="co">#&gt; 4 Petal.W… &lt;chr…        3 &lt;fit… Sepa…   0.0636    0.0340      1.87 6.30e- 2</span>
-<span class="co">#&gt; 5 Petal.W… &lt;chr…        3 &lt;fit… Sepa…   0.232     0.0515      4.52 1.29e- 5</span>
-<span class="co">#&gt; # … with 2 more variables: conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;</span>
+<span class="co">#&gt; # A tibble: 0 x 5</span>
+<span class="co">#&gt; # … with 5 variables: outcomes &lt;chr&gt;, vars &lt;list&gt;, test_num &lt;int&gt;, fit &lt;list&gt;,</span>
+<span class="co">#&gt; #   tidied &lt;???&gt;</span>
 
 <span class="co"># Compare with the lm</span>
 <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">Petal.Width</span> <span class="op">~</span> <span class="va">Species</span> <span class="op">+</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span>
