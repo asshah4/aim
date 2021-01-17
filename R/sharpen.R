@@ -24,7 +24,7 @@
 #'   core(df) %>%
 #'   arm(
 #'     title = "log_model",
-#'     f = am + vs ~ mpg + disp + hp,
+#'     plan = am + vs ~ mpg + disp + hp,
 #'     pattern = "parallel",
 #'     approach = logistic_reg() %>% set_engine("glm"),
 #'   ) %>%
@@ -42,7 +42,9 @@ sharpen <- function(octomod, which_arms = NULL, ...) {
 	core <- octomod$core
 
 	# Get arms and equipment
-	arms <- octomod$arms[bear] %>% dplyr::bind_rows(.id = "arm")
+	arms <-
+		octomod$arms[bear] %>%
+		dplyr::bind_rows(.id = "arm")
 
 	# Arms that are logistic regs
 	logs <-
@@ -53,7 +55,7 @@ sharpen <- function(octomod, which_arms = NULL, ...) {
 
 	# Add c-statistic if logistic regression from parsnip
 	outfit <-
-		octomod$outfit[logs] %>% dplyr::bind_rows(.id = "arm") %>%
+		octomod$equipment[logs] %>% dplyr::bind_rows(.id = "arm") %>%
 		dplyr::rowwise() %>%
 		dplyr::mutate(pred = {
 			core %>%
@@ -71,7 +73,7 @@ sharpen <- function(octomod, which_arms = NULL, ...) {
 		split(.$arm)
 
 	# Attach outfitted arm back
-	octomod[["outfit"]][logs] <- outfit[logs]
+	octomod[["equipment"]][logs] <- outfit[logs]
 
 	# Return
 	new_octomod(octomod)

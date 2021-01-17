@@ -40,6 +40,8 @@
 #'   equip()
 #'
 #' @importFrom magrittr %>%
+#' @importFrom dplyr mutate filter rowwise ungroup
+#' @importFrom purrr map
 #' @export
 #' @name equip
 equip <- function(octomod, which_arms = NULL, ...) {
@@ -71,36 +73,66 @@ equip <- function(octomod, which_arms = NULL, ...) {
 		octomod$arms[bear] %>%
 		dplyr::bind_rows(.id = "arm")
 
-	# Parsnip models, the bulk of the octomod
-	parsnips <-
-		arms %>%
-		dplyr::filter(type == "model_spec") %>%
-		dplyr::mutate(fit = purrr::pmap(
-			list(approach, formulas),
-			function(approach, formulas) {
-				fit(approach, formulas, data = core)
-			}
-		))
+	# Split models
+	split_models <- filter(arms, type == "model_spec" & !is.na(split))
+	if (nrow(split_models) > 0) {
+		split_models <-
+			split_models %>%
+			rowwise() %>%
+			mutate(fit = list(fit(approach, formulas, data = filter(core, eval(as.name(split)) == split_level)))) %>%
+			ungroup()
+	}
 
-	# Hypothesis testing for individual models
-	tests <-
-		arms %>%
-		dplyr::filter(type == "htest") %>%
-		dplyr::mutate(fit = purrr::pmap(
-			list(outcomes, vars, pars, approach),
-			function(y, x, p, fn) {
-				y <- core[[y]]
-				x <- core[[x]]
-				fn(x, y, p)
-			}
-		))
+	# Unsplit models
+	unsplit_models <- filter(arms, type == "model_spec" & is.na(split))
+	if (nrow(unsplit_models) > 0) {
+		unsplit_models <-
+			unsplit_models %>%
+			rowwise() %>%
+			mutate(fit = list(fit(approach, formulas, data = core))) %>%
+			ungroup()
+	}
 
-	# Format for output
+	# Split tests
+	split_tests <- arms %>% filter(type == "htest" & !is.na(split))
+	if (nrow(split_tests) > 0) {
+		split_tests <-
+			split_tests %>%
+			rowwise() %>%
+			mutate(fit = list({
+				df <- filter(core, eval(as.name(split)) == split_level)
+				y <- df[[outcomes]]
+				x <- df[[vars]]
+				approach(x, y, pars)
+			})) %>%
+			ungroup()
+	}
+
+	# Unsplit tests
+	unsplit_tests <- arms %>% filter(type == "htest" & is.na(split))
+	if (nrow(unsplit_tests) > 0) {
+		unsplit_tests <-
+			unsplit_tests %>%
+			rowwise() %>%
+			mutate(fit = list({
+				y <- core[[outcomes]]
+				x <- core[[vars]]
+				approach(x, y, pars)
+			})) %>%
+			ungroup()
+	}
+
+	# Get the tidied versions
 	equip <-
-		dplyr::bind_rows(parsnips, tests) %>%
+		dplyr::bind_rows(
+			split_models,
+			unsplit_models,
+			split_tests,
+			unsplit_tests
+		) %>%
 		split(.$arm) %>%
-		purrr::map(., ~ dplyr::select(.x, c(outcomes, vars, test_num, fit))) %>%
-		purrr::map(., ~ dplyr::mutate(.x, tidied = purrr::map(
+		map(., ~ dplyr::select(.x, c(outcomes, vars, test_num, fit))) %>%
+		map(., ~ mutate(.x, tidied = map(
 			fit, ~ broom::tidy(.x, conf.int = TRUE, exponentiate = TRUE)
 		)))
 

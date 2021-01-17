@@ -71,6 +71,9 @@
 #'     split = "carb"
 #'   )
 #'
+#' @importFrom dplyr mutate
+#' @importFrom tibble tibble
+#' @importFrom purrr map
 #' @export
 #' @rdname arm
 arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", approach, split = NULL, ...) {
@@ -117,10 +120,9 @@ arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", appro
 
 	# Grouping variable is based on `core` data
 	if (!is.null(split)) {
-		split_level <-
-			octomod$core %>%
-			pull(split) %>%
-			unique()
+		split_level <- unique(dplyr::pull(octomod$core, split))
+	} else {
+		split_level <- NULL
 	}
 
 	# Based on approach
@@ -128,16 +130,16 @@ arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", appro
 		pattern,
 		direct = {
 			tbl <-
-				tibble::tibble(test_num = 1:length(out)) %>%
-				dplyr::mutate(vars = list(pred[1:num])) %>%
-				dplyr::mutate(outcomes = out) %>%
+				tibble(test_num = 1:length(out)) %>%
+				mutate(vars = list(pred[1:num])) %>%
+				mutate(outcomes = out) %>%
 				dplyr::relocate(outcomes)
 		},
 		sequential = {
 			tbl <-
-				tibble::tibble(test_num = 1:num) %>%
-				dplyr::mutate(
-					vars = purrr::map(
+				tibble(test_num = 1:num) %>%
+				mutate(
+					vars = map(
 						test_num,
 						~ unique(c(exp, pred[nexp:(nexp + .x - 1)]))
 					)
@@ -146,26 +148,32 @@ arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", appro
 		},
 		parallel = {
 			tbl <-
-				tibble::tibble(test_num = 1:num) %>%
-				dplyr::mutate(
-					vars = purrr::map(test_num, ~ c(exp, covar[.x - 1 + is.null(exp)]))
+				tibble(test_num = 1:num) %>%
+				mutate(
+					vars = map(test_num, ~ c(exp, covar[.x - 1 + is.null(exp)]))
 				) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		}
 	)
 
-	# Now can re-create appropriate formulas
+	# Now can re-create appropriate formulas, expanding for splits
 	arm <-
 		tbl %>%
-		dplyr::mutate(formulas = purrr::map_chr(vars, ~paste(unlist(.x), collapse = " + "))) %>%
-		dplyr::mutate(formulas = paste(outcomes, formulas, sep = " ~ ")) %>%
-		dplyr::mutate(formulas = purrr::map(formulas, ~formula(.x))) %>%
-		dplyr::mutate(
+		mutate(formulas = purrr::map_chr(vars, ~paste(unlist(.x), collapse = " + "))) %>%
+		mutate(formulas = paste(outcomes, formulas, sep = " ~ ")) %>%
+		mutate(formulas = map(formulas, ~formula(.x))) %>%
+		mutate(
 			approach = list(approach),
 			type = type,
 			pars = list(pars)
 		) %>%
-		tidyr::expand_grid(., split_level)
+		tidyr::expand_grid(., split_level) %>%
+		mutate(split = split)
+
+	# Temporarily create split column if it doesn't exist
+	if (!"split" %in% names(arm)) {
+		arm <- mutate(arm, split = NA)
+	}
 
 	# Add to octomod
 	octomod[["arms"]][[title]] <- arm

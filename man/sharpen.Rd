@@ -38,7 +38,7 @@ om <-
   core(df) \%>\%
   arm(
     title = "log_model",
-    f = am + vs ~ mpg + disp + hp,
+    plan = am + vs ~ mpg + disp + hp,
     pattern = "parallel",
     approach = logistic_reg() \%>\% set_engine("glm"),
   ) \%>\%

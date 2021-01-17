@@ -85,7 +85,7 @@ om <-
     pattern = "direct",
     approach = "t.test",
     paired = TRUE,
-    group = "carb"
+    split = "carb"
   )
 
 }

@@ -12,5 +12,6 @@ utils::globalVariables(c(
 	"approach",
 	"vars",
 	"pars",
-	"pred"
+	"pred",
+	"split_level"
 ))

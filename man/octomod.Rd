@@ -30,7 +30,7 @@ octobeast <-
   core(iris) \%>\%
   arm(
     title = "flowers_test",
-    f = Sepal.Length ~ Sepal.Width,
+    plan = Sepal.Length ~ Sepal.Width,
     exposure = NULL,
     pattern = "direct",
     approach = "t.test"

@@ -21,7 +21,7 @@
 #'   core(iris) %>%
 #'   arm(
 #'     title = "flowers_test",
-#'     f = Sepal.Length ~ Sepal.Width,
+#'     plan = Sepal.Length ~ Sepal.Width,
 #'     exposure = NULL,
 #'     pattern = "direct",
 #'     approach = "t.test"
@@ -34,9 +34,9 @@ octomod <- function() {
 	# The octomod should have a basic structure that is shared.
 	# Common data, families of hypotheses, and results of these tests.
 	octomod <- list(
-		core = list(),   # The core data to be used throughout
-		arms = list(),   # The hypothesis families that are supplied
-		equipment = list()  # The tested hypothesis and outcomes, tidied
+		core = list(),       # Core data to be used throughout
+		arms = list(),       # Hypothesis families that are supplied
+		equipment = list()   # Tested hypothesis and outcomes, tidied
 	)
 
 	# Return
@@ -94,16 +94,5 @@ print.octomod <- function(x, ...) {
 		"\n"
 	)
 	print(names(x$equipment))
-
-	# If its been appropriately equipmentted
-	if (length(x$core) > 0 &&
-			length(x$arms) == length(x$equipment) &&
-			length(x$arms) > 0) {
-		cat(
-			"\n------------------------------------------------",
-			"\nThis `octomod` is an OCTOBEAST, armed and ready!",
-			"\n------------------------------------------------"
-		)
-	}
 
 }

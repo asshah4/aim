@@ -10,13 +10,13 @@ om <-
 	core(df) %>%
   arm(
   	title = "automatic_transmission",
-  	f = am ~ mpg,
+  	plan = am ~ mpg,
   	pattern = "parallel",
   	approach = logistic_reg() %>% set_engine("glm")
   ) %>%
 	arm(
   	title = "vital_signs",
-  	f = vs ~ mpg,
+  	plan = vs ~ mpg,
   	pattern = "sequential",
   	approach = logistic_reg() %>% set_engine("glm")
   ) %>%
@@ -25,6 +25,6 @@ om <-
 sharp <- om %>% sharpen(which_arms = c("vital_signs", "automatic_transmission"))
 
 test_that("sharpen() should return a additional column called metric", {
-	expect_true(inherits(sharp$outfit, "list"))
-	expect_output(str(sharp$outfit[[1]]), "metric")
+	expect_true(inherits(sharp$equipment, "list"))
+	expect_output(str(sharp$equipment[[1]]), "metric")
 })
