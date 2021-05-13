@@ -1,0 +1,64 @@
+---
+title: "Development Thoughts"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Development Thoughts}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+**As of `r format(Sys.time(), "%B %d, %Y")`, this is still being *iterated*.**
+
+# Background
+
+The development of this project was inspired by the a problem of organizing many different hypotheses while writing my thesis. I had several data sets and many, many models, and had trouble with how to store and recall them. I wanted an easier way to pull my thoughts together, creating a dynamic structure that would unfold along with the research project itself.
+
+The structure, **which is still being iterated**, is about an easy-to-understand interface that allows the following major concepts:
+
+1. Identifying core data that will be queried with specific hypothesis
+1. Ability to handle grouping/strata of that data for subsets of analyses
+1. Forming hypotheses of multiple outcomes and multiple predictors with an epidemiological angle (e.g. *exposures*, *outcomes*, *covariates*)
+1. Running and updating tests as the data changes
+1. Extracting or recalling models as the research project progresses
+
+As minimally-experienced programmer, I used examples of current effective packages while designing the API.
+
+| Source | Descriptionn |
+| --- | --- |
+| [R4DS](https://r4ds.had.co.nz/many-models.html) | This was the first time I had seen an elegant way of generating multiple models and working with list-columns, particulary the type that could become *tidy*. |
+| [{modelr}](https://modelr.tidyverse.org/) | An example of a package that simplifies modeling in R |
+| [{modelgrid}](https://github.com/smaakage85/modelgrid) | A framework for creating and managing multiple models, with a focus on the {caret} package |
+| [{parsnip}](https://parsnip.tidymodels.org/) | The core of this was based on the single interface for modeling that `tidymodels` provides and serves as a foundation for flexible model definitions |
+| [{stacks}](https://stacks.tidymodels.org/) | An influential concept of an API designed for binding together mutliple model definitions, however is meant for a specific formula and pulling together multiple models for blended predictions |
+| [{workflowsets}](https://workflowsets.tidymodels.org/index.html) | This fits multiple models in a workflow to identify a potential "best" model, which is very flexible |
+| [{easystats}](https://easystats.github.io/easystats/) | Forms a different "universe" in parallel to the `tidyverse` for interpreting results of models, with a focus on the presentation and exploration of statistical analysis |
+
+The features that I found missing in these was the ability to handle a variety of formulas that had specific pre-defined hypotheses, and the focus had been to *compare* or *combine* models, instead of considering the focus on causality. Essentially, I wanted a more epidemiological approach. The *easystats* archetype of R "monsters" was partially the idea for the working name of **{octomod}**. I started writing this after reading [this blogpost](https://blog.simonpcouch.com/blog/dev-docs-p1/) on development of a package. 
+
+# Defining the API
+
+## Current approach
+
+I've currently defined the basic functions as below:
+
+-   `octomod()` initializes the modeling structure
+-   `core()` defines the core data of the `octomod` structure, allowing tests to be performed from a centralized data set
+-   `arm()` creates individual arms to the `octomod`, which reference a specific family of hypotheses
+-   `equip()` gives each of the arms a *tidied* output including model fit and parameters, which can subsequently be called
+
+The benefits of this are I can flexibly change the core data, give specific formulas that can be expanded/varied, fit independently, and extracted in a list-column based format.
+
+The problems are that "changing" the central dataset is dangerous, the structure doesn't hold together afterwards, and fitting the data may break older models.
+
+## Alternative approach
+
+There should be a core function that establishes the underlying structure. `octomod()` is the current, and likely a safe bet to continue. The question is if it should contain data inside it as a requirement for definition.
+
+

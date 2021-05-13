@@ -41,39 +41,38 @@ sharpen <- function(octomod, which_arms = NULL, ...) {
 	# Get core data
 	core <- octomod$core
 
-	# Get arms and equipment
-	arms <-
-		octomod$arms[bear] %>%
-		dplyr::bind_rows(.id = "arm")
+	# Trim to appropriate arms and inventory
+	status <- octomod$inventory[bear]
+	arms <- octomod$arms[bear]
+	equipment <- octomod$equipment[bear]
 
-	# Arms that are logistic regs
-	logs <-
-		arms %>%
-		dplyr::filter(purrr::map_lgl(approach, ~ {inherits(.x, "logistic_reg")})) %>%
-		dplyr::pull(arm) %>%
-		unique()
+	for (i in 1:length(bear)) {
 
-	# Add c-statistic if logistic regression from parsnip
-	outfit <-
-		octomod$equipment[logs] %>% dplyr::bind_rows(.id = "arm") %>%
-		dplyr::rowwise() %>%
-		dplyr::mutate(pred = {
-			core %>%
-				dplyr::select(outcomes) %>%
-				dplyr::bind_cols(
-					parsnip::predict.model_fit(fit, new_data = core, type = "prob")
-				) %>%
-				list()
-		}) %>%
-		dplyr::mutate(metric = {
-			yardstick::roc_auc_vec(truth = pred[[outcomes]], pred[[".pred_1"]], event_level = "second")
-		}) %>%
-		dplyr::ungroup() %>%
-		dplyr::select(-pred) %>%
-		split(.$arm)
+		if (inherits(status[[bear[i]]]$test$approach, "logistic_reg")) {
 
-	# Attach outfitted arm back
-	octomod[["equipment"]][logs] <- outfit[logs]
+			equipment[[bear[i]]] <-
+				equipment[[bear[i]]] %>%
+				dplyr::rowwise() %>%
+				mutate(pred = list({
+					core %>%
+						dplyr::select(outcomes) %>%
+						dplyr::bind_cols(
+							parsnip::predict.model_fit(fit, new_data = core, type = "prob")
+						)
+				})) %>%
+				mutate(metric = {
+					yardstick::roc_auc_vec(truth = as.factor(pred[[outcomes]]), pred[[".pred_1"]], event_level = "second")
+				}) %>%
+				dplyr::ungroup() %>%
+				dplyr::select(-pred)
+
+			octomod$inventory[[bear[i]]]$fit$sharpened <- TRUE
+		}
+
+	}
+
+	# Return equipment to the octomod
+	octomod[["equipment"]][bear] <- equipment[bear]
 
 	# Return
 	new_octomod(octomod)

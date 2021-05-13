@@ -36,7 +36,8 @@ octomod <- function() {
 	octomod <- list(
 		core = list(),       # Core data to be used throughout
 		arms = list(),       # Hypothesis families that are supplied
-		equipment = list()   # Tested hypothesis and outcomes, tidied
+		equipment = list(),  # Tested hypothesis and outcomes, tidied
+		inventory = list()   # Status for each arm
 	)
 
 	# Return

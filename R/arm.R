@@ -45,11 +45,11 @@
 #'   parameters. These can be given as additional, unmatched arguments. This
 #'   option currently supports only hypothesis tests, of class `htest`.
 #'
-#' @param split How the data should be split. References the name of the
-#'   variable in the `core` data that the models will be with fit against,
-#'   splitting the data into subsets. This helps to perform hypothesis testing
-#'   on subsets or strata of the data. It defaults to NULL (which means the full
-#'   data will be used) **experimental**
+#' @param strata How the data should be split or stratified. References the name
+#'   of the variable in the `core` data that the models will be with fit
+#'   against, splitting the data into subsets. This helps to perform hypothesis
+#'   testing on subsets or strata of the data. It defaults to NULL (which means
+#'   the full data will be used) **experimental**
 #'
 #' @param ... This should reflect the additional parameters that may need to be
 #'   given to the `approach` argument, such as `paired = TRUE` for `t.test`. The
@@ -68,7 +68,7 @@
 #'     pattern = "direct",
 #'     approach = "t.test",
 #'     paired = TRUE,
-#'     split = "carb"
+#'     strata = "carb"
 #'   )
 #'
 #' @importFrom dplyr mutate
@@ -76,9 +76,7 @@
 #' @importFrom purrr map
 #' @export
 #' @rdname arm
-arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", approach, split = NULL, ...) {
-
-	validate_new_arm(octomod, title, plan, exposure, pattern, approach, split)
+arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", approach, strata = NULL, ...) {
 
 	# Match call
 	mc <- match.call()
@@ -91,38 +89,34 @@ arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", appro
 		pars <- dots
 	}
 
-	# Break apart formula (deparsing to help with Surv objects)
+	# Validate parameters
+	validate_new_arm(octomod, title, plan, exposure, pattern, approach, strata)
+
+	# Inventory, based on each arm
+	status <- inventory(octomod, title, approach, pars, strata)
+	octomod[["inventory"]][[title]] <- status
+
+	# Break apart formula (deparsing to help with Surv/mixed objects)
 	out <- gsub(" ", "", unlist(strsplit(deparse(plan[[2]]), "\ \\+\ ")))
-	pred <- gsub(" ", "", unlist(strsplit(deparse(plan[[3]]), "\ \\+\ ")))
+	pred <- labels(stats::terms(plan))
 	exp <- exposure
+	exp[grepl("\\|", exp)] <- gsub("\\(", "", gsub("\\)", "", grep("\\|", exposure, value = TRUE)))
 	covar <- setdiff(pred, exp)
+
+	# Need to add parenthesis back to mixed vars
+	exp[grepl("\\|", exp)] <- paste0("(", exp[grepl("\\|", exp)], ")")
 
 	# Exposure should always be first variables
 	pred <- c(exp, covar)
 
-	# Return type of approach, whether model or test class
-	type <- type_of_approach(approach)
-
-	# "Regenerate" the lost arm if the approach is not function-like
-	if (type == "htest") {
-		approach <- generate_new_function(approach)
-	}
-
 	# Number of tests per outcome is number of covariates +/- exposure x 1
-	num <- length(covar) + !is.null(exp)
+	num <- length(covar) + !is.null(exposure)
 
 	# If exposure are present...
-	if (is.null(exp)) {
+	if (length(exp) == 0) {
 		nexp <- 1
 	} else {
 		nexp <- length(exp)
-	}
-
-	# Grouping variable is based on `core` data
-	if (!is.null(split)) {
-		split_level <- unique(dplyr::pull(octomod$core, split))
-	} else {
-		split_level <- NULL
 	}
 
 	# Based on approach
@@ -150,30 +144,24 @@ arm <- function(octomod, title, plan, exposure = NULL, pattern = "direct", appro
 			tbl <-
 				tibble(test_num = 1:num) %>%
 				mutate(
-					vars = map(test_num, ~ c(exp, covar[.x - 1 + is.null(exp)]))
+					vars = map(test_num, ~ c(exp, covar[.x - 1 + is.null(exposure)]))
 				) %>%
 				tidyr::expand_grid(outcomes = out, .)
 		}
 	)
 
-	# Now can re-create appropriate formulas, expanding for splits
+	# Now can re-create appropriate formulas, expanding for strata
 	arm <-
 		tbl %>%
 		mutate(formulas = purrr::map_chr(vars, ~paste(unlist(.x), collapse = " + "))) %>%
 		mutate(formulas = paste(outcomes, formulas, sep = " ~ ")) %>%
 		mutate(formulas = map(formulas, ~formula(.x))) %>%
-		mutate(
-			approach = list(approach),
-			type = type,
-			pars = list(pars)
-		) %>%
-		tidyr::expand_grid(., split_level) %>%
-		mutate(split = split)
-
-	# Temporarily create split column if it doesn't exist
-	if (!"split" %in% names(arm)) {
-		arm <- mutate(arm, split = NA)
-	}
+		{
+			if (status$strata$split)
+				tidyr::expand_grid(., level = status$strata$level)
+			else
+				.
+		}
 
 	# Add to octomod
 	octomod[["arms"]][[title]] <- arm

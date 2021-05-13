@@ -44,9 +44,9 @@ handle any number of research questions.
 
 ## Usage
 
-The package is very simple to use. First, lets load the basic packages.
-The two hypotheses in this case are a linear model, and a paired t-test.
-The `iris` dataset will serve as the example.
+The package is simple to use. First, lets load the basic packages. The
+two hypotheses in this case are a linear model, and a paired t-test. The
+`iris` dataset will serve as the example.
 
 You can see that `parsnip` is used, as this allows **many** model
 specifications to be called in a very similar manner, making modeling
@@ -54,10 +54,7 @@ much easier.
 
 ``` r
 library(magrittr)
-#> Warning: package 'magrittr' was built under R version 4.0.3
 library(parsnip)
-#> Warning: package 'parsnip' was built under R version 4.0.3
-lm_mod <- linear_reg() %>% set_engine("lm")
 ```
 
 To use the `octomod`, simply initialize the structure and add data. The
@@ -65,49 +62,47 @@ steps are:
 
 1.  Create the `octomod`
 2.  Add the core or central data that the hypotheses revolve around
-    using `add_core()`
-3.  Add the specific hypothetical arms with `add_arm()`
+    using `core()`
+3.  Add the specific hypothetical arms with `arm()`
 4.  Equip or outfit each arm with the appropriate test results with
-    `add_outfit()`
-
-<!-- end list -->
+    `equip()`
 
 ``` r
 library(octomod)
 om <-
   octomod() %>%
-  add_core(iris) %>%
-  add_arm(
+  core(iris) %>%
+  arm(
     title = "t_test",
-    f = Sepal.Length + Sepal.Width ~ Petal.Length,
+    plan = Sepal.Length + Sepal.Width ~ Petal.Length,
     pattern = "direct",
     approach = "t.test",
     paired = TRUE
   ) %>%
-  add_arm(
+  arm(
     title = "linear",
-    f = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
+    plan = Petal.Width ~ Sepal.Length + Sepal.Width + Petal.Length,
     pattern = "sequential",
-    approach = lm_mod
+    approach = linear_reg() %>% set_engine("lm")
   ) %>%
     equip()
 
 # Showcase the findings
-om$outfit
+om$equipment
 #> $t_test
-#> # A tibble: 2 x 4
-#>   outcomes     test_num fit     tidied          
-#>   <chr>           <int> <list>  <list>          
-#> 1 Sepal.Length        1 <htest> <tibble [1 x 8]>
-#> 2 Sepal.Width         1 <htest> <tibble [1 x 8]>
+#> # A tibble: 2 x 6
+#>   outcomes     test_num vars      formulas  fit     tidied              
+#>   <chr>           <int> <list>    <list>    <list>  <list>              
+#> 1 Sepal.Length        1 <chr [1]> <formula> <htest> <tibble[,8] [1 × 8]>
+#> 2 Sepal.Width         2 <chr [1]> <formula> <htest> <tibble[,8] [1 × 8]>
 #> 
 #> $linear
-#> # A tibble: 3 x 4
-#>   outcomes    test_num fit      tidied          
-#>   <chr>          <int> <list>   <list>          
-#> 1 Petal.Width        1 <fit[+]> <tibble [2 x 7]>
-#> 2 Petal.Width        2 <fit[+]> <tibble [3 x 7]>
-#> 3 Petal.Width        3 <fit[+]> <tibble [4 x 7]>
+#> # A tibble: 3 x 6
+#>   outcomes    test_num vars      formulas  fit      tidied              
+#>   <chr>          <int> <list>    <list>    <list>   <list>              
+#> 1 Petal.Width        1 <chr [1]> <formula> <fit[+]> <tibble[,7] [2 × 7]>
+#> 2 Petal.Width        2 <chr [2]> <formula> <fit[+]> <tibble[,7] [3 × 7]>
+#> 3 Petal.Width        3 <chr [3]> <formula> <fit[+]> <tibble[,7] [4 × 7]>
 ```
 
 The functions are relatively simple, but the ability to specify **how**
@@ -115,4 +110,4 @@ the relationship between outcomes and exposures should be built is quite
 powerful. It allows a different combination of hypothesis-based formulas
 to be built, and allows for multiple outcomes to specified (a feature
 not yet built into other modeling packages). Please see the vignettes
-for a more thorough breakdown\!
+for a more thorough breakdown!

@@ -1,3 +1,46 @@
+#' @description Create individual options for an arm
+#' @noRd
+inventory <- function(octomod, title, approach, pars, strata, ...) {
+
+	# Return type of approach, whether model or test class
+	type <- type_of_approach(approach)
+
+	# "Regenerate" the lost arm if the approach is not function-like
+	if (type == "htest") {
+		approach <- generate_new_function(approach)
+	}
+
+	# Data splitting
+	# Grouping variable is based on `core` data
+	if (!is.null(strata)) {
+		level <- unique(dplyr::pull(octomod$core, !!strata))
+	} else {
+		level <- NA
+	}
+
+	# Create status for each arm
+	status <- list(
+		# Test parameters
+		test = list(
+			type = type,
+			approach = approach,
+			args = pars
+		),
+		# Splitting parameters
+		strata = list(
+			split = ifelse(!is.null(strata), TRUE, FALSE),
+			var = strata,
+			level = level
+		),
+		# Fitting measures
+		fit = list(
+			equipped = ifelse(title %in% names(octomod$equipment), TRUE, FALSE),
+			sharpened = FALSE
+		)
+	)
+
+}
+
 #' @description Check on the **which_arms** parameter
 #' @noRd
 bear_arms <- function(octomod, which_arms) {
@@ -31,7 +74,7 @@ validate_octomod <- function(octomod) {
 
 #' @description Validate new arm being added to octomod
 #' @noRd
-validate_new_arm <- function(octomod, title, plan, exposure, pattern, approach, split) {
+validate_new_arm <- function(octomod, title, plan, exposure, pattern, approach, strata) {
 
 	# Validate octomod first
 	validate_octomod(octomod)
@@ -64,18 +107,22 @@ validate_new_arm <- function(octomod, title, plan, exposure, pattern, approach, 
 	}
 
 	# If core is available, can double check names are appropriate
-	if (core_status) {
+	if (FALSE) {
 
 		# Check to see if exposure is available in core data
 		if (!is.null(exposure)) {
-			if (length(setdiff(exposure, names(octomod$core))) > 0) {
+
+			# Strip exposure to simplest version
+			exp <- unique(unlist(strsplit(gsub("[^[:alnum:] ]", "", exposure), " +")))[-1]
+
+			if (length(setdiff(exp, names(octomod$core))) > 0) {
 				stop("Exposure variables for the data are not available in specified `core`.")
 			}
 		}
 
 		# Check to see if grouping variable is allowable
-		if (!is.null(split)) {
-			if (!split %in% names(octomod$core)) {
+		if (!is.null(strata)) {
+			if (!strata %in% names(octomod$core)) {
 				stop("Splitting variable for the data is not available in specified `core`.")
 			}
 		}
@@ -83,3 +130,7 @@ validate_new_arm <- function(octomod, title, plan, exposure, pattern, approach, 
 	}
 
 }
+
+#' @description Create a "fail-safe" execution of fit to continue running models
+#' @noRd
+possible_fit <- purrr::possibly(parsnip::fit.model_spec, otherwise = NA, quiet = FALSE)

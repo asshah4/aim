@@ -42,6 +42,7 @@
 #' @importFrom magrittr %>%
 #' @importFrom dplyr mutate filter rowwise ungroup
 #' @importFrom purrr map
+#' @importFrom rlang !! sym
 #' @export
 #' @name equip
 equip <- function(octomod, which_arms = NULL, ...) {
@@ -67,77 +68,78 @@ equip <- function(octomod, which_arms = NULL, ...) {
 	# Get core data, which may need to be split by arm
 	core <- octomod$core
 
-	# Appropriate fit based on type, tibble to make it easier to split
-	# Group and fit by test type
-	arms <-
-		octomod$arms[bear] %>%
-		dplyr::bind_rows(.id = "arm")
+	# Trim to appropriate arms and inventory
+	status <- octomod$inventory[bear]
+	arms <- octomod$arms[bear]
 
-	# Split models
-	split_models <- filter(arms, type == "model_spec" & !is.na(split))
-	if (nrow(split_models) > 0) {
-		split_models <-
-			split_models %>%
-			rowwise() %>%
-			mutate(fit = list(fit(approach, formulas, data = filter(core, eval(as.name(split)) == split_level)))) %>%
-			ungroup()
+	# Equipement initialization
+	equipment <- list()
+
+
+	for (i in 1:length(bear)) {
+
+		if (status[[bear[i]]]$test$type == "model_spec") {
+
+			equipment[[bear[i]]] <-
+				arms[[bear[i]]] %>%
+				rowwise() %>%
+				{
+					if (status[[bear[i]]]$strata$split)
+						mutate(., fit = list(
+							possible_fit(
+								status[[bear[i]]]$test$approach,
+								formulas,
+								#data = filter(core, eval(as.name(status[[bear[i]]]$split$var)) == level)
+								data = filter(core, !!sym(status[[bear[i]]]$strata$var) == level)
+							)
+						))
+					else
+						mutate(., fit = list(
+							possible_fit(status[[bear[i]]]$test$approach, formulas, data = core)
+						))
+				} %>%
+				mutate(tidied = list(broom::tidy(
+					fit, conf.int = TRUE, exponentiate = TRUE
+				))) %>%
+				ungroup()
+
+			octomod$inventory[[bear[i]]]$fit$equipped <- TRUE
+
+		}
+
+		if (status[[bear[i]]]$test$type == "htest") {
+
+			equipment[[bear[i]]] <-
+				arms[[bear[i]]] %>%
+				rowwise() %>%
+				{
+					if (status[[bear[i]]]$strata$split)
+						mutate(., fit = list({
+							df <- filter(core, !!sym(status[[bear[i]]]$strata$var) == level)
+							y <- df[[outcomes]]
+							x <- df[[vars]]
+							status[[bear[i]]]$test$approach(x, y, status[[bear[i]]]$test$args)
+						}))
+					else
+						mutate(., fit = list({
+							y <- core[[outcomes]]
+							x <- core[[vars]]
+							status[[bear[i]]]$test$approach(x, y, status[[bear[i]]]$test$args)
+						}))
+				} %>%
+				mutate(tidied = list(broom::tidy(
+					fit, conf.int = TRUE, exponentiate = TRUE
+				))) %>%
+				ungroup()
+
+			octomod$inventory[[bear[i]]]$fit$equipped <- TRUE
+
+		}
+
 	}
-
-	# Unsplit models
-	unsplit_models <- filter(arms, type == "model_spec" & is.na(split))
-	if (nrow(unsplit_models) > 0) {
-		unsplit_models <-
-			unsplit_models %>%
-			rowwise() %>%
-			mutate(fit = list(fit(approach, formulas, data = core))) %>%
-			ungroup()
-	}
-
-	# Split tests
-	split_tests <- arms %>% filter(type == "htest" & !is.na(split))
-	if (nrow(split_tests) > 0) {
-		split_tests <-
-			split_tests %>%
-			rowwise() %>%
-			mutate(fit = list({
-				df <- filter(core, eval(as.name(split)) == split_level)
-				y <- df[[outcomes]]
-				x <- df[[vars]]
-				approach(x, y, pars)
-			})) %>%
-			ungroup()
-	}
-
-	# Unsplit tests
-	unsplit_tests <- arms %>% filter(type == "htest" & is.na(split))
-	if (nrow(unsplit_tests) > 0) {
-		unsplit_tests <-
-			unsplit_tests %>%
-			rowwise() %>%
-			mutate(fit = list({
-				y <- core[[outcomes]]
-				x <- core[[vars]]
-				approach(x, y, pars)
-			})) %>%
-			ungroup()
-	}
-
-	# Get the tidied versions
-	equip <-
-		dplyr::bind_rows(
-			split_models,
-			unsplit_models,
-			split_tests,
-			unsplit_tests
-		) %>%
-		split(.$arm) %>%
-		map(., ~ dplyr::select(.x, c(outcomes, vars, test_num, fit))) %>%
-		map(., ~ mutate(.x, tidied = map(
-			fit, ~ broom::tidy(.x, conf.int = TRUE, exponentiate = TRUE)
-		)))
 
 	# Add to octomod
-	octomod[["equipment"]][bear] <- equip[bear]
+	octomod[["equipment"]][bear] <- equipment[bear]
 
 	# Return
 	new_octomod(octomod)

@@ -16,3 +16,5 @@ As this is experimental, the functions may have sweeping changes. The major func
 - `arm()` adds pre-specified hypothesis and formulas for both inferential statistics and modeling, with the modeling defined by the `parsnip` model specifications
 - `equip()` adds the modeling analysis to the proposed hypothesis, and can be run all at once or in parts depending on need
 - `sharpen()` adds model-level information about a `parsnip` model specification, but currently only works for logistic regressions
+
+The internals have been updated to focus on using mainly list objects, to allow for flexibility in object type.

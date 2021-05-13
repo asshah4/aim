@@ -11,7 +11,7 @@ arm(
   exposure = NULL,
   pattern = "direct",
   approach,
-  split = NULL,
+  strata = NULL,
   ...
 )
 }
@@ -50,11 +50,11 @@ parameters. These can be given as additional, unmatched arguments. This
 option currently supports only hypothesis tests, of class \code{htest}.
 }}
 
-\item{split}{How the data should be split. References the name of the
-variable in the \code{core} data that the models will be with fit against,
-splitting the data into subsets. This helps to perform hypothesis testing
-on subsets or strata of the data. It defaults to NULL (which means the full
-data will be used) \strong{experimental}}
+\item{strata}{How the data should be split or stratified. References the name
+of the variable in the \code{core} data that the models will be with fit
+against, splitting the data into subsets. This helps to perform hypothesis
+testing on subsets or strata of the data. It defaults to NULL (which means
+the full data will be used) \strong{experimental}}
 
 \item{...}{This should reflect the additional parameters that may need to be
 given to the \code{approach} argument, such as \code{paired = TRUE} for \code{t.test}. The
@@ -85,7 +85,7 @@ om <-
     pattern = "direct",
     approach = "t.test",
     paired = TRUE,
-    split = "carb"
+    strata = "carb"
   )
 
 }

@@ -13,5 +13,5 @@ utils::globalVariables(c(
 	"vars",
 	"pars",
 	"pred",
-	"split_level"
+	"level"
 ))

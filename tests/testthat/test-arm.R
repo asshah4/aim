@@ -4,18 +4,18 @@ library(parsnip)
 # Pattern Testing -------------------------------------------------------------
 
 # Direct pattern
-om <-
-  octomod() %>%
-  core(mtcars) %>%
-  arm(
-    title = "Horsepower",
-    plan = mpg + hp ~ wt + cyl,
-    pattern = "direct",
-    approach = "t.test",
-    paired = TRUE
-  )
 
-test_that("arm() creates the correct objects", {
+test_that("arm() uses direct pattern correctly", {
+	om <-
+	  octomod() %>%
+	  core(mtcars) %>%
+	  arm(
+	    title = "Horsepower",
+	    plan = mpg + hp ~ wt + cyl,
+	    pattern = "direct",
+	    approach = "t.test",
+	    paired = TRUE
+	  )
 	expect_s3_class(om$arms$Horsepower, "tbl")
 	expect_true(inherits(om$arms, "list"))
 })

@@ -62,7 +62,7 @@ lm(Petal.Width ~ Species + Sepal.Width + Sepal.Length, data = iris)
 
 This gives us three different tests for a single data set. The testing would be more elaborate in a larger dataset perhaps. The approach with `octomod` is to place each of these testing groups into an hypothetical *arm* and recall this data when needed.
 
-The **approach** parameter allows for (currently), only either a *model_spec* object from `parsnip`, or a simple statistical test from base `R` (e.g. `stats`) such as a t-test. If its a test from `stats`, can pass additional parameters within the `arm()` function.
+The **approach** parameter allows for (currently), only either a *model\_spec* object from `parsnip`, or a simple statistical test from base `R` (e.g. `stats`) such as a t-test. If its a test from `stats`, can pass additional parameters within the `arm()` function.
 
 ```{r}
 # Declare model type with parsnip
@@ -96,7 +96,7 @@ octobeast <-
     plan = Petal.Width ~ Sepal.Length + Sepal.Width,
     pattern = "sequential",
     approach = lm_mod,
-    split = "Species"
+    strata = "Species"
   ) %>%
   # Get the model and test fits
   equip()
@@ -105,7 +105,9 @@ octobeast <-
 octobeast
 ```
 
-This structure holds the hypothesis we've declared, but we haven't fit or tested them yet. This allows flexibility in that it allows us to focus more on the planning component of hypothesis testing. It also highlights the **pattern** parameter, which reshapes the formulas into how the tests should be run, including having a fixed **exposure** parameter that doesn't vary. The **test_num** states which iteration was run.
+This structure holds the hypothesis we've declared, but we haven't fit or tested them yet. This allows flexibility in that it allows us to focus more on the planning component of hypothesis testing. It also highlights the **pattern** parameter, which reshapes the formulas into how the tests should be run, including having a fixed **exposure** parameter that doesn't vary. The **test\_num** states which iteration was run.
+
+Of note, the final arm shows a different parameter, **strata**, which allows the same hypothesis to performed in strata of the core data.
 
 ```{r}
 # Parallel pattern
@@ -119,7 +121,7 @@ octobeast$arms$petal_width %>%
   mutate(formulas = as.character(formulas))
 ```
 
-Now, we see how the fit all of the data at once (or in parts if we so choose using the **which_arms** argument). We *equipped* each *arm* with the appropriate tested data. We can filter this down to what ever tests are most interesting.
+Now, we see how the fit all of the data at once (or in parts if we so choose using the **which\_arms** argument). We *equipped* each *arm* with the appropriate tested data. We can filter this down to what ever tests are most interesting.
 
 ```{r}
 # List of fit
