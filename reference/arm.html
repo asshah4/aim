@@ -97,6 +97,9 @@ function." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/development.html">Development Thoughts</a>
+    </li>
+    <li>
       <a href="../articles/octobeast.html">The Octobeast</a>
     </li>
   </ul>
@@ -143,7 +146,7 @@ function.</p>
   exposure <span class='op'>=</span> <span class='cn'>NULL</span>,
   pattern <span class='op'>=</span> <span class='st'>"direct"</span>,
   <span class='va'>approach</span>,
-  split <span class='op'>=</span> <span class='cn'>NULL</span>,
+  strata <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -195,12 +198,12 @@ option currently supports only hypothesis tests, of class <code>htest</code>.</p
 </ul></td>
     </tr>
     <tr>
-      <th>split</th>
-      <td><p>How the data should be split. References the name of the
-variable in the <code>core</code> data that the models will be with fit against,
-splitting the data into subsets. This helps to perform hypothesis testing
-on subsets or strata of the data. It defaults to NULL (which means the full
-data will be used) <strong>experimental</strong></p></td>
+      <th>strata</th>
+      <td><p>How the data should be split or stratified. References the name
+of the variable in the <code>core</code> data that the models will be with fit
+against, splitting the data into subsets. This helps to perform hypothesis
+testing on subsets or strata of the data. It defaults to NULL (which means
+the full data will be used) <strong>experimental</strong></p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -231,7 +234,7 @@ between variables is defined at this stage.</p>
     pattern <span class='op'>=</span> <span class='st'>"direct"</span>,
     approach <span class='op'>=</span> <span class='st'>"t.test"</span>,
     paired <span class='op'>=</span> <span class='cn'>TRUE</span>,
-    split <span class='op'>=</span> <span class='st'>"carb"</span>
+    strata <span class='op'>=</span> <span class='st'>"carb"</span>
   <span class='op'>)</span>
 
 </div></pre>
