@@ -95,7 +95,7 @@
 
     
     
-<p><strong>As of May 13, 2021, this is still being <em>iterated</em>.</strong></p>
+<p><strong>As of May 18, 2021, this is still being <em>iterated</em>.</strong></p>
 <div id="background" class="section level1">
 <h1 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h1>
@@ -151,12 +151,41 @@
 </table>
 <p>The features that I found missing in these was the ability to handle a variety of formulas that had specific pre-defined hypotheses, and the focus had been to <em>compare</em> or <em>combine</em> models, instead of considering the focus on causality. Essentially, I wanted a more epidemiological approach. The <em>easystats</em> archetype of R “monsters” was partially the idea for the working name of <strong>{octomod}</strong>. I started writing this after reading <a href="https://blog.simonpcouch.com/blog/dev-docs-p1/">this blogpost</a> on development of a package.</p>
 </div>
+<div id="on-names" class="section level1">
+<h1 class="hasAnchor">
+<a href="#on-names" class="anchor"></a>On Names</h1>
+<p>The project name has gone through many iterations. The reason why the name was important is that the correct <em>metaphor</em> helps the planning process, providing a schema for understanding. <a href="https://en.wikipedia.org/wiki/Metaphors_We_Live_By">Metaphors We Live By</a> by Lakoff was fundamental in this understanding for me.</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Project Name</th>
+<th>Reasoning</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>{marksman}</td>
+<td>The first draft included the concept of “specific aims”. This research concept is from grant writing, where the first page of a project contains the specific hypotheses that will be explored. Thus, one could <em>load</em>, <em>aim</em>, and <em>fire</em> and specific targets. The problem with this was it seemed to deterministic, as exploration was a crucial component.</td>
+</tr>
+<tr class="even">
+<td>{octomod}</td>
+<td>The second draft took inspiration from the idea of an <em>octopus</em>, with 8 arms or legs all surrounded a central idea. This allowed for flexibility in that the many arms of a project were not necessarily hierarchical. However, theming a project after a cephalopod does make the function names less easy to remember.</td>
+</tr>
+<tr class="odd">
+<td>{aim}</td>
+<td>Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations.</td>
+</tr>
+</tbody>
+</table>
+</div>
 <div id="defining-the-api" class="section level1">
 <h1 class="hasAnchor">
 <a href="#defining-the-api" class="anchor"></a>Defining the API</h1>
-<div id="current-approach" class="section level2">
+<div id="current-draft" class="section level2">
 <h2 class="hasAnchor">
-<a href="#current-approach" class="anchor"></a>Current approach</h2>
+<a href="#current-draft" class="anchor"></a>Current Draft</h2>
 <p>I’ve currently defined the basic functions as below:</p>
 <ul>
 <li>
@@ -171,10 +200,94 @@
 <p>The benefits of this are I can flexibly change the core data, give specific formulas that can be expanded/varied, fit independently, and extracted in a list-column based format.</p>
 <p>The problems are that “changing” the central dataset is dangerous, the structure doesn’t hold together afterwards, and fitting the data may break older models.</p>
 </div>
-<div id="alternative-approach" class="section level2">
+<div id="second-draft" class="section level2">
 <h2 class="hasAnchor">
-<a href="#alternative-approach" class="anchor"></a>Alternative approach</h2>
-<p>There should be a core function that establishes the underlying structure. <code><a href="../reference/octomod.html">octomod()</a></code> is the current, and likely a safe bet to continue. The question is if it should contain data inside it as a requirement for definition.</p>
+<a href="#second-draft" class="anchor"></a>Second Draft</h2>
+<div id="core-functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#core-functions" class="anchor"></a>Core Functions</h3>
+<p>As described, the name helps to determine the function’s purpose. The core functions represent the major user-facing features. They also help to identify the underlying structure needed to store the data collected.</p>
+<ul>
+<li>
+<code>project()</code> initializes a structure that holds and can retain information about the individual project aims or study arms</li>
+<li>
+<code>set_data()</code> attaches a specific data frame to the <code>project</code> object</li>
+<li>
+<code>add_arm()</code> creates a hypothesis-driven series of tests around a formula, and allows for multiple tests to be described simultaneously (e.g. sequential addition of covariates)</li>
+<li>
+<code>build_models()</code> runs the tests, whether it is basic statistics or more complex inferential models, with the capacity to update only the newly added arms</li>
+<li>
+<code>collect_findings()</code> recalls information from the <code>project</code> structure in a flexible way</li>
+</ul>
+<p><strong>Defining the Structure</strong></p>
+<p>There should be a core function that establishes the underlying structure. Should the data be given at this time, or added in a separate function? Initialization should likely be a list structure due to its malleability.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">project</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><strong>Data Sets</strong></p>
+<p>It seems that it should be a specific, but necessary, step to add data. The data structure, hopefully <strong>tidy</strong>, would provide the parameters by column names. It may allow for creating more effective selection commands as well.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">set_data</span><span class="op">(</span>
+  data <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
+<p><strong>Adding Hypotheses</strong></p>
+<p>This is probably the most important feature. A function such as <code>add_arm()</code> could help to stack on different potential tests.</p>
+<p>The complex part of this is that each <em>arm</em> would allow for variations of a hypothesis formula. Multiple predictors, multiple outcomes. In an epidemiological sense, its important that certain predictors are maintained as <em>exposures</em>. Each hypothesis thus needs to allow flexibility for the complexity of a model formula.</p>
+<ul>
+<li>Unique name for each arm, to be “pulled” later on</li>
+<li>A global formula or plan to be specified, and potentially varied or recombined (e.g. different “patterns” of combinations based on the testing strategy). It would be helpful to label certain variables as fixed exposures in some way as well.</li>
+<li>The type of “test” that is being used. This should likely draw from a common system, such as <code>parsnip</code>, to have consistent model representations. The other aspect would be more straightforward testing, such as from the <code>stats</code> base package.</li>
+<li>Subgroups of the data should be allowed to be analyzed via this as well. This is such a common pattern that it should likely be defined as a specific parameter.</li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">add_arm</span><span class="op">(</span>
+  title <span class="op">=</span> <span class="st">"first_example"</span>,
+  description <span class="op">=</span> <span class="cn">NULL</span>,
+  plan <span class="op">=</span> <span class="va">outcome</span> <span class="op">~</span> <span class="va">exposure</span> <span class="op">+</span> <span class="va">covariate</span>,
+  exposure <span class="op">=</span> <span class="st">"exposure"</span>,
+  pattern <span class="op">=</span> <span class="st">"parallel"</span>,
+  test <span class="op">=</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/linear_reg.html">linear_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
+<p><strong>Running Tests</strong></p>
+<p>The ability to then run tests would be the next logical step. This capacity should allow for identifying if tests have already been run or not, and only run newly added components.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">build_models</span><span class="op">(</span>
+  run_all <span class="op">=</span> <span class="cn">FALSE</span>,
+  which_tests <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
+<p><strong>Data Extraction</strong></p>
+<p>The final structure of the project should be flexible in terms of extracting or pulling data. Its imagined as a list structure, and thus components could be called by the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> operator. That depends on quality of names, and making sure they are well described.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">collect_findings</span><span class="op">(</span>
+  which_tests <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
+<p>This is an important and difficult process of deciding how the user should be able to visualize information and extract findings. This will end up including <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> and <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> functions as well.</p>
+</div>
+<div id="project-structure" class="section level3">
+<h3 class="hasAnchor">
+<a href="#project-structure" class="anchor"></a>Project Structure</h3>
+<p>The overall project structure requires a specific <em>class</em> that will contain a pattern of an internal structure. The <code>project</code> object should hold:</p>
+<ul>
+<li>a space to hold the data set</li>
+<li>a <em>tidy</em> table that holds each <code>arm</code> as a separate row, containing columns for the title, formula combinations, modifiers/options, description, and build/run status</li>
+<li>a corresponding <em>tidy</em> table that holds the results of each <code>arm</code> after it has been run</li>
+</ul>
+</div>
+<div id="supporting-functions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#supporting-functions" class="anchor"></a>Supporting Functions</h3>
+<p>The most complex part of this is handling formulas. Each formula given has the option to be expanded in a number of patterns. Each pattern should represent an epidemiology approach to model building (e.g. each model is informative, even if it is insignificant).</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">make_formulas</span><span class="op">(</span>
+  formulas <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span>,
+  combination <span class="op">=</span> <span class="st">"parallel"</span>,
+  exposures <span class="op">=</span> <span class="cn">NULL</span>,
+  <span class="va">...</span>
+<span class="op">)</span></code></pre></div>
+</div>
 </div>
 </div>
   </div>
