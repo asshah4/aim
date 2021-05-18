@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add Arms to the octomod — arm • octomod</title>
+<title>Equip the octomod With Hypothesis Testing — equip • octomod</title>
 
 
 <!-- jquery -->
@@ -39,10 +39,13 @@
 
 
 
-<meta property="og:title" content="Add Arms to the octomod — arm" />
-<meta property="og:description" content="Add a new hypothesis arm to the octomod object. The hypothesis collected
-here are all directed at the core dataset specified by the core()
-function." />
+<meta property="og:title" content="Equip the octomod With Hypothesis Testing — equip" />
+<meta property="og:description" content="This function allows for fitting the many arms of the octomod object,
+equipping them with the correct test methods. For modeling, this heavily
+leans on the tidymodels approach which allows for unified model
+specification. For inferential statistics, which do not yet have a unified
+testing approach, this provides the ability to run these somewhat simpler
+tests in a cohesive manner." />
 
 
 
@@ -128,27 +131,21 @@ function." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add Arms to the <code>octomod</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/octomod/blob/master/R/arm.R'><code>R/arm.R</code></a></small>
-    <div class="hidden name"><code>arm.Rd</code></div>
+    <h1>Equip the <code>octomod</code> With Hypothesis Testing</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/octomod/blob/master/R/equip.R'><code>R/equip.R</code></a></small>
+    <div class="hidden name"><code>equip.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Add a new hypothesis arm to the <code>octomod</code> object. The hypothesis collected
-here are all directed at the core dataset specified by the <code><a href='core.html'>core()</a></code>
-function.</p>
+    <p>This function allows for fitting the many arms of the <code>octomod</code> object,
+equipping them with the correct test methods. For modeling, this heavily
+leans on the <code>tidymodels</code> approach which allows for unified model
+specification. For inferential statistics, which do not yet have a unified
+testing approach, this provides the ability to run these somewhat simpler
+tests in a cohesive manner.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>arm</span><span class='op'>(</span>
-  <span class='va'>octomod</span>,
-  <span class='va'>title</span>,
-  <span class='va'>plan</span>,
-  exposure <span class='op'>=</span> <span class='cn'>NULL</span>,
-  pattern <span class='op'>=</span> <span class='st'>"direct"</span>,
-  <span class='va'>approach</span>,
-  strata <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>equip</span><span class='op'>(</span><span class='va'>octomod</span>, which_arms <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -158,84 +155,42 @@ function.</p>
       <td><p>Object of class <code>octomod</code></p></td>
     </tr>
     <tr>
-      <th>title</th>
-      <td><p>Character string to identify this arm. Must be unique and not
-previously specified.</p></td>
-    </tr>
-    <tr>
-      <th>plan</th>
-      <td><p>Formula showing relationship of outcomes and predictors, and is
-the essentially the hypothesis. As it allows for complex formulas (e.g.
-multiple outcomes), it is referred to as the <code>plan</code> instead.</p></td>
-    </tr>
-    <tr>
-      <th>exposure</th>
-      <td><p>Variable(s) that are forced to be maintained in every model as
-a predictor.</p></td>
-    </tr>
-    <tr>
-      <th>pattern</th>
-      <td><p>The building pattern for how to put together the overall plan.
-It defines variable relationships that will be used. The options for the
-<code>pattern</code> currently include:</p><ul>
-<li><p><code>direct</code> will define the relationship as y ~ x</p></li>
-<li><p><code>sequential</code> will define the relationship as y ~ x1, y ~ x1 + x2</p></li>
-<li><p><code>parallel</code> will define the relationship as y ~ x1, y ~ x2</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>approach</th>
-      <td><p>The testing approach that should be used, defined as how the
-analysis or hypothesis testing should be performed. There are several
-options on which specification to use, anywhere from regression modeling to
-inferential statistics. The approach applies to the entirety of the growing
-arm.</p><ul>
-<li><p>A model specified by the <a href='https://parsnip.tidymodels.org'><code>parsnip</code> package</a>, which includes the mode and
-computational engine</p></li>
-<li><p>A statistical test, such as a <code>t.test</code>, which may require additional
-parameters. These can be given as additional, unmatched arguments. This
-option currently supports only hypothesis tests, of class <code>htest</code>.</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>strata</th>
-      <td><p>How the data should be split or stratified. References the name
-of the variable in the <code>core</code> data that the models will be with fit
-against, splitting the data into subsets. This helps to perform hypothesis
-testing on subsets or strata of the data. It defaults to NULL (which means
-the full data will be used) <strong>experimental</strong></p></td>
+      <th>which_arms</th>
+      <td><p>Vector of names of arms that should be run. Defaults to all
+arms that have not yet been equipped..</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>This should reflect the additional parameters that may need to be
-given to the <code>approach</code> argument, such as <code>paired = TRUE</code> for <code>t.test</code>. The
-additional parameters must be named to allow them to be passed
-successfully.</p></td>
+      <td><p>To pass additional parameters as needed</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An <code>octomod</code> object with arms attached</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>This step is the most crucial, in that the the hypothesis and relationship
-between variables is defined at this stage.</p>
+    <p>An <code>octomod</code> object with arms equipped with the test statistics.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://magrittr.tidyverse.org'>magrittr</a></span><span class='op'>)</span>
+<span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://parsnip.tidymodels.org'>parsnip</a></span><span class='op'>)</span>
+<span class='va'>lm_mod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://parsnip.tidymodels.org/reference/linear_reg.html'>linear_reg</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span> <span class='fu'><a href='https://parsnip.tidymodels.org/reference/set_engine.html'>set_engine</a></span><span class='op'>(</span><span class='st'>"lm"</span><span class='op'>)</span>
 
 <span class='va'>om</span> <span class='op'>&lt;-</span>
   <span class='fu'><a href='octomod.html'>octomod</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'><a href='core.html'>core</a></span><span class='op'>(</span><span class='va'>mtcars</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
-  <span class='fu'>arm</span><span class='op'>(</span>
-    title <span class='op'>=</span> <span class='st'>"Horsepower"</span>,
-    plan <span class='op'>=</span> <span class='va'>hp</span> <span class='op'>~</span> <span class='va'>wt</span>,
+  <span class='fu'><a href='core.html'>core</a></span><span class='op'>(</span><span class='va'>iris</span><span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='arm.html'>arm</a></span><span class='op'>(</span>
+    title <span class='op'>=</span> <span class='st'>"t_test"</span>,
+    plan <span class='op'>=</span> <span class='va'>Sepal.Length</span> <span class='op'>+</span> <span class='va'>Sepal.Width</span> <span class='op'>~</span> <span class='va'>Petal.Length</span>,
     pattern <span class='op'>=</span> <span class='st'>"direct"</span>,
     approach <span class='op'>=</span> <span class='st'>"t.test"</span>,
-    paired <span class='op'>=</span> <span class='cn'>TRUE</span>,
-    strata <span class='op'>=</span> <span class='st'>"carb"</span>
-  <span class='op'>)</span>
+    paired <span class='op'>=</span> <span class='cn'>TRUE</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'><a href='arm.html'>arm</a></span><span class='op'>(</span>
+    title <span class='op'>=</span> <span class='st'>"linear"</span>,
+    plan <span class='op'>=</span> <span class='va'>Petal.Width</span> <span class='op'>~</span> <span class='va'>Sepal.Length</span> <span class='op'>+</span> <span class='va'>Sepal.Width</span> <span class='op'>+</span> <span class='va'>Petal.Length</span>,
+    pattern <span class='op'>=</span> <span class='st'>"sequential"</span>,
+    approach <span class='op'>=</span> <span class='va'>lm_mod</span>
+  <span class='op'>)</span> <span class='op'>%&gt;%</span>
+  <span class='fu'>equip</span><span class='op'>(</span><span class='op'>)</span>
 
 </div></pre>
   </div>
