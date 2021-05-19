@@ -15,7 +15,8 @@ project <- function() {
 		title = character(),
 		data = list(),
 		hypothesis = list(),
-		findings = list()
+		findings = list(),
+		status = list(),
 	)
 
 	# Return after initialization

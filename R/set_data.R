@@ -26,6 +26,9 @@ set_data <- function(project, data, ...) {
 		data = list(data)
 	)
 
+	# Return
+	project
+
 }
 
 #' @description Ensure that the project data is available for the arm
@@ -54,7 +57,7 @@ which_project_row <- function(project, which_data = NULL) {
 	# If no data set is selected, default to most recent
 	if (is.null(which_data)) {
 		n <- length(project$title)
-		data_name <- project$title[n]
+		#data_name <- project$title[n]
 	}
 	# If data set is selected, return / select that row
 	else if (!is.null(which_data)) {
@@ -62,10 +65,10 @@ which_project_row <- function(project, which_data = NULL) {
 		if (!(which_data %in% project$title)) {
 			stop("Data set from `which_data` parameter is not in `project()`")
 		}
-		data_name <- which_data
+		n <- match(which_data, project$title)
 	}
 
 	# Return appropriate project row name
-	data_name
+	n
 
 }

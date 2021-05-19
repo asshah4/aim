@@ -61,11 +61,14 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 
 	# Ensure correct project data and arm
 	row <- which_project_row(project, which_data)
-	data <- project$data[project$title == row][[1]]
-	arm <- project$hypothesis[project$title == row][[1]]
+	data <- project$data[[row]]
+	arm <- project$hypothesis[[row]]
 
 	# Formula table
 	tbl <- make_formulas(formula, fixed, combination)
+
+	# Add tests
+	tbl$tests <- list(test)
 
 	# Add strata if available
 	if (!is.null(strata)) {
@@ -75,7 +78,32 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 	# Add the arm
 	arm[[name]] <- tbl
 
-	project$hypothesis[project$title == row][[1]] <- arm
+	# Place back into project
+	project$hypothesis[[row]] <- arm
+
+	### SET STATUS ###
+
+	# Open status flags
+	status <- project$status[[row]]
+
+	# Create important parameters
+	has_split <- !is.null(strata)
+	if (is.null(strata)) {has_strata <- NA} else {has_strata <- strata}
+	if ("model_spec" %in% class(test)) { has_type <- "model"}
+
+	# Add hypothesis status
+	status[[name]] <- tibble::tibble(
+		run = FALSE,
+		split = has_split,
+		strata = has_strata,
+		type = has_type
+	)
+
+	# Update project
+	project$status[[row]] <- status
+
+	# Return
+	project
 
 }
 
