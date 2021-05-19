@@ -95,7 +95,7 @@
 
     
     
-<p><strong>As of May 18, 2021, this is still being <em>iterated</em>.</strong></p>
+<p><strong>As of May 19, 2021, this is still being <em>iterated</em>.</strong></p>
 <div id="background" class="section level1">
 <h1 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h1>
@@ -209,9 +209,9 @@
 <p>As described, the name helps to determine the function’s purpose. The core functions represent the major user-facing features. They also help to identify the underlying structure needed to store the data collected.</p>
 <ul>
 <li>
-<code>project()</code> initializes a structure that holds and can retain information about the individual project aims or study arms</li>
+<code><a href="../reference/project.html">project()</a></code> initializes a structure that holds and can retain information about the individual project aims or study arms</li>
 <li>
-<code>set_data()</code> attaches a specific data frame to the <code>project</code> object</li>
+<code><a href="../reference/set_data.html">set_data()</a></code> attaches a specific data frame to the <code>project</code> object</li>
 <li>
 <code>add_arm()</code> creates a hypothesis-driven series of tests around a formula, and allows for multiple tests to be described simultaneously (e.g. sequential addition of covariates)</li>
 <li>
@@ -222,11 +222,11 @@
 <p><strong>Defining the Structure</strong></p>
 <p>There should be a core function that establishes the underlying structure. Should the data be given at this time, or added in a separate function? Initialization should likely be a list structure due to its malleability.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">project</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/project.html">project</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p><strong>Data Sets</strong></p>
 <p>It seems that it should be a specific, but necessary, step to add data. The data structure, hopefully <strong>tidy</strong>, would provide the parameters by column names. It may allow for creating more effective selection commands as well.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">set_data</span><span class="op">(</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/set_data.html">set_data</a></span><span class="op">(</span>
   data <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
