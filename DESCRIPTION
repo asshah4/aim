@@ -1,11 +1,11 @@
-Package: octomod
+Package: aim
 Title: A Many-Handed Approach to Multiple Models
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
            family = "Shah",
            role = c("aut", "cre"),
-           email = "asshah4@emory.edu",
+           email = "ashah282@uic.edu",
            comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: A simple and tidy way to organize the many models built during a 
     research project. The package consists of individual hypothesis objects that 
@@ -42,5 +42,5 @@ Imports:
 Remotes:
     asshah4/card
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/octomod
-BugReports: https://github.com/asshah4/octomod/issues
+URL: https://github.com/asshah4/aim
+BugReports: https://github.com/asshah4/aim/issues

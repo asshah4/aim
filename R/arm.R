@@ -196,24 +196,14 @@ type_of_approach <- function(approach) {
 	type
 }
 
-#' @description Regenerate a new function from the approach if needed. Should
+#' @description Regenerate a new function from the test if needed. Should
 #'   only be called if the approach is not already a model call (e.g. parsnip
 #'   model).
 #' @noRd
-generate_new_function <- function(approach) {
-
-	# Check approach
-	if (!inherits(approach, "character")) {
-		stop("The `approach` is not a character string.", call. = FALSE)
-	}
+generate_new_function <- function(test) {
 
 	# Make function
-	fn <- get(approach)
-
-	# Check if actually function
-	if (!is.function(fn)) {
-		stop("The `approach` is not a function that can be passed on.")
-	}
+	fn <- get(test)
 
 	# Generate new function
 	new_fn <- function(x, y, ...) {

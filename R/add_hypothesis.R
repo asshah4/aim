@@ -49,7 +49,7 @@
 #'   the full data will be used) **experimental**
 #'
 #' @param ... This should reflect the additional parameters that may need to be
-#'   given to the `test` argument, such as `paired = TRUE` for `t.test`. The
+#'   given to the `test` argument, such as `paired = TRUE` for `t.test()`. The
 #'   additional parameters must be named to allow them to be passed
 #'   successfully.
 #'
@@ -59,16 +59,35 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 	# Check data file
 	validate_project_data(project)
 
+	# Save additional, optional parameters
+	dots <- rlang::dots_list(...)
+	if (length(dots) == 0) {
+		test_pars <- NULL
+	} else {
+		test_pars <- dots
+	}
+
 	# Ensure correct project data and arm
 	row <- which_project_row(project, which_data)
 	data <- project$data[[row]]
 	arm <- project$hypothesis[[row]]
+	type <- type_of_test(test)
+
+	# Set project flags and attributes
+	project <- flag_status(project, name, row, strata, type)
 
 	# Formula table
 	tbl <- make_formulas(formula, fixed, combination)
 
-	# Add tests
-	tbl$tests <- list(test)
+	# Add tests and test options
+	if (type == "model_spec") {
+		tbl$tests <- list(test)
+	}
+	else if (type == "htest") {
+		test <- generate_new_function(test)
+		tbl$tests <- list(test)
+	}
+	tbl$options <- test_pars
 
 	# Add strata if available
 	if (!is.null(strata)) {
@@ -80,27 +99,6 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 
 	# Place back into project
 	project$hypothesis[[row]] <- arm
-
-	### SET STATUS ###
-
-	# Open status flags
-	status <- project$status[[row]]
-
-	# Create important parameters
-	has_split <- !is.null(strata)
-	if (is.null(strata)) {has_strata <- NA} else {has_strata <- strata}
-	if ("model_spec" %in% class(test)) { has_type <- "model"}
-
-	# Add hypothesis status
-	status[[name]] <- tibble::tibble(
-		run = FALSE,
-		split = has_split,
-		strata = has_strata,
-		type = has_type
-	)
-
-	# Update project
-	project$status[[row]] <- status
 
 	# Return
 	project
@@ -123,6 +121,9 @@ make_formulas <- function(formula, fixed, combination) {
 	# Need to add parenthesis back to mixed variables
 	exposures[grepl("\\|", exposures)] <-
 		paste0("(", exposures[grepl("\\|", exposures)], ")")
+
+	# Clean up exposures
+	if (length(exposures) == 0) {exposures <- NULL}
 
 	# Exposure should always be first variables
 	predictors <- c(exposures, covariates)
@@ -196,3 +197,61 @@ create_strata <- function(data = NULL, strata) {
 	level
 
 }
+
+#' @description Update status flags
+#' @noRd
+flag_status <- function(project, name, row, strata, type) {
+
+	# Open status flags
+	status <- project$status[[row]]
+
+	# Create important parameters
+	has_split <- !is.null(strata)
+	if (is.null(strata)) {has_strata <- NA} else {has_strata <- strata}
+	has_type <- type
+
+	# Add hypothesis status
+	status[[name]] <- tibble::tibble(
+		run = FALSE,
+		split = has_split,
+		strata = has_strata,
+		type = has_type
+	)
+
+	# Add status back in
+	project$status[[row]] <- status
+
+	# Return
+	project
+
+}
+
+#' @description Identify type of test that will be used
+#' @noRd
+type_of_test <- function(test) {
+
+	# Check if modeling type
+	if ("model_spec" %in% class(test)) {
+		type <- "model_spec"
+	}
+
+	# Check if hypothesis test type
+	if ("character" %in% class(test)) {
+		# Check to see if viable function
+		fn <- get(test)
+		if (is.function(fn)) {
+			type <- "htest"
+		}
+		else {
+			stop("The `test` is not a function that can be passed on.")
+		}
+	}
+	# Validation of type
+	else if ("character" %in% class(test)) {
+		stop("The `test` is not a character string.", call. = FALSE)
+	}
+
+	# Return
+	type
+}
+

@@ -15,7 +15,22 @@
 #' @export
 build_models <- function(project, ...) {
 
-	# For all datasets
+	# Validation of project class
+	if (!inherits(project, "project")) {
+		stop("The argument must inherit from the `project` class.")
+	}
+
+	# Data must be available
+	if (length(project$data) == 0) {
+		stop("Cannot test hypotheses without data.")
+	}
+
+	# Hypotheses must be available
+	if (length(project$hypothesis) == 0) {
+		stop("There are no hypotheses to be tested.")
+	}
+
+	# Model building
 	for (i in 1:length(project$title)) {
 
 		# Obtain major variables
@@ -30,7 +45,7 @@ build_models <- function(project, ...) {
 		# Loop through each arm of the hypothesis
 		for (j in 1:length(which_arms)) {
 
-			# If parsnip model, both strata and not
+			# If *parsnip*, both strata and not
 			if (status[[j]]$type == "model") {
 				finding[[j]] <- arm[[j]] %>%
 					dplyr::rowwise() %>%
@@ -46,6 +61,29 @@ build_models <- function(project, ...) {
 							mutate(., fit = list(possible_fit(tests, formulas, data = data)))
 					}
 
+				# If *htest*, evaluate both strata and not
+				if (status[[j]]$type == "htest") {
+					stop("Testing `htest` objects is not currently available.")
+					finding[[j]] <- arm[[j]] %>%
+						dplyr::rowwise() %>%
+						{
+							if (status[[j]]$split == TRUE) {
+								mutate(., fit = list({
+									data = dplyr::filter(data, !!sym(status[[j]]$strata) == level)
+									x <- data[[outcomes]]
+									y <- data[[vars]]
+									tests(x, y, options)
+								}))
+							}
+							else {
+								mutate(., fit = list({
+									x <- data[[outcomes]]
+									y <- data[[outcomes]]
+									tests(x, y, options)
+								}))
+							}
+						}
+				}
 			}
 
 			# Subset finding columns
