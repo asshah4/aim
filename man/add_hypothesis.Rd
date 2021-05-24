@@ -57,7 +57,7 @@ testing on subsets or strata of the data. It defaults to NULL (which means
 the full data will be used) \strong{experimental}}
 
 \item{...}{This should reflect the additional parameters that may need to be
-given to the \code{test} argument, such as \code{paired = TRUE} for \code{t.test}. The
+given to the \code{test} argument, such as \code{paired = TRUE} for \code{t.test()}. The
 additional parameters must be named to allow them to be passed
 successfully.}
 }

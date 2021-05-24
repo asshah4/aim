@@ -62,9 +62,9 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 	# Save additional, optional parameters
 	dots <- rlang::dots_list(...)
 	if (length(dots) == 0) {
-		test_pars <- NULL
+		test_opts <- NULL
 	} else {
-		test_pars <- dots
+		test_opts <- dots
 	}
 
 	# Ensure correct project data and arm
@@ -74,20 +74,13 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 	type <- type_of_test(test)
 
 	# Set project flags and attributes
-	project <- flag_status(project, name, row, strata, type)
+	project <- flag_status(project, name, row, strata, type, test_opts)
 
 	# Formula table
 	tbl <- make_formulas(formula, fixed, combination)
 
-	# Add tests and test options
-	if (type == "model_spec") {
-		tbl$tests <- list(test)
-	}
-	else if (type == "htest") {
-		test <- generate_new_function(test)
-		tbl$tests <- list(test)
-	}
-	tbl$options <- test_pars
+	# Add tests
+	tbl$tests <- list(test)
 
 	# Add strata if available
 	if (!is.null(strata)) {
@@ -143,14 +136,14 @@ make_formulas <- function(formula, fixed, combination) {
 		combination,
 		direct = {
 			tbl <-
-				tibble(test_num = 1:length(outcomes)) %>%
+				tibble(number = 1:length(outcomes)) %>%
 				mutate(vars = list(predictors[1:num])) %>%
 				mutate(outcomes = outcomes) %>%
 				dplyr::relocate(outcomes)
 		},
 		sequential = {
 			tbl <-
-				tibble(test_num = 1:num) %>%
+				tibble(number = 1:num) %>%
 				mutate(
 					vars = map(
 						test_num,
@@ -161,9 +154,9 @@ make_formulas <- function(formula, fixed, combination) {
 		},
 		parallel = {
 			tbl <-
-				tibble(test_num = 1:num) %>%
+				tibble(number = 1:num) %>%
 				mutate(
-					vars = map(test_num, ~ c(exposures, covariates[.x - 1 + is.null(exposures)]))
+					vars = map(number, ~ c(exposures, covariates[.x - 1 + is.null(exposures)]))
 				) %>%
 				tidyr::expand_grid(outcomes = outcomes, .)
 		}
@@ -200,7 +193,7 @@ create_strata <- function(data = NULL, strata) {
 
 #' @description Update status flags
 #' @noRd
-flag_status <- function(project, name, row, strata, type) {
+flag_status <- function(project, name, row, strata, type, test_opts) {
 
 	# Open status flags
 	status <- project$status[[row]]
@@ -215,7 +208,8 @@ flag_status <- function(project, name, row, strata, type) {
 		run = FALSE,
 		split = has_split,
 		strata = has_strata,
-		type = has_type
+		type = has_type,
+		options = test_opts
 	)
 
 	# Add status back in
