@@ -44,3 +44,4 @@ Remotes:
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/aim
 BugReports: https://github.com/asshah4/aim/issues
+Config/testthat/edition: 3

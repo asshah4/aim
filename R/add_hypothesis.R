@@ -48,6 +48,9 @@
 #'   testing on subsets or strata of the data. It defaults to NULL (which means
 #'   the full data will be used) **experimental**
 #'
+#' @param which_data Name of "row" or dataset that should be analyzed. Defaults
+#'   to the most recent dataset added.
+#'
 #' @param ... This should reflect the additional parameters that may need to be
 #'   given to the `test` argument, such as `paired = TRUE` for `t.test()`. The
 #'   additional parameters must be named to allow them to be passed
@@ -75,6 +78,7 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 
 	# Set project flags and attributes
 	project <- flag_status(project, name, row, strata, type, test_opts)
+	names(project$status) <- project$title
 
 	# Formula table
 	tbl <- make_formulas(formula, fixed, combination)
@@ -92,6 +96,9 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 
 	# Place back into project
 	project$hypothesis[[row]] <- arm
+
+	# Rename project hypotheses list
+	names(project$hypothesis) <- project$title
 
 	# Return
 	project
@@ -146,7 +153,7 @@ make_formulas <- function(formula, fixed, combination) {
 				tibble(number = 1:num) %>%
 				mutate(
 					vars = map(
-						test_num,
+						number,
 						~ unique(c(exposures, predictors[nexp:(nexp + .x - 1)]))
 					)
 				) %>%

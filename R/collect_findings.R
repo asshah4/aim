@@ -1,14 +1,37 @@
 #' Collect the Important Findings from a Project
 #'
-#' This function simplifies the collection of the model fit and test results from a function. This should be called after the project has been fitted with `build_models()`.
+#' This function simplifies the collection of the model fit and test results
+#' from a function. This should be called after the project has been fitted with
+#' `build_models()`.
 #'
-#' @return `project` object
+#' @return Returns a `tibble` that includes the name of the hypothesis, the test number, the outcome variable, the terms, and model or test parameters as defined by the [broom::tidy()] function.
 #'
 #' @param project Object of class `project`
 #'
-#' @param ... For extensibility.
+#' @param ... For extensibility
 #'
 #' @export
 collect_findings <- function(project, ...) {
+
+	# Check to see if fitted
+	status <- unlist(project$findings, recursive = FALSE)
+	if (is.null(status)) {
+		stop("Cannot return findings until tests have been run with `build_models()`")
+	} else {
+		remove(status)
+	}
+
+	# Create summary table of findings
+	findings <-
+		project$findings %>%
+		# Collapse all findings into table
+		unlist(recursive = FALSE, use.names = TRUE) %>%
+		dplyr::bind_rows(.id = "name") %>%
+		# Select out tidied values
+		tidyr::unnest(tidied) %>%
+		dplyr::select(-c(vars, fit))
+
+	# Return
+	findings
 
 }

@@ -16,6 +16,8 @@ Object of \code{project} class
 The project arms may include hypotheses that are represented by multiple
 types of tests. The models are dependent on the universal definitions from
 the \href{https://parsnip.tidymodels.org/}{{parsnip}} package. In addition,
-specific basic statistical testing is also able to be analyzed and stored.
-This step is added after \code{add_hypothesis()} in terms of workflow.
+specific basic statistical testing can be analyzed and stored.
+This step is added after \code{add_hypothesis()} in terms of workflow. This
+function only runs on hypothesis that have not already been run, allowing for
+the ease of adding to an existing project without rebuilding it.
 }

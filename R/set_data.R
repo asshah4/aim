@@ -9,7 +9,7 @@
 #'
 #' @param project Object of class `project`
 #'
-#' @param .data Data frame or tibble
+#' @param data Data frame or tibble
 #'
 #' @param ... For extensibility
 #'
@@ -25,6 +25,9 @@ set_data <- function(project, data, ...) {
 		title = data_name,
 		data = list(data)
 	)
+
+	# Rename project data
+	names(project$data) <- project$title
 
 	# Return
 	project

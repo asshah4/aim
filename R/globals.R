@@ -13,5 +13,7 @@ utils::globalVariables(c(
 	"vars",
 	"pars",
 	"pred",
-	"level"
+	"level",
+	"tests",
+	"number"
 ))
