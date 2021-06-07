@@ -4,16 +4,20 @@
 \alias{collect_findings}
 \title{Collect the Important Findings from a Project}
 \usage{
-collect_findings(project, ...)
+collect_findings(project, stage = "findings", ...)
 }
 \arguments{
 \item{project}{Object of class \code{project}}
 
-\item{...}{For extensibility.}
+\item{stage}{Internal marker of workflow progress.}
+
+\item{...}{For extensibility}
 }
 \value{
-\code{project} object
+Returns a \code{tibble} that includes the name of the hypothesis, the test number, the outcome variable, the terms, and model or test parameters as defined by the \code{\link[broom:reexports]{broom::tidy()}} function.
 }
 \description{
-This function simplifies the collection of the model fit and test results from a function. This should be called after the project has been fitted with \code{build_models()}.
+This function simplifies the collection of the model fit and test results
+from a function. This should be called after the project has been fitted with
+\code{build_models()}.
 }

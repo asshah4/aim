@@ -13,6 +13,91 @@
 #' @return The result of calling `rhs(lhs)`.
 NULL
 
+### AIM UTILS ### ====
+
+#' @description Determine which project row should be used
+#' @noRd
+which_project_row <- function(project, which_data = NULL) {
+
+	# If no data set is selected, default to most recent
+	if (is.null(which_data)) {
+		n <- length(project$title)
+		#data_name <- project$title[n]
+	}
+	# If data set is selected, return / select that row
+	else if (!is.null(which_data)) {
+		# Validate it is a name within the project titles
+		if (!(which_data %in% project$title)) {
+			stop("Data set from `which_data` parameter is not in `project()`")
+		}
+		n <- match(which_data, project$title)
+	}
+
+	# Return appropriate project row name
+	n
+
+}
+
+#' @description Ensure that the project data is available for the arm
+#' @noRd
+validate_project <- function(project, stage) {
+
+	# Check for set_data()
+	if (stage == "data") {
+		if (!("project" %in% class(project))) {
+			stop("This is not a object of class `project`")
+		}
+	}
+
+	# Check for add_hypothesis()
+	if (stage == "hypothesis") {
+		if (!("project" %in% class(project))) {
+			stop("This is not a object of class `project`")
+		}
+		# Ensure there is a data set available
+		if (length(project$title) == 0) {
+			message("There is no data available to add hypotheses against.")
+		}
+		# Only one data set
+		else if (length(project$title) == 1) {
+			message("Using the only available data set.")
+		}
+		# If more than one data set
+		else if (length(project$title > 1)) {
+			message("Defaults to the most recent data placed by `set_data()`")
+		}
+	}
+
+	# Check for build_models()
+	if (stage == "build") {
+		if (!("project" %in% class(project))) {
+			stop("This is not a object of class `project`")
+		}
+		if (length(project$data) == 0) {
+			stop("Cannot test hypotheses without data from `set_data()`.")
+		}
+		if (length(project$hypothesis) == 0) {
+			stop("There are no hypotheses to be tested from `add_hypothesis()`.")
+		}
+	}
+
+	# Check for collect_findings()
+	if (stage == "findings") {
+		if (!("project" %in% class(project))) {
+			stop("This is not a object of class `project`")
+		}
+		# Check to see if fitted
+		status <- unlist(project$findings, recursive = FALSE)
+		if (is.null(status)) {
+			stop("Cannot return findings until tests have been run with `build_models()`.")
+		}
+	}
+
+}
+
+
+### OCTOMOD UTILS ### ====
+
 #' @description Create individual options for an arm
 #' @noRd
 inventory <- function(octomod, title, approach, pars, strata, ...) {

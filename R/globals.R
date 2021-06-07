@@ -15,5 +15,6 @@ utils::globalVariables(c(
 	"pred",
 	"level",
 	"tests",
-	"number"
+	"number",
+	"tidied"
 ))

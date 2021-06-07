@@ -1,4 +1,4 @@
 library(testthat)
-library(octomod)
+library(aim)
 
-test_check("octomod")
+test_check("aim")

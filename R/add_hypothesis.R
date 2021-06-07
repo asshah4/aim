@@ -51,16 +51,23 @@
 #' @param which_data Name of "row" or dataset that should be analyzed. Defaults
 #'   to the most recent dataset added.
 #'
+#' @param stage Internal marker of workflow progress.
+#'
 #' @param ... This should reflect the additional parameters that may need to be
 #'   given to the `test` argument, such as `paired = TRUE` for `t.test()`. The
 #'   additional parameters must be named to allow them to be passed
 #'   successfully.
 #'
 #' @export
-add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "direct", test, which_data = NULL, strata = NULL, ...) {
+add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "direct", test, which_data = NULL, strata = NULL, stage = "hypothesis", ...) {
 
-	# Check data file
-	validate_project_data(project)
+	# Data available?
+	if (length(project$title) == 0) {
+		stop("Cannot add a hypothesis until `set_data()` has been called.")
+	}
+
+	# Argument validation
+	validate_project(project, stage)
 
 	# Save additional, optional parameters
 	dots <- rlang::dots_list(...)
@@ -88,7 +95,8 @@ add_hypothesis <- function(project, name, formula, fixed = NULL, combination = "
 
 	# Add strata if available
 	if (!is.null(strata)) {
-		tbl <- tidyr::expand_grid(tbl, level = create_strata(data, strata))
+		tbl <-
+			tidyr::expand_grid(tbl, level = as.factor(unique(dplyr::pull(data, strata))))
 	}
 
 	# Add the arm
@@ -178,23 +186,6 @@ make_formulas <- function(formula, fixed, combination) {
 
 	# Return
 	tbl
-
-}
-
-#' @description Create strata from data in `add_hypothesis()`
-#' @noRd
-create_strata <- function(data = NULL, strata) {
-
-	# Check to see if data is available
-	if (is.null(data)) {
-		stop("Strata cannot be created if a data set is not available.")
-	}
-
-	# Expand strata
-	level <- unique(dplyr::pull(data, strata))
-
-	# Return
-	level
 
 }
 

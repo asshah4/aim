@@ -8,18 +8,15 @@
 #'
 #' @param project Object of class `project`
 #'
+#' @param stage Internal marker of workflow progress.
+#'
 #' @param ... For extensibility
 #'
 #' @export
-collect_findings <- function(project, ...) {
+collect_findings <- function(project, stage = "findings", ...) {
 
-	# Check to see if fitted
-	status <- unlist(project$findings, recursive = FALSE)
-	if (is.null(status)) {
-		stop("Cannot return findings until tests have been run with `build_models()`")
-	} else {
-		remove(status)
-	}
+	# Validate project
+	validate_project(project, stage)
 
 	# Create summary table of findings
 	findings <-

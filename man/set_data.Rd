@@ -4,14 +4,16 @@
 \alias{set_data}
 \title{Set the Data}
 \usage{
-set_data(project, data, ...)
+set_data(project, data, stage = "data", ...)
 }
 \arguments{
 \item{project}{Object of class \code{project}}
 
-\item{...}{For extensibility}
+\item{data}{Data frame or tibble}
 
-\item{.data}{Data frame or tibble}
+\item{stage}{Internal marker of workflow progress.}
+
+\item{...}{For extensibility}
 }
 \value{
 \code{project} object

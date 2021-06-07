@@ -13,6 +13,7 @@ add_hypothesis(
   test,
   which_data = NULL,
   strata = NULL,
+  stage = "hypothesis",
   ...
 )
 }
@@ -50,11 +51,16 @@ parameters. These can be given as additional, unmatched arguments. This
 option currently supports only hypothesis tests, of class \code{htest}.
 }}
 
+\item{which_data}{Name of "row" or dataset that should be analyzed. Defaults
+to the most recent dataset added.}
+
 \item{strata}{How the data should be split or stratified. References the name
 of the data given in \code{set_data()} that the models will be with fit
 against, splitting the data into subsets. This helps to perform hypothesis
 testing on subsets or strata of the data. It defaults to NULL (which means
 the full data will be used) \strong{experimental}}
+
+\item{stage}{Internal marker of workflow progress.}
 
 \item{...}{This should reflect the additional parameters that may need to be
 given to the \code{test} argument, such as \code{paired = TRUE} for \code{t.test()}. The

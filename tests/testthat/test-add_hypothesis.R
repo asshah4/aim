@@ -7,15 +7,12 @@ proj <-
 		test = "t.test",
 		paired = TRUE,
 		combination = "direct"
-	) %>%
-	build_models()
+	)
 
-
-test_that("can expect a `project` as main input", {
+test_that("correct input", {
 	expect_s3_class(proj, "project")
 })
 
-test_that("findings are in table form", {
-	res <- proj %>% collect_findings()
-	expect_s3_class(res, "tbl")
+test_that("correct output", {
+	expect_type(proj$hypothesis, "list")
 })

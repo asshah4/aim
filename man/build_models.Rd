@@ -4,10 +4,14 @@
 \alias{build_models}
 \title{Build the Models and Tests}
 \usage{
-build_models(project, ...)
+build_models(project, stage = "build", ...)
 }
 \arguments{
 \item{project}{Object of class \code{project}}
+
+\item{stage}{Internal marker of workflow progress.}
+
+\item{...}{For extensibility}
 }
 \value{
 Object of \code{project} class

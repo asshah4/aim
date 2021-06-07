@@ -12,25 +12,17 @@
 #'
 #' @param project Object of class `project`
 #'
-#' @importFrom dplyr mutate filter
+#' @param stage Internal marker of workflow progress.
+#'
+#' @param ... For extensibility
+#'
+#' @importFrom dplyr mutate filter select
 #' @importFrom rlang !! sym
 #' @export
-build_models <- function(project, ...) {
+build_models <- function(project, stage = "build", ...) {
 
-	# Validation of project class
-	if (!inherits(project, "project")) {
-		stop("The argument must inherit from the `project` class.")
-	}
-
-	# Data must be available
-	if (length(project$data) == 0) {
-		stop("Cannot test hypotheses without data.")
-	}
-
-	# Hypotheses must be available
-	if (length(project$hypothesis) == 0) {
-		stop("There are no hypotheses to be tested.")
-	}
+	# Validate project
+	validate_project(project, stage)
 
 	# Model building
 	for (i in 1:length(project$title)) {
@@ -103,7 +95,8 @@ build_models <- function(project, ...) {
 			}
 
 			# Subset finding columns
-			finding[[j]] <- finding[[j]][c("number", "outcomes", "vars", "fit", "tidied")]
+			finding[[j]] <- finding[[j]] %>%
+				select(dplyr::one_of("number", "level", "outcomes", "vars", "fit", "tidied"))
 
 			# Set status
 			status[[j]]$run <- TRUE
@@ -116,7 +109,7 @@ build_models <- function(project, ...) {
 
 	}
 
-	# Return
+	# Retunr
 	project
 
 }
