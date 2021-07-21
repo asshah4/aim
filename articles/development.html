@@ -5,14 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Development Thoughts • aim</title>
+<title>Development Thoughts • aims</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="Development Thoughts">
-<meta property="og:description" content="aim">
+<meta property="og:description" content="aims">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -30,7 +30,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">aim</a>
+        <a class="navbar-link" href="../index.html">aims</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
       </span>
     </div>
@@ -56,9 +56,6 @@
 <li>
       <a href="../articles/development.html">Development Thoughts</a>
     </li>
-    <li>
-      <a href="../articles/octobeast.html">The Octobeast</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -67,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/asshah4/octomod/">
+  <a href="https://github.com/asshah4/aims/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -95,7 +92,7 @@
 
     
     
-<p><strong>As of May 23, 2021, this is still being <em>iterated</em>.</strong></p>
+<p><strong>As of July 21, 2021, this is still being <em>iterated</em>.</strong></p>
 <div id="background" class="section level1">
 <h1 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h1>
@@ -189,13 +186,13 @@
 <p>I’ve currently defined the basic functions as below:</p>
 <ul>
 <li>
-<code><a href="../reference/octomod.html">octomod()</a></code> initializes the modeling structure</li>
+<code>octomod()</code> initializes the modeling structure</li>
 <li>
-<code><a href="../reference/core.html">core()</a></code> defines the core data of the <code>octomod</code> structure, allowing tests to be performed from a centralized data set</li>
+<code>core()</code> defines the core data of the <code>octomod</code> structure, allowing tests to be performed from a centralized data set</li>
 <li>
-<code><a href="../reference/arm.html">arm()</a></code> creates individual arms to the <code>octomod</code>, which reference a specific family of hypotheses</li>
+<code>arm()</code> creates individual arms to the <code>octomod</code>, which reference a specific family of hypotheses</li>
 <li>
-<code><a href="../reference/equip.html">equip()</a></code> gives each of the arms a <em>tidied</em> output including model fit and parameters, which can subsequently be called</li>
+<code>equip()</code> gives each of the arms a <em>tidied</em> output including model fit and parameters, which can subsequently be called</li>
 </ul>
 <p>The benefits of this are I can flexibly change the core data, give specific formulas that can be expanded/varied, fit independently, and extracted in a list-column based format.</p>
 <p>The problems are that “changing” the central dataset is dangerous, the structure doesn’t hold together afterwards, and fitting the data may break older models.</p>
@@ -215,9 +212,9 @@
 <li>
 <code>add_arm()</code> creates a hypothesis-driven series of tests around a formula, and allows for multiple tests to be described simultaneously (e.g. sequential addition of covariates)</li>
 <li>
-<code>build_models()</code> runs the tests, whether it is basic statistics or more complex inferential models, with the capacity to update only the newly added arms</li>
+<code><a href="../reference/build_models.html">build_models()</a></code> runs the tests, whether it is basic statistics or more complex inferential models, with the capacity to update only the newly added arms</li>
 <li>
-<code>collect_findings()</code> recalls information from the <code>project</code> structure in a flexible way</li>
+<code><a href="../reference/collect_findings.html">collect_findings()</a></code> recalls information from the <code>project</code> structure in a flexible way</li>
 </ul>
 <p><strong>Defining the Structure</strong></p>
 <p>There should be a core function that establishes the underlying structure. Should the data be given at this time, or added in a separate function? Initialization should likely be a list structure due to its malleability.</p>
@@ -252,7 +249,7 @@
 <p><strong>Running Tests</strong></p>
 <p>The ability to then run tests would be the next logical step. This capacity should allow for identifying if tests have already been run or not, and only run newly added components.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">build_models</span><span class="op">(</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/build_models.html">build_models</a></span><span class="op">(</span>
   run_all <span class="op">=</span> <span class="cn">FALSE</span>,
   which_tests <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>
@@ -260,7 +257,7 @@
 <p><strong>Data Extraction</strong></p>
 <p>The final structure of the project should be flexible in terms of extracting or pulling data. Its imagined as a list structure, and thus components could be called by the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> operator. That depends on quality of names, and making sure they are well described.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">collect_findings</span><span class="op">(</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/collect_findings.html">collect_findings</a></span><span class="op">(</span>
   which_tests <span class="op">=</span> <span class="cn">NULL</span>,
   <span class="va">...</span>
 <span class="op">)</span></code></pre></div>
@@ -281,7 +278,7 @@
 <a href="#supporting-functions" class="anchor"></a>Supporting Functions</h3>
 <p>The most complex part of this is handling formulas. Each formula given has the option to be expanded in a number of patterns. Each pattern should represent an epidemiology approach to model building (e.g. each model is informative, even if it is insignificant).</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">make_formulas</span><span class="op">(</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/make_formulas.html">make_formulas</a></span><span class="op">(</span>
   formulas <span class="op">=</span> <span class="va">y</span> <span class="op">~</span> <span class="va">x1</span> <span class="op">+</span> <span class="va">x2</span> <span class="op">+</span> <span class="va">x3</span>,
   combination <span class="op">=</span> <span class="st">"parallel"</span>,
   exposures <span class="op">=</span> <span class="cn">NULL</span>,

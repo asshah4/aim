@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add a Hypothesis to the Project — add_hypothesis • aim</title>
+<title>Add a Hypothesis to the Project — add_hypothesis • aims</title>
 
 
 <!-- jquery -->
@@ -74,7 +74,7 @@ should be applied to the data set." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">aim</a>
+        <a class="navbar-link" href="../index.html">aims</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
       </span>
     </div>
@@ -100,9 +100,6 @@ should be applied to the data set." />
     <li>
       <a href="../articles/development.html">Development Thoughts</a>
     </li>
-    <li>
-      <a href="../articles/octobeast.html">The Octobeast</a>
-    </li>
   </ul>
 </li>
 <li>
@@ -111,7 +108,7 @@ should be applied to the data set." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/octomod/">
+  <a href="https://github.com/asshah4/aims/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -145,11 +142,11 @@ should be applied to the data set.</p>
   <span class='va'>project</span>,
   <span class='va'>name</span>,
   <span class='va'>formula</span>,
-  fixed <span class='op'>=</span> <span class='cn'>NULL</span>,
   combination <span class='op'>=</span> <span class='st'>"direct"</span>,
   <span class='va'>test</span>,
   which_data <span class='op'>=</span> <span class='cn'>NULL</span>,
-  strata <span class='op'>=</span> <span class='cn'>NULL</span>,
+  .strata <span class='op'>=</span> <span class='cn'>NA</span>,
+  .stage <span class='op'>=</span> <span class='st'>"hypothesis"</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -167,20 +164,30 @@ previously specified.</p></td>
     </tr>
     <tr>
       <th>formula</th>
-      <td><p>Formula showing relationship of outcomes and predictors, and is
-the essentially the hypothesis. As it allows for complex formulas (e.g.
-multiple outcomes), it is referred to as the <code>plan</code> instead.</p></td>
-    </tr>
-    <tr>
-      <th>fixed</th>
-      <td><p>Variable(s) that are forced to be maintained in every model as
-a predictor.</p></td>
+      <td><p>Formula showing relationship of outcomes and predictors, and
+is essentially the hypothesis. It allows for complex formulas e.g. multiple
+predictors, multiple exposures, and multiple covariates, that can be
+organized into individual formulas based on additional modifiers. Each RHS
+term of the formula is considered an outcome variable, and is analyzed as a
+single outcome. Each LHS term is consider a predictor, and can be modified
+as below:</p><ul>
+<li><p><code><a href='https://rdrr.io/r/base/Log.html'>exp()</a></code> is placed around a term to define as an independent exposure,
+which will be placed in separate formulas from any other term marked as an
+exposure</p></li>
+<li><p><code><a href='https://rdrr.io/r/stats/cor.html'>cov()</a></code> is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as mixed
+effects</p></li>
+</ul>
+
+<p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
+<p>For example, the equation below describes two independent exposures "x1" and "x2" that should be conditionally regressed for every level of "z"</p>
+<p>$$y ~ exp(x1) + exp(x2) + x3 + x4 + cov((1 | z))$$</p></td>
     </tr>
     <tr>
       <th>combination</th>
-      <td><p>The building pattern for how to put together the overall plan.
-It defines variable relationships that will be used. The options for the
-<code>combination</code> currently include:</p><ul>
+      <td><p>The building pattern for how to put together the overall
+plan. It defines variable relationships that will be used. The options for
+the <code>combination</code> currently include:</p><ul>
 <li><p><code>direct</code> will define the relationship as y ~ x</p></li>
 <li><p><code>sequential</code> will define the relationship as y ~ x1, y ~ x1 + x2</p></li>
 <li><p><code>parallel</code> will define the relationship as y ~ x1, y ~ x2</p></li>
@@ -188,29 +195,37 @@ It defines variable relationships that will be used. The options for the
     </tr>
     <tr>
       <th>test</th>
-      <td><p>The testing that will be used, defined as how the
-analysis or hypothesis testing should be performed. There are several
-options on which specification to use, anywhere from regression modeling to
-inferential statistics. The test applies to the collection of hypotheses.</p><ul>
-<li><p>A model specified by the <a href='https://parsnip.tidymodels.org'><code>parsnip</code> package</a>, which includes the mode and
-computational engine</p></li>
+      <td><p>The testing that will be used, defined as how the analysis or
+hypothesis testing should be performed. There are several options on which
+specification to use, anywhere from regression modeling to inferential
+statistics. The test applies to the collection of hypotheses.</p><ul>
+<li><p>A model specified by the <a href='https://parsnip.tidymodels.org'><code>parsnip</code> package</a>, which includes the mode and #'   computational engine</p></li>
 <li><p>A statistical test, such as a <code>t.test</code>, which may require additional
 parameters. These can be given as additional, unmatched arguments. This
 option currently supports only hypothesis tests, of class <code>htest</code>.</p></li>
 </ul></td>
     </tr>
     <tr>
-      <th>strata</th>
-      <td><p>How the data should be split or stratified. References the name
-of the data given in <code><a href='set_data.html'>set_data()</a></code> that the models will be with fit
+      <th>which_data</th>
+      <td><p>Name of "row" or dataset that should be analyzed. Defaults
+to the most recent dataset added.</p></td>
+    </tr>
+    <tr>
+      <th>.strata</th>
+      <td><p>How the data should be split or stratified. References the
+name of the data given in <code><a href='set_data.html'>set_data()</a></code> that the models will be with fit
 against, splitting the data into subsets. This helps to perform hypothesis
 testing on subsets or strata of the data. It defaults to NULL (which means
 the full data will be used) <strong>experimental</strong></p></td>
     </tr>
     <tr>
+      <th>.stage</th>
+      <td><p>Internal marker of project status.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>This should reflect the additional parameters that may need to be
-given to the <code>test</code> argument, such as <code>paired = TRUE</code> for <code>t.test</code>. The
+given to the <code>test</code> argument, such as <code>paired = TRUE</code> for <code><a href='https://rdrr.io/r/stats/t.test.html'>t.test()</a></code>. The
 additional parameters must be named to allow them to be passed
 successfully.</p></td>
     </tr>

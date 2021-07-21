@@ -1,39 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://asshah4.github.io/octomod//index.html</loc>
+    <loc>https://asshah4.github.io/aims//index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/add_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/add_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/arm.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/build_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/core.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/collect_findings.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/equip.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/make_formulas.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/octomod.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/pipe.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/project.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/project.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/set_data.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/octomod//reference/set_data.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/octomod//reference/sharpen.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/octomod//articles/development.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/octomod//articles/octobeast.html</loc>
+    <loc>https://asshah4.github.io/aims//articles/development.html</loc>
   </url>
 </urlset>
