@@ -5,7 +5,6 @@ utils::globalVariables(c(
 	"...",
 	"outcomes",
 	"formulas",
-	"test_num",
 	"fit",
 	"varying",
 	"type",
@@ -16,5 +15,8 @@ utils::globalVariables(c(
 	"level",
 	"tests",
 	"number",
-	"tidied"
+	"tidied",
+	"tail",
+	"name",
+	"data"
 ))

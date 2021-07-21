@@ -9,30 +9,23 @@
 #'
 #' @param project Object of class `project`
 #'
-#' @param data Data frame or tibble
+#' @param .data Data frame or tibble
 #'
-#' @param stage Internal marker of workflow progress.
+#' @param .stage Internal marker of workflow progress.
 #'
 #' @param ... For extensibility
 #'
 #' @export
-set_data <- function(project, data, stage = "data", ...) {
+set_data <- function(project, .data, .stage = "data", ...) {
 
 	# Validate project
-	validate_project(project, stage)
+	validate_project(project, .stage, .data)
 
 	# Name of original dataset
-	data_name <- deparse(substitute(data))
+	data_name <- deparse(substitute(.data))
 
-	# Add data to new row
-	project <- tibble::add_row(
-		project,
-		title = data_name,
-		data = list(data)
-	)
-
-	# Rename project data
-	names(project$data) <- project$title
+	# Add data to project, using name as the label
+	project$data[[data_name]] <- .data
 
 	# Return
 	project

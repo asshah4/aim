@@ -4,17 +4,32 @@
 \alias{collect_findings}
 \title{Collect the Important Findings from a Project}
 \usage{
-collect_findings(project, stage = "findings", ...)
+collect_findings(
+  project,
+  which_tests = NULL,
+  tidy = TRUE,
+  .stage = "results",
+  ...
+)
 }
 \arguments{
 \item{project}{Object of class \code{project}}
 
-\item{stage}{Internal marker of workflow progress.}
+\item{which_tests}{Character vector of hypothesis names to be collected.
+Defaults to all tests that were run.}
+
+\item{tidy}{Returns findings after being processed by \code{\link[broom:reexports]{broom::tidy()}},
+defaulting to TRUE. If the original model fit is required, change to FALSE.}
+
+\item{.stage}{Internal marker of workflow progress.}
 
 \item{...}{For extensibility}
 }
 \value{
-Returns a \code{tibble} that includes the name of the hypothesis, the test number, the outcome variable, the terms, and model or test parameters as defined by the \code{\link[broom:reexports]{broom::tidy()}} function.
+Returns a \code{tibble} that includes the name of the hypothesis, the test
+number, the outcome variable, the terms, and model or test parameters as
+defined by the \code{\link[broom:reexports]{broom::tidy()}} function. If requested, can instead return
+the original model fit instead of tidy parameters.
 }
 \description{
 This function simplifies the collection of the model fit and test results

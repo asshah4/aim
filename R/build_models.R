@@ -12,104 +12,97 @@
 #'
 #' @param project Object of class `project`
 #'
-#' @param stage Internal marker of workflow progress.
+#' @param .stage Internal marker of workflow progress.
 #'
 #' @param ... For extensibility
 #'
 #' @importFrom dplyr mutate filter select
 #' @importFrom rlang !! sym
 #' @export
-build_models <- function(project, stage = "build", ...) {
+build_models <- function(project, .stage = "build", ...) {
 
 	# Validate project
-	validate_project(project, stage)
+	validate_project(project, .stage)
 
 	# Model building
-	for (i in 1:length(project$title)) {
+	for (i in 1:length(project$hypothesis)) {
 
 		# Obtain major variables
-		data <- project$data[[i]]
-		arm <- project$hypothesis[[i]]
-		status <- project$status[[i]]
-		finding <- project$hypothesis[[i]]
+		name <- names(project$hypothesis)[i]
+		instructions <- project$instructions[[name]]
+		data_name <- instructions$data
+		data <- project$data[[data_name]]
+		arm <- project$hypothesis[[name]]
 
-		# Identify number of arms
-		which_arms <- names(arm)
+		# Determine if arm has been run already, and iterate forward
+		if (instructions$run == TRUE) { next }
 
-		# Loop through each arm of the hypothesis
-		for (j in 1:length(which_arms)) {
-
-			# Determine if arm has been run already, and iterate forward
-			if (status[[j]]$run == TRUE) { next }
-
-			# If *parsnip*, both strata and not
-			if (status[[j]]$type == "model_spec") {
-				finding[[j]] <- arm[[j]] %>%
-					dplyr::rowwise() %>%
-					# Fit models using parsnip
-					{
-						if (status[[j]]$split == TRUE) {
-							mutate(., fit = list(possible_fit(
-								tests,
-								formulas,
-								data = filter(data, !!sym(status[[j]]$strata) == level)
-							)))
-						}
-						else
-							mutate(., fit = list(possible_fit(tests, formulas, data = data)))
-					} %>%
-					# Broom to tidy
-					mutate(tidied = list(broom::tidy(
-						fit, conf.int = TRUE, exponentiate = TRUE
-					))) %>%
-					ungroup()
-			}
-
-			# If *htest*, evaluate both strata and not
-			if (status[[j]]$type == "htest") {
-				finding[[j]] <- arm[[j]] %>%
-					dplyr::rowwise() %>%
-					# Create htest variables
-					{
-						if (status[[j]]$split == TRUE) {
-							mutate(., fit = list({
-								data = dplyr::filter(data, !!sym(status[[j]]$strata) == level)
-								x <- data[[outcomes]]
-								y <- data[[vars]]
-								possible_call(tests, c(list(x, y), status[[j]]$options))
-							}))
-						}
-						else {
-							mutate(., fit = list({
-								x <- data[[outcomes]]
-								y <- data[[outcomes]]
-								possible_call(tests, c(list(x, y), status[[j]]$options))
-							}))
-						}
-					} %>%
-					# Broom to tidy
-					mutate(tidied = list(broom::tidy(
-						fit, conf.int = TRUE, exponentiate = TRUE
-					))) %>%
-					ungroup()
-			}
-
-			# Subset finding columns
-			finding[[j]] <- finding[[j]] %>%
-				select(dplyr::one_of("number", "level", "outcomes", "vars", "fit", "tidied"))
-
-			# Set status
-			status[[j]]$run <- TRUE
+		# If *parsnip*, both strata and not
+		if (instructions$type == "model_spec") {
+			finding <- arm %>%
+				dplyr::rowwise() %>%
+				# Fit models using parsnip
+				{
+					if (instructions$split == TRUE) {
+						mutate(., fit = list(possible_fit(
+							tests,
+							formulas,
+							data = filter(data, !!sym(instructions$strata) == level)
+						)))
+					}
+					else
+						mutate(., fit = list(possible_fit(tests, formulas, data = data)))
+				} %>%
+				# Broom to tidy
+				mutate(tidied = list(broom::tidy(
+					fit, conf.int = TRUE, exponentiate = TRUE
+				))) %>%
+				dplyr::ungroup()
 		}
 
-		# Place data back
-		names(finding) <- which_arms
-		project$findings[[i]] <- finding
-		project$status[[i]] <- status
+		# If *htest*, evaluate both strata and not
+		if (instructions$type == "htest") {
+			finding <- arm %>%
+				dplyr::rowwise() %>%
+				# Create htest variables
+				{
+					if (instructions$split == TRUE) {
+						mutate(., fit = list({
+							data = dplyr::filter(data, !!sym(instructions$strata) == level)
+							x <- data[[outcomes]]
+							y <- data[[vars]]
+							possible_call(tests, c(list(x, y), instructions$options))
+						}))
+					}
+					else {
+						mutate(., fit = list({
+							x <- data[[outcomes]]
+							y <- data[[vars]]
+							possible_call(tests, c(list(x, y), instructions$options))
+						}))
+					}
+				} %>%
+				# Broom to tidy
+				mutate(tidied = list(broom::tidy(
+					fit, conf.int = TRUE, exponentiate = TRUE
+				))) %>%
+				dplyr::ungroup()
+		}
 
+		# Subset finding columns
+		finding <- finding %>%
+			select(dplyr::one_of("number", "level", "outcomes", "exposures", "vars", "fit", "tidied")) %>%
+			suppressWarnings()
+
+		# Set status
+		instructions$run <- TRUE
+
+		# Replace variables back into project prior to next loop
+		project$findings[[name]] <- finding
+		project$instructions[[name]] <- instructions
 	}
 
-	# Retunr
+	# Return
 	project
 
 }

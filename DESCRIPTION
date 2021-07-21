@@ -1,4 +1,4 @@
-Package: aim
+Package: aims
 Title: A Many-Handed Approach to Multiple Models
 Version: 0.0.0.9000
 Authors@R: 
@@ -6,7 +6,7 @@ Authors@R:
            family = "Shah",
            role = c("aut", "cre"),
            email = "ashah282@uic.edu",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           comment = c(ORCID = "0000-0002-9729-1558"))
 Description: A simple and tidy way to organize the many models built during a 
     research project. The package consists of individual hypothesis objects that 
     are all linked together around a single data set. In causality-based 
@@ -21,9 +21,6 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown,
-    covr,
-    circular,
 Imports: 
     dplyr,
     magrittr,
@@ -32,15 +29,9 @@ Imports:
     tibble,
     tidyr,
     methods,
-    card,
-    tidyverse,
-    tidymodels,
-    progress,
     rlang,
-    broom,
-    yardstick
 Remotes:
-    asshah4/card
+    asshah4/aim
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/aim
 BugReports: https://github.com/asshah4/aim/issues

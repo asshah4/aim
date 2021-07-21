@@ -1,4 +1,4 @@
-url: https://asshah4.github.io/octomod/
+url: https://asshah4.github.io/aims/
 
 destination: docs
 
@@ -25,15 +25,4 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/asshah4/octomod/
-
-reference:
-- title: "Creating an Octomod"
-  desc: Basic functions for making an `octomod` object
-- contents:
-  - arm
-  - core
-  - octomod
-  - equip
-  - sharpen
-
+      href: https://github.com/asshah4/aims/
