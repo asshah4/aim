@@ -108,7 +108,7 @@ should be applied to the data set." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/aims/">
+  <a href="https://github.com/asshah4/framework/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -175,12 +175,13 @@ as below:</p><ul>
 which will be placed in separate formulas from any other term marked as an
 exposure</p></li>
 <li><p><code><a href='https://rdrr.io/r/stats/cor.html'>cov()</a></code> is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as mixed
-effects</p></li>
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects</p></li>
 </ul>
 
 <p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
-<p>For example, the equation below describes two independent exposures "x1" and "x2" that should be conditionally regressed for every level of "z"</p>
+<p>For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally regressed for every level of "z"</p>
 <p>$$y ~ exp(x1) + exp(x2) + x3 + x4 + cov((1 | z))$$</p></td>
     </tr>
     <tr>

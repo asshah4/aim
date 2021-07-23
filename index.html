@@ -64,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/asshah4/aims/">
+  <a href="https://github.com/asshah4/framework/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -81,9 +81,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="aims" class="section level1">
+<div id="framework" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#aims" class="anchor"></a>aims</h1></div>
+<a href="#framework" class="anchor"></a>framework</h1></div>
 <!-- badges: start -->
 
 <!-- badges: end -->
@@ -91,105 +91,6 @@
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>The package is simple to use. First, lets load the basic packages. The two hypotheses in this case are a linear model, and a paired t-test. The <code>iris</code> dataset will serve as the example.</p>
-<p>You can see that <code>parsnip</code> is used, as this allows <strong>many</strong> model specifications to be called in a very similar manner, making modeling much easier.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/aim">aims</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://parsnip.tidymodels.org">parsnip</a></span><span class="op">)</span>
-
-<span class="va">aim</span> <span class="op">&lt;-</span> 
-    <span class="fu"><a href="reference/project.html">project</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/set_data.html">set_data</a></span><span class="op">(</span><span class="va">iris</span><span class="op">)</span> 
-
-<span class="co"># Print</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">aim</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 1 x 3</span>
-<span class="co">#&gt;   data  hypothesis findings</span>
-<span class="co">#&gt;   &lt;chr&gt;      &lt;int&gt;    &lt;int&gt;</span>
-<span class="co">#&gt; 1 iris           0        0</span></code></pre></div>
-<p>This simply shows that there are not yet any hypotheses that have been tested yet.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Adding tests</span>
-<span class="va">aim</span> <span class="op">&lt;-</span>
-    <span class="va">aim</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/add_hypothesis.html">add_hypothesis</a></span><span class="op">(</span>
-        name <span class="op">=</span> <span class="st">"sepals"</span>,
-        formula <span class="op">=</span> <span class="va">Sepal.Length</span> <span class="op">~</span> <span class="va">Sepal.Width</span>,
-        test <span class="op">=</span> <span class="st">"t.test"</span>,
-        paired <span class="op">=</span> <span class="cn">TRUE</span>
-    <span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/add_hypothesis.html">add_hypothesis</a></span><span class="op">(</span>
-        name <span class="op">=</span> <span class="st">"linear"</span>,
-        formula <span class="op">=</span> <span class="va">Petal.Length</span> <span class="op">~</span> <span class="va">Sepal.Length</span> <span class="op">+</span> <span class="va">Sepal.Width</span>,
-        combination <span class="op">=</span> <span class="st">"sequential"</span>,
-        test <span class="op">=</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/linear_reg.html">linear_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span>,
-        .strata <span class="op">=</span> <span class="st">"Species"</span>
-    <span class="op">)</span>
-<span class="co">#&gt; Using the only available data set.</span>
-<span class="co">#&gt; Using the only available data set.</span>
-
-<span class="co"># Show our new hypothesis</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">aim</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 4 x 8</span>
-<span class="co">#&gt;   data  name   type       outcomes     number run   split level     </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;         &lt;int&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;fct&gt;     </span>
-<span class="co">#&gt; 1 iris  sepals htest      Sepal.Length      1 FALSE FALSE &lt;NA&gt;      </span>
-<span class="co">#&gt; 2 iris  linear model_spec Petal.Length      2 FALSE TRUE  setosa    </span>
-<span class="co">#&gt; 3 iris  linear model_spec Petal.Length      2 FALSE TRUE  versicolor</span>
-<span class="co">#&gt; 4 iris  linear model_spec Petal.Length      2 FALSE TRUE  virginica</span></code></pre></div>
-<p>This helps to identify how the tests were set up, and what have been run. It serves as a quick summary of the analysis.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Running the tests</span>
-<span class="va">aim</span> <span class="op">&lt;-</span>
-    <span class="va">aim</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/build_models.html">build_models</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Shows which analyses have been run</span>
-<span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">aim</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 4 x 8</span>
-<span class="co">#&gt;   data  name   type       outcomes     number run   split level     </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;      &lt;chr&gt;         &lt;int&gt; &lt;lgl&gt; &lt;lgl&gt; &lt;fct&gt;     </span>
-<span class="co">#&gt; 1 iris  sepals htest      Sepal.Length      1 TRUE  FALSE &lt;NA&gt;      </span>
-<span class="co">#&gt; 2 iris  linear model_spec Petal.Length      2 TRUE  TRUE  setosa    </span>
-<span class="co">#&gt; 3 iris  linear model_spec Petal.Length      2 TRUE  TRUE  versicolor</span>
-<span class="co">#&gt; 4 iris  linear model_spec Petal.Length      2 TRUE  TRUE  virginica</span></code></pre></div>
-<p>This now has models that have been run, along with how the data was stratified if indicated. These can then be pulled in a tidy format (or a raw model if need be).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Show the findings in a tidy format</span>
-<span class="va">aim</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/collect_findings.html">collect_findings</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 16 x 14</span>
-<span class="co">#&gt;    name   number outcomes     estimate statistic  p.value parameter conf.low</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt;  1 sepals      1 Sepal.Length   2.79     34.8    1.85e-73       149  2.63   </span>
-<span class="co">#&gt;  2 linear      1 Petal.Length   0.803     2.34   2.38e- 2        NA  0.112  </span>
-<span class="co">#&gt;  3 linear      1 Petal.Length   0.132     1.92   6.07e- 2        NA -0.00615</span>
-<span class="co">#&gt;  4 linear      1 Petal.Length   0.185     0.360  7.20e- 1        NA -0.849  </span>
-<span class="co">#&gt;  5 linear      1 Petal.Length   0.686     7.95   2.59e-10        NA  0.513  </span>
-<span class="co">#&gt;  6 linear      1 Petal.Length   0.610     1.46   1.50e- 1        NA -0.228  </span>
-<span class="co">#&gt;  7 linear      1 Petal.Length   0.750    11.9    6.30e-16        NA  0.623  </span>
-<span class="co">#&gt;  8 linear      2 Petal.Length   0.791     2.25   2.92e- 2        NA  0.0836 </span>
-<span class="co">#&gt;  9 linear      2 Petal.Length   0.149     1.44   1.57e- 1        NA -0.0594 </span>
-<span class="co">#&gt; 10 linear      2 Petal.Length  -0.0211   -0.220  8.27e- 1        NA -0.214  </span>
-<span class="co">#&gt; 11 linear      2 Petal.Length  -0.111    -0.215  8.31e- 1        NA -1.15   </span>
-<span class="co">#&gt; 12 linear      2 Petal.Length   0.578     5.90   3.87e- 7        NA  0.381  </span>
-<span class="co">#&gt; 13 linear      2 Petal.Length   0.339     2.10   4.07e- 2        NA  0.0150 </span>
-<span class="co">#&gt; 14 linear      2 Petal.Length   0.592     1.26   2.12e- 1        NA -0.350  </span>
-<span class="co">#&gt; 15 linear      2 Petal.Length   0.747    10.4    8.01e-14        NA  0.603  </span>
-<span class="co">#&gt; 16 linear      2 Petal.Length   0.0128    0.0904 9.28e- 1        NA -0.271  </span>
-<span class="co">#&gt; # … with 6 more variables: conf.high &lt;dbl&gt;, method &lt;chr&gt;, alternative &lt;chr&gt;,</span>
-<span class="co">#&gt; #   term &lt;chr&gt;, std.error &lt;dbl&gt;, level &lt;fct&gt;</span>
-
-<span class="co"># Show the findings with raw models (if needed)</span>
-<span class="va">aim</span> <span class="op">%&gt;%</span> <span class="fu"><a href="reference/collect_findings.html">collect_findings</a></span><span class="op">(</span>tidy <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co">#&gt; Only returning raw models.</span>
-<span class="co">#&gt; # A tibble: 6 x 5</span>
-<span class="co">#&gt;   name   number level      outcomes     fit   </span>
-<span class="co">#&gt;   &lt;chr&gt;   &lt;int&gt; &lt;fct&gt;      &lt;chr&gt;        &lt;list&gt;</span>
-<span class="co">#&gt; 1 linear      1 setosa     Petal.Length &lt;lm&gt;  </span>
-<span class="co">#&gt; 2 linear      1 versicolor Petal.Length &lt;lm&gt;  </span>
-<span class="co">#&gt; 3 linear      1 virginica  Petal.Length &lt;lm&gt;  </span>
-<span class="co">#&gt; 4 linear      2 setosa     Petal.Length &lt;lm&gt;  </span>
-<span class="co">#&gt; 5 linear      2 versicolor Petal.Length &lt;lm&gt;  </span>
-<span class="co">#&gt; 6 linear      2 virginica  Petal.Length &lt;lm&gt;</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -222,8 +123,8 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://github.com/asshah4/aims/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/w/asshah4/aims" alt="Github commit frequency"></a></li>
-<li><a href="https://github.com/asshah4/aims/actions"><img src="https://github.com/asshah4/aims/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/asshah4/framework/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/w/asshah4/framework" alt="Github commit frequency"></a></li>
+<li><a href="https://github.com/asshah4/framework/actions"><img src="https://github.com/asshah4/framework/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 </div>

@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://asshah4.github.io/aims//index.html</loc>
+    <loc>https://asshah4.github.io/framework//index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/add_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/add_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/build_models.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/build_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/collect_findings.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/collect_findings.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/make_formulas.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/fit_calls.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/pipe.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/fit_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/project.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/make_formulas.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/set_data.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//articles/development.html</loc>
+    <loc>https://asshah4.github.io/framework//reference/project.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/framework//reference/set_data.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/framework//reference/tidy_tests.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/framework//articles/development.html</loc>
   </url>
 </urlset>
