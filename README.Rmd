@@ -13,76 +13,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-# aims
+# framework
 
 <!-- badges: start -->
 
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental) [![Github commit frequency](https://img.shields.io/github/commit-activity/w/asshah4/aims)](https://github.com/asshah4/aims/graphs/commit-activity) [![R-CMD-check](https://github.com/asshah4/aims/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/aims/actions)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental) [![Github commit frequency](https://img.shields.io/github/commit-activity/w/asshah4/framework)](https://github.com/asshah4/framework/graphs/commit-activity) [![R-CMD-check](https://github.com/asshah4/framework/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/framework/actions)
 
 <!-- badges: end -->
 
 ## Usage
 
 The package is simple to use. First, lets load the basic packages. The two hypotheses in this case are a linear model, and a paired t-test. The `iris` dataset will serve as the example.
-
-You can see that `parsnip` is used, as this allows **many** model specifications to be called in a very similar manner, making modeling much easier.
-
-```{r}
-library(aims)
-library(parsnip)
-
-aim <- 
-	project() %>%
-	set_data(iris) 
-
-# Print
-print(aim)
-```
-
-This simply shows that there are not yet any hypotheses that have been tested yet.
-
-```{r}
-# Adding tests
-aim <-
-	aim %>%
-	add_hypothesis(
-		name = "sepals",
-		formula = Sepal.Length ~ Sepal.Width,
-		test = "t.test",
-		paired = TRUE
-	) %>%
-	add_hypothesis(
-		name = "linear",
-		formula = Petal.Length ~ Sepal.Length + Sepal.Width,
-		combination = "sequential",
-		test = linear_reg() %>% set_engine("lm"),
-		.strata = "Species"
-	)
-
-# Show our new hypothesis
-print(aim)
-```
-
-This helps to identify how the tests were set up, and what have been run. It serves as a quick summary of the analysis.
-
-```{r}
-# Running the tests
-aim <-
-	aim %>%
-	build_models()
-
-# Shows which analyses have been run
-print(aim)
-```
-
-This now has models that have been run, along with how the data was stratified if indicated.
-These can then be pulled in a tidy format (or a raw model if need be).
-
-```{r}
-# Show the findings in a tidy format
-aim %>% collect_findings()
-
-# Show the findings with raw models (if needed)
-aim %>% collect_findings(tidy = FALSE)
-```
 

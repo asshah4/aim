@@ -19,13 +19,14 @@ as below:
 which will be placed in separate formulas from any other term marked as an
 exposure
 \item \code{cov()} is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as mixed
-effects
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects
 }
 
 Of note, these formula modifiers do not apply to \code{htest} objects yet.
 
-For example, the equation below describes two independent exposures "x1" and "x2" that should be conditionally regressed for every level of "z"
+For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally regressed for every level of "z"
 
 \deqn{y ~ exp(x1) + exp(x2) + x3 + x4 + cov((1 | z))}}
 
@@ -39,5 +40,6 @@ the \code{combination} currently include:
 }}
 }
 \description{
-This is an internal function that helps to create the appropriate formula combinations for adding hypotheses.
+This is an internal function that helps to create the appropriate formula
+combinations for adding hypotheses.
 }
