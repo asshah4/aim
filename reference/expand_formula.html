@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Build the Models and Tests — build_models • aims</title>
+<title>Expand Formulas for a Hypothesis — expand_formula • aims</title>
 
 
 <!-- jquery -->
@@ -39,14 +39,9 @@
 
 
 
-<meta property="og:title" content="Build the Models and Tests — build_models" />
-<meta property="og:description" content="The project arms may include hypotheses that are represented by multiple
-types of tests. The models are dependent on the universal definitions from
-the parsnip package. In addition,
-specific basic statistical testing can be analyzed and stored.
-This step is added after add_hypothesis() in terms of workflow. This
-function only runs on hypothesis that have not already been run, allowing for
-the ease of adding to an existing project without rebuilding it." />
+<meta property="og:title" content="Expand Formulas for a Hypothesis — expand_formula" />
+<meta property="og:description" content="This is an internal function that helps to create the appropriate formula
+combinations for adding hypotheses." />
 
 
 
@@ -129,43 +124,62 @@ the ease of adding to an existing project without rebuilding it." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Build the Models and Tests</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/build_models.R'><code>R/build_models.R</code></a></small>
-    <div class="hidden name"><code>build_models.Rd</code></div>
+    <h1>Expand Formulas for a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
+    <div class="hidden name"><code>expand_formula.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The project arms may include hypotheses that are represented by multiple
-types of tests. The models are dependent on the universal definitions from
-the <a href='https://parsnip.tidymodels.org/'>parsnip</a> package. In addition,
-specific basic statistical testing can be analyzed and stored.
-This step is added after <code><a href='add_hypothesis.html'>add_hypothesis()</a></code> in terms of workflow. This
-function only runs on hypothesis that have not already been run, allowing for
-the ease of adding to an existing project without rebuilding it.</p>
+    <p>This is an internal function that helps to create the appropriate formula
+combinations for adding hypotheses.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>build_models</span><span class='op'>(</span><span class='va'>project</span>, .stage <span class='op'>=</span> <span class='st'>"build"</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>expand_formula</span><span class='op'>(</span><span class='va'>formula</span>, <span class='va'>combination</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>project</th>
-      <td><p>Object of class <code>project</code></p></td>
+      <th>formula</th>
+      <td><p>Formula showing relationship of outcomes and predictors, and
+is essentially the hypothesis. It allows for complex formulas e.g. multiple
+predictors, multiple exposures, and multiple covariates, that can be
+organized into individual formulas based on additional modifiers. Each RHS
+term of the formula is considered an outcome variable, and is analyzed as a
+single outcome. Each LHS term is consider a predictor, and can be modified
+as below:</p><ul>
+<li><p><code>X()</code> is placed around a term to define as an independent exposure,
+which will be placed in separate formulas from any other term marked as an
+exposure</p></li>
+<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects</p></li>
+</ul>
+
+<p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
+<p>For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally regressed for every level of "z"</p>
+<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p></td>
     </tr>
     <tr>
-      <th>.stage</th>
-      <td><p>Internal marker of workflow progress.</p></td>
+      <th>combination</th>
+      <td><p>The building pattern for how to put together the overall
+plan. It defines variable relationships that will be used. The options for
+the <code>combination</code> currently include:</p><ul>
+<li><p><code>direct</code> will define the relationship as y ~ x</p></li>
+<li><p><code>sequential</code> will define the relationship as y ~ x1, y ~ x1 + x2</p></li>
+<li><p><code>parallel</code> will define the relationship as y ~ x1, y ~ x2</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>For extensibility</p></td>
+      <td><p>Not currently used</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Object of <code>project</code> class</p>
+    <p>Table of formulas and extracted terms</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

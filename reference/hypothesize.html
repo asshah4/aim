@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Make formula combinations in new_hypothesis() — make_formulas • aims</title>
+<title>Create a Hypothesis — hypothesize • aims</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,10 @@
 
 
 
-<meta property="og:title" content="Make formula combinations in new_hypothesis() — make_formulas" />
-<meta property="og:description" content="This is an internal function that helps to create the appropriate formula
-combinations for adding hypotheses." />
+<meta property="og:title" content="Create a Hypothesis — hypothesize" />
+<meta property="og:description" content="hypothesize() creates a hypothesis object that can be placed into a
+modeling framework. This framework allows for multiple hypotheses to be
+modeled, and allows for assessment of confounding variables." />
 
 
 
@@ -124,21 +125,46 @@ combinations for adding hypotheses." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Make formula combinations in <code>new_hypothesis()</code></h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/add_hypothesis.R'><code>R/add_hypothesis.R</code></a></small>
-    <div class="hidden name"><code>make_formulas.Rd</code></div>
+    <h1>Create a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
+    <div class="hidden name"><code>hypothesize.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is an internal function that helps to create the appropriate formula
-combinations for adding hypotheses.</p>
+    <p><code>hypothesize()</code> creates a <code>hypothesis</code> object that can be placed into a
+modeling framework. This framework allows for multiple hypotheses to be
+modeled, and allows for assessment of confounding variables.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>make_formulas</span><span class='op'>(</span><span class='va'>formula</span>, <span class='va'>combination</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for formula</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span>
+  <span class='va'>formula</span>,
+  <span class='va'>combination</span>,
+  <span class='va'>test</span>,
+  test_opts <span class='op'>=</span> <span class='cn'>NULL</span>,
+  data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  data_name <span class='op'>=</span> <span class='cn'>NULL</span>,
+  strata <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p>General object that can be cast into a hypothesis object. Currently
+this accepts the following object types:</p><ul>
+<li><p><code>formula</code> objects, which will be given additional modifiers as described.
+Please see the <code>formula</code> parameter for further details.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>For additional variables based on the generic method invoked.</p></td>
+    </tr>
     <tr>
       <th>formula</th>
       <td><p>Formula showing relationship of outcomes and predictors, and
@@ -148,10 +174,10 @@ organized into individual formulas based on additional modifiers. Each RHS
 term of the formula is considered an outcome variable, and is analyzed as a
 single outcome. Each LHS term is consider a predictor, and can be modified
 as below:</p><ul>
-<li><p><code><a href='https://rdrr.io/r/base/Log.html'>exp()</a></code> is placed around a term to define as an independent exposure,
+<li><p><code>X()</code> is placed around a term to define as an independent exposure,
 which will be placed in separate formulas from any other term marked as an
 exposure</p></li>
-<li><p><code><a href='https://rdrr.io/r/stats/cor.html'>cov()</a></code> is placed around a term for any predictors that should be
+<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
 maintained/fixed in all models, which can include complex terms, such as
 mixed effects</p></li>
 </ul>
@@ -159,7 +185,7 @@ mixed effects</p></li>
 <p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
 <p>For example, the equation below describes two independent exposures "x1"
 and "x2" that should be conditionally regressed for every level of "z"</p>
-<p>$$y ~ exp(x1) + exp(x2) + x3 + x4 + cov((1 | z))$$</p></td>
+<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p></td>
     </tr>
     <tr>
       <th>combination</th>
@@ -171,8 +197,53 @@ the <code>combination</code> currently include:</p><ul>
 <li><p><code>parallel</code> will define the relationship as y ~ x1, y ~ x2</p></li>
 </ul></td>
     </tr>
+    <tr>
+      <th>test</th>
+      <td><p>The testing that will be used, defined as how the analysis or
+hypothesis testing should be performed. There are several options on which
+specification to use, anywhere from regression modeling to inferential
+statistics. The test applies to the collection of hypotheses.</p><ul>
+<li><p>A model specified by the <a href='https://parsnip.tidymodels.org'><code>parsnip</code> package</a>, which includes the mode and
+computational engine</p></li>
+<li><p>A statistical test, such as a <code>t.test</code>, which may require additional
+parameters. These can be given as additional, unmatched arguments. This
+option currently supports only hypothesis tests, of class <code>htest</code>.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>test_opts</th>
+      <td><p>For optional or additional parameters to be given to the
+<em>test</em> argument. Should be in format of a list of <strong>name = argument</strong>
+pairs.</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>Data set to be attached to this hypothesis. Not necessary to
+create a <code>hypothesis</code>, and can be specified or added at a later time. The
+name of the data set will be used as the reference variable.</p></td>
+    </tr>
+    <tr>
+      <th>data_name</th>
+      <td><p>Name of the dataset that this hypothesis should be tested
+against. The data itself will be used to generate the name if it is given
+from the <em>data</em> argument. If only a character vector is given, the function
+will match the <code>hypothesis</code> to data already available (or warn if not
+available). This flexibility allows for lightweight manipulation of the
+<code>hypothesis</code> object, and the addition of multiple data sets.</p></td>
+    </tr>
+    <tr>
+      <th>strata</th>
+      <td><p>How the data should be split or stratified. References the
+name of the data given in that the models will be with fit
+against, splitting the data into subsets. This helps to perform hypothesis
+testing on subsets or strata of the data. It defaults to NULL (which means
+the full data will be used) <strong>experimental</strong></p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>An object of class <code>hypothesis</code></p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Build the Models and Tests — build_models • aims</title>
+<title>Tie Hypothesis to Data — tie_hypothesis_to_data • aims</title>
 
 
 <!-- jquery -->
@@ -39,14 +39,8 @@
 
 
 
-<meta property="og:title" content="Build the Models and Tests — build_models" />
-<meta property="og:description" content="The project arms may include hypotheses that are represented by multiple
-types of tests. The models are dependent on the universal definitions from
-the parsnip package. In addition,
-specific basic statistical testing can be analyzed and stored.
-This step is added after add_hypothesis() in terms of workflow. This
-function only runs on hypothesis that have not already been run, allowing for
-the ease of adding to an existing project without rebuilding it." />
+<meta property="og:title" content="Tie Hypothesis to Data — tie_hypothesis_to_data" />
+<meta property="og:description" content="Sets the status of the framework object to tie the hypothesis to the data it will be tested against." />
 
 
 
@@ -129,43 +123,18 @@ the ease of adding to an existing project without rebuilding it." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Build the Models and Tests</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/build_models.R'><code>R/build_models.R</code></a></small>
-    <div class="hidden name"><code>build_models.Rd</code></div>
+    <h1>Tie Hypothesis to Data</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/framework.R'><code>R/framework.R</code></a></small>
+    <div class="hidden name"><code>tie_hypothesis_to_data.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>The project arms may include hypotheses that are represented by multiple
-types of tests. The models are dependent on the universal definitions from
-the <a href='https://parsnip.tidymodels.org/'>parsnip</a> package. In addition,
-specific basic statistical testing can be analyzed and stored.
-This step is added after <code><a href='add_hypothesis.html'>add_hypothesis()</a></code> in terms of workflow. This
-function only runs on hypothesis that have not already been run, allowing for
-the ease of adding to an existing project without rebuilding it.</p>
+    <p>Sets the status of the <code>framework</code> object to tie the hypothesis to the data it will be tested against.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>build_models</span><span class='op'>(</span><span class='va'>project</span>, .stage <span class='op'>=</span> <span class='st'>"build"</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>tie_hypothesis_to_data</span><span class='op'>(</span><span class='va'>framework</span>, <span class='va'>hypothesis</span>, <span class='va'>name</span><span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>project</th>
-      <td><p>Object of class <code>project</code></p></td>
-    </tr>
-    <tr>
-      <th>.stage</th>
-      <td><p>Internal marker of workflow progress.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>For extensibility</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Object of <code>project</code> class</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

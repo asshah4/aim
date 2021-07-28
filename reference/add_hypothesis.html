@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add a Hypothesis to the Project — add_hypothesis • aims</title>
+<title>Add a Hypothesis to the Framework — add_hypothesis • aims</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,8 @@
 
 
 
-<meta property="og:title" content="Add a Hypothesis to the Project — add_hypothesis" />
-<meta property="og:description" content="Adding an &quot;arm&quot; to the project reflects a series of hypothesis generated
-around the core data that was set in the preceding function. The hypothesis
-formula allows for modifiers to both the formula itself, as well as how it
-should be applied to the data set." />
+<meta property="og:title" content="Add a Hypothesis to the Framework — add_hypothesis" />
+<meta property="og:description" content="Add a Hypothesis to the Framework" />
 
 
 
@@ -108,7 +105,7 @@ should be applied to the data set." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/framework/">
+  <a href="https://github.com/asshah4/aims/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -126,115 +123,27 @@ should be applied to the data set." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add a Hypothesis to the Project</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aim/blob/master/R/add_hypothesis.R'><code>R/add_hypothesis.R</code></a></small>
+    <h1>Add a Hypothesis to the Framework</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/framework.R'><code>R/framework.R</code></a></small>
     <div class="hidden name"><code>add_hypothesis.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Adding an "arm" to the project reflects a series of hypothesis generated
-around the core data that was set in the preceding function. The hypothesis
-formula allows for modifiers to both the formula itself, as well as <em>how</em> it
-should be applied to the data set.</p>
+    <p>Add a Hypothesis to the Framework</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_hypothesis</span><span class='op'>(</span>
-  <span class='va'>project</span>,
-  <span class='va'>name</span>,
-  <span class='va'>formula</span>,
-  combination <span class='op'>=</span> <span class='st'>"direct"</span>,
-  <span class='va'>test</span>,
-  which_data <span class='op'>=</span> <span class='cn'>NULL</span>,
-  .strata <span class='op'>=</span> <span class='cn'>NA</span>,
-  .stage <span class='op'>=</span> <span class='st'>"hypothesis"</span>,
+  <span class='va'>framework</span>,
+  <span class='va'>hypothesis</span>,
+  name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>hypothesis</span><span class='op'>)</span><span class='op'>)</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>project</th>
-      <td><p>Object of class <code>project</code></p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>Character string to identify this arm. Must be unique and not
-previously specified.</p></td>
-    </tr>
-    <tr>
-      <th>formula</th>
-      <td><p>Formula showing relationship of outcomes and predictors, and
-is essentially the hypothesis. It allows for complex formulas e.g. multiple
-predictors, multiple exposures, and multiple covariates, that can be
-organized into individual formulas based on additional modifiers. Each RHS
-term of the formula is considered an outcome variable, and is analyzed as a
-single outcome. Each LHS term is consider a predictor, and can be modified
-as below:</p><ul>
-<li><p><code><a href='https://rdrr.io/r/base/Log.html'>exp()</a></code> is placed around a term to define as an independent exposure,
-which will be placed in separate formulas from any other term marked as an
-exposure</p></li>
-<li><p><code><a href='https://rdrr.io/r/stats/cor.html'>cov()</a></code> is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects</p></li>
-</ul>
 
-<p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
-<p>For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally regressed for every level of "z"</p>
-<p>$$y ~ exp(x1) + exp(x2) + x3 + x4 + cov((1 | z))$$</p></td>
-    </tr>
-    <tr>
-      <th>combination</th>
-      <td><p>The building pattern for how to put together the overall
-plan. It defines variable relationships that will be used. The options for
-the <code>combination</code> currently include:</p><ul>
-<li><p><code>direct</code> will define the relationship as y ~ x</p></li>
-<li><p><code>sequential</code> will define the relationship as y ~ x1, y ~ x1 + x2</p></li>
-<li><p><code>parallel</code> will define the relationship as y ~ x1, y ~ x2</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>test</th>
-      <td><p>The testing that will be used, defined as how the analysis or
-hypothesis testing should be performed. There are several options on which
-specification to use, anywhere from regression modeling to inferential
-statistics. The test applies to the collection of hypotheses.</p><ul>
-<li><p>A model specified by the <a href='https://parsnip.tidymodels.org'><code>parsnip</code> package</a>, which includes the mode and #'   computational engine</p></li>
-<li><p>A statistical test, such as a <code>t.test</code>, which may require additional
-parameters. These can be given as additional, unmatched arguments. This
-option currently supports only hypothesis tests, of class <code>htest</code>.</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>which_data</th>
-      <td><p>Name of "row" or dataset that should be analyzed. Defaults
-to the most recent dataset added.</p></td>
-    </tr>
-    <tr>
-      <th>.strata</th>
-      <td><p>How the data should be split or stratified. References the
-name of the data given in <code><a href='set_data.html'>set_data()</a></code> that the models will be with fit
-against, splitting the data into subsets. This helps to perform hypothesis
-testing on subsets or strata of the data. It defaults to NULL (which means
-the full data will be used) <strong>experimental</strong></p></td>
-    </tr>
-    <tr>
-      <th>.stage</th>
-      <td><p>Internal marker of project status.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>This should reflect the additional parameters that may need to be
-given to the <code>test</code> argument, such as <code>paired = TRUE</code> for <code><a href='https://rdrr.io/r/stats/t.test.html'>t.test()</a></code>. The
-additional parameters must be named to allow them to be passed
-successfully.</p></td>
-    </tr>
-    </table>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p><code>project</code> object</p>
+    <div class='dont-index'><p>Other frameworks: 
+<code><a href='framework.html'>framework</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

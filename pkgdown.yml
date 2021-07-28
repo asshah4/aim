@@ -3,8 +3,8 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   development: development.html
-last_built: 2021-07-23T02:27Z
+last_built: 2021-07-28T13:39Z
 urls:
-  reference: https://asshah4.github.io/framework//reference
-  article: https://asshah4.github.io/framework//articles
+  reference: https://asshah4.github.io/aims//reference
+  article: https://asshah4.github.io/aims//articles
 
