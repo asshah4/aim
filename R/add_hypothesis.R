@@ -43,7 +43,7 @@
 #'   successfully.
 #'
 #' @export
-add_hypothesis <- function(project, name, formula, combination = "direct", test, which_data = NULL, .strata = NA, .stage = "hypothesis", ...) {
+new_hypothesis <- function(project, name, formula, combination = "direct", test, which_data = NULL, .strata = NA, .stage = "hypothesis", ...) {
 
 	# Argument validation
 	validate_project(project, .stage, formula)
@@ -99,7 +99,7 @@ add_hypothesis <- function(project, name, formula, combination = "direct", test,
 
 }
 
-#' Make formula combinations in `add_hypothesis()`
+#' Make formula combinations in `new_hypothesis()`
 #'
 #' This is an internal function that helps to create the appropriate formula
 #' combinations for adding hypotheses.
@@ -189,7 +189,7 @@ make_formulas <- function(formula, combination) {
 						mutate(vars = purrr::map2(vars, exposures, ~ c(.y, .x))) %>%
 						mutate(vars = purrr::map(vars, ~ na.omit(.x)))
 					} else {
-						.
+						tibble::add_column(., exposures = NA)
 					}
 				} %>%
 				tidyr::expand_grid(outcomes = outcomes, .)
@@ -209,7 +209,7 @@ make_formulas <- function(formula, combination) {
 						mutate(vars = purrr::map2(vars, exposures, ~ c(.y, .x))) %>%
 						mutate(vars = purrr::map(vars, ~ na.omit(.x)))
 					} else {
-						.
+						tibble::add_column(., exposures = NA)
 					}
 				} %>%
 				tidyr::expand_grid(outcomes = outcomes, .)
@@ -236,7 +236,7 @@ make_formulas <- function(formula, combination) {
 						mutate(vars = purrr::map2(vars, exposures, ~ c(.y, .x))) %>%
 						mutate(vars = purrr::map(vars, ~ na.omit(.x)))
 					} else {
-						.
+						tibble::add_column(., exposures = NA)
 					}
 				} %>%
 				tidyr::expand_grid(outcomes = outcomes, .)

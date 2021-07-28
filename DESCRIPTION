@@ -1,5 +1,5 @@
 Package: aims
-Title: A Many-Handed Approach to Multiple Models
+Title: A Hypothesis Driven Approach to Multiple Models
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
@@ -8,11 +8,12 @@ Authors@R:
            email = "ashah282@uic.edu",
            comment = c(ORCID = "0000-0002-9729-1558"))
 Description: A simple and tidy way to organize the many models built during a 
-    research project. The package consists of individual hypothesis objects that 
-    are all linked together around a single data set. In causality-based 
-    research, such as epidemiology, the focus is on specific hypothesis that can
-    be tested. However, the number of models can become unruly. This serves as a 
-    way to organize the many.
+    research project. The package consists of formulating hypothesis, testing or
+    modeling the findings, and understanding the parameters. In causality-based 
+    research, such as epidemiology, the focus is on a specific aim that 
+    can be tested, which helps to contextualize variables, and provides 
+    relationships between outcomes, exposures, and covariates. This package 
+    attempts to provide a framework for these types of analyses.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -33,6 +34,6 @@ Imports:
 Remotes:
     asshah4/aim
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/aim
-BugReports: https://github.com/asshah4/aim/issues
+URL: https://github.com/asshah4/aims
+BugReports: https://github.com/asshah4/aims/issues
 Config/testthat/edition: 3
