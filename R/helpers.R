@@ -12,32 +12,38 @@ add_data <- function(x, ...) {
 
 #' Add data to the hypothesis
 #'
-#' @param data Data set to be attached to this hypothesis. Not necessary to
-#'   create a `hypothesis`, and can be specified or added at a later time. The
-#'   name of the data set will be used as the reference variable.
+#' @param .data Data set to be linked to this hypothesis. The argument can
+#'   either be a character string or a data frame, and defaults to NULL. If
+#'   `.data` is a character string, it assumes that a data frame will be added
+#'   later (or is already available in the `framework` object). If the `.data`
+#'   is a data frame, it takes the name of the given data. It is not necessary
+#'   to include a data argument, but the hypothesis cannot be tested until a
+#'   data set is provided. This allows for flexibility and lightweight
+#'   manipulation of the `hypothesis` object.
 #'
-#' @param data_name Name of the dataset that this hypothesis should be tested
-#'   against. The data itself will be used to generate the name if it is given
-#'   from the *data* argument. If only a character vector is given, the function
-#'   will match the `hypothesis` to data already available (or warn if not
-#'   available). This flexibility allows for lightweight manipulation of the
-#'   `hypothesis` object, and the addition of multiple data sets.
-#'
-#' @param strata How the data should be split or stratified. References the
-#'   name of the data given in that the models will be with fit
-#'   against, splitting the data into subsets. This helps to perform hypothesis
-#'   testing on subsets or strata of the data. It defaults to NULL (which means
-#'   the full data will be used) **experimental**
+#' @param .strata How the data should be split or stratified. References the
+#'   name of the data given in that the models will be with fit against,
+#'   splitting the data into subsets. This helps to perform hypothesis testing
+#'   on subsets or strata of the data. It defaults to NULL (which means the full
+#'   data will be used). This argument will only be incorporated if `.data` is
+#'   present.
 #'
 #' @rdname add_data
 #' @export
-add_data.hypothesis <- function(x,
-																data,
-																data_name = deparse(substitute(data))) {
+add_data.hypothesis <- function(x, .data, .strata = NULL) {
 	# Warn if data is already present
 
-	# Forces an update of the data if its available
-	attributes(x)$data[[data_name]] <- data
+	# The data name helps to link the datasets to the tests and hypothesis
+	if (!is.null(.data)) {
+		.data_name <- deparse(substitute(.data))
+	} else {
+		.data_name <- NULL
+	}
+
+	# Update attributes
+	x <-
+		x %>%
+		.set_hypothesis_data(.data, .data_name, .strata)
 
 	# Return hypothesis
 	x
@@ -45,24 +51,37 @@ add_data.hypothesis <- function(x,
 
 #' Add data to the hypothesis that is a part of a framework
 #'
-#' @param hypothesis_name Character vector of which hypothesis data frame should be added to. This will replace prior data that was set.
+#' @param name Character vector of which hypothesis the data should be added to.
 #'
 #' @rdname add_data
 #' @export
-add_data.framework <- function(x,
-															 hypothesis_name,
-															 data,
-															 data_name = deparse(substitute(data))) {
+add_data.framework <- function(x, name, .data, .strata = NULL) {
 	# Warn if data is already present
 
-	# Forces an update if already present
-	attributes(x)$data <- attributes(x)$data %>%
+	# The data name helps to link the datasets to the tests and hypothesis
+	if (!is.null(.data)) {
+		.data_name <- deparse(substitute(.data))
+	} else {
+		.data_name <- NULL
+	}
+
+	# Strata cannot be NULL when adding
+	if (is.null(.strata)) {
+		.strata <- NA
+	}
+
+	# Adds a row
+	#attributes(x)$data_table <- attributes(x)$data_table %>%
+	attributes(x)$data_table %>%
 		tibble::add_row(
-			hypothesis_name = hypothesis_name,
-			data_name = data_name,
-			data = list(data)
+			hypothesis_name = name,
+			data = list(.data),
+		)
+			data_name = .data_name,
+			strata = .strata
 		)
 
 	# Return framework
 	x
 }
+

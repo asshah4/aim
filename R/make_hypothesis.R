@@ -43,7 +43,7 @@
 #'   successfully.
 #'
 #' @export
-new_hypothesis <- function(project, name, formula, combination = "direct", test, which_data = NULL, .strata = NA, .stage = "hypothesis", ...) {
+make_hypothesis <- function(project, name, formula, combination = "direct", test, which_data = NULL, .strata = NA, .stage = "hypothesis", ...) {
 
 	# Argument validation
 	validate_project(project, .stage, formula)

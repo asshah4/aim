@@ -5,11 +5,15 @@
 framework <- function(...) {
 	# Base structure is that of a tibble
 	framework <- tibble::tribble(
-		~name, ~outcome, ~exposure, ~formula, ~fit, ~tidy
+		~name, ~outcome, ~exposure, ~formulae, ~fit, ~tidy
 	)
 
-	attr(framework, "data") <- tibble::tribble(
-		~hypothesis_name, ~data_name, ~data
+	attr(framework, "data_table") <- tibble::tribble(
+		~hypothesis_name, ~data_name, ~data, ~strata
+	)
+
+	attr(framework, "test_table") <- tibble::tribble(
+		~hypothesis_name, ~test, ~test_opts
 	)
 
 	# Return
@@ -26,8 +30,8 @@ add_hypothesis <- function(framework,
 													 name = deparse(substitute(hypothesis)),
 													 ...) {
 	# Identify number of sub-hypotheses
-	parameters <- attributes(hypothesis)$terms
-	formulas <- attributes(hypothesis)$formulas[[1]]
+	parameters <- attributes(hypothesis)$parameters
+	formulae <- attributes(hypothesis)$formulae
 	n <- nrow(parameters)
 
 	for (i in 1:n) {
@@ -36,32 +40,16 @@ add_hypothesis <- function(framework,
 				name = name,
 				outcome = parameters$outcomes[i],
 				exposure = parameters$exposures[i],
-				formula = list(formulas[[i]])
+				formulae = list(formulae[[i]])
 			)
 	}
 
 	# Each of the rows of the hypothesis are sub-hypotheses to be tested
-	framework <- tie_hypothesis_to_data(framework, hypothesis, name)
+	if (length(attributes(hypothesis)$data) > 0) {
+		framework <- .link_hypothesis_to_data(framework, hypothesis, name)
+	}
 
 	# Return
 	framework
 }
 
-#' Tie Hypothesis to Data
-#'
-#' Sets the status of the `framework` object to tie the hypothesis to the data it will be tested against.
-#' @family internals
-#' @export
-tie_hypothesis_to_data <- function(framework, hypothesis, name) {
-
-	# If data is present in the hypothesis
-	attributes(framework)$data <- attributes(framework)$data %>%
-		tibble::add_row(
-			hypothesis_name = name,
-			data_name = names(attributes(hypothesis)$data),
-			data = attributes(hypothesis)$data
-		)
-
-	# Return framework
-	framework
-}

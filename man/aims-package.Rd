@@ -4,14 +4,15 @@
 \name{aims-package}
 \alias{aims}
 \alias{aims-package}
-\title{aims: A Many-Handed Approach to Multiple Models}
+\title{aims: A Hypothesis Driven Approach to Multiple Models}
 \description{
 A simple and tidy way to organize the many models built during a 
-    research project. The package consists of individual hypothesis objects that 
-    are all linked together around a single data set. In causality-based 
-    research, such as epidemiology, the focus is on specific hypothesis that can
-    be tested. However, the number of models can become unruly. This serves as a 
-    way to organize the many.
+    research project. The package consists of formulating hypothesis, testing or
+    modeling the findings, and understanding the parameters. In causality-based 
+    research, such as epidemiology, the focus is on a specific aim that 
+    can be tested, which helps to contextualize variables, and provides 
+    relationships between outcomes, exposures, and covariates. This package 
+    attempts to provide a framework for these types of analyses.
 }
 \seealso{
 Useful links:

@@ -3,53 +3,32 @@
 \name{hypothesize}
 \alias{hypothesize}
 \alias{hypothesize.formula}
+\alias{hypothesize.default}
 \title{Create a Hypothesis}
 \usage{
-hypothesize(x, ...)
+hypothesize(h, ...)
 
 \method{hypothesize}{formula}(
-  formula,
+  h,
   combination,
   test,
-  test_opts = NULL,
-  data = NULL,
-  data_name = NULL,
-  strata = NULL,
+  .test_opts = NULL,
+  .data = NULL,
+  .strata = NULL,
   ...
 )
+
+\method{hypothesize}{default}(h, ...)
 }
 \arguments{
-\item{x}{General object that can be cast into a hypothesis object. Currently
+\item{h}{General object that can be cast into a hypothesis object. Currently
 this accepts the following object types:
 \itemize{
-\item \code{formula} objects, which will be given additional modifiers as described.
-Please see the \code{formula} parameter for further details.
+\item \code{formula} objects, which  be given additional modifiers as described.
+Please see \code{\link[=expand_formula]{expand_formula()}} or the formula section below for details.
 }}
 
 \item{...}{For additional variables based on the generic method invoked.}
-
-\item{formula}{Formula showing relationship of outcomes and predictors, and
-is essentially the hypothesis. It allows for complex formulas e.g. multiple
-predictors, multiple exposures, and multiple covariates, that can be
-organized into individual formulas based on additional modifiers. Each RHS
-term of the formula is considered an outcome variable, and is analyzed as a
-single outcome. Each LHS term is consider a predictor, and can be modified
-as below:
-\itemize{
-\item \code{X()} is placed around a term to define as an independent exposure,
-which will be placed in separate formulas from any other term marked as an
-exposure
-\item \code{F()} is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects
-}
-
-Of note, these formula modifiers do not apply to \code{htest} objects yet.
-
-For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally regressed for every level of "z"
-
-\deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}}
 
 \item{combination}{The building pattern for how to put together the overall
 plan. It defines variable relationships that will be used. The options for
@@ -72,26 +51,25 @@ parameters. These can be given as additional, unmatched arguments. This
 option currently supports only hypothesis tests, of class \code{htest}.
 }}
 
-\item{test_opts}{For optional or additional parameters to be given to the
-\emph{test} argument. Should be in format of a list of \strong{name = argument}
-pairs.}
+\item{.test_opts}{For optional or additional parameters to be given to the
+\emph{test} argument. Should be in format of a list with name-pairs, such as
+\code{list(name = argument)} pairs.}
 
-\item{data}{Data set to be attached to this hypothesis. Not necessary to
-create a \code{hypothesis}, and can be specified or added at a later time. The
-name of the data set will be used as the reference variable.}
+\item{.data}{Data set to be linked to this hypothesis. The argument can
+either be a character string or a data frame, and defaults to NULL. If
+\code{.data} is a character string, it assumes that a data frame will be added
+later (or is already available in the \code{framework} object). If the \code{.data}
+is a data frame, it takes the name of the given data. It is not necessary
+to include a data argument, but the hypothesis cannot be tested until a
+data set is provided. This allows for flexibility and lightweight
+manipulation of the \code{hypothesis} object.}
 
-\item{data_name}{Name of the dataset that this hypothesis should be tested
-against. The data itself will be used to generate the name if it is given
-from the \emph{data} argument. If only a character vector is given, the function
-will match the \code{hypothesis} to data already available (or warn if not
-available). This flexibility allows for lightweight manipulation of the
-\code{hypothesis} object, and the addition of multiple data sets.}
-
-\item{strata}{How the data should be split or stratified. References the
-name of the data given in that the models will be with fit
-against, splitting the data into subsets. This helps to perform hypothesis
-testing on subsets or strata of the data. It defaults to NULL (which means
-the full data will be used) \strong{experimental}}
+\item{.strata}{How the data should be split or stratified. References the
+name of the data given in that the models will be with fit against,
+splitting the data into subsets. This helps to perform hypothesis testing
+on subsets or strata of the data. It defaults to NULL (which means the full
+data will be used). This argument will only be incorporated if \code{.data} is
+present.}
 }
 \value{
 An object of class \code{hypothesis}
@@ -101,3 +79,31 @@ An object of class \code{hypothesis}
 modeling framework. This framework allows for multiple hypotheses to be
 modeled, and allows for assessment of confounding variables.
 }
+\section{Warning}{
+
+
+The formula object does not necessarily work for \code{htest} objects as it is
+still \strong{experimental}.
+}
+
+\section{Formulae}{
+
+
+When supplying a \code{formula} object, each RHS term of the formula is
+considered an outcome variable, and is analyzed as a single outcome. Each
+LHS term is consider a predictor, and can be modified as below:
+\itemize{
+\item \code{X()} is placed around a term to define as an independent exposure, which
+will be placed in separate formulae from any other term marked as an
+exposure
+\item \code{F()} is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects
+}
+
+For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally regressed for every level of "z"
+
+\deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}
+}
+
