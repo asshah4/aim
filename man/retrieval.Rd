@@ -7,6 +7,7 @@
 \alias{get_combination}
 \alias{get_formulae}
 \alias{get_parameters}
+\alias{get_names}
 \alias{update_status}
 \title{Retrieve, Modify, and Destroy Components From \code{framework} Object}
 \usage{
@@ -20,6 +21,8 @@ get_formulae(x, name)
 
 get_parameters(x, name)
 
+get_names(x, ...)
+
 update_status(x, name, stage = NA, run = FALSE)
 }
 \arguments{
@@ -27,7 +30,7 @@ update_status(x, name, stage = NA, run = FALSE)
 
 \item{name}{Name of \code{hypothesis} object to pull components from}
 
-\item{...}{For optional parameters}
+\item{...}{For additional parameters to be passed on}
 }
 \value{
 The \verb{get_*()} functions return the named object from the \code{framework}.
@@ -40,22 +43,19 @@ the \code{framework} object as described.
 
 \strong{Retrieval functions}:
 \itemize{
-\item \code{get_data()} retrieves the data set associated with a specified
-hypothesis and data name
+\item \code{get_data()} retrieves the data set associated with a specified hypothesis
+and data name
 \item \code{get_test()} retrieves the test associated with a hypothesis
-\item \code{get_formulae()} retrieves the list of formulaes associated with
-a hypothesis and data set.
-}
-
-\strong{Reporting functions}
-\itemize{
-\item \code{report_stage()} creates a message to identify at what stage a
-hypothesis has been developed to.
+\item \code{get_formulae()} retrieves the list of formulas associated with a
+hypothesis
+\item \code{get_combination()} retrieves how a hypothesis was combined to generate its
+formula list
+\item \code{get_names()} retrieves the hypothesis names that match a certain argument, such as \code{combination = "parallel"} or \code{data_name = "mtcars"}
 }
 
 \strong{Update functions}:
 \itemize{
-\item \code{update_status()} modifies the components of a framework, usually
-used internally to help update the stage/status of the specified object
+\item \code{update_status()} modifies the components of a framework, usually used
+internally to help update the stage/status of the specified object
 }
 }

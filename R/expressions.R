@@ -12,14 +12,20 @@
 #'   see the  for further documentation.
 #'
 #' @param combination The building pattern for how to put together the overall
-#'   plan. It defines variable relationships that will be used. The options for
-#'   the `combination` currently include:
+#'  plan. It defines variable relationships that will be used. The options of
+#'  `combination` will lead to the following patterns:
 #'
-#'   * `direct` will define the relationship as y ~ x
+#'  * `direct` will not modify the original equation pattern
 #'
-#'   * `sequential` will define the relationship as y ~ x1, y ~ x1 + x2
+#'  \deqn{y ~ x1 + x2}
 #'
-#'   * `parallel` will define the relationship as y ~ x1, y ~ x2
+#'  * `sequential` will create a list of sequentially adjusted formula
+#'
+#'  \deqn{y ~ x1} \deqn{y ~ x1 + x2}
+#'
+#'  * `parallel` will create a list of formula with parallel predictors
+#'
+#'  \deqn{y ~ x1} \deqn{y ~ x2}
 #'
 #' @param ... Not currently used
 #'
@@ -38,7 +44,7 @@
 #'   mixed effects
 #'
 #'   For example, the equation below describes two independent exposures "x1"
-#'   and "x2" that should be conditionally regressed for every level of "z"
+#'   and "x2" that should be conditionally tested for every level of "z"
 #'
 #'   \deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}
 #'
@@ -55,10 +61,8 @@ expand_formula <- function(formula,
 	fixed <- grep("F\\(", predictors, value = TRUE)
 	covariates <- setdiff(labels(stats::terms(formula)), c(fixed, exposures))
 
-	# Exposure should be primary variable in formula
-	if (length(exposures) == 0) {
-		exposures <- setdiff(predictors, c(exposures, fixed))[1]
-	} else if (length(exposures) > 0) {
+	# Exposures should be cleaned from original modifiers if present, or nulled
+	if (length(exposures) > 0) {
 		exposures <-
 			gsub("\\)", "", gsub("X\\(", "", exposures)) %>%
 			paste(outcomes, ., sep = " ~ ") %>%
@@ -66,20 +70,24 @@ expand_formula <- function(formula,
 			lapply(., stats::terms) %>%
 			lapply(., labels) %>%
 			unique()
+	} else if (length(exposures) == 0) {
+		exposures <- NA
 	}
 
-	# Clean up fixed variables, including mixed variables and parantheses
-	fixed <- gsub("\\)$", "", gsub("F\\(", "", fixed))
-	fixed[grepl("\\|", fixed)] <-
-		gsub("\\(", "", gsub("\\)", "", grep("\\|", fixed, value = TRUE)))
-	fixed[grepl("\\|", fixed)] <-
-		paste0("(", fixed[grepl("\\|", fixed)], ")")
+	# Fixed variables may included mixed effect objects or objects with
+	# parenthesis. They should be modified to maintain the original structure.
+	if (length(fixed) > 0) {
+		fixed <- gsub("\\)$", "", gsub("F\\(", "", fixed))
+		fixed[grepl("\\|", fixed)] <-
+			gsub("\\(", "", gsub("\\)", "", grep("\\|", fixed, value = TRUE)))
+		fixed[grepl("\\|", fixed)] <-
+			paste0("(", fixed[grepl("\\|", fixed)], ")")
+	} else if (length(fixed) == 0) {
+		fixed <- NULL
+	}
 
-	# Null out unneeded variables
-	if (length(fixed) == 0) {fixed <- NULL}
-	if (length(exposures) == 0) {exposures <- NULL}
-
-	# Place the fixed variables in the front
+	# Reset the covariates and ensure fixed variables are primary/upfront
+	covariates <- setdiff(covariates, c(fixed, exposures))
 	predictors <- c(fixed, covariates)
 
 	# Based on approach
@@ -98,12 +106,12 @@ expand_formula <- function(formula,
 		},
 		sequential = {
 			# Number of covariates to sequence through
-			num <- length(covariates) + sum(!is.null(exposures))
+			num <- length(covariates) + sum(!is.na(exposures))
 
 			tbl <-
 				tibble::tibble(number = 1:num) %>%
 				mutate(vars = purrr::map(
-					number, ~ c(fixed, covariates[0:(.x - sum(!is.null(exposures)))])
+					number, ~ c(fixed, covariates[0:(.x - sum(!is.na(exposures)))])
 				)) %>%
 				tidyr::expand_grid(exposures = exposures, .) %>%
 				mutate(vars = purrr::map2(vars, exposures, ~ c(.y, .x))) %>%
@@ -114,7 +122,7 @@ expand_formula <- function(formula,
 			# If no exp or fixed, than based on num. of covariates
 			# If no covariates, than based on num. of fixed and exposures
 			if (length(covariates) == 0) {
-				num <- sum(any(c(!is.null(fixed), !is.null(exposures))))
+				num <- sum(any(c(!is.null(fixed), !is.na(exposures))))
 			}
 
 			if (length(covariates) > 0) {

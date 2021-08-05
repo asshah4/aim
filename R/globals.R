@@ -16,7 +16,6 @@ utils::globalVariables(c(
 	"tests",
 	"number",
 	"tidied",
-	"tail",
 	"name",
 	"data"
 ))

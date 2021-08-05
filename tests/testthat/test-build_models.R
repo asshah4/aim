@@ -4,14 +4,14 @@ test_that("correct output of the built models", {
 	proj <-
 		project() %>%
 		set_data(mtcars) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "weight",
 			formula = wt ~ vs,
 			test = "t.test",
 			paired = TRUE,
 			combination = "direct"
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "mpg",
 			formula = mpg ~ wt + vs,
 			combination = "sequential",
@@ -24,6 +24,6 @@ test_that("correct output of the built models", {
 	expect_true("tidied" %in% names(proj$findings$weight))
 
 	res <- unlist(proj$findings, recursive = FALSE)
-	expect_length(res, 10)
+	expect_length(res, 12)
 
 })

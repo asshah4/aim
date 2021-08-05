@@ -89,7 +89,7 @@ mixed effects
 }
 
 For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally regressed for every level of "z"
+and "x2" that should be conditionally tested for every level of "z"
 
 \deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}
 }

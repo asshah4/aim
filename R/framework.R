@@ -9,7 +9,11 @@ framework <- function(...) {
 	)
 
 	attr(framework, "data_table") <- tibble::tribble(
-		~name, ~data_name, ~data_list, ~strata
+		~name, ~data_name, ~strata
+	)
+
+	attr(framework, "data_list") <- tibble::tribble(
+		~data_name, ~data
 	)
 
 	attr(framework, "test_table") <- tibble::tribble(
@@ -77,7 +81,8 @@ add_hypothesis <- function(framework,
 #' @inheritParams add_hypothesis
 #'
 #' @param which_ones Vector of which hypothesis should be built. Defaults to
-#'   building all hypotheses that have not been run yet.
+#'   building all hypotheses that have not been run yet. If given a name, will
+#'   forcibly re-run the analysis.
 #'
 #' @family frameworks
 #' @export
@@ -97,25 +102,29 @@ build_frames <- function(framework, which_ones = NULL, ...) {
 			subset(., name %in% which_ones)
 	}
 
-	for (i in 1:nrow(x)) {
-		name <- x$name[i]
+	if (nrow(x) > 0) {
+		for (i in 1:nrow(x)) {
+			name <- x$name[i]
 
-		# Retrieve information
-		test <- get_test(framework, name)
-		data <- get_data(framework, name)
-		formulae <- get_formulae(framework, name)
+			# Retrieve information
+			test <- get_test(framework, name)
+			data <- get_data(framework, name)
+			formulae <- get_formulae(framework, name)
 
-		# Apply fitting and tidying functions
-		fits <- fit_models(.formula = formulae, .test = test, .data = data)
-		tidied <- tidy_tests(.fits = fits)
+			# Apply fitting and tidying functions
+			fits <- fit_models(.formula = formulae, .test = test, .data = data)
+			tidied <- tidy_tests(.fits = fits)
 
-		# Return to original framework object
-		framework$fit[framework$name == name] <- fits
-		framework$tidy[framework$name == name] <- tidied
+			# Return to original framework object
+			framework$fit[framework$name == name] <- fits
+			framework$tidy[framework$name == name] <- tidied
 
-		# Update stage
-		framework <-
-			update_status(framework, name = name, stage = "built", run = TRUE)
+			# Update stage
+			framework <-
+				update_status(framework, name = name, stage = "built", run = TRUE)
+		}
+	} else {
+		message("All tests are already built. To force build, set `which_ones` to desired hypothesis.")
 	}
 
 	# Return

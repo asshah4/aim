@@ -10,23 +10,23 @@
 #'
 #' __Retrieval functions__:
 #'
-#' * `get_data()` retrieves the data set associated with a specified
-#' hypothesis and data name
+#' * `get_data()` retrieves the data set associated with a specified hypothesis
+#' and data name
 #'
 #' * `get_test()` retrieves the test associated with a hypothesis
 #'
-#' * `get_formulae()` retrieves the list of formulaes associated with
-#' a hypothesis and data set.
+#' * `get_formulae()` retrieves the list of formulas associated with a
+#' hypothesis
 #'
-#' __Reporting functions__
+#' * `get_combination()` retrieves how a hypothesis was combined to generate its
+#' formula list
 #'
-#' * `report_stage()` creates a message to identify at what stage a
-#' hypothesis has been developed to.
+#' * `get_names()` retrieves the hypothesis names that match a certain argument, such as `combination = "parallel"` or `data_name = "mtcars"`
 #'
 #' __Update functions__:
 #'
-#' * `update_status()` modifies the components of a framework, usually
-#' used internally to help update the stage/status of the specified object
+#' * `update_status()` modifies the components of a framework, usually used
+#' internally to help update the stage/status of the specified object
 #'
 #' @return The `get_*()` functions return the named object from the `framework`.
 #'   The `update_*()` functions return the entire framework after modification.
@@ -35,7 +35,7 @@
 #'
 #' @param name Name of `hypothesis` object to pull components from
 #'
-#' @param ... For optional parameters
+#' @param ... For additional parameters to be passed on
 #'
 #' @name retrieval
 NULL
@@ -45,7 +45,11 @@ NULL
 get_data <- function(x, name) {
 
 	y <- attributes(x)$data_table
-	data <- y$data_list[[y$name == name]]
+	data_name <- y$data_name[y$name == name]
+
+	z <- attributes(x)$data_list
+	index <- match(data_name, z$data_name)
+	data <- z$data[[index]]
 
 	# Returns data
 	data
@@ -58,7 +62,8 @@ get_test <- function(x, name) {
 
 	y <- attributes(x)$test_table
 	if (y$type[y$name == name] == "model_spec") {
-		test <- y$test[[y$name == name]]
+		index <- match(name, y$name)
+		test <- y$test[[index]]
 	}
 
 	# Return
@@ -97,6 +102,25 @@ get_parameters <- function(x, name) {
 
 	# Return
 	pars
+}
+
+#' @rdname retrieval
+#' @export
+get_names <- function(x, ...) {
+
+	opts <- list(...)
+	named_args <- names(opts)
+	name_list <- list()
+
+	for (i in 1:length(opts)) {
+		for (j in named_args) {
+			y <- attr(x, "test_table")
+			name_list[[i]] <- y$name[y$combination == opts[[j]]]
+		}
+	}
+
+	# Return vector of names
+	unlist(name_list)
 }
 
 #' @rdname retrieval
@@ -176,14 +200,24 @@ NULL
 	# Get data name
 	data_name <- names(attributes(hypothesis)$data)
 
+	# Data table for linking hypothesis to data
 	attributes(framework)$data_table <-
 		attributes(framework)$data_table %>%
 		tibble::add_row(
 			name = name,
 			data_name = data_name,
-			data_list = list(attributes(hypothesis)$data[[data_name]]),
+			#data_list = list(attributes(hypothesis)$data[[data_name]]),
 			strata = attributes(hypothesis)$strata[[data_name]]
 		)
+
+	# Data list (to minimize too many data sets)
+	attributes(framework)$data_list <-
+		attributes(framework)$data_list %>%
+		tibble::add_row(
+			data_name = data_name,
+			data = list(attributes(hypothesis)$data[[data_name]])
+		) %>%
+		unique()
 
 	# Return framework
 	invisible(framework)

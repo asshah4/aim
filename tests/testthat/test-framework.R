@@ -15,37 +15,13 @@ test_that("hypothesis can be added to framework", {
 
 })
 
-test_that("data added later is same as data added in original hypothesis", {
-	hyp <- hypothesize(
-			h = mpg + hp ~ wt + cyl,
-			combination = "sequential",
-			test = linear_reg() %>% set_engine("lm")
-		)
-
-	f1 <- framework() %>%
-		add_hypothesis(hyp) %>%
-		add_data("hyp", mtcars)
-
-	hyp <- hypothesize(
-			h = mpg + hp ~ wt + cyl,
-			combination = "sequential",
-			test = linear_reg() %>% set_engine("lm"),
-			.data = mtcars
-		)
-
-	f2 <- framework() %>%
-		add_hypothesis(hyp)
-
-	expect_equal(f1, f2, ignore_attr = TRUE)
-})
-
 test_that("frameworks can be fitted", {
 	library(parsnip)
 	hyp <- hypothesize(
 			h = mpg + hp ~ wt + cyl,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm"),
-			.data = mtcars
+			data = mtcars
 		)
 	f <- framework() %>%
 		add_hypothesis(hyp) %>%
@@ -54,3 +30,31 @@ test_that("frameworks can be fitted", {
 	expect_type(f$fit, "list")
 	expect_s3_class(f$tidy[[1]], "tbl_df")
 })
+
+test_that("multiple hypotheses can be added and fitted", {
+	library(parsnip)
+	h1 <- hypothesize(
+		h = mpg ~ wt + cyl,
+		combination = "sequential",
+		test = linear_reg() %>% set_engine("lm"),
+		data = mtcars
+	)
+	h2 <- update_hypothesis(h1, combination = "parallel")
+
+	f <-
+		framework() %>%
+		add_hypothesis(h1) %>%
+		add_hypothesis(h2)
+
+	# Should be a list of formulas with only a single data set saved
+	expect_equal(nrow(f), 4)
+	expect_equal(nrow(attr(f, "data_list")), 1)
+	expect_equal(nrow(attr(f, "data_table")), 2)
+
+	# Unadjusted h1 and h2 should be the same
+	f <- f %>% build_frames()
+	t1 <- get_parameters(f, "h1")
+	t2 <- get_parameters(f, "h2")
+	expect_identical(t1[[1]], t2[[1]])
+})
+

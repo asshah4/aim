@@ -10,7 +10,8 @@ build_frames(framework, which_ones = NULL, ...)
 \item{framework}{Object of class \code{framework}}
 
 \item{which_ones}{Vector of which hypothesis should be built. Defaults to
-building all hypotheses that have not been run yet.}
+building all hypotheses that have not been run yet. If given a name, will
+forcibly re-run the analysis.}
 }
 \value{
 Returns a \code{framework} object that has be fitted and tidied.

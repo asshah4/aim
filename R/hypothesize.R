@@ -135,3 +135,33 @@ new_hypothesis <- function(hypothesis,
 	)
 }
 
+# Generic Methods ----
+
+#' Print a Hypothesis
+#' @param x A `hypothesis` object
+#' @inheritParams base::print
+#' @export
+print.hypothesis <- function(x, ...) {
+
+	# Retrieve variables
+	h <- stats::formula(stats::terms(x))
+	combination <- attr(x, "combination")
+	test <- attr(x, "test")
+	data_name <- names(attr(x, "data"))
+
+	# Glue message
+	cat(glue::glue(
+		"
+		Hypothesis: {deparse(h)}
+
+		Description:
+
+		Formulas generated in {combination} pattern.
+		To be tested using a `{class(test)[1]}` approach.
+		Will be tested against `{data_name}`.
+
+		"
+	))
+
+	invisible(x)
+}

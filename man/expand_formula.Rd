@@ -14,13 +14,25 @@ organized into individual formulae based on additional modifiers. Please
 see the  for further documentation.}
 
 \item{combination}{The building pattern for how to put together the overall
-plan. It defines variable relationships that will be used. The options for
-the \code{combination} currently include:
+plan. It defines variable relationships that will be used. The options of
+\code{combination} will lead to the following patterns:
+
+\deqn{y ~ x1 + x2}
 \itemize{
-\item \code{direct} will define the relationship as y ~ x
-\item \code{sequential} will define the relationship as y ~ x1, y ~ x1 + x2
-\item \code{parallel} will define the relationship as y ~ x1, y ~ x2
-}}
+\item \code{direct} will not modify the original equation pattern
+}
+
+\deqn{y ~ x1 + x2}
+\itemize{
+\item \code{sequential} will create a list of sequentially adjusted formula
+}
+
+\deqn{y ~ x1} \deqn{y ~ x1 + x2}
+\itemize{
+\item \code{parallel} will create a list of formula with parallel predictors
+}
+
+\deqn{y ~ x1} \deqn{y ~ x2}}
 
 \item{...}{Not currently used}
 }
@@ -47,7 +59,7 @@ mixed effects
 }
 
 For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally regressed for every level of "z"
+and "x2" that should be conditionally tested for every level of "z"
 
 \deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}
 }

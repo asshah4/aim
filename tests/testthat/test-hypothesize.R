@@ -28,6 +28,20 @@ test_that("new hypotheses can easily be generated", {
 	h2 <- update_hypothesis(h1, combination = "parallel")
 	h3 <- update_hypothesis(h2, combination = "direct", data = iris)
 
+	expect_s3_class(h2, "hypothesis")
 	expect_length(attributes(h2)$parameters, 4)
 	expect_identical(attributes(h3)$data$iris, iris)
+})
+
+test_that("generic print methods work", {
+	hyp <-
+		hypothesize(
+			h = mpg + hp ~ wt + cyl,
+			combination = "sequential",
+			test = linear_reg() %>% set_engine("lm"),
+			data = mtcars
+		)
+
+	expect_output(print(hyp), regexp = "Hypothesis:")
+
 })

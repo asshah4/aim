@@ -2,7 +2,7 @@ test_that("findings are in table form", {
 	proj <-
 		project() %>%
 		set_data(mtcars) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "weight",
 			formula = wt ~ vs,
 			test = "t.test",

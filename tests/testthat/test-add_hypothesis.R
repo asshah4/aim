@@ -9,7 +9,7 @@ test_that("formulas will make appropriate tables", {
 	# Sequential = 4 rows
 	p <-
 		proj %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test",
 			formula = mpg ~ vs + am + wt + hp,
 			combination = "sequential",
@@ -21,7 +21,7 @@ test_that("formulas will make appropriate tables", {
 	# Direct = 1 row x number of exposures
 	p <-
 		proj %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test",
 			formula = mpg ~ exp(vs) + exp(am) + wt + hp,
 			combination = "direct",
@@ -33,7 +33,7 @@ test_that("formulas will make appropriate tables", {
 	# Parallel = number of predictors minus number of fixed covariates
 	p <-
 		proj %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test",
 			formula = mpg ~ cov(vs) + am + wt + hp,
 			combination = "parallel",
@@ -45,7 +45,7 @@ test_that("formulas will make appropriate tables", {
 	# Exposures that contain interaction terms will be appropriately expanded
 	p <-
 		proj %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test",
 			formula = mpg ~ exp(vs*am) + wt + hp,
 			combination = "sequential",
@@ -65,37 +65,37 @@ test_that("different formula modifiers lead to correct number of formulas genera
 	# Sequential
 	p <-
 		proj %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test1",
 			formula = mpg ~ vs + am,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test2",
 			formula = mpg ~ exp(vs) + am + wt,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test3",
 			formula = mpg ~ cov(vs) + am + wt,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test4",
 			formula = mpg ~ cov(vs) + cov(am) + wt + gear,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test5",
 			formula = mpg ~ exp(vs) + exp(am) + wt + gear,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test6",
 			formula = mpg ~ exp(vs) + exp(am) + cov(wt) + cov(gear),
 			combination = "sequential",
@@ -112,37 +112,37 @@ test_that("different formula modifiers lead to correct number of formulas genera
 	# Parallel
 	p <-
 		proj %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test1",
 			formula = mpg ~ vs + am,
 			combination = "parallel",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test2",
 			formula = mpg ~ exp(vs) + am + wt,
 			combination = "parallel",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test3",
 			formula = mpg ~ cov(vs) + am + wt,
 			combination = "parallel",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test4",
 			formula = mpg ~ cov(vs) + cov(am) + wt + gear,
 			combination = "parallel",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test5",
 			formula = mpg ~ exp(vs) + exp(am) + wt + gear,
 			combination = "parallel",
 			test = linear_reg() %>% set_engine("lm")
 		) %>%
-		add_hypothesis(
+		make_hypothesis(
 			name = "test6",
 			formula = mpg ~ exp(vs) + exp(am) + cov(wt) + cov(gear),
 			combination = "parallel",
