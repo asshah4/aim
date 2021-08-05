@@ -6,7 +6,7 @@
 #'
 #' @return An object of class `hypothesis`
 #'
-#' @param h General object that can be cast into a hypothesis object. Currently
+#' @param h General variable that can be cast into a hypothesis object. Currently
 #'   this accepts the following object types:
 #'
 #'   * `formula` objects, which  be given additional modifiers as described.
@@ -35,11 +35,20 @@
 #'   parameters. These can be given as additional, unmatched arguments. This
 #'   option currently supports only hypothesis tests, of class `htest`.
 #'
-#' @param .test_opts For optional or additional parameters to be given to the
+#' @param test_opts For optional or additional parameters to be given to the
 #'   *test* argument. Should be in format of a list with name-pairs, such as
 #'   `list(name = argument)` pairs.
 #'
-#' @inheritParams add_data
+#' @param data Data set to be linked to this hypothesis. It assumes data is one
+#'   of type `c("tbl_df", "tbl", "data.frame")`. The name of the data set is
+#'   taken from the object itself.
+#'
+#' @param strata How the data should be split or stratified. References the
+#'   name of the data given in that the models will be with fit against,
+#'   splitting the data into subsets. This helps to perform hypothesis testing
+#'   on subsets or strata of the data. It defaults to NULL (which means the full
+#'   data will be used). This argument will only be incorporated if `data` is
+#'   present.
 #'
 #' @param ... For additional variables based on the generic method invoked.
 #'
@@ -62,26 +71,26 @@ hypothesize <- function(h, ...) {
 hypothesize.formula <- function(h,
 																combination,
 																test,
-																.test_opts = NULL,
-																.data = NULL,
-																.strata = NULL,
+																test_opts = NULL,
+																data,
+																strata = NULL,
 																...) {
 	# Initialize a `hypothesis` object
 	hypothesis <- new_hypothesis(hypothesis = h)
 
 	# The data name helps to link the datasets to the tests and hypothesis
-	if (!is.null(.data)) {
-		.data_name <- deparse(substitute(.data))
+	if (!is.null(data)) {
+		data_name <- deparse(substitute(data))
 	} else {
-		.data_name <- NA
+		data_name <- NA
 	}
 
 	# Modify and return attributes
 	hypothesis <-
 		hypothesis %>%
-		.set_hypothesis_formulae(h, combination) %>%
-		.set_hypothesis_tests(test, .test_opts) %>%
-		.set_hypothesis_data(.data, .data_name, .strata)
+		.set_formulae(h, combination) %>%
+		.set_tests(test, test_opts) %>%
+		.set_data(data, data_name, strata)
 
 	validate_class(hypothesis, "hypothesis")
 
@@ -94,7 +103,7 @@ hypothesize.formula <- function(h,
 #' @export
 hypothesize.default <- function(h, ...) {
 	stop(
-		"`hypothesize()` is not defined for a `", class(x)[1], "` object.",
+		"`hypothesize()` is not defined for a `", class(h)[1], "` object.",
 		call. = FALSE
 	)
 }

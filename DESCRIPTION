@@ -22,6 +22,7 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
+    rmarkdown
 Imports: 
     dplyr,
     magrittr,
@@ -32,7 +33,7 @@ Imports:
     methods,
     rlang,
 Remotes:
-    asshah4/aim
+    asshah4/aims
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/aims
 BugReports: https://github.com/asshah4/aims/issues

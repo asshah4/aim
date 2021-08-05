@@ -11,6 +11,8 @@ Initialize a Hypothesis Framework
 }
 \seealso{
 Other frameworks: 
-\code{\link{add_hypothesis}()}
+\code{\link{add_hypothesis}()},
+\code{\link{build_frames}()},
+\code{\link{fit_models}()}
 }
 \concept{frameworks}

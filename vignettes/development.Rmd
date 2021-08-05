@@ -40,7 +40,7 @@ As minimally-experienced programmer, I used examples of current effective packag
 | [{workflowsets}](https://workflowsets.tidymodels.org/index.html) | This fits multiple models in a workflow to identify a potential "best" model, which is very flexible |
 | [{easystats}](https://easystats.github.io/easystats/) | Forms a different "universe" in parallel to the `tidyverse` for interpreting results of models, with a focus on the presentation and exploration of statistical analysis |
 
-The features that I found missing in these was the ability to handle a variety of formulas that had specific pre-defined hypotheses, and the focus had been to *compare* or *combine* models, instead of considering the focus on causality. Essentially, I wanted a more epidemiological approach. The *easystats* archetype of R "monsters" was partially the idea for the working name of **{octomod}**. I started writing this after reading [this blogpost](https://blog.simonpcouch.com/blog/dev-docs-p1/) on development of a package. 
+The features that I found missing in these was the ability to handle a variety of formulas that had specific pre-defined hypotheses, and the focus had been to *compare* or *combine* models, instead of considering the focus on causality. Essentially, I wanted a more epidemiological approach. The *easystats* archetype of R "monsters" was partially the idea for the working name of **{aims}**. I started writing this after reading [this blogpost](https://blog.simonpcouch.com/blog/dev-docs-p1/) on development of a package. 
 
 # On Names
 
@@ -50,7 +50,7 @@ The project name has gone through many iterations. The reason why the name was i
 | --- | --- |
 | {marksman} | The first draft included the concept of "specific aims". This research concept is from grant writing, where the first page of a project contains the specific hypotheses that will be explored. Thus, one could *load*, *aim*, and *fire* and specific targets. The problem with this was it seemed to deterministic, as exploration was a crucial component. |
 | {octomod} | The second draft took inspiration from the idea of an *octopus*, with 8 arms or legs all surrounded a central idea. This allowed for flexibility in that the many arms of a project were not necessarily hierarchical. However, theming a project after a cephalopod does make the function names less easy to remember. |
-| {aim} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
+| {aims} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
 
 # Defining the API
 

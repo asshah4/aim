@@ -11,11 +11,26 @@ add_hypothesis(
   ...
 )
 }
+\arguments{
+\item{framework}{Object of class \code{framework}}
+
+\item{hypothesis}{Object of class \code{hypothesis} (which may or may not include
+data already added)}
+
+\item{name}{Name of the \code{hypothesis} object, which defaults to the name of
+the \code{hypothesis} object itself}
+}
+\value{
+A \code{framework} object that has had a \code{hypothesis} added
+}
 \description{
-Add a Hypothesis to the Framework
+Takes a \code{hypothesis} object and adds it to a \code{framework}, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison.
 }
 \seealso{
 Other frameworks: 
+\code{\link{build_frames}()},
+\code{\link{fit_models}()},
 \code{\link{framework}()}
 }
 \concept{frameworks}

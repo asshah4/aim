@@ -126,6 +126,7 @@ possible_call <- purrr::possibly(do.call, otherwise = NA, quiet = FALSE)
 #' @param .opts Options to pass to the test, if needed
 #' @param .data Data set to be used
 #' @export
+#' @family frameworks
 fit_models <- function(.formula, .test, .opts = NULL, .data) {
 
 	purrr::map(.formula, ~ possible_fit(.test, .x, .data))

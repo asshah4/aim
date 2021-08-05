@@ -2,6 +2,8 @@
 #'
 #' If a hypothesis does not have a data, it can be added subsequently. This can be done in a pipe, either to the hypothesis itself, or to a framework, to allow for flexibility.
 #'
+#' @return Returns a `hypothesis` or `framework` object with the prescribed data added back on, which can be seen by calling `print(framework)` or `attributes(hypothesis)$data`.
+#'
 #' @param x Either a `hypothesis` or `framework` object
 #'
 #' @family helpers
@@ -58,6 +60,9 @@ add_data.hypothesis <- function(x, .data, .strata = NULL) {
 add_data.framework <- function(x, name, .data, .strata = NULL) {
 	# Warn if data is already present
 
+	# Validate
+	validate_hypothesis_exists(x, name)
+
 	# The data name helps to link the datasets to the tests and hypothesis
 	if (!is.null(.data)) {
 		.data_name <- deparse(substitute(.data))
@@ -70,16 +75,53 @@ add_data.framework <- function(x, name, .data, .strata = NULL) {
 		.strata <- NA
 	}
 
-	# Adds a row
-	#attributes(x)$data_table <- attributes(x)$data_table %>%
-	attributes(x)$data_table %>%
-		tibble::add_row(
-			hypothesis_name = name,
-			data = list(.data),
-		)
-			data_name = .data_name,
-			strata = .strata
-		)
+	# Rows should be added, and then subsequently data should be added
+	.dt <- attributes(x)$data_table
+
+	if (nrow(.dt) == 0) {
+		.dt <-
+			.dt %>%
+			tibble::add_row(
+				name = name,
+				data_name = .data_name,
+				strata = .strata
+			)
+		.dt$data_list <- list(.data)
+	} else if (nrow(.dt) > 0) {
+		.dt <-
+			.dt %>%
+			tibble::add_row(
+				name = name,
+				data_name = .data_name,
+				strata = .strata
+			)
+		.dt$data_list[[nrow(.dt)]] <- .data
+	}
+
+	# Return the attributes back to the framework
+	attributes(x)$data_table <- .dt
+
+	# Make sure data names are characters for merging (versus NA as logical)
+	x <- within(x, {
+		data_name =
+			ifelse(is.character(data_name), data_name, as.character(data_name))
+	})
+
+	# If adding data to new data set
+	if (nrow(.dt) == 1) {
+		x$data_name[x$name == name] <- .dt$data_name
+	}
+	# If data already present, then must be more selective
+	else if (nrow(.dt) > 1) {
+		# Duplicate original data frame
+		y <- x[x$name == name, ]
+
+		y$data_name <-
+			.dt$data_name[.dt$name == name & .dt$data_name != unique(x$data_name)]
+
+		# Bind together new rows for all hypothesis/data combinations
+		x <- do.call("rbind", list(x, y))
+	}
 
 	# Return framework
 	x

@@ -109,3 +109,21 @@ validate_project <- function(project, .stage, ...) {
 	}
 
 }
+
+#' Fit a list of {parsnip} models
+#'
+#' @description This allows for the simple fitting of multiple models. It
+#'   requires three components: a formula, a {parsnip} model definition, and a
+#'   data set to analyze.
+#' @return Returns a list of model fits
+#' @param .formula List or vector of formulas
+#' @param .test A model definition from {parsnip}
+#' @param .opts Options to pass to the test, if needed
+#' @param .data Data set to be used
+#' @export
+#' @family frameworks
+fit_models <- function(.formula, .test, .opts = NULL, .data) {
+
+	purrr::map(.formula, ~ possible_fit(.test, .x, .data))
+
+}

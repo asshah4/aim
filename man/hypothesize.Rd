@@ -8,20 +8,12 @@
 \usage{
 hypothesize(h, ...)
 
-\method{hypothesize}{formula}(
-  h,
-  combination,
-  test,
-  .test_opts = NULL,
-  .data = NULL,
-  .strata = NULL,
-  ...
-)
+\method{hypothesize}{formula}(h, combination, test, test_opts = NULL, data, strata = NULL, ...)
 
 \method{hypothesize}{default}(h, ...)
 }
 \arguments{
-\item{h}{General object that can be cast into a hypothesis object. Currently
+\item{h}{General variable that can be cast into a hypothesis object. Currently
 this accepts the following object types:
 \itemize{
 \item \code{formula} objects, which  be given additional modifiers as described.
@@ -51,24 +43,19 @@ parameters. These can be given as additional, unmatched arguments. This
 option currently supports only hypothesis tests, of class \code{htest}.
 }}
 
-\item{.test_opts}{For optional or additional parameters to be given to the
+\item{test_opts}{For optional or additional parameters to be given to the
 \emph{test} argument. Should be in format of a list with name-pairs, such as
 \code{list(name = argument)} pairs.}
 
-\item{.data}{Data set to be linked to this hypothesis. The argument can
-either be a character string or a data frame, and defaults to NULL. If
-\code{.data} is a character string, it assumes that a data frame will be added
-later (or is already available in the \code{framework} object). If the \code{.data}
-is a data frame, it takes the name of the given data. It is not necessary
-to include a data argument, but the hypothesis cannot be tested until a
-data set is provided. This allows for flexibility and lightweight
-manipulation of the \code{hypothesis} object.}
+\item{data}{Data set to be linked to this hypothesis. It assumes data is one
+of type \code{c("tbl_df", "tbl", "data.frame")}. The name of the data set is
+taken from the object itself.}
 
-\item{.strata}{How the data should be split or stratified. References the
+\item{strata}{How the data should be split or stratified. References the
 name of the data given in that the models will be with fit against,
 splitting the data into subsets. This helps to perform hypothesis testing
 on subsets or strata of the data. It defaults to NULL (which means the full
-data will be used). This argument will only be incorporated if \code{.data} is
+data will be used). This argument will only be incorporated if \code{data} is
 present.}
 }
 \value{
