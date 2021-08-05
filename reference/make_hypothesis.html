@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Adding Data — add_data • aims</title>
+<title>Add a Hypothesis to the Project — make_hypothesis • aims</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,11 @@
 
 
 
-<meta property="og:title" content="Adding Data — add_data" />
-<meta property="og:description" content="If a hypothesis does not have a data, it can be added subsequently. This can be done in a pipe, either to the hypothesis itself, or to a framework, to allow for flexibility." />
+<meta property="og:title" content="Add a Hypothesis to the Project — make_hypothesis" />
+<meta property="og:description" content="Adding an &quot;arm&quot; to the project reflects a series of hypothesis generated
+around the core data that was set in the preceding function. The hypothesis
+formula allows for modifiers to both the formula itself, as well as how it
+should be applied to the data set." />
 
 
 
@@ -123,59 +126,115 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Adding Data</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/adding.R'><code>R/adding.R</code></a></small>
-    <div class="hidden name"><code>add_data.Rd</code></div>
+    <h1>Add a Hypothesis to the Project</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/make_hypothesis.R'><code>R/make_hypothesis.R</code></a></small>
+    <div class="hidden name"><code>make_hypothesis.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>If a hypothesis does not have a data, it can be added subsequently. This can be done in a pipe, either to the hypothesis itself, or to a framework, to allow for flexibility.</p>
+    <p>Adding an "arm" to the project reflects a series of hypothesis generated
+around the core data that was set in the preceding function. The hypothesis
+formula allows for modifiers to both the formula itself, as well as <em>how</em> it
+should be applied to the data set.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_data</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
-
-<span class='co'># S3 method for hypothesis</span>
-<span class='fu'>add_data</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>.data</span>, .strata <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
-
-<span class='co'># S3 method for framework</span>
-<span class='fu'>add_data</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span>, <span class='va'>.data</span>, .strata <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>make_hypothesis</span><span class='op'>(</span>
+  <span class='va'>project</span>,
+  <span class='va'>name</span>,
+  <span class='va'>formula</span>,
+  combination <span class='op'>=</span> <span class='st'>"direct"</span>,
+  <span class='va'>test</span>,
+  which_data <span class='op'>=</span> <span class='cn'>NULL</span>,
+  .strata <span class='op'>=</span> <span class='cn'>NA</span>,
+  .stage <span class='op'>=</span> <span class='st'>"hypothesis"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>Either a <code>hypothesis</code> or <code>framework</code> object</p></td>
+      <th>project</th>
+      <td><p>Object of class <code>project</code></p></td>
     </tr>
     <tr>
-      <th>.data</th>
-      <td><p>Data set to be linked to this hypothesis. The argument can
-either be a character string or a data frame, and defaults to NULL. If
-<code>.data</code> is a character string, it assumes that a data frame will be added
-later (or is already available in the <code>framework</code> object). If the <code>.data</code>
-is a data frame, it takes the name of the given data. It is not necessary
-to include a data argument, but the hypothesis cannot be tested until a
-data set is provided. This allows for flexibility and lightweight
-manipulation of the <code>hypothesis</code> object.</p></td>
+      <th>name</th>
+      <td><p>Character string to identify this arm. Must be unique and not
+previously specified.</p></td>
+    </tr>
+    <tr>
+      <th>formula</th>
+      <td><p>Formula showing relationship of outcomes and predictors, and
+is essentially the hypothesis. It allows for complex formulas e.g. multiple
+predictors, multiple exposures, and multiple covariates, that can be
+organized into individual formulas based on additional modifiers. Each RHS
+term of the formula is considered an outcome variable, and is analyzed as a
+single outcome. Each LHS term is consider a predictor, and can be modified
+as below:</p><ul>
+<li><p><code><a href='https://rdrr.io/r/base/Log.html'>exp()</a></code> is placed around a term to define as an independent exposure,
+which will be placed in separate formulas from any other term marked as an
+exposure</p></li>
+<li><p><code><a href='https://rdrr.io/r/stats/cor.html'>cov()</a></code> is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects</p></li>
+</ul>
+
+<p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
+<p>For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally regressed for every level of "z"</p>
+<p>$$y ~ exp(x1) + exp(x2) + x3 + x4 + cov((1 | z))$$</p></td>
+    </tr>
+    <tr>
+      <th>combination</th>
+      <td><p>The building pattern for how to put together the overall
+plan. It defines variable relationships that will be used. The options for
+the <code>combination</code> currently include:</p><ul>
+<li><p><code>direct</code> will define the relationship as y ~ x</p></li>
+<li><p><code>sequential</code> will define the relationship as y ~ x1, y ~ x1 + x2</p></li>
+<li><p><code>parallel</code> will define the relationship as y ~ x1, y ~ x2</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>test</th>
+      <td><p>The testing that will be used, defined as how the analysis or
+hypothesis testing should be performed. There are several options on which
+specification to use, anywhere from regression modeling to inferential
+statistics. The test applies to the collection of hypotheses.</p><ul>
+<li><p>A model specified by the <a href='https://parsnip.tidymodels.org'><code>parsnip</code> package</a>, which includes the mode and #'   computational engine</p></li>
+<li><p>A statistical test, such as a <code>t.test</code>, which may require additional
+parameters. These can be given as additional, unmatched arguments. This
+option currently supports only hypothesis tests, of class <code>htest</code>.</p></li>
+</ul></td>
+    </tr>
+    <tr>
+      <th>which_data</th>
+      <td><p>Name of "row" or dataset that should be analyzed. Defaults
+to the most recent dataset added.</p></td>
     </tr>
     <tr>
       <th>.strata</th>
       <td><p>How the data should be split or stratified. References the
-name of the data given in that the models will be with fit against,
-splitting the data into subsets. This helps to perform hypothesis testing
-on subsets or strata of the data. It defaults to NULL (which means the full
-data will be used). This argument will only be incorporated if <code>.data</code> is
-present.</p></td>
+name of the data given in <code><a href='set_data.html'>set_data()</a></code> that the models will be with fit
+against, splitting the data into subsets. This helps to perform hypothesis
+testing on subsets or strata of the data. It defaults to NULL (which means
+the full data will be used) <strong>experimental</strong></p></td>
     </tr>
     <tr>
-      <th>name</th>
-      <td><p>Character vector of which hypothesis the data should be added to.</p></td>
+      <th>.stage</th>
+      <td><p>Internal marker of project status.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>This should reflect the additional parameters that may need to be
+given to the <code>test</code> argument, such as <code>paired = TRUE</code> for <code><a href='https://rdrr.io/r/stats/t.test.html'>t.test()</a></code>. The
+additional parameters must be named to allow them to be passed
+successfully.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a <code>hypothesis</code> or <code>framework</code> object with the prescribed data added back on, which can be seen by calling <code><a href='https://rdrr.io/r/base/print.html'>print(framework)</a></code> or <code>attributes(hypothesis)$data</code>.</p>
+    <p><code>project</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

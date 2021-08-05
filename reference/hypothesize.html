@@ -136,56 +136,28 @@ modeling framework. This framework allows for multiple hypotheses to be
 modeled, and allows for assessment of confounding variables.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for formula</span>
-<span class='fu'>hypothesize</span><span class='op'>(</span>
-  <span class='va'>formula</span>,
-  <span class='va'>combination</span>,
-  <span class='va'>test</span>,
-  test_opts <span class='op'>=</span> <span class='cn'>NULL</span>,
-  data <span class='op'>=</span> <span class='cn'>NULL</span>,
-  data_name <span class='op'>=</span> <span class='cn'>NULL</span>,
-  strata <span class='op'>=</span> <span class='cn'>NULL</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>combination</span>, <span class='va'>test</span>, test_opts <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>data</span>, strata <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for default</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>General object that can be cast into a hypothesis object. Currently
+      <th>h</th>
+      <td><p>General variable that can be cast into a hypothesis object. Currently
 this accepts the following object types:</p><ul>
-<li><p><code>formula</code> objects, which will be given additional modifiers as described.
-Please see the <code>formula</code> parameter for further details.</p></li>
+<li><p><code>formula</code> objects, which  be given additional modifiers as described.
+Please see <code><a href='expand_formula.html'>expand_formula()</a></code> or the formula section below for details.</p></li>
 </ul></td>
     </tr>
     <tr>
       <th>...</th>
       <td><p>For additional variables based on the generic method invoked.</p></td>
-    </tr>
-    <tr>
-      <th>formula</th>
-      <td><p>Formula showing relationship of outcomes and predictors, and
-is essentially the hypothesis. It allows for complex formulas e.g. multiple
-predictors, multiple exposures, and multiple covariates, that can be
-organized into individual formulas based on additional modifiers. Each RHS
-term of the formula is considered an outcome variable, and is analyzed as a
-single outcome. Each LHS term is consider a predictor, and can be modified
-as below:</p><ul>
-<li><p><code>X()</code> is placed around a term to define as an independent exposure,
-which will be placed in separate formulas from any other term marked as an
-exposure</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects</p></li>
-</ul>
-
-<p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
-<p>For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally regressed for every level of "z"</p>
-<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p></td>
     </tr>
     <tr>
       <th>combination</th>
@@ -213,37 +185,55 @@ option currently supports only hypothesis tests, of class <code>htest</code>.</p
     <tr>
       <th>test_opts</th>
       <td><p>For optional or additional parameters to be given to the
-<em>test</em> argument. Should be in format of a list of <strong>name = argument</strong>
-pairs.</p></td>
+<em>test</em> argument. Should be in format of a list with name-pairs, such as
+<code><a href='https://rdrr.io/r/base/list.html'>list(name = argument)</a></code> pairs.</p></td>
     </tr>
     <tr>
       <th>data</th>
-      <td><p>Data set to be attached to this hypothesis. Not necessary to
-create a <code>hypothesis</code>, and can be specified or added at a later time. The
-name of the data set will be used as the reference variable.</p></td>
-    </tr>
-    <tr>
-      <th>data_name</th>
-      <td><p>Name of the dataset that this hypothesis should be tested
-against. The data itself will be used to generate the name if it is given
-from the <em>data</em> argument. If only a character vector is given, the function
-will match the <code>hypothesis</code> to data already available (or warn if not
-available). This flexibility allows for lightweight manipulation of the
-<code>hypothesis</code> object, and the addition of multiple data sets.</p></td>
+      <td><p>Data set to be linked to this hypothesis. It assumes data is one
+of type <code><a href='https://rdrr.io/r/base/c.html'>c("tbl_df", "tbl", "data.frame")</a></code>. The name of the data set is
+taken from the object itself.</p></td>
     </tr>
     <tr>
       <th>strata</th>
       <td><p>How the data should be split or stratified. References the
-name of the data given in that the models will be with fit
-against, splitting the data into subsets. This helps to perform hypothesis
-testing on subsets or strata of the data. It defaults to NULL (which means
-the full data will be used) <strong>experimental</strong></p></td>
+name of the data given in that the models will be with fit against,
+splitting the data into subsets. This helps to perform hypothesis testing
+on subsets or strata of the data. It defaults to NULL (which means the full
+data will be used). This argument will only be incorporated if <code>data</code> is
+present.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>An object of class <code>hypothesis</code></p>
+    <h2 class="hasAnchor" id="warning"><a class="anchor" href="#warning"></a>Warning</h2>
+
+    
+
+
+<p>The formula object does not necessarily work for <code>htest</code> objects as it is
+still <strong>experimental</strong>.</p>
+    <h2 class="hasAnchor" id="formulae"><a class="anchor" href="#formulae"></a>Formulae</h2>
+
+    
+
+
+<p>When supplying a <code>formula</code> object, each RHS term of the formula is
+considered an outcome variable, and is analyzed as a single outcome. Each
+LHS term is consider a predictor, and can be modified as below:</p><ul>
+<li><p><code>X()</code> is placed around a term to define as an independent exposure, which
+will be placed in separate formulae from any other term marked as an
+exposure</p></li>
+<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects</p></li>
+</ul>
+
+<p>For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally regressed for every level of "z"</p>
+<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • aims</title>
+<title>Set Components of a Hypothesis — set_hypothesis • aims</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,21 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Set Components of a Hypothesis — set_hypothesis" />
+<meta property="og:description" content="The following functions will replace the internal attributes of a
+hypothesis object, without warning.
+.set_formulae() expands the formula based on outcomes and predictors
+(including both exposures, covariates, and fixed variables). The pattern is
+decided by the combination argument. The major functionality is within the
+expand_formula() function, but this allows for setting internal attributes.
+.set_data() adds data to a formula (internal to the hypothesize()
+function), along with potential stratification instructions. Modifies the
+formula by adding the attributes to the formula.
+set_tests() Add the test and test options (if needed) the the
+hypothesis object. This modifies the attributes of the original object and
+invisibly returns the same object.
+
+" />
 
 
 
@@ -58,7 +72,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,138 +134,66 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Set Components of a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/hypothesis-helpers.R'><code>R/hypothesis-helpers.R</code></a></small>
+    <div class="hidden name"><code>set_hypothesis.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>The following functions will replace the internal attributes of a
+<code>hypothesis</code> object, without warning.</p><ul>
+<li><p><code>.set_formulae()</code> expands the formula based on outcomes and predictors
+(including both exposures, covariates, and fixed variables). The pattern is
+decided by the <code>combination</code> argument. The major functionality is within the
+<code><a href='expand_formula.html'>expand_formula()</a></code> function, but this allows for setting internal attributes.</p></li>
+<li><p><code>.set_data()</code> adds data to a formula (internal to the <code><a href='hypothesize.html'>hypothesize()</a></code>
+function), along with potential stratification instructions. Modifies the
+formula by adding the attributes to the formula.</p></li>
+<li><p><code>set_tests()</code> Add the test and test options (if needed) the the
+<code>hypothesis</code> object. This modifies the attributes of the original object and
+invisibly returns the same object.</p></li>
+</ul>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    </div>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="add_data.html">add_data()</a></code> </p>
-        </td>
-        <td><p>Adding Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="add_hypothesis.html">add_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Add a Hypothesis to the Framework</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_frames.html">build_frames()</a></code> </p>
-        </td>
-        <td><p>Build Up the Framework by Fitting Models and Tests</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_models.html">build_models()</a></code> </p>
-        </td>
-        <td><p>Build the Models and Tests</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="collect_findings.html">collect_findings()</a></code> </p>
-        </td>
-        <td><p>Collect the Important Findings from a Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_models.html">fit_models()</a></code> <code><a href="fit_models.html">fit_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="framework.html">framework()</a></code> </p>
-        </td>
-        <td><p>Initialize a Hypothesis Framework</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Create a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_formulas.html">make_formulas()</a></code> </p>
-        </td>
-        <td><p>Make formula combinations in <code>new_hypothesis()</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_hypothesis.html">make_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Add a Hypothesis to the Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="project.html">project()</a></code> </p>
-        </td>
-        <td><p>Initialize a Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">get_data()</a></code> <code><a href="retrieval.html">get_test()</a></code> <code><a href="retrieval.html">get_combination()</a></code> <code><a href="retrieval.html">get_formulae()</a></code> <code><a href="retrieval.html">get_parameters()</a></code> <code><a href="retrieval.html">update_status()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>framework</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_data.html">set_data()</a></code> </p>
-        </td>
-        <td><p>Set the Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+    <pre class="usage"><span class='fu'>.set_formulae</span><span class='op'>(</span><span class='va'>hypothesis</span>, <span class='va'>formula</span>, <span class='va'>combination</span><span class='op'>)</span>
+
+<span class='fu'>.set_data</span><span class='op'>(</span><span class='va'>hypothesis</span>, <span class='va'>data</span>, <span class='va'>data_name</span>, strata <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span>
+
+<span class='fu'>.set_tests</span><span class='op'>(</span><span class='va'>hypothesis</span>, <span class='va'>test</span>, <span class='va'>.test_opts</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>hypothesis</th>
+      <td><p>A <code>hypothesis</code> object</p></td>
+    </tr>
+    <tr>
+      <th>combination</th>
+      <td><p>The pattern of how to generate formulas</p></td>
+    </tr>
+    <tr>
+      <th>data</th>
+      <td><p>A data frame object</p></td>
+    </tr>
+    <tr>
+      <th>data_name</th>
+      <td><p>Abstracted from the <strong>data</strong> argument</p></td>
+    </tr>
+    <tr>
+      <th>strata</th>
+      <td><p>Optional argument to subset data frame</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Invisibly returns the <code>hypothesis</code> object</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • aims</title>
+<title>Retrieve, Modify, and Destroy Components From framework Object — retrieval • aims</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,28 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Retrieve, Modify, and Destroy Components From framework Object — retrieval" />
+<meta property="og:description" content="These functions are essentially helper functions to simplify the manipulation
+of framework objects. They may retrieve or modify or destroy components of
+the framework object as described.
+Retrieval functions:
+get_data() retrieves the data set associated with a specified
+hypothesis and data name
+get_test() retrieves the test associated with a hypothesis
+get_formulae() retrieves the list of formulaes associated with
+a hypothesis and data set.
+
+
+Reporting functions
+report_stage() creates a message to identify at what stage a
+hypothesis has been developed to.
+
+
+Update functions:
+update_status() modifies the components of a framework, usually
+used internally to help update the stage/status of the specified object
+
+" />
 
 
 
@@ -58,7 +79,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,138 +141,72 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Retrieve, Modify, and Destroy Components From <code>framework</code> Object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/framework-helpers.R'><code>R/framework-helpers.R</code></a></small>
+    <div class="hidden name"><code>retrieval.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>These functions are essentially helper functions to simplify the manipulation
+of <code>framework</code> objects. They may retrieve or modify or destroy components of
+the <code>framework</code> object as described.</p>
+<p><strong>Retrieval functions</strong>:</p><ul>
+<li><p><code>get_data()</code> retrieves the data set associated with a specified
+hypothesis and data name</p></li>
+<li><p><code>get_test()</code> retrieves the test associated with a hypothesis</p></li>
+<li><p><code>get_formulae()</code> retrieves the list of formulaes associated with
+a hypothesis and data set.</p></li>
+</ul>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+<p><strong>Reporting functions</strong></p><ul>
+<li><p><code>report_stage()</code> creates a message to identify at what stage a
+hypothesis has been developed to.</p></li>
+</ul>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="add_data.html">add_data()</a></code> </p>
-        </td>
-        <td><p>Adding Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="add_hypothesis.html">add_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Add a Hypothesis to the Framework</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_frames.html">build_frames()</a></code> </p>
-        </td>
-        <td><p>Build Up the Framework by Fitting Models and Tests</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_models.html">build_models()</a></code> </p>
-        </td>
-        <td><p>Build the Models and Tests</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="collect_findings.html">collect_findings()</a></code> </p>
-        </td>
-        <td><p>Collect the Important Findings from a Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_models.html">fit_models()</a></code> <code><a href="fit_models.html">fit_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="framework.html">framework()</a></code> </p>
-        </td>
-        <td><p>Initialize a Hypothesis Framework</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Create a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_formulas.html">make_formulas()</a></code> </p>
-        </td>
-        <td><p>Make formula combinations in <code>new_hypothesis()</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_hypothesis.html">make_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Add a Hypothesis to the Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="project.html">project()</a></code> </p>
-        </td>
-        <td><p>Initialize a Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">get_data()</a></code> <code><a href="retrieval.html">get_test()</a></code> <code><a href="retrieval.html">get_combination()</a></code> <code><a href="retrieval.html">get_formulae()</a></code> <code><a href="retrieval.html">get_parameters()</a></code> <code><a href="retrieval.html">update_status()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>framework</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_data.html">set_data()</a></code> </p>
-        </td>
-        <td><p>Set the Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+<p><strong>Update functions</strong>:</p><ul>
+<li><p><code>update_status()</code> modifies the components of a framework, usually
+used internally to help update the stage/status of the specified object</p></li>
+</ul>
+
+    </div>
+
+    <pre class="usage"><span class='fu'>get_data</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>get_test</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>get_combination</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>get_formulae</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>get_parameters</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>update_status</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span>, stage <span class='op'>=</span> <span class='cn'>NA</span>, run <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p><code>framework</code> object</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name of <code>hypothesis</code> object to pull components from</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>For optional parameters</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The <code>get_*()</code> functions return the named object from the <code>framework</code>.
+The <code>update_*()</code> functions return the entire framework after modification.</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

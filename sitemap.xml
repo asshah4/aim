@@ -13,6 +13,9 @@
     <loc>https://asshah4.github.io/aims//reference/aims-package.html</loc>
   </url>
   <url>
+    <loc>https://asshah4.github.io/aims//reference/build_frames.html</loc>
+  </url>
+  <url>
     <loc>https://asshah4.github.io/aims//reference/build_models.html</loc>
   </url>
   <url>
@@ -34,10 +37,13 @@
     <loc>https://asshah4.github.io/aims//reference/hypothesize.html</loc>
   </url>
   <url>
+    <loc>https://asshah4.github.io/aims//reference/link_framework.html</loc>
+  </url>
+  <url>
     <loc>https://asshah4.github.io/aims//reference/make_formulas.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/new_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/make_hypothesis.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/aims//reference/pipe.html</loc>
@@ -46,13 +52,19 @@
     <loc>https://asshah4.github.io/aims//reference/project.html</loc>
   </url>
   <url>
+    <loc>https://asshah4.github.io/aims//reference/retrieval.html</loc>
+  </url>
+  <url>
     <loc>https://asshah4.github.io/aims//reference/set_data.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/aims//reference/set_hypothesis.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/aims//reference/tidy_tests.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/tie_hypothesis_to_data.html</loc>
+    <loc>https://asshah4.github.io/aims//reference/update_hypothesis.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/aims//articles/development.html</loc>

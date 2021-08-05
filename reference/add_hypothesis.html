@@ -40,7 +40,8 @@
 
 
 <meta property="og:title" content="Add a Hypothesis to the Framework — add_hypothesis" />
-<meta property="og:description" content="Add a Hypothesis to the Framework" />
+<meta property="og:description" content="Takes a hypothesis object and adds it to a framework, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison." />
 
 
 
@@ -129,7 +130,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Add a Hypothesis to the Framework</p>
+    <p>Takes a <code>hypothesis</code> object and adds it to a <code>framework</code>, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison.</p>
     </div>
 
     <pre class="usage"><span class='fu'>add_hypothesis</span><span class='op'>(</span>
@@ -139,10 +141,33 @@
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>framework</th>
+      <td><p>Object of class <code>framework</code></p></td>
+    </tr>
+    <tr>
+      <th>hypothesis</th>
+      <td><p>Object of class <code>hypothesis</code> (which may or may not include
+data already added)</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name of the <code>hypothesis</code> object, which defaults to the name of
+the <code>hypothesis</code> object itself</p></td>
+    </tr>
+    </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>framework</code> object that has had a <code>hypothesis</code> added</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other frameworks: 
+<code><a href='build_frames.html'>build_frames</a>()</code>,
+<code><a href='fit_models.html'>fit_models</a>()</code>,
 <code><a href='framework.html'>framework</a>()</code></p></div>
 
   </div>

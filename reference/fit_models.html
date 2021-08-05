@@ -42,6 +42,9 @@
 <meta property="og:title" content="Fit a list of parsnip models — fit_models" />
 <meta property="og:description" content="This allows for the simple fitting of multiple models. It
 requires three components: a formula, a parsnip model definition, and a
+data set to analyze.
+This allows for the simple fitting of multiple models. It
+requires three components: a formula, a parsnip model definition, and a
 data set to analyze." />
 
 
@@ -126,7 +129,7 @@ data set to analyze." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fit a list of parsnip models</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/build_models.R'><code>R/build_models.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/build_models.R'><code>R/build_models.R</code></a>, <a href='https://github.com/asshah4/aims/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
     <div class="hidden name"><code>fit_models.Rd</code></div>
     </div>
 
@@ -134,9 +137,14 @@ data set to analyze." />
     <p>This allows for the simple fitting of multiple models. It
 requires three components: a formula, a parsnip model definition, and a
 data set to analyze.</p>
+<p>This allows for the simple fitting of multiple models. It
+requires three components: a formula, a parsnip model definition, and a
+data set to analyze.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fit_models</span><span class='op'>(</span><span class='va'>.formula</span>, <span class='va'>.test</span>, .opts <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>.data</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>fit_models</span><span class='op'>(</span><span class='va'>.formula</span>, <span class='va'>.test</span>, .opts <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>.data</span><span class='op'>)</span>
+
+<span class='fu'>fit_models</span><span class='op'>(</span><span class='va'>.formula</span>, <span class='va'>.test</span>, .opts <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>.data</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -162,6 +170,17 @@ data set to analyze.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>Returns a list of model fits</p>
+<p>Returns a list of model fits</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other frameworks: 
+<code><a href='add_hypothesis.html'>add_hypothesis</a>()</code>,
+<code><a href='build_frames.html'>build_frames</a>()</code>,
+<code><a href='framework.html'>framework</a>()</code></p>
+<p>Other frameworks: 
+<code><a href='add_hypothesis.html'>add_hypothesis</a>()</code>,
+<code><a href='build_frames.html'>build_frames</a>()</code>,
+<code><a href='framework.html'>framework</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

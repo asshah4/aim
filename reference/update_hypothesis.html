@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • aims</title>
+<title>Update a Hypothesis — update_hypothesis • aims</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,11 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Update a Hypothesis — update_hypothesis" />
+<meta property="og:description" content="A hypothesis object can be modified to generate an updated hypothesis,
+which can then be placed into a framework as needed. The strata and
+test_opts arguments can only be updated if the data and test
+options are also given, respectively." />
 
 
 
@@ -58,7 +62,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,138 +124,36 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Update a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/hypothesis-helpers.R'><code>R/hypothesis-helpers.R</code></a></small>
+    <div class="hidden name"><code>update_hypothesis.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>A <code>hypothesis</code> object can be modified to generate an updated hypothesis,
+which can then be placed into a <code>framework</code> as needed. The <strong>strata</strong> and
+<strong>test_opts</strong> arguments can only be updated if the <strong>data</strong> and <strong>test</strong>
+options are also given, respectively.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>update_hypothesis</span><span class='op'>(</span><span class='va'>hypothesis</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="add_data.html">add_data()</a></code> </p>
-        </td>
-        <td><p>Adding Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="add_hypothesis.html">add_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Add a Hypothesis to the Framework</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_frames.html">build_frames()</a></code> </p>
-        </td>
-        <td><p>Build Up the Framework by Fitting Models and Tests</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="build_models.html">build_models()</a></code> </p>
-        </td>
-        <td><p>Build the Models and Tests</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="collect_findings.html">collect_findings()</a></code> </p>
-        </td>
-        <td><p>Collect the Important Findings from a Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_models.html">fit_models()</a></code> <code><a href="fit_models.html">fit_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="framework.html">framework()</a></code> </p>
-        </td>
-        <td><p>Initialize a Hypothesis Framework</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Create a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_formulas.html">make_formulas()</a></code> </p>
-        </td>
-        <td><p>Make formula combinations in <code>new_hypothesis()</code></p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_hypothesis.html">make_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Add a Hypothesis to the Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="project.html">project()</a></code> </p>
-        </td>
-        <td><p>Initialize a Project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">get_data()</a></code> <code><a href="retrieval.html">get_test()</a></code> <code><a href="retrieval.html">get_combination()</a></code> <code><a href="retrieval.html">get_formulae()</a></code> <code><a href="retrieval.html">get_parameters()</a></code> <code><a href="retrieval.html">update_status()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>framework</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="set_data.html">set_data()</a></code> </p>
-        </td>
-        <td><p>Set the Data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>hypothesis</th>
+      <td><p>A <code>hypothesis</code> object</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>hypothesis</code> object</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Expand Formulas for a Hypothesis — expand_formula • aims</title>
+<title>Expand Formulae for a Hypothesis — expand_formula • aims</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Expand Formulas for a Hypothesis — expand_formula" />
+<meta property="og:title" content="Expand Formulae for a Hypothesis — expand_formula" />
 <meta property="og:description" content="This is an internal function that helps to create the appropriate formula
 combinations for adding hypotheses." />
 
@@ -124,8 +124,8 @@ combinations for adding hypotheses." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Expand Formulas for a Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
+    <h1>Expand Formulae for a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/expressions.R'><code>R/expressions.R</code></a></small>
     <div class="hidden name"><code>expand_formula.Rd</code></div>
     </div>
 
@@ -142,24 +142,10 @@ combinations for adding hypotheses.</p>
     <tr>
       <th>formula</th>
       <td><p>Formula showing relationship of outcomes and predictors, and
-is essentially the hypothesis. It allows for complex formulas e.g. multiple
+is essentially the hypothesis. It allows for complex formulae e.g. multiple
 predictors, multiple exposures, and multiple covariates, that can be
-organized into individual formulas based on additional modifiers. Each RHS
-term of the formula is considered an outcome variable, and is analyzed as a
-single outcome. Each LHS term is consider a predictor, and can be modified
-as below:</p><ul>
-<li><p><code>X()</code> is placed around a term to define as an independent exposure,
-which will be placed in separate formulas from any other term marked as an
-exposure</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects</p></li>
-</ul>
-
-<p>Of note, these formula modifiers do not apply to <code>htest</code> objects yet.</p>
-<p>For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally regressed for every level of "z"</p>
-<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p></td>
+organized into individual formulae based on additional modifiers. Please
+see the  for further documentation.</p></td>
     </tr>
     <tr>
       <th>combination</th>
@@ -179,7 +165,26 @@ the <code>combination</code> currently include:</p><ul>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Table of formulas and extracted terms</p>
+    <p>Table of formulae and extracted terms</p>
+    <h2 class="hasAnchor" id="formulae"><a class="anchor" href="#formulae"></a>Formulae</h2>
+
+    
+
+
+<p>When supplying a <code>formula</code> object, each RHS term of the formula is
+considered an outcome variable, and is analyzed as a single outcome. Each
+LHS term is consider a predictor, and can be modified as below:</p><ul>
+<li><p><code>X()</code> is placed around a term to define as an independent exposure, which
+will be placed in separate formulae from any other term marked as an
+exposure</p></li>
+<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects</p></li>
+</ul>
+
+<p>For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally regressed for every level of "z"</p>
+<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
