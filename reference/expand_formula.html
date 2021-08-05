@@ -150,12 +150,21 @@ see the  for further documentation.</p></td>
     <tr>
       <th>combination</th>
       <td><p>The building pattern for how to put together the overall
-plan. It defines variable relationships that will be used. The options for
-the <code>combination</code> currently include:</p><ul>
-<li><p><code>direct</code> will define the relationship as y ~ x</p></li>
-<li><p><code>sequential</code> will define the relationship as y ~ x1, y ~ x1 + x2</p></li>
-<li><p><code>parallel</code> will define the relationship as y ~ x1, y ~ x2</p></li>
-</ul></td>
+plan. It defines variable relationships that will be used. The options of
+<code>combination</code> will lead to the following patterns:</p>
+<p>$$y ~ x1 + x2$$</p><ul>
+<li><p><code>direct</code> will not modify the original equation pattern</p></li>
+</ul>
+
+<p>$$y ~ x1 + x2$$</p><ul>
+<li><p><code>sequential</code> will create a list of sequentially adjusted formula</p></li>
+</ul>
+
+<p>$$y ~ x1$$ $$y ~ x1 + x2$$</p><ul>
+<li><p><code>parallel</code> will create a list of formula with parallel predictors</p></li>
+</ul>
+
+<p>$$y ~ x1$$ $$y ~ x2$$</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -183,7 +192,7 @@ mixed effects</p></li>
 </ul>
 
 <p>For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally regressed for every level of "z"</p>
+and "x2" that should be conditionally tested for every level of "z"</p>
 <p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p>
 
   </div>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Build Up the Framework by Fitting Models and Tests — build_frames • aims</title>
+<title>Print a Hypothesis — print.hypothesis • aims</title>
 
 
 <!-- jquery -->
@@ -39,12 +39,8 @@
 
 
 
-<meta property="og:title" content="Build Up the Framework by Fitting Models and Tests — build_frames" />
-<meta property="og:description" content="This function allows for delayed building of multiple hypothesis. It uses the
-hypothesis objects with the corresponding test arguments against the
-prescribed data. Which hypotheses to run can be specified, which will
-forcibly re-run these, otherwise the default behavior is to only run models
-that have not yet been fitted." />
+<meta property="og:title" content="Print a Hypothesis — print.hypothesis" />
+<meta property="og:description" content="Print a Hypothesis" />
 
 
 
@@ -127,45 +123,31 @@ that have not yet been fitted." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Build Up the Framework by Fitting Models and Tests</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/framework.R'><code>R/framework.R</code></a></small>
-    <div class="hidden name"><code>build_frames.Rd</code></div>
+    <h1>Print a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
+    <div class="hidden name"><code>print.hypothesis.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This function allows for delayed building of multiple hypothesis. It uses the
-<code>hypothesis</code> objects with the corresponding <strong>test</strong> arguments against the
-prescribed <strong>data</strong>. Which hypotheses to run can be specified, which will
-forcibly re-run these, otherwise the default behavior is to only run models
-that have not yet been fitted.</p>
+    <p>Print a Hypothesis</p>
     </div>
 
-    <pre class="usage"><span class='fu'>build_frames</span><span class='op'>(</span><span class='va'>framework</span>, which_ones <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='co'># S3 method for hypothesis</span>
+<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>framework</th>
-      <td><p>Object of class <code>framework</code></p></td>
+      <th>x</th>
+      <td><p>A <code>hypothesis</code> object</p></td>
     </tr>
     <tr>
-      <th>which_ones</th>
-      <td><p>Vector of which hypothesis should be built. Defaults to
-building all hypotheses that have not been run yet. If given a name, will
-forcibly re-run the analysis.</p></td>
+      <th>...</th>
+      <td><p>further arguments passed to or from other methods.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>Returns a <code>framework</code> object that has be fitted and tidied.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other frameworks: 
-<code><a href='add_hypothesis.html'>add_hypothesis</a>()</code>,
-<code><a href='fit_models.html'>fit_models</a>()</code>,
-<code><a href='framework.html'>framework</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

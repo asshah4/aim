@@ -4,9 +4,6 @@
     <loc>https://asshah4.github.io/aims//index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/aims//reference/add_data.html</loc>
-  </url>
-  <url>
     <loc>https://asshah4.github.io/aims//reference/add_hypothesis.html</loc>
   </url>
   <url>
@@ -47,6 +44,9 @@
   </url>
   <url>
     <loc>https://asshah4.github.io/aims//reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/aims//reference/print.hypothesis.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/aims//reference/project.html</loc>
