@@ -1,4 +1,4 @@
 library(testthat)
-library(aims)
+library(path)
 
-test_check("aims")
+test_check("path")

@@ -51,10 +51,12 @@ The project name has gone through many iterations. The reason why the name was i
 | {marksman} | The first draft included the concept of "specific aims". This research concept is from grant writing, where the first page of a project contains the specific hypotheses that will be explored. Thus, one could *load*, *aim*, and *fire* and specific targets. The problem with this was it seemed to deterministic, as exploration was a crucial component. |
 | {octomod} | The second draft took inspiration from the idea of an *octopus*, with 8 arms or legs all surrounded a central idea. This allowed for flexibility in that the many arms of a project were not necessarily hierarchical. However, theming a project after a cephalopod does make the function names less easy to remember. |
 | {aims} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
+| {diagnose} | After iterating through the code, modeling causality and looking at clinically relevant variables was the more refined underlying objective. This allowed for simplification of the hypothesis generating method and opened the door to look at effect modification. | 
+| {path} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
 
 # Defining the API
 
-## Current Draft
+## First Draft
 
 I've currently defined the basic functions as below:
 
@@ -154,16 +156,26 @@ The overall project structure requires a specific *class* that will contain a pa
 - a *tidy* table that holds each `arm` as a separate row, containing columns for the title, formula combinations, modifiers/options, description, and build/run status
 - a corresponding *tidy* table that holds the results of each `arm` after it has been run
 
-### Supporting Functions
+## Third Draft
 
-The most complex part of this is handling formulas. Each formula given has the option to be expanded in a number of patterns. Each pattern should represent an epidemiology approach to model building (e.g. each model is informative, even if it is insignificant). 
+I realized this approach was not effective in that it was overly complicated in having multiple names, data frames, and connections between them. I simplified the pipeline to focus on a specific S3 classes that could be used to generate hypotheses, and iterate through to help look at variable relationship.
+
+### Core Functions
 
 ```{r, eval=FALSE}
-make_formulas(
-  formulas = y ~ x1 + x2 + x3,
-  combination = "parallel",
-  exposures = NULL,
-  ...
-)
+study() %>%
+	add_hypothesis(hypothesis) %>%
+	build_study()
 ```
+
+Essentially, this was a list based concept of adding hypotheses to a modified list/tibble structure that had important data stored as attributes.
+
+## Fourth Draft
+
+I decided that I was not really seeing the big picture. What I wanted was a way to store a set of multiple tests with the purpose of studying the relationship between two variables (an exposure and an outcome), and potentially looking at covariates. The *basic* concept was essentially a **directed acyclic graph**, with the relationships storing the hypotheses that were tested. The functionality was the same, but the API was different.
+
+The two major classes needed would be ...
+
+- `term_relationship` object, that showed and/or carried the relationship between variables, likely a list of `formulas`
+- `path_map` object that drew the relationships between the variables, and allowed for the storage of multiple tests
 

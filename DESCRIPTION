@@ -1,5 +1,5 @@
-Package: aims
-Title: A Hypothesis Driven Approach to Multiple Models
+Package: path 
+Title: Visualizing Casuality
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
@@ -33,8 +33,8 @@ Imports:
     methods,
     rlang,
 Remotes:
-    asshah4/aims
+    asshah4/path
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/aims
-BugReports: https://github.com/asshah4/aims/issues
+URL: https://github.com/asshah4/path
+BugReports: https://github.com/asshah4/path/issues
 Config/testthat/edition: 3

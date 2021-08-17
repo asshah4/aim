@@ -3,7 +3,7 @@
 #' This is an internal function that helps to create the appropriate formula
 #' combinations for adding hypotheses.
 #'
-#' @return Table of formulae and extracted terms
+#' @return List or table of formulae and extracted terms (to be determined by the __table__ argument).
 #'
 #' @param formula Formula showing relationship of outcomes and predictors, and
 #'   is essentially the hypothesis. It allows for complex formulae e.g. multiple
@@ -27,6 +27,9 @@
 #'
 #'  \deqn{y ~ x1} \deqn{y ~ x2}
 #'
+#' @param table Determines if the returned value should be a list of formulas or
+#'   a table. Defaults to FALSE, leading to a list generation.
+#'
 #' @param ... Not currently used
 #'
 #' @section Formulae:
@@ -43,6 +46,10 @@
 #'   maintained/fixed in all models, which can include complex terms, such as
 #'   mixed effects
 #'
+#'   * `C()` is placed around a term for any predictors that are a potential
+#'   confounder, which does not yet change the relationship of how formulas are
+#'   built, but is stored for future methods to be used with [hypothesize()]
+#'
 #'   For example, the equation below describes two independent exposures "x1"
 #'   and "x2" that should be conditionally tested for every level of "z"
 #'
@@ -52,6 +59,7 @@
 #' @export
 expand_formula <- function(formula,
 													 combination,
+													 table = FALSE,
 													 ...) {
 	# Initial deparsing of variables
 	outcomes <-
@@ -59,7 +67,14 @@ expand_formula <- function(formula,
 	predictors <- labels(stats::terms(formula))
 	exposures <- grep("X\\(", predictors, value = TRUE)
 	fixed <- grep("F\\(", predictors, value = TRUE)
+
+	# Confounders need to be identified
+	confounders <- grep("C\\(", predictors, value = TRUE)
+	confounders <- gsub("\\)", "", gsub("C\\(", "", confounders))
+
+	# Covariates should not contain any additional labels
 	covariates <- setdiff(labels(stats::terms(formula)), c(fixed, exposures))
+	covariates <- gsub("\\)", "", gsub("C\\(", "", covariates))
 
 	# Exposures should be cleaned from original modifiers if present, or nulled
 	if (length(exposures) > 0) {
@@ -69,7 +84,8 @@ expand_formula <- function(formula,
 			lapply(., stats::formula) %>%
 			lapply(., stats::terms) %>%
 			lapply(., labels) %>%
-			unique()
+			unique() %>%
+			unlist()
 	} else if (length(exposures) == 0) {
 		exposures <- NA
 	}
@@ -106,12 +122,14 @@ expand_formula <- function(formula,
 		},
 		sequential = {
 			# Number of covariates to sequence through
-			num <- length(covariates) + sum(!is.na(exposures))
+			mod <- unique(!is.na(exposures))
+			num <- sum(mod + length(covariates))
 
 			tbl <-
 				tibble::tibble(number = 1:num) %>%
 				mutate(vars = purrr::map(
-					number, ~ c(fixed, covariates[0:(.x - sum(!is.na(exposures)))])
+					number,
+					~ c(fixed, covariates[(1 - mod):(.x - mod)])
 				)) %>%
 				tidyr::expand_grid(exposures = exposures, .) %>%
 				mutate(vars = purrr::map2(vars, exposures, ~ c(.y, .x))) %>%
@@ -142,12 +160,19 @@ expand_formula <- function(formula,
 	)
 
 	# Return expanded formulae
-	tbl %>%
+	tbl <- tbl %>%
 		mutate(exposures = sapply(exposures, paste, collapse = ", ")) %>%
 		mutate(formulae = {
 			purrr::map_chr(vars, ~ paste(unlist(.x), collapse = " + ")) %>%
 				paste(outcomes, ., sep = " ~ ") %>%
 				lapply(., formula)
 		})
+
+	# Return either list or table
+	if (table) {
+		tbl
+	} else {
+		tbl$formulae
+	}
 }
 

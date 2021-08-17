@@ -1,37 +1,37 @@
 # Retrieve Functions ----
 
-#' Retrieve, Modify, and Destroy Components From `framework` Object
+#' Retrieve, Modify, and Destroy Components From `study` Object
 #'
 #' @description
 #'
 #' These functions are essentially helper functions to simplify the manipulation
-#' of `framework` objects. They may retrieve or modify or destroy components of
-#' the `framework` object as described.
+#' of `study` objects. They may retrieve or modify or destroy components of
+#' the `study` object as described.
 #'
 #' __Retrieval functions__:
 #'
-#' * `get_data()` retrieves the data set associated with a specified hypothesis
+#' * `fetch_data()` retrieves the data set associated with a specified hypothesis
 #' and data name
 #'
-#' * `get_test()` retrieves the test associated with a hypothesis
+#' * `fetch_test()` retrieves the test associated with a hypothesis
 #'
-#' * `get_formulae()` retrieves the list of formulas associated with a
+#' * `fetch_formulae()` retrieves the list of formulas associated with a
 #' hypothesis
 #'
-#' * `get_combination()` retrieves how a hypothesis was combined to generate its
+#' * `fetch_combination()` retrieves how a hypothesis was combined to generate its
 #' formula list
 #'
-#' * `get_names()` retrieves the hypothesis names that match a certain argument, such as `combination = "parallel"` or `data_name = "mtcars"`
+#' * `fetch_names()` retrieves the hypothesis names that match a certain argument, such as `combination = "parallel"` or `data_name = "mtcars"`
 #'
 #' __Update functions__:
 #'
-#' * `update_status()` modifies the components of a framework, usually used
+#' * `update_study()` modifies the components of a study, usually used
 #' internally to help update the stage/status of the specified object
 #'
-#' @return The `get_*()` functions return the named object from the `framework`.
-#'   The `update_*()` functions return the entire framework after modification.
+#' @return The `fetch_*()` functions return the named object from the `study`.
+#'   The `update_*()` functions return the entire study after modification.
 #'
-#' @param x `framework` object
+#' @param x `study` object
 #'
 #' @param name Name of `hypothesis` object to pull components from
 #'
@@ -42,7 +42,7 @@ NULL
 
 #' @rdname retrieval
 #' @export
-get_data <- function(x, name) {
+fetch_data <- function(x, name) {
 
 	y <- attributes(x)$data_table
 	data_name <- y$data_name[y$name == name]
@@ -58,7 +58,7 @@ get_data <- function(x, name) {
 
 #' @rdname retrieval
 #' @export
-get_test <- function(x, name) {
+fetch_test <- function(x, name) {
 
 	y <- attributes(x)$test_table
 	if (y$type[y$name == name] == "model_spec") {
@@ -73,7 +73,7 @@ get_test <- function(x, name) {
 
 #' @rdname retrieval
 #' @export
-get_combination <- function(x, name) {
+fetch_combination <- function(x, name) {
 
 	y <- attributes(x)$test_table
 	combination <- y$combination[y$name == name]
@@ -85,7 +85,7 @@ get_combination <- function(x, name) {
 
 #' @rdname retrieval
 #' @export
-get_formulae <- function(x, name) {
+fetch_formulae <- function(x, name) {
 
 	formulae <- x$formulae[x$name == name]
 
@@ -96,7 +96,7 @@ get_formulae <- function(x, name) {
 
 #' @rdname retrieval
 #' @export
-get_parameters <- function(x, name) {
+fetch_parameters <- function(x, name) {
 
 	pars <- x$tidy[x$name == name]
 
@@ -106,7 +106,7 @@ get_parameters <- function(x, name) {
 
 #' @rdname retrieval
 #' @export
-get_names <- function(x, ...) {
+fetch_names <- function(x, ...) {
 
 	opts <- list(...)
 	named_args <- names(opts)
@@ -125,12 +125,14 @@ get_names <- function(x, ...) {
 
 #' @rdname retrieval
 #' @export
-update_status <- function(x, name, stage = NA, run = FALSE) {
+update_study <- function(x, name, stage = NA, run = FALSE) {
 
-	status <- attributes(x)$status_table
-	status$run <- run
-	status$stage <- stage
-	attributes(x)$status_table <- status
+	if (!is.na(stage)) {
+		status <- attributes(x)$status_table
+		status$run <- run
+		status$stage <- stage
+		attributes(x)$status_table <- status
+	}
 
 	# Return
 	invisible(x)
@@ -138,20 +140,21 @@ update_status <- function(x, name, stage = NA, run = FALSE) {
 
 # Linking Functions ----
 
-#' Linking Functions Between Hypothesis and Framework
+#' Linking Functions Between Hypothesis and Study
 #'
-#' These are all internal functions to help attach components to the `framework` object, and are generally not exposed to the user.
+#' These are all internal functions to help attach components to the `study`
+#' object, and are generally not exposed to the user.
 #'
-#' @param framework Object of `framework` class
+#' @param study Object of `study` class
 #' @param hypothesis Object of `hypothesis` class
 #' @param name Name of `hypothesis`, given from parent function
-#' @name link_framework
+#' @name link_study
 #' @keywords internal
 NULL
 
-#' @rdname link_framework
+#' @rdname link_study
 #' @keywords internal
-.link_hypothesis <- function(framework, hypothesis, name) {
+.link_hypothesis <- function(study, hypothesis, name) {
 
 	# Identify number of sub-hypotheses
 	parameters <- attributes(hypothesis)$parameters
@@ -160,7 +163,7 @@ NULL
 
 	# Major parameters should be passed along
 	for (i in 1:n) {
-		framework <- framework %>%
+		study <- study %>%
 			tibble::add_row(
 				name = name,
 				number = parameters$number[i],
@@ -171,15 +174,15 @@ NULL
 	}
 
 	# Return
-	invisible(framework)
+	invisible(study)
 }
 
-#' @rdname link_framework
+#' @rdname link_study
 #' @keywords internal
-.link_test <- function(framework, hypothesis, name) {
+.link_test <- function(study, hypothesis, name) {
 	# Test, test type, and test options should be passed along
-	attributes(framework)$test_table <-
-		attributes(framework)$test_table %>%
+	attributes(study)$test_table <-
+		attributes(study)$test_table %>%
 		tibble::add_row(
 			name = name,
 			call = list(stats::formula(stats::terms(hypothesis))),
@@ -190,19 +193,19 @@ NULL
 		)
 
 	# Return
-	invisible(framework)
+	invisible(study)
 }
 
-#' @rdname link_framework
+#' @rdname link_study
 #' @keywords internal
-.link_data <- function(framework, hypothesis, name) {
+.link_data <- function(study, hypothesis, name) {
 
 	# Get data name
 	data_name <- names(attributes(hypothesis)$data)
 
 	# Data table for linking hypothesis to data
-	attributes(framework)$data_table <-
-		attributes(framework)$data_table %>%
+	attributes(study)$data_table <-
+		attributes(study)$data_table %>%
 		tibble::add_row(
 			name = name,
 			data_name = data_name,
@@ -211,25 +214,25 @@ NULL
 		)
 
 	# Data list (to minimize too many data sets)
-	attributes(framework)$data_list <-
-		attributes(framework)$data_list %>%
+	attributes(study)$data_list <-
+		attributes(study)$data_list %>%
 		tibble::add_row(
 			data_name = data_name,
 			data = list(attributes(hypothesis)$data[[data_name]])
 		) %>%
 		unique()
 
-	# Return framework
-	invisible(framework)
+	# Return study
+	invisible(study)
 }
 
-#' @rdname link_framework
+#' @rdname link_study
 #' @keywords internal
-.link_status <- function(framework, hypothesis, name) {
+.link_status <- function(study, hypothesis, name) {
 
 	# Add hypothesis and data_name to status table
-	attributes(framework)$status_table <-
-		attributes(framework)$status_table %>%
+	attributes(study)$status_table <-
+		attributes(study)$status_table %>%
 		tibble::add_row(
 			name = name,
 			run = FALSE,
@@ -239,6 +242,25 @@ NULL
 
 
 	# Return
-	invisible(framework)
+	invisible(study)
 }
 
+#' @rdname link_study
+#' @keywords internal
+.link_vars <- function(study, hypothesis, name) {
+
+	attr(study, "var_table") <-
+		attr(study, "var_table") %>%
+		tibble::add_row(
+			name = name,
+			combination = attributes(hypothesis)$combination,
+			outcomes = attributes(hypothesis)$vars$outcomes,
+			exposures = attributes(hypothesis)$vars$exposures,
+			fixed = attributes(hypothesis)$vars$fixed,
+			covariates = attributes(hypothesis)$vars$covariates,
+			confounders = attributes(hypothesis)$vars$confounders
+		)
+
+	invisible(study)
+
+}

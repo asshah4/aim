@@ -1,42 +1,52 @@
-#' Initialize a Hypothesis Framework
+#' Initialize a Framework for Studying Hypotheses
 #'
-#' @family frameworks
+#' @family studies
 #' @export
-framework <- function(...) {
+study <- function(...) {
+
 	# Base structure is that of a tibble
-	framework <- tibble::tribble(
+	study <- tibble::tribble(
 		~name, ~number, ~outcome, ~exposure, ~formulae, ~fit, ~tidy
 	)
 
-	attr(framework, "data_table") <- tibble::tribble(
+	# Need to know how the data should be tested
+	attr(study, "data_table") <- tibble::tribble(
 		~name, ~data_name, ~strata
 	)
 
-	attr(framework, "data_list") <- tibble::tribble(
+	# Storage of data should be simple
+	attr(study, "data_list") <- tibble::tribble(
 		~data_name, ~data
 	)
 
-	attr(framework, "test_table") <- tibble::tribble(
+	# Identify the tests
+	attr(study, "test_table") <- tibble::tribble(
 		~name, ~call, ~test, ~test_opts, ~combination, ~type
 	)
 
-	attr(framework, "status_table") <- tibble::tribble(
+	# Recording of status updates
+	attr(study, "status_table") <- tibble::tribble(
 		~name, ~run, ~error, ~stage
 	)
 
+	attr(study, "var_table") <- tibble::tribble(
+		~name, ~combination, ~outcomes, ~exposures, ~fixed, ~covariates, ~confounders
+	)
+
 	# Return
-	framework <-
-		structure(framework, class = c("framework", class(framework)))
+	study <-
+		structure(study, class = c("study", class(study)))
+
 }
 
-#' Add a Hypothesis to the Framework
+#' Add a Hypothesis to the Study
 #'
-#' Takes a `hypothesis` object and adds it to a `framework`, allowing multiple
+#' Takes a `hypothesis` object and adds it to a `study`, allowing multiple
 #' potential hypotheses to be put together for eventual analysis and comparison.
 #'
-#' @return A `framework` object that has had a `hypothesis` added
+#' @return A `study` object that has had a `hypothesis` added
 #'
-#' @param framework Object of class `framework`
+#' @param study Object of class `study`
 #'
 #' @param hypothesis Object of class `hypothesis` (which may or may not include
 #'   data already added)
@@ -44,31 +54,32 @@ framework <- function(...) {
 #' @param name Name of the `hypothesis` object, which defaults to the name of
 #'   the `hypothesis` object itself
 #'
-#' @family frameworks
+#' @family studies
 #' @export
-add_hypothesis <- function(framework,
+add_hypothesis <- function(study,
 													 hypothesis,
 													 name = deparse(substitute(hypothesis)),
 													 ...) {
 
-	validate_class(framework, "framework")
+	validate_class(study, "study")
 
-	# Pipe of adding components to framework
-	framework <-
-		framework %>%
+	# Pipe of adding components to study
+	study <-
+		study %>%
 		.link_hypothesis(hypothesis, name) %>%
 		.link_test(hypothesis, name) %>%
 		.link_data(hypothesis, name) %>%
-		.link_status(hypothesis, name)
+		.link_status(hypothesis, name) %>%
+		.link_vars(hypothesis, name)
 
 	# Update stage/status
-	framework <- update_status(framework, name, stage = "hypothesis")
+	study <- update_study(study, name, stage = "hypothesis")
 
 	# Return
-	framework
+	study
 }
 
-#' Build Up the Framework by Fitting Models and Tests
+#' Run the Study by Fitting Models and Tests
 #'
 #' This function allows for delayed building of multiple hypothesis. It uses the
 #' `hypothesis` objects with the corresponding __test__ arguments against the
@@ -76,7 +87,7 @@ add_hypothesis <- function(framework,
 #' forcibly re-run these, otherwise the default behavior is to only run models
 #' that have not yet been fitted.
 #'
-#' @return Returns a `framework` object that has be fitted and tidied.
+#' @return Returns a `study` object that has be fitted and tidied.
 #'
 #' @inheritParams add_hypothesis
 #'
@@ -84,21 +95,21 @@ add_hypothesis <- function(framework,
 #'   building all hypotheses that have not been run yet. If given a name, will
 #'   forcibly re-run the analysis.
 #'
-#' @family frameworks
+#' @family studies
 #' @export
-build_frames <- function(framework, which_ones = NULL, ...) {
+build_study <- function(study, which_ones = NULL, ...) {
 
-	validate_class(framework, "framework")
+	validate_class(study, "study")
 
 	# Select out models that have not yet been run
 	# If specified hypothesis are named, force them to be re-run
 	if (is.null(which_ones)) {
 		x <-
-			attributes(framework)$status_table[c("name", "run")] %>%
+			attributes(study)$status_table[c("name", "run")] %>%
 			subset(., run == FALSE)
 	} else {
 		x <-
-			attributes(framework)$status_table[c("name", "run")] %>%
+			attributes(study)$status_table[c("name", "run")] %>%
 			subset(., name %in% which_ones)
 	}
 
@@ -107,27 +118,27 @@ build_frames <- function(framework, which_ones = NULL, ...) {
 			name <- x$name[i]
 
 			# Retrieve information
-			test <- get_test(framework, name)
-			data <- get_data(framework, name)
-			formulae <- get_formulae(framework, name)
+			test <- fetch_test(study, name)
+			data <- fetch_data(study, name)
+			formulae <- fetch_formulae(study, name)
 
 			# Apply fitting and tidying functions
 			fits <- fit_models(.formula = formulae, .test = test, .data = data)
 			tidied <- tidy_tests(.fits = fits)
 
-			# Return to original framework object
-			framework$fit[framework$name == name] <- fits
-			framework$tidy[framework$name == name] <- tidied
+			# Return to original study object
+			study$fit[study$name == name] <- fits
+			study$tidy[study$name == name] <- tidied
 
 			# Update stage
-			framework <-
-				update_status(framework, name = name, stage = "built", run = TRUE)
+			study <-
+				update_study(study, name = name, stage = "built", run = TRUE)
 		}
 	} else {
 		message("All tests are already built. To force build, set `which_ones` to desired hypothesis.")
 	}
 
 	# Return
-	framework
+	study
 }
 

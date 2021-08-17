@@ -16,7 +16,7 @@
 #' function), along with potential stratification instructions. Modifies the
 #' formula by adding the attributes to the formula.
 #'
-#' * `.set_tests()` Add the test and test options (if needed) the the
+#' * `set_tests()` Add the test and test options (if needed) the the
 #' `hypothesis` object. This modifies the attributes of the original object and
 #' invisibly returns the same object.
 #'
@@ -38,7 +38,7 @@ NULL
 	validate_class(formula, "formula")
 	validate_class(combination, "character")
 
-	tbl <- expand_formula(formula, combination, table = TRUE)
+	tbl <- expand_formula(formula, combination)
 	formulae <- tbl$formulae
 	parameters <- tbl[1:4]
 
@@ -83,46 +83,6 @@ NULL
 	# Set attributes
 	attributes(hypothesis)$test <- test
 	attributes(hypothesis)$test_opts <- .test_opts
-
-	# Return
-	invisible(hypothesis)
-}
-
-#' @rdname set_hypothesis
-#' @keywords internal
-.set_vars <- function(hypothesis, formula, confounders = NULL) {
-
-	# Outcomes
-	outcomes <- gsub(" ", "", unlist(strsplit(deparse(formula[[2]]), "\ \\+\ ")))
-	if (length(outcomes) == 0) {outcomes <- NA}
-	attributes(hypothesis)$vars$outcomes <- outcomes
-
-	# Predictors
-	predictors <- labels(stats::terms(formula))
-	exposures <- grep("X\\(", predictors, value = TRUE)
-	fixed <- grep("F\\(", predictors, value = TRUE)
-	covariates <- setdiff(predictors, c(fixed, exposures))
-
-	# Clean variables are needed
-	covariates <- gsub("\\)", "", gsub("C\\(", "", covariates))
-	if (length(covariates) == 0) {covariates <- NA}
-	exposures <- gsub("\\)", "", gsub("X\\(", "", exposures))
-	if (length(exposures) == 0) {exposures <- NA}
-	fixed <- gsub("\\)", "", gsub("F\\(", "", fixed))
-	if (length(fixed) == 0) {fixed <- NA}
-
-	# Assign back to hypothesis
-	attributes(hypothesis)$vars$exposures <- exposures
-	attributes(hypothesis)$vars$fixed <- fixed
-	attributes(hypothesis)$vars$covariates <- covariates
-
-	# Confounders need to be identified
-	if (is.null(confounders)) {
-		confounders <- grep("C\\(", predictors, value = TRUE)
-		confounders <- gsub("\\)", "", gsub("C\\(", "", confounders))
-		if (length(confounders) == 0) {confounders <- NA}
-		attributes(hypothesis)$vars$confounders <- confounders
-	}
 
 	# Return
 	invisible(hypothesis)
@@ -180,5 +140,4 @@ update_hypothesis <- function(hypothesis, ...) {
 	}
 
 	invisible(hypothesis)
-
 }

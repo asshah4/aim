@@ -1,15 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# aims
+# path
 
 <!-- badges: start -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Github commit
-frequency](https://img.shields.io/github/commit-activity/w/asshah4/aims)](https://github.com/asshah4/aims/graphs/commit-activity)
-[![R-CMD-check](https://github.com/asshah4/aims/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/aims/actions)
+frequency](https://img.shields.io/github/commit-activity/w/asshah4/diagnose)](https://github.com/asshah4/diagnose/graphs/commit-activity)
+[![R-CMD-check](https://github.com/asshah4/diagnose/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/diagnose/actions)
 
 <!-- badges: end -->
 

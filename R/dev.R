@@ -1,60 +1,24 @@
 #' Reformulate a Hypothesis
 #'
-#' After `hypothesis` objects have been fitted in a `framework`, the generated list of models can be evaluated based on how the models were composed via the __combination__ argument.
+#' After `hypothesis` objects have been fitted in a `study`, the generated list of models can be evaluated based on how the models were composed via the __combination__ argument.
 #'
-#' @return A `framework` object with an additional hypothesis
+#' @return A `study` object with an additional hypothesis
 #'
 #' @inheritParams add_hypothesis
 #'
 #' @export
-reformulate <- function(framework, name) {
+reformulate <- function(study, name) {
 
 	# Start with tidy table for a hypothesis
 	f <-
-		framework[framework$name == name,] %>%
+		study[study$name == name,] %>%
 		tidyr::unnest(tidy) %>%
 		dplyr::select(-c(name, fit, statistic))
 
-	# Trimmed data set is no longer a framework object
+	# Trimmed data set is no longer a study object
 	f
 }
 
-#' Tidy framework
-#' @export
-tidy.framework <- function(framework, name) {
-
-	# Start with tidy table for a hypothesis
-	f <-
-		framework[framework$name == name,] %>%
-		tidyr::unnest(tidy) %>%
-		dplyr::select(-c(name, fit, statistic))
-
-	# Trimmed data set is no longer a framework object
-	f
-}
-
-
-#' Check for any significant relationships and return just those variables
-#' @export
-identify_significant_predictors <- function(x) {
-
-	# Assumes table format, made via "direct" combination
-	x <- x[x$p.value < 0.05 & x$term != "(Intercept)", ]
-
-	# Predictors
-	predictors <- x$term
-	outcomes <- x$outcome
-
-	# Create new formula
-	f <-
-		paste(predictors, collapse = " + ") %>%
-		paste(outcomes, ., sep = " ~ ") %>%
-		stats::as.formula(.)
-
-	# Return formula
-	f
-
-}
 
 #' Reduce full term formula to only significant variables
 #' Takes a tidy tibble and returns only the parameters that are significant, excluding intercept.
@@ -67,14 +31,66 @@ find_significant_terms <- function(x, p.value = 0.05) {
 
 }
 
+#' Check For Confounding
+#'
+#' @export
+check_confounding <- function(x, name) {
 
+	### APPROACH
+
+	# Takes hypothesis from study
+
+	# Examines the combinations of exposures and outcomes to look for potential confounding
+
+	# Should return a new hypothesis object that is added to the study
+
+	# This new hypothesis should be with less variables (obviously), and can be then refitted
+
+	# If confounders are already listed in the options, more "aggressive" analysis of confounders should be performed (e.g. formal confounding analyisis, such as with strata)
+
+
+	# Trimmed data set is no longer a study object
+	t <-
+		x[x$name == name,] %>%
+		tidyr::unnest(tidy) %>%
+		dplyr::select(-c(name, fit, statistic))
+
+	# Identify important attributes of the named hypothesis
+	combination <- fetch_combination(x, name)
+
+	# Need to establish outcomes and exposures
+	groups <-
+		expand.grid(outcome = t$outcome, exposures = t$exposure) %>%
+		unique()
+
+	for (o in groups$outcome) {
+		for (e in groups$exposures) {
+			switch(
+				combination,
+				sequential = {
+					# Identify confounders
+				 	confounders <-
+				 		find_sequential_confounders(x, name, outcome = o, exposure = e)
+
+				 	# Place back into study
+				 	y <- x[x$name == name & x$outcome == o & x$exposure == e, ]
+				 	attributes(y)$var_table
+
+				}
+			)
+		}
+	}
+
+
+
+}
 
 
 #' Requires a tidy tibble from a hypothesis that has been built with the same
 #' exposure and has been built in parallel. It finds which potential covariates
 #' may be confounders.
 find_parallel_confounders <- function(x, name) {
-	y <- tidy.framework(x, name)
+	y <- tidy.study(x, name)
 	y <- y[-c(match(c("std.error", "conf.low", "conf.high"), names(y)))]
 
 	# Find base effect size
@@ -100,15 +116,13 @@ find_parallel_confounders <- function(x, name) {
 	confounders
 }
 
-#' If its done in sequential adjustment, then its more complex.
-find_sequential_confounders <- function(x, name) {
+#' Return the confounders determined in sequential models
+find_sequential_confounders <- function(x, name, outcome, exposure) {
 
-	y <- tidy.framework(x, name)
-	y <- y[-c(match(c("std.error", "conf.low", "conf.high"), names(y)))]
-
-	# Base effect
-	exposure <- unique(y$exposure)
-	outcome <- unique(y$outcome)
+	y <-
+		x[x$name == name & x$outcome == outcome & x$exposure == exposure, ] %>%
+		tidyr::unnest(tidy) %>%
+		dplyr::select(-c(name, fit, statistic, std.error))
 
 	# Make list of terms
 	vars <-

@@ -4,7 +4,7 @@
 \alias{expand_formula}
 \title{Expand Formulae for a Hypothesis}
 \usage{
-expand_formula(formula, combination, ...)
+expand_formula(formula, combination, table = FALSE, ...)
 }
 \arguments{
 \item{formula}{Formula showing relationship of outcomes and predictors, and
@@ -16,8 +16,6 @@ see the  for further documentation.}
 \item{combination}{The building pattern for how to put together the overall
 plan. It defines variable relationships that will be used. The options of
 \code{combination} will lead to the following patterns:
-
-\deqn{y ~ x1 + x2}
 \itemize{
 \item \code{direct} will not modify the original equation pattern
 }
@@ -34,10 +32,13 @@ plan. It defines variable relationships that will be used. The options of
 
 \deqn{y ~ x1} \deqn{y ~ x2}}
 
+\item{table}{Determines if the returned value should be a list of formulas or
+a table. Defaults to FALSE, leading to a list generation.}
+
 \item{...}{Not currently used}
 }
 \value{
-Table of formulae and extracted terms
+List or table of formulae and extracted terms (to be determined by the \strong{table} argument).
 }
 \description{
 This is an internal function that helps to create the appropriate formula
@@ -56,6 +57,9 @@ exposure
 \item \code{F()} is placed around a term for any predictors that should be
 maintained/fixed in all models, which can include complex terms, such as
 mixed effects
+\item \code{C()} is placed around a term for any predictors that are a potential
+confounder, which does not yet change the relationship of how formulas are
+built, but is stored for future methods to be used with \code{\link[=hypothesize]{hypothesize()}}
 }
 
 For example, the equation below describes two independent exposures "x1"

@@ -1,4 +1,4 @@
-test_that("hypothesis can be added to framework", {
+test_that("hypothesis can be added to study", {
 	library(parsnip)
 	h <-
 		hypothesize(
@@ -8,14 +8,13 @@ test_that("hypothesis can be added to framework", {
 			data = mtcars
 		)
 
-	f <- framework() %>%
+	f <- study() %>%
 		add_hypothesis(h)
 
-	expect_s3_class(f, "framework")
-
+	expect_s3_class(f, "study")
 })
 
-test_that("frameworks can be fitted", {
+test_that("studys can be fitted", {
 	library(parsnip)
 	hyp <- hypothesize(
 			h = mpg + hp ~ wt + cyl,
@@ -23,9 +22,9 @@ test_that("frameworks can be fitted", {
 			test = linear_reg() %>% set_engine("lm"),
 			data = mtcars
 		)
-	f <- framework() %>%
+	f <- study() %>%
 		add_hypothesis(hyp) %>%
-		build_frames()
+		build_study()
 
 	expect_type(f$fit, "list")
 	expect_s3_class(f$tidy[[1]], "tbl_df")
@@ -42,7 +41,7 @@ test_that("multiple hypotheses can be added and fitted", {
 	h2 <- update_hypothesis(h1, combination = "parallel")
 
 	f <-
-		framework() %>%
+		study() %>%
 		add_hypothesis(h1) %>%
 		add_hypothesis(h2)
 
@@ -52,9 +51,9 @@ test_that("multiple hypotheses can be added and fitted", {
 	expect_equal(nrow(attr(f, "data_table")), 2)
 
 	# Unadjusted h1 and h2 should be the same
-	f <- f %>% build_frames()
-	t1 <- get_parameters(f, "h1")
-	t2 <- get_parameters(f, "h2")
+	f <- f %>% build_study()
+	t1 <- fetch_parameters(f, "h1")
+	t2 <- fetch_parameters(f, "h2")
 	expect_identical(t1[[1]], t2[[1]])
 })
 

@@ -31,15 +31,4 @@ This allows for the simple fitting of multiple models. It
 requires three components: a formula, a {parsnip} model definition, and a
 data set to analyze.
 }
-\seealso{
-Other frameworks: 
-\code{\link{add_hypothesis}()},
-\code{\link{build_frames}()},
-\code{\link{framework}()}
-
-Other frameworks: 
-\code{\link{add_hypothesis}()},
-\code{\link{build_frames}()},
-\code{\link{framework}()}
-}
 \concept{frameworks}

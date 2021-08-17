@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A \code{hypothesis} object}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{...}{For further arguments to be passed on}
 }
 \description{
 Print a Hypothesis

@@ -3,12 +3,15 @@
 \name{hypothesize}
 \alias{hypothesize}
 \alias{hypothesize.formula}
+\alias{hypothesize.list}
 \alias{hypothesize.default}
 \title{Create a Hypothesis}
 \usage{
 hypothesize(h, ...)
 
 \method{hypothesize}{formula}(h, combination, test, test_opts = NULL, data, strata = NULL, ...)
+
+\method{hypothesize}{list}(h, combination, test, test_opts = NULL, data, strata = NULL, ...)
 
 \method{hypothesize}{default}(h, ...)
 }
@@ -18,6 +21,10 @@ this accepts the following object types:
 \itemize{
 \item \code{formula} objects, which  be given additional modifiers as described.
 Please see \code{\link[=expand_formula]{expand_formula()}} or the formula section below for details.
+\item \code{list} object, which describes the outcomes, exposures, covariates, fixed
+variables, and potential confounders in a named list, which allows for
+grouped covariates when modeling. Please see the details section for
+further explanation.
 }}
 
 \item{...}{For additional variables based on the generic method invoked.}
@@ -86,6 +93,9 @@ exposure
 \item \code{F()} is placed around a term for any predictors that should be
 maintained/fixed in all models, which can include complex terms, such as
 mixed effects
+\item \code{C()} is placed around a term for any predictors that are a potential
+confounder, which does not yet change the relationship of how formulas are
+built, but is stored for future methods to be used with \code{\link[=hypothesize]{hypothesize()}}
 }
 
 For example, the equation below describes two independent exposures "x1"

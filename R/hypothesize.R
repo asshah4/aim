@@ -12,6 +12,11 @@
 #'   * `formula` objects, which  be given additional modifiers as described.
 #'   Please see [expand_formula()] or the formula section below for details.
 #'
+#'   * `list` object, which describes the outcomes, exposures, covariates, fixed
+#'   variables, and potential confounders in a named list, which allows for
+#'   grouped covariates when modeling. Please see the details section for
+#'   further explanation.
+#'
 #' @param combination The building pattern for how to put together the overall
 #'   plan. It defines variable relationships that will be used. The options for
 #'   the `combination` currently include:
@@ -90,12 +95,26 @@ hypothesize.formula <- function(h,
 		hypothesis %>%
 		.set_formulae(h, combination) %>%
 		.set_tests(test, test_opts) %>%
-		.set_data(data, data_name, strata)
+		.set_data(data, data_name, strata) %>%
+		.set_vars(h)
 
 	validate_class(hypothesis, "hypothesis")
 
 	# Return
 	hypothesis
+}
+
+#' For named list style objects
+#' @rdname hypothesize
+#' @export
+hypothesize.list <- function(h,
+														 combination,
+														 test,
+														 test_opts = NULL,
+														 data,
+														 strata = NULL,
+														 ...) {
+	warning("Not yet working")
 }
 
 #' Default for `hypothesis` objects
@@ -118,8 +137,6 @@ new_hypothesis <- function(hypothesis,
 													 test_opts,
 													 data,
 													 strata) {
-	# Class validation
-	validate_class(hypothesis, "formula")
 
 	# Return a new framework object
 	structure(
@@ -127,6 +144,13 @@ new_hypothesis <- function(hypothesis,
 		class = c("hypothesis", class(hypothesis)), # Class definition
 		combination = character(), # Formula building pattern
 		formulae = list(), # Formulae to be built
+		vars = list(
+			outcomes = list(),
+			exposures = list(),
+			fixed = list(),
+			covariates = list(),
+			confounders = list()
+		), # Vectors of special terms, such as confounders
 		parameters = tibble::tibble(), # Parameter table
 		test = list(), # Either model_spec or htest object
 		test_opts = list(), # Additional arguments to pass down
@@ -139,7 +163,7 @@ new_hypothesis <- function(hypothesis,
 
 #' Print a Hypothesis
 #' @param x A `hypothesis` object
-#' @inheritParams base::print
+#' @param ... For further arguments to be passed on
 #' @export
 print.hypothesis <- function(x, ...) {
 
@@ -148,17 +172,26 @@ print.hypothesis <- function(x, ...) {
 	combination <- attr(x, "combination")
 	test <- attr(x, "test")
 	data_name <- names(attr(x, "data"))
+	vars <- attr(x, "vars")
 
 	# Glue message
 	cat(glue::glue(
 		"
 		Hypothesis: {deparse(h)}
 
-		Description:
+		Components:
 
-		Formulas generated in {combination} pattern.
-		To be tested using a `{class(test)[1]}` approach.
-		Will be tested against `{data_name}`.
+		  Outcomes        = {vars$outcomes}
+		  Exposures       = {vars$exposures}
+		  Covariates      = {vars$covariates}
+		  Fixed           = {vars$fixed}
+		  Confounders     = {vars$confounders}
+
+		Attributes:
+
+		  Combination     = {combination}
+		  Test            = {class(test)[1]}
+		  Data            = {data_name}
 
 		"
 	))
