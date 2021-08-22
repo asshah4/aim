@@ -1,9 +1,9 @@
-url: https://asshah4.github.io/path/
+url: https://asshah4.github.io/empath/
 
 destination: docs
 
 home:
-  Title: A Clinical Approach to Modeling Causality
+  Title: Exploratory Modeling for Path Analysis
   description: A way to handle multiple models, with an emphasis on hypothesis testing
 
 navbar:
@@ -25,4 +25,4 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/asshah4/path/
+      href: https://github.com/asshah4/empath/

@@ -264,3 +264,93 @@ NULL
 	invisible(study)
 
 }
+
+#' Study Modifications
+#'
+#' @param study Object of `study` class
+#' @param hypothesis Object of `hypothesis` class
+#' @param name Name of `hypothesis`, given from parent function
+#' @name modify_study
+#' @keywords internal
+NULL
+
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+modify_study_test <- function(study, hypothesis, name) {
+
+	# Update test information
+	attr(study, "test_table") <-
+		attr(study, "test_table") %>%
+		tibble::add_row(
+			name = name,
+			call = list(stats::formula(stats::terms(hypothesis))),
+			test = list(attributes(hypothesis)$test),
+			test_opts = attributes(hypothesis)$test_opts,
+			combination = attributes(hypothesis)$combination,
+			type = tail(class(attributes(hypothesis)$test), 1)
+		)
+
+	# Return
+	invisible(study)
+
+}
+
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+modify_study_formula <- function(study, hypothesis, name) {
+
+	formula <- stats::formula(stats::terms(hypothesis))
+	combination <- attr(hypothesis, "combination")
+	parameters <- expand_formula(formula, combination, table = TRUE)
+	n <- nrow(parameters)
+
+	# Major parameters should be passed along
+	for (i in 1:n) {
+		study$model_map <-
+			study$model_map %>%
+			tibble::add_row(
+				name = name,
+				number = parameters$number[i],
+				outcome = parameters$outcomes[i],
+				exposure = parameters$exposures[i],
+				formulae = parameters$formulae[i]
+			)
+	}
+
+	# Return
+	invisible(study)
+
+}
+
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+modify_study_data <- function(study, hypothesis, name) {
+
+	# Get data name
+	data_name <- names(attributes(hypothesis)$data)
+
+	# Data table for linking hypothesis to data
+	attributes(study)$data_table <-
+		attributes(study)$data_table %>%
+		tibble::add_row(
+			name = name,
+			data_name = data_name,
+			strata = attributes(hypothesis)$strata[[data_name]]
+		)
+
+	# Data list (to minimize too many data sets)
+	attributes(study)$data_list <-
+		attributes(study)$data_list %>%
+		tibble::add_row(
+			data_name = data_name,
+			data = list(attributes(hypothesis)$data[[data_name]])
+		) %>%
+		unique()
+
+	# Return study
+	invisible(study)
+
+}

@@ -1,5 +1,5 @@
-Package: path 
-Title: Visualizing Casuality
+Package: empath 
+Title: Exploratory Modeling for Path Analysis
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
@@ -35,6 +35,6 @@ Imports:
 Remotes:
     asshah4/path
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/path
-BugReports: https://github.com/asshah4/path/issues
+URL: https://github.com/asshah4/empath
+BugReports: https://github.com/asshah4/empath/issues
 Config/testthat/edition: 3

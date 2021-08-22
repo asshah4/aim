@@ -1,4 +1,4 @@
 library(testthat)
-library(path)
+library(empath)
 
-test_check("path")
+test_check("empath")

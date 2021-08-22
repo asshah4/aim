@@ -39,6 +39,7 @@ As minimally-experienced programmer, I used examples of current effective packag
 | [{stacks}](https://stacks.tidymodels.org/) | An influential concept of an API designed for binding together mutliple model definitions, however is meant for a specific formula and pulling together multiple models for blended predictions |
 | [{workflowsets}](https://workflowsets.tidymodels.org/index.html) | This fits multiple models in a workflow to identify a potential "best" model, which is very flexible |
 | [{easystats}](https://easystats.github.io/easystats/) | Forms a different "universe" in parallel to the `tidyverse` for interpreting results of models, with a focus on the presentation and exploration of statistical analysis |
+| [{ggdag}](https://ggdag.malco.io/) | A *tidy* approach to creating directed acyclic graphs |
 
 The features that I found missing in these was the ability to handle a variety of formulas that had specific pre-defined hypotheses, and the focus had been to *compare* or *combine* models, instead of considering the focus on causality. Essentially, I wanted a more epidemiological approach. The *easystats* archetype of R "monsters" was partially the idea for the working name of **{aims}**. I started writing this after reading [this blogpost](https://blog.simonpcouch.com/blog/dev-docs-p1/) on development of a package. 
 
@@ -52,7 +53,7 @@ The project name has gone through many iterations. The reason why the name was i
 | {octomod} | The second draft took inspiration from the idea of an *octopus*, with 8 arms or legs all surrounded a central idea. This allowed for flexibility in that the many arms of a project were not necessarily hierarchical. However, theming a project after a cephalopod does make the function names less easy to remember. |
 | {aims} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
 | {diagnose} | After iterating through the code, modeling causality and looking at clinically relevant variables was the more refined underlying objective. This allowed for simplification of the hypothesis generating method and opened the door to look at effect modification. | 
-| {path} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
+| {empath} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
 
 # Defining the API
 
@@ -174,8 +175,9 @@ Essentially, this was a list based concept of adding hypotheses to a modified li
 
 I decided that I was not really seeing the big picture. What I wanted was a way to store a set of multiple tests with the purpose of studying the relationship between two variables (an exposure and an outcome), and potentially looking at covariates. The *basic* concept was essentially a **directed acyclic graph**, with the relationships storing the hypotheses that were tested. The functionality was the same, but the API was different.
 
-The two major classes needed would be ...
+The major classes needed would be ...
 
-- `term_relationship` object, that showed and/or carried the relationship between variables, likely a list of `formulas`
-- `path_map` object that drew the relationships between the variables, and allowed for the storage of multiple tests
+- `hypothesis` object, that showed and/or carried the relationship between variables, likely a complex formula object
+- `map` object that drew the relationships between the variables, and allowed for the storage of multiple tests
+- `path` object that is extracted after the map has been drawn (if you will), should be able to be evaluated to help understand which variables may be confounders, etc
 

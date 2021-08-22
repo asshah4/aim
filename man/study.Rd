@@ -2,16 +2,10 @@
 % Please edit documentation in R/study.R
 \name{study}
 \alias{study}
-\title{Initialize a Framework for Studying Hypotheses}
+\title{Mapping Many Hypotheses Together}
 \usage{
 study(...)
 }
 \description{
-Initialize a Framework for Studying Hypotheses
+Mapping Many Hypotheses Together
 }
-\seealso{
-Other studies: 
-\code{\link{add_hypothesis}()},
-\code{\link{build_study}()}
-}
-\concept{studies}

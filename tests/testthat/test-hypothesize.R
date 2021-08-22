@@ -2,14 +2,14 @@ test_that("hypothesis must be made with data present", {
 	library(parsnip)
 	expect_error({
 		h <-
-			hypothesize(
+			propose_hypothesis(
 				h = mpg + hp ~ wt + cyl,
 				combination = "sequential",
 				test = linear_reg() %>% set_engine("lm")
 			)
 	})
 	h <-
-		hypothesize(
+		propose_hypothesis(
 			h = mpg + hp ~ wt + cyl,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm"),
@@ -24,7 +24,7 @@ test_that("new hypotheses can easily be generated", {
 	h = mpg ~ X(wt) + hp + disp + cyl
 	combination = "sequential"
 	test = linear_reg() %>% set_engine("lm")
-	h1 <- hypothesize(h, combination, test, data = mtcars)
+	h1 <- propose_hypothesis(h, combination, test, data = mtcars)
 	h2 <- update_hypothesis(h1, combination = "parallel")
 	h3 <- update_hypothesis(h2, combination = "direct", data = iris)
 
@@ -35,7 +35,7 @@ test_that("new hypotheses can easily be generated", {
 
 test_that("generic print methods work", {
 	hyp <-
-		hypothesize(
+		propose_hypothesis(
 			h = mpg + hp ~ wt + cyl,
 			combination = "sequential",
 			test = linear_reg() %>% set_engine("lm"),
