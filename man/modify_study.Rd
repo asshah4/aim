@@ -5,6 +5,7 @@
 \alias{modify_study_test}
 \alias{modify_study_formula}
 \alias{modify_study_data}
+\alias{modify_study_status}
 \title{Study Modifications}
 \usage{
 modify_study_test(study, hypothesis, name)
@@ -12,6 +13,16 @@ modify_study_test(study, hypothesis, name)
 modify_study_formula(study, hypothesis, name)
 
 modify_study_data(study, hypothesis, name)
+
+modify_study_status(
+  study,
+  hypothesis,
+  name,
+  run = FALSE,
+  error = FALSE,
+  stage = NA,
+  path = FALSE
+)
 }
 \arguments{
 \item{study}{Object of \code{study} class}

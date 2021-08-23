@@ -329,26 +329,50 @@ modify_study_formula <- function(study, hypothesis, name) {
 #' @export
 modify_study_data <- function(study, hypothesis, name) {
 
-	# Get data name
-	data_name <- names(attributes(hypothesis)$data)
-
 	# Data table for linking hypothesis to data
 	attributes(study)$data_table <-
 		attributes(study)$data_table %>%
 		tibble::add_row(
 			name = name,
-			data_name = data_name,
-			strata = attributes(hypothesis)$strata[[data_name]]
+			data_name = attributes(hypothesis)$data_name,
+			strata = attributes(hypothesis)$strata
 		)
 
 	# Data list (to minimize too many data sets)
 	attributes(study)$data_list <-
 		attributes(study)$data_list %>%
 		tibble::add_row(
-			data_name = data_name,
-			data = list(attributes(hypothesis)$data[[data_name]])
+			data_name = attributes(hypothesis)$data_name,
+			data = list(attributes(hypothesis)$data)
 		) %>%
 		unique()
+
+	# Return study
+	invisible(study)
+
+}
+
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+modify_study_status <- function(study,
+																hypothesis,
+																name,
+																run = FALSE,
+																error = FALSE,
+																stage = NA,
+																path = FALSE) {
+
+	# Modify the Status Table
+	attributes(study)$status_table <-
+		attributes(study)$status_table %>%
+		tibble::add_row(
+			name = name,
+			run = run,
+			error = error,
+			stage = stage,
+			path = path
+		)
 
 	# Return study
 	invisible(study)

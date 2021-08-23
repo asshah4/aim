@@ -1,4 +1,4 @@
 library(testthat)
-library(empath)
+library(dagger)
 
-test_check("empath")
+test_check("dagger")

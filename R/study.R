@@ -51,10 +51,12 @@ draw_hypothesis <- function(study,
 	validate_class(study, "study")
 
 	# The hypothesis should be broken down to be incorporated into the study
-	study %>%
+	study <-
+		study %>%
 		modify_study_test(hypothesis, name) %>%
 		modify_study_data(hypothesis, name) %>%
-		modify_study_formula(hypothesis, name)
+		modify_study_formula(hypothesis, name) %>%
+		modify_study_status(hypothesis, name, run = FALSE, stage = "hypothesis")
 
 
 

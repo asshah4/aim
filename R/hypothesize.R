@@ -20,6 +20,9 @@ hypothesize.formula <- function(h,
 	# Check for strata
 	if (is.null(strata)) {strata <- NA}
 
+	# Get data name
+	data_name <- deparse(substitute(data))
+
 	# Construct
 	h <- new_hypothesis(
 		hypothesis = h,
@@ -27,6 +30,7 @@ hypothesize.formula <- function(h,
 		test = test,
 		test_opts = test_opts,
 		data = data,
+		data_name = data_name,
 		strata = strata
 	)
 
@@ -54,6 +58,7 @@ new_hypothesis <- function(hypothesis,
 													 test,
 													 test_opts,
 													 data,
+													 data_name,
 													 strata) {
 
 	structure(
@@ -61,8 +66,9 @@ new_hypothesis <- function(hypothesis,
 		combination = combination, # Formula building pattern
 		test = test, # Either model_spec or htest object
 		test_opts = test_opts, # Additional arguments to pass down
-		data = data, # List of data frames, named
-		strata = strata, # List of variables contained in linked data frames
+		data = data, # Unnamed data
+		data_name = data_name, # Name of data frame
+		strata = strata, # Name of variable for stratification
 		class = c("hypothesis", class(hypothesis)) # Class definition
 	)
 
