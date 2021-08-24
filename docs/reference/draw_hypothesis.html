@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • dagger</title>
+<title>Draw Hypothesis onto Map — draw_hypothesis • dagger</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Draw Hypothesis onto Map — draw_hypothesis" />
+<meta property="og:description" content="Takes a hypothesis object and adds it to a study, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison." />
 
 
 
@@ -58,7 +60,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,120 +122,49 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Draw Hypothesis onto Map</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/study.R'><code>R/study.R</code></a></small>
+    <div class="hidden name"><code>draw_hypothesis.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Takes a <code>hypothesis</code> object and adds it to a <code>study</code>, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>draw_hypothesis</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>hypothesis</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="construct_dag.html">construct_dag()</a></code> </p>
-        </td>
-        <td><p>Construct Directed Acyclic Graphs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_maps.html">construct_maps()</a></code> </p>
-        </td>
-        <td><p>Construct Path Maps</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_models.html">construct_models()</a></code> </p>
-        </td>
-        <td><p>Construct Models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_hypothesis.html">draw_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Draw Hypothesis onto Map</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_paths.html">expand_paths()</a></code> </p>
-        </td>
-        <td><p>Expand Paths of a Formula</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_parsnip_models.html">fit_parsnip_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Draw A Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.study.html">print(<i>&lt;study&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a Study</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">fetch_data()</a></code> <code><a href="retrieval.html">fetch_test()</a></code> <code><a href="retrieval.html">fetch_combination()</a></code> <code><a href="retrieval.html">fetch_formulae()</a></code> <code><a href="retrieval.html">fetch_parameters()</a></code> <code><a href="retrieval.html">fetch_names()</a></code> <code><a href="retrieval.html">update_study()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="study.html">study()</a></code> </p>
-        </td>
-        <td><p>Mapping Many Hypotheses Together</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>study</th>
+      <td><p>Object of class <code>study</code></p></td>
+    </tr>
+    <tr>
+      <th>hypothesis</th>
+      <td><p>Object of class <code>hypothesis</code> (which may or may not include
+data already added)</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name of the <code>hypothesis</code> object, which defaults to the name of
+the <code>hypothesis</code> object itself</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>study</code> object that has had a <code>hypothesis</code> added</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other studies: 
+<code><a href='construct_models.html'>construct_models</a>()</code>,
+<code><a href='fit_parsnip_models.html'>fit_parsnip_models</a>()</code></p></div>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • dagger</title>
+<title>Expand Formulae for a Hypothesis — expand_formula • dagger</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Expand Formulae for a Hypothesis — expand_formula" />
+<meta property="og:description" content="This is an internal function that helps to create the appropriate formula
+combinations for adding hypotheses." />
 
 
 
@@ -58,7 +60,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,120 +122,87 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Expand Formulae for a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/expressions.R'><code>R/expressions.R</code></a></small>
+    <div class="hidden name"><code>expand_formula.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>This is an internal function that helps to create the appropriate formula
+combinations for adding hypotheses.</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>expand_formula</span><span class='op'>(</span><span class='va'>formula</span>, <span class='va'>combination</span>, table <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="construct_dag.html">construct_dag()</a></code> </p>
-        </td>
-        <td><p>Construct Directed Acyclic Graphs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_maps.html">construct_maps()</a></code> </p>
-        </td>
-        <td><p>Construct Path Maps</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_models.html">construct_models()</a></code> </p>
-        </td>
-        <td><p>Construct Models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_hypothesis.html">draw_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Draw Hypothesis onto Map</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_paths.html">expand_paths()</a></code> </p>
-        </td>
-        <td><p>Expand Paths of a Formula</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_parsnip_models.html">fit_parsnip_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Draw A Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.study.html">print(<i>&lt;study&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a Study</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">fetch_data()</a></code> <code><a href="retrieval.html">fetch_test()</a></code> <code><a href="retrieval.html">fetch_combination()</a></code> <code><a href="retrieval.html">fetch_formulae()</a></code> <code><a href="retrieval.html">fetch_parameters()</a></code> <code><a href="retrieval.html">fetch_names()</a></code> <code><a href="retrieval.html">update_study()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="study.html">study()</a></code> </p>
-        </td>
-        <td><p>Mapping Many Hypotheses Together</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>formula</th>
+      <td><p>Formula showing relationship of outcomes and predictors, and
+is essentially the hypothesis. It allows for complex formulae e.g. multiple
+predictors, multiple exposures, and multiple covariates, that can be
+organized into individual formulae based on additional modifiers. Please
+see the  for further documentation.</p></td>
+    </tr>
+    <tr>
+      <th>combination</th>
+      <td><p>The building pattern for how to put together the overall
+plan. It defines variable relationships that will be used. The options of
+<code>combination</code> will lead to the following patterns:</p><ul>
+<li><p><code>direct</code> will not modify the original equation pattern</p></li>
+</ul>
+
+<p>$$y ~ x1 + x2$$</p><ul>
+<li><p><code>sequential</code> will create a list of sequentially adjusted formula</p></li>
+</ul>
+
+<p>$$y ~ x1$$ $$y ~ x1 + x2$$</p><ul>
+<li><p><code>parallel</code> will create a list of formula with parallel predictors</p></li>
+</ul>
+
+<p>$$y ~ x1$$ $$y ~ x2$$</p></td>
+    </tr>
+    <tr>
+      <th>table</th>
+      <td><p>Determines if the returned value should be a list of formulas or
+a table. Defaults to FALSE, leading to a list generation.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Not currently used</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>List or table of formulae and extracted terms (to be determined by the <strong>table</strong> argument).</p>
+    <h2 class="hasAnchor" id="formulae"><a class="anchor" href="#formulae"></a>Formulae</h2>
+
+    
+
+
+<p>When supplying a <code>formula</code> object, each RHS term of the formula is
+considered an outcome variable, and is analyzed as a single outcome. Each
+LHS term is consider a predictor, and can be modified as below:</p><ul>
+<li><p><code>X()</code> is placed around a term to define as an independent exposure, which
+will be placed in separate formulae from any other term marked as an
+exposure</p></li>
+<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects</p></li>
+<li><p><code><a href='https://rdrr.io/r/stats/zC.html'>C()</a></code> is placed around a term for any predictors that are a potential
+confounder, which does not yet change the relationship of how formulas are
+built, but is stored for future methods to be used with <code><a href='hypothesize.html'>hypothesize()</a></code></p></li>
+</ul>
+
+<p>For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally tested for every level of "z"</p>
+<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

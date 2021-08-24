@@ -1,4 +1,4 @@
-url: https://asshah4.github.io/empath/
+url: https://asshah4.github.io/dagger/
 
 destination: docs
 
@@ -25,4 +25,4 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/asshah4/empath/
+      href: https://github.com/asshah4/dagger/

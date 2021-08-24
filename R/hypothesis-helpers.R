@@ -7,16 +7,16 @@
 #' The following functions will replace the internal attributes of a
 #' `hypothesis` object, without warning.
 #'
-#' * `.set_formulae()` expands the formula based on outcomes and predictors
+#' * `set_formulae()` expands the formula based on outcomes and predictors
 #' (including both exposures, covariates, and fixed variables). The pattern is
 #' decided by the `combination` argument. The major functionality is within the
 #' `expand_formula()` function, but this allows for setting internal attributes.
 #'
-#' * `.set_data()` adds data to a formula (internal to the `hypothesize()`
+#' * `set_data()` adds data to a formula (internal to the `hypothesize()`
 #' function), along with potential stratification instructions. Modifies the
 #' formula by adding the attributes to the formula.
 #'
-#' * `.set_tests()` Add the test and test options (if needed) the the
+#' * `set_tests()` Add the test and test options (if needed) the the
 #' `hypothesis` object. This modifies the attributes of the original object and
 #' invisibly returns the same object.
 #'
@@ -27,13 +27,13 @@
 #' @param data A data frame object
 #' @param data_name Abstracted from the **data** argument
 #' @param strata Optional argument to subset data frame
-#' @name set_hypothesis
+#' @name modify_hypothesis
 #' @keywords internal
 NULL
 
-#' @rdname set_hypothesis
+#' @rdname modify_hypothesis
 #' @keywords internal
-.set_formulae <- function(hypothesis, formula, combination) {
+set_formulae <- function(hypothesis, formula, combination) {
 	# Validate class
 	validate_class(formula, "formula")
 	validate_class(combination, "character")
@@ -50,9 +50,9 @@ NULL
 	invisible(hypothesis)
 }
 
-#' @rdname set_hypothesis
+#' @rdname modify_hypothesis
 #' @keywords internal
-.set_data <- function(hypothesis, data, data_name, strata = NULL) {
+set_data <- function(hypothesis, data, data_name, strata = NULL) {
 
 	# Validate if present
 	validate_class(data, c("data.frame", "tbl", "tbl_df"))
@@ -73,9 +73,9 @@ NULL
 	invisible(hypothesis)
 }
 
-#' @rdname set_hypothesis
+#' @rdname modify_hypothesis
 #' @keywords internal
-.set_tests <- function(hypothesis, test, .test_opts) {
+set_tests <- function(hypothesis, test, .test_opts) {
 
 	# Validate classes
 	validate_class(test, c("model_spec", "htest"))
@@ -88,9 +88,9 @@ NULL
 	invisible(hypothesis)
 }
 
-#' @rdname set_hypothesis
+#' @rdname modify_hypothesis
 #' @keywords internal
-.set_vars <- function(hypothesis, formula, confounders = NULL) {
+set_vars <- function(hypothesis, formula, confounders = NULL) {
 
 	# Outcomes
 	outcomes <- gsub(" ", "", unlist(strsplit(deparse(formula[[2]]), "\ \\+\ ")))
@@ -162,16 +162,13 @@ update_hypothesis <- function(hypothesis, ...) {
 		# Reexpand formulas if updating combination
 		if (i == "combination") {
 			h <- stats::formula(stats::terms(hypothesis))
-			hypothesis <- hypothesis %>% .set_formulae(h, changes[[i]])
+			hypothesis <- hypothesis %>% set_formulae(h, changes[[i]])
 		}
 		# Old data should be removed before placing new data
 		else if (i == "data") {
-			old_data_name <- names(attributes(hypothesis)$data)
-			attributes(hypothesis)$data[old_data_name] <- NULL
-			attributes(hypothesis)$strata[old_data_name] <- NULL
+			attributes(hypothesis)$data <- changes[[i]]
 			new_data_name <- mc[[i]]
-			hypothesis <-
-				hypothesis %>% .set_data(changes[[i]], new_data_name, mc[["strata"]])
+			attributes(hypothesis)$data_name <- new_data_name
 		}
 		# Replace the old with the new
 		else {

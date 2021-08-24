@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • dagger</title>
+<title>Tidy a list of htest or model objects — tidy_tests • dagger</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,9 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Tidy a list of htest or model objects — tidy_tests" />
+<meta property="og:description" content="Accepts a list of objects that can be tidied via
+[broom::tidy()]" />
 
 
 
@@ -58,7 +60,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,120 +122,45 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Tidy a list of <code>htest</code> or model objects</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <div class="hidden name"><code>tidy_tests.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Accepts a list of objects that can be tidied via
+[<code><a href='https://generics.r-lib.org/reference/tidy.html'>broom::tidy()</a></code>]</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>tidy_tests</span><span class='op'>(</span><span class='va'>.fits</span>, conf.int <span class='op'>=</span> <span class='cn'>TRUE</span>, conf.level <span class='op'>=</span> <span class='fl'>0.95</span>, exponentiate <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="construct_dag.html">construct_dag()</a></code> </p>
-        </td>
-        <td><p>Construct Directed Acyclic Graphs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_maps.html">construct_maps()</a></code> </p>
-        </td>
-        <td><p>Construct Path Maps</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_models.html">construct_models()</a></code> </p>
-        </td>
-        <td><p>Construct Models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_hypothesis.html">draw_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Draw Hypothesis onto Map</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_paths.html">expand_paths()</a></code> </p>
-        </td>
-        <td><p>Expand Paths of a Formula</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_parsnip_models.html">fit_parsnip_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Draw A Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.study.html">print(<i>&lt;study&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a Study</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">fetch_data()</a></code> <code><a href="retrieval.html">fetch_test()</a></code> <code><a href="retrieval.html">fetch_combination()</a></code> <code><a href="retrieval.html">fetch_formulae()</a></code> <code><a href="retrieval.html">fetch_parameters()</a></code> <code><a href="retrieval.html">fetch_names()</a></code> <code><a href="retrieval.html">update_study()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="study.html">study()</a></code> </p>
-        </td>
-        <td><p>Mapping Many Hypotheses Together</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>.fits</th>
+      <td><p>List of model or <code>htest</code> objects that have been fitted</p></td>
+    </tr>
+    <tr>
+      <th>conf.int</th>
+      <td><p>Logical indicating whether or not to include a confidence
+interval in the tidied output. Defaults to <code>FALSE</code>.</p></td>
+    </tr>
+    <tr>
+      <th>conf.level</th>
+      <td><p>The confidence level to use for the confidence interval
+if <code>conf.int = TRUE</code>. Must be strictly greater than 0 and less than 1.
+Defaults to 0.95, which corresponds to a 95 percent confidence interval.</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Returns a list of tidy objects in the form of tibbles of parameters</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

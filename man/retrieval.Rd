@@ -23,7 +23,7 @@ fetch_parameters(x, name)
 
 fetch_names(x, ...)
 
-update_study(x, name, stage = NA, run = FALSE)
+update_study(x, name, stage = NA, run = FALSE, path = FALSE)
 }
 \arguments{
 \item{x}{\code{study} object}
@@ -31,6 +31,12 @@ update_study(x, name, stage = NA, run = FALSE)
 \item{name}{Name of \code{hypothesis} object to pull components from}
 
 \item{...}{For additional parameters to be passed on}
+
+\item{stage}{Hypothesis stage}
+
+\item{run}{If model has been built}
+
+\item{path}{Variable for path status}
 }
 \value{
 The \verb{fetch_*()} functions return the named object from the \code{study}.

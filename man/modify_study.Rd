@@ -2,19 +2,22 @@
 % Please edit documentation in R/study-helpers.R
 \name{modify_study}
 \alias{modify_study}
-\alias{modify_study_test}
-\alias{modify_study_formula}
-\alias{modify_study_data}
-\alias{modify_study_status}
+\alias{add_study_formula}
+\alias{add_study_paths}
+\alias{add_study_test}
+\alias{add_study_data}
+\alias{add_study_status}
 \title{Study Modifications}
 \usage{
-modify_study_test(study, hypothesis, name)
+add_study_formula(study, hypothesis, name)
 
-modify_study_formula(study, hypothesis, name)
+add_study_paths(study, hypothesis, name)
 
-modify_study_data(study, hypothesis, name)
+add_study_test(study, hypothesis, name)
 
-modify_study_status(
+add_study_data(study, hypothesis, name)
+
+add_study_status(
   study,
   hypothesis,
   name,

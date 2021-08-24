@@ -87,7 +87,8 @@ fetch_combination <- function(x, name) {
 #' @export
 fetch_formulae <- function(x, name) {
 
-	formulae <- x$formulae[x$name == name]
+	y <- x$model_map
+	formulae <- y$formulae[y$name == name]
 
 	# Return
 	formulae
@@ -98,10 +99,12 @@ fetch_formulae <- function(x, name) {
 #' @export
 fetch_parameters <- function(x, name) {
 
-	pars <- x$tidy[x$name == name]
+	y <- x$model_map
+	pars <- y$tidy[y$name == name]
 
 	# Return
 	pars
+
 }
 
 #' @rdname retrieval
@@ -121,11 +124,15 @@ fetch_names <- function(x, ...) {
 
 	# Return vector of names
 	unlist(name_list)
+
 }
 
 #' @rdname retrieval
+#' @param stage Hypothesis stage
+#' @param run If model has been built
+#' @param path Variable for path status
 #' @export
-update_study <- function(x, name, stage = NA, run = FALSE) {
+update_study <- function(x, name, stage = NA, run = FALSE, path = FALSE) {
 
 	if (!is.na(stage)) {
 		status <- attributes(x)$status_table
@@ -136,133 +143,6 @@ update_study <- function(x, name, stage = NA, run = FALSE) {
 
 	# Return
 	invisible(x)
-}
-
-# Linking Functions ----
-
-#' Linking Functions Between Hypothesis and Study
-#'
-#' These are all internal functions to help attach components to the `study`
-#' object, and are generally not exposed to the user.
-#'
-#' @param study Object of `study` class
-#' @param hypothesis Object of `hypothesis` class
-#' @param name Name of `hypothesis`, given from parent function
-#' @name link_study
-#' @keywords internal
-NULL
-
-#' @rdname link_study
-#' @keywords internal
-.link_hypothesis <- function(study, hypothesis, name) {
-
-	# Identify number of sub-hypotheses
-	parameters <- attributes(hypothesis)$parameters
-	formulae <- attributes(hypothesis)$formulae
-	n <- nrow(parameters)
-
-	# Major parameters should be passed along
-	for (i in 1:n) {
-		study <- study %>%
-			tibble::add_row(
-				name = name,
-				number = parameters$number[i],
-				outcome = parameters$outcomes[i],
-				exposure = parameters$exposures[i],
-				formulae = list(formulae[[i]])
-			)
-	}
-
-	# Return
-	invisible(study)
-}
-
-#' @rdname link_study
-#' @keywords internal
-.link_test <- function(study, hypothesis, name) {
-	# Test, test type, and test options should be passed along
-	attributes(study)$test_table <-
-		attributes(study)$test_table %>%
-		tibble::add_row(
-			name = name,
-			call = list(stats::formula(stats::terms(hypothesis))),
-			test = list(attributes(hypothesis)$test),
-			test_opts = ifelse(is.null(attributes(hypothesis)$test_opts), NA, test_opts),
-			combination = attributes(hypothesis)$combination,
-			type = tail(class(attributes(hypothesis)$test), 1)
-		)
-
-	# Return
-	invisible(study)
-}
-
-#' @rdname link_study
-#' @keywords internal
-.link_data <- function(study, hypothesis, name) {
-
-	# Get data name
-	data_name <- names(attributes(hypothesis)$data)
-
-	# Data table for linking hypothesis to data
-	attributes(study)$data_table <-
-		attributes(study)$data_table %>%
-		tibble::add_row(
-			name = name,
-			data_name = data_name,
-			#data_list = list(attributes(hypothesis)$data[[data_name]]),
-			strata = attributes(hypothesis)$strata[[data_name]]
-		)
-
-	# Data list (to minimize too many data sets)
-	attributes(study)$data_list <-
-		attributes(study)$data_list %>%
-		tibble::add_row(
-			data_name = data_name,
-			data = list(attributes(hypothesis)$data[[data_name]])
-		) %>%
-		unique()
-
-	# Return study
-	invisible(study)
-}
-
-#' @rdname link_study
-#' @keywords internal
-.link_status <- function(study, hypothesis, name) {
-
-	# Add hypothesis and data_name to status table
-	attributes(study)$status_table <-
-		attributes(study)$status_table %>%
-		tibble::add_row(
-			name = name,
-			run = FALSE,
-			error = NA,
-			stage = NA
-		)
-
-
-	# Return
-	invisible(study)
-}
-
-#' @rdname link_study
-#' @keywords internal
-.link_vars <- function(study, hypothesis, name) {
-
-	attr(study, "var_table") <-
-		attr(study, "var_table") %>%
-		tibble::add_row(
-			name = name,
-			combination = attributes(hypothesis)$combination,
-			outcomes = attributes(hypothesis)$vars$outcomes,
-			exposures = attributes(hypothesis)$vars$exposures,
-			fixed = attributes(hypothesis)$vars$fixed,
-			covariates = attributes(hypothesis)$vars$covariates,
-			confounders = attributes(hypothesis)$vars$confounders
-		)
-
-	invisible(study)
-
 }
 
 #' Study Modifications
@@ -277,29 +157,7 @@ NULL
 #' @rdname modify_study
 #' @keywords internal
 #' @export
-modify_study_test <- function(study, hypothesis, name) {
-
-	# Update test information
-	attr(study, "test_table") <-
-		attr(study, "test_table") %>%
-		tibble::add_row(
-			name = name,
-			call = list(stats::formula(stats::terms(hypothesis))),
-			test = list(attributes(hypothesis)$test),
-			test_opts = attributes(hypothesis)$test_opts,
-			combination = attributes(hypothesis)$combination,
-			type = tail(class(attributes(hypothesis)$test), 1)
-		)
-
-	# Return
-	invisible(study)
-
-}
-
-#' @rdname modify_study
-#' @keywords internal
-#' @export
-modify_study_formula <- function(study, hypothesis, name) {
+add_study_formula <- function(study, hypothesis, name) {
 
 	formula <- stats::formula(stats::terms(hypothesis))
 	combination <- attr(hypothesis, "combination")
@@ -327,7 +185,71 @@ modify_study_formula <- function(study, hypothesis, name) {
 #' @rdname modify_study
 #' @keywords internal
 #' @export
-modify_study_data <- function(study, hypothesis, name) {
+add_study_paths <- function(study, hypothesis, name) {
+
+	models <-
+		study$model_map %>%
+		.[.$name == name & .$number == max(.$number), ] %>%
+		.[c("name", "outcome", "exposure", "formulae")] %>%
+		unique()
+
+	for (i in 1:nrow(models)) {
+
+		# Terms
+		f <- models[i, ]$formulae[[1]]
+		exp <- models[i, ]$exposure[[1]]
+		out <- as.character(f[[2]])
+
+		# Path formulas
+		paths <- expand_paths(f)
+
+		for (j in 1:length(paths)) {
+			study$path_map <-
+				study$path_map %>%
+				tibble::add_row(
+					name = name,
+					outcome = out,
+					exposure = exp,
+					relationship = paths[j],
+					term = as.character(paths[[j]][[3]]),
+					direction = "->",
+					to = as.character(paths[[j]][[2]])
+				)
+		}
+	}
+
+	# Return
+	invisible(study)
+
+}
+
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+add_study_test <- function(study, hypothesis, name) {
+
+	# Update test information
+	attr(study, "test_table") <-
+		attr(study, "test_table") %>%
+		tibble::add_row(
+			name = name,
+			call = list(stats::formula(stats::terms(hypothesis))),
+			test = list(attributes(hypothesis)$test),
+			test_opts = attributes(hypothesis)$test_opts,
+			combination = attributes(hypothesis)$combination,
+			type = utils::tail(class(attributes(hypothesis)$test), 1)
+		)
+
+	# Return
+	invisible(study)
+
+}
+
+
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+add_study_data <- function(study, hypothesis, name) {
 
 	# Data table for linking hypothesis to data
 	attributes(study)$data_table <-
@@ -355,7 +277,7 @@ modify_study_data <- function(study, hypothesis, name) {
 #' @rdname modify_study
 #' @keywords internal
 #' @export
-modify_study_status <- function(study,
+add_study_status <- function(study,
 																hypothesis,
 																name,
 																run = FALSE,

@@ -3,9 +3,8 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   development: development.html
-  octobeast: octobeast.html
-last_built: 2021-05-14T11:55Z
+last_built: 2021-08-24T20:29Z
 urls:
-  reference: https://asshah4.github.io/octomod//reference
-  article: https://asshah4.github.io/octomod//articles
+  reference: https://asshah4.github.io/dagger//reference
+  article: https://asshah4.github.io/dagger//articles
 

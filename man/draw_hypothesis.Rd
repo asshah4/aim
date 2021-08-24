@@ -6,6 +6,25 @@
 \usage{
 draw_hypothesis(study, hypothesis, name = deparse(substitute(hypothesis)), ...)
 }
-\description{
-Draw Hypothesis onto Map
+\arguments{
+\item{study}{Object of class \code{study}}
+
+\item{hypothesis}{Object of class \code{hypothesis} (which may or may not include
+data already added)}
+
+\item{name}{Name of the \code{hypothesis} object, which defaults to the name of
+the \code{hypothesis} object itself}
 }
+\value{
+A \code{study} object that has had a \code{hypothesis} added
+}
+\description{
+Takes a \code{hypothesis} object and adds it to a \code{study}, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison.
+}
+\seealso{
+Other studies: 
+\code{\link{construct_models}()},
+\code{\link{fit_parsnip_models}()}
+}
+\concept{studies}

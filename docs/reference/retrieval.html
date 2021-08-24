@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • dagger</title>
+<title>Retrieve, Modify, and Destroy Components From study Object — retrieval • dagger</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,26 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Retrieve, Modify, and Destroy Components From study Object — retrieval" />
+<meta property="og:description" content="These functions are essentially helper functions to simplify the manipulation
+of study objects. They may retrieve or modify or destroy components of
+the study object as described.
+Retrieval functions:
+fetch_data() retrieves the data set associated with a specified hypothesis
+and data name
+fetch_test() retrieves the test associated with a hypothesis
+fetch_formulae() retrieves the list of formulas associated with a
+hypothesis
+fetch_combination() retrieves how a hypothesis was combined to generate its
+formula list
+fetch_names() retrieves the hypothesis names that match a certain argument, such as combination = &quot;parallel&quot; or data_name = &quot;mtcars&quot;
+
+
+Update functions:
+update_study() modifies the components of a study, usually used
+internally to help update the stage/status of the specified object
+
+" />
 
 
 
@@ -58,7 +77,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,120 +139,84 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Retrieve, Modify, and Destroy Components From <code>study</code> Object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/study-helpers.R'><code>R/study-helpers.R</code></a></small>
+    <div class="hidden name"><code>retrieval.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>These functions are essentially helper functions to simplify the manipulation
+of <code>study</code> objects. They may retrieve or modify or destroy components of
+the <code>study</code> object as described.</p>
+<p><strong>Retrieval functions</strong>:</p><ul>
+<li><p><code>fetch_data()</code> retrieves the data set associated with a specified hypothesis
+and data name</p></li>
+<li><p><code>fetch_test()</code> retrieves the test associated with a hypothesis</p></li>
+<li><p><code>fetch_formulae()</code> retrieves the list of formulas associated with a
+hypothesis</p></li>
+<li><p><code>fetch_combination()</code> retrieves how a hypothesis was combined to generate its
+formula list</p></li>
+<li><p><code>fetch_names()</code> retrieves the hypothesis names that match a certain argument, such as <code>combination = "parallel"</code> or <code>data_name = "mtcars"</code></p></li>
+</ul>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+<p><strong>Update functions</strong>:</p><ul>
+<li><p><code>update_study()</code> modifies the components of a study, usually used
+internally to help update the stage/status of the specified object</p></li>
+</ul>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="construct_dag.html">construct_dag()</a></code> </p>
-        </td>
-        <td><p>Construct Directed Acyclic Graphs</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_maps.html">construct_maps()</a></code> </p>
-        </td>
-        <td><p>Construct Path Maps</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="construct_models.html">construct_models()</a></code> </p>
-        </td>
-        <td><p>Construct Models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw_hypothesis.html">draw_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Draw Hypothesis onto Map</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_paths.html">expand_paths()</a></code> </p>
-        </td>
-        <td><p>Expand Paths of a Formula</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_parsnip_models.html">fit_parsnip_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Draw A Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.study.html">print(<i>&lt;study&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a Study</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">fetch_data()</a></code> <code><a href="retrieval.html">fetch_test()</a></code> <code><a href="retrieval.html">fetch_combination()</a></code> <code><a href="retrieval.html">fetch_formulae()</a></code> <code><a href="retrieval.html">fetch_parameters()</a></code> <code><a href="retrieval.html">fetch_names()</a></code> <code><a href="retrieval.html">update_study()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="study.html">study()</a></code> </p>
-        </td>
-        <td><p>Mapping Many Hypotheses Together</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+    </div>
+
+    <pre class="usage"><span class='fu'>fetch_data</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_test</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_combination</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_formulae</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_parameters</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_names</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>update_study</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span>, stage <span class='op'>=</span> <span class='cn'>NA</span>, run <span class='op'>=</span> <span class='cn'>FALSE</span>, path <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>x</th>
+      <td><p><code>study</code> object</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name of <code>hypothesis</code> object to pull components from</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>For additional parameters to be passed on</p></td>
+    </tr>
+    <tr>
+      <th>stage</th>
+      <td><p>Hypothesis stage</p></td>
+    </tr>
+    <tr>
+      <th>run</th>
+      <td><p>If model has been built</p></td>
+    </tr>
+    <tr>
+      <th>path</th>
+      <td><p>Variable for path status</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>The <code>fetch_*()</code> functions return the named object from the <code>study</code>.
+The <code>update_*()</code> functions return the entire study after modification.</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

@@ -53,7 +53,7 @@ The project name has gone through many iterations. The reason why the name was i
 | {octomod} | The second draft took inspiration from the idea of an *octopus*, with 8 arms or legs all surrounded a central idea. This allowed for flexibility in that the many arms of a project were not necessarily hierarchical. However, theming a project after a cephalopod does make the function names less easy to remember. |
 | {aims} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
 | {diagnose} | After iterating through the code, modeling causality and looking at clinically relevant variables was the more refined underlying objective. This allowed for simplification of the hypothesis generating method and opened the door to look at effect modification. | 
-| {empath} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
+| {dagger} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
 
 # Defining the API
 
