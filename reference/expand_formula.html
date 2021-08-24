@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Expand Formulae for a Hypothesis — expand_formula • aims</title>
+<title>Expand Formulae for a Hypothesis — expand_formula • dagger</title>
 
 
 <!-- jquery -->
@@ -72,7 +72,7 @@ combinations for adding hypotheses." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">aims</a>
+        <a class="navbar-link" href="../index.html">dagger</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
       </span>
     </div>
@@ -106,7 +106,7 @@ combinations for adding hypotheses." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/aims/">
+  <a href="https://github.com/asshah4/dagger/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -125,7 +125,7 @@ combinations for adding hypotheses." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Expand Formulae for a Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/expressions.R'><code>R/expressions.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/expressions.R'><code>R/expressions.R</code></a></small>
     <div class="hidden name"><code>expand_formula.Rd</code></div>
     </div>
 
@@ -134,7 +134,7 @@ combinations for adding hypotheses." />
 combinations for adding hypotheses.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>expand_formula</span><span class='op'>(</span><span class='va'>formula</span>, <span class='va'>combination</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>expand_formula</span><span class='op'>(</span><span class='va'>formula</span>, <span class='va'>combination</span>, table <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -151,8 +151,7 @@ see the  for further documentation.</p></td>
       <th>combination</th>
       <td><p>The building pattern for how to put together the overall
 plan. It defines variable relationships that will be used. The options of
-<code>combination</code> will lead to the following patterns:</p>
-<p>$$y ~ x1 + x2$$</p><ul>
+<code>combination</code> will lead to the following patterns:</p><ul>
 <li><p><code>direct</code> will not modify the original equation pattern</p></li>
 </ul>
 
@@ -167,6 +166,11 @@ plan. It defines variable relationships that will be used. The options of
 <p>$$y ~ x1$$ $$y ~ x2$$</p></td>
     </tr>
     <tr>
+      <th>table</th>
+      <td><p>Determines if the returned value should be a list of formulas or
+a table. Defaults to FALSE, leading to a list generation.</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>Not currently used</p></td>
     </tr>
@@ -174,7 +178,7 @@ plan. It defines variable relationships that will be used. The options of
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Table of formulae and extracted terms</p>
+    <p>List or table of formulae and extracted terms (to be determined by the <strong>table</strong> argument).</p>
     <h2 class="hasAnchor" id="formulae"><a class="anchor" href="#formulae"></a>Formulae</h2>
 
     
@@ -189,6 +193,9 @@ exposure</p></li>
 <li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
 maintained/fixed in all models, which can include complex terms, such as
 mixed effects</p></li>
+<li><p><code><a href='https://rdrr.io/r/stats/zC.html'>C()</a></code> is placed around a term for any predictors that are a potential
+confounder, which does not yet change the relationship of how formulas are
+built, but is stored for future methods to be used with <code><a href='hypothesize.html'>hypothesize()</a></code></p></li>
 </ul>
 
 <p>For example, the equation below describes two independent exposures "x1"

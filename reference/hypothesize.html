@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Create a Hypothesis — hypothesize • aims</title>
+<title>Draw A Hypothesis — hypothesize • dagger</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Create a Hypothesis — hypothesize" />
-<meta property="og:description" content="hypothesize() creates a hypothesis object that can be placed into a
+<meta property="og:title" content="Draw A Hypothesis — hypothesize" />
+<meta property="og:description" content="hypothesis() creates a hypothesis object that can be placed into a
 modeling framework. This framework allows for multiple hypotheses to be
 modeled, and allows for assessment of confounding variables." />
 
@@ -73,7 +73,7 @@ modeled, and allows for assessment of confounding variables." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">aims</a>
+        <a class="navbar-link" href="../index.html">dagger</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
       </span>
     </div>
@@ -107,7 +107,7 @@ modeled, and allows for assessment of confounding variables." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/aims/">
+  <a href="https://github.com/asshah4/dagger/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -125,13 +125,13 @@ modeled, and allows for assessment of confounding variables." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Create a Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/aims/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
+    <h1>Draw A Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
     <div class="hidden name"><code>hypothesize.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><code>hypothesize()</code> creates a <code>hypothesis</code> object that can be placed into a
+    <p><code>hypothesis()</code> creates a <code>hypothesis</code> object that can be placed into a
 modeling framework. This framework allows for multiple hypotheses to be
 modeled, and allows for assessment of confounding variables.</p>
     </div>
@@ -153,6 +153,10 @@ modeled, and allows for assessment of confounding variables.</p>
 this accepts the following object types:</p><ul>
 <li><p><code>formula</code> objects, which  be given additional modifiers as described.
 Please see <code><a href='expand_formula.html'>expand_formula()</a></code> or the formula section below for details.</p></li>
+<li><p><code>list</code> object, which describes the outcomes, exposures, covariates, fixed
+variables, and potential confounders in a named list, which allows for
+grouped covariates when modeling. Please see the details section for
+further explanation.</p></li>
 </ul></td>
     </tr>
     <tr>
@@ -229,6 +233,9 @@ exposure</p></li>
 <li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
 maintained/fixed in all models, which can include complex terms, such as
 mixed effects</p></li>
+<li><p><code><a href='https://rdrr.io/r/stats/zC.html'>C()</a></code> is placed around a term for any predictors that are a potential
+confounder, which does not yet change the relationship of how formulas are
+built, but is stored for future methods to be used with <code>hypothesize()</code></p></li>
 </ul>
 
 <p>For example, the equation below describes two independent exposures "x1"
