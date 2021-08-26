@@ -141,6 +141,9 @@ set_vars <- function(hypothesis, formula, confounders = NULL) {
 #' @return A `hypothesis` object
 #'
 #' @param hypothesis A `hypothesis` object
+#' @param ... Additional named arguments to pass (should be named components of
+#'   a `hypothesis` object)
+#'
 #' @export
 update_hypothesis <- function(hypothesis, ...) {
 

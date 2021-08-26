@@ -8,6 +8,8 @@ expand_paths(formula, ...)
 }
 \arguments{
 \item{formula}{an object of class \code{formula}}
+
+\item{...}{For extensibility}
 }
 \description{
 This presumes that all covariates are confounders are potential confounders.

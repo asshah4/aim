@@ -1,9 +1,10 @@
-
 #' Expand Paths of a Formula
 #'
 #' This presumes that all covariates are confounders are potential confounders.
 #'
 #' @param formula an object of class `formula`
+#' @param ... For extensibility
+#'
 #' @export
 expand_paths <- function(formula, ...) {
 
@@ -34,5 +35,35 @@ expand_paths <- function(formula, ...) {
 
 	# Return list of paths
 	paths
+
+}
+
+#' Map Out A Directed Acyclic Graph
+#'
+#' This function converts a hypothesis into a `dagitty` object (or
+#' `tidy_dagitty` if requested). This can subsequently be passed onto the
+#' [ggdag::ggdag()] function for additional plotting.
+#'
+#' @return `dagitty` or `tidy_dagitty` object
+#'
+#' @param study A `study` object
+#' @param name The name of a hypothesis added to the study
+#' @param tidy Defaults to FALSE, thus returning a `dagitty` object. If TRUE, then will return a `tidy_dagitty` object.
+#' @importFrom rlang !!!
+#' @export
+map_dag <- function(study, name, tidy = FALSE) {
+
+	p <- study$path_map
+	f <- p$relationship
+
+	exp <- unique(p$exposure[p$name == name])
+	out <- unique(p$outcome[p$name == name])
+
+	if (tidy) {
+		rlang::exec(ggdag::dagify, !!!f, exposure = exp, outcome = out) %>%
+		ggdag::tidy_dagitty(.)
+	} else {
+		rlang::exec(ggdag::dagify, !!!f, exposure = exp, outcome = out)
+	}
 
 }

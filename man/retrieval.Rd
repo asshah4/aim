@@ -6,9 +6,9 @@
 \alias{fetch_test}
 \alias{fetch_combination}
 \alias{fetch_formulae}
-\alias{fetch_parameters}
+\alias{fetch_tidy}
+\alias{fetch_raw}
 \alias{fetch_names}
-\alias{update_study}
 \title{Retrieve, Modify, and Destroy Components From \code{study} Object}
 \usage{
 fetch_data(x, name)
@@ -19,11 +19,11 @@ fetch_combination(x, name)
 
 fetch_formulae(x, name)
 
-fetch_parameters(x, name)
+fetch_tidy(x, name)
+
+fetch_raw(x, name)
 
 fetch_names(x, ...)
-
-update_study(x, name, stage = NA, run = FALSE, path = FALSE)
 }
 \arguments{
 \item{x}{\code{study} object}
@@ -31,12 +31,6 @@ update_study(x, name, stage = NA, run = FALSE, path = FALSE)
 \item{name}{Name of \code{hypothesis} object to pull components from}
 
 \item{...}{For additional parameters to be passed on}
-
-\item{stage}{Hypothesis stage}
-
-\item{run}{If model has been built}
-
-\item{path}{Variable for path status}
 }
 \value{
 The \verb{fetch_*()} functions return the named object from the \code{study}.

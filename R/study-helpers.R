@@ -97,13 +97,25 @@ fetch_formulae <- function(x, name) {
 
 #' @rdname retrieval
 #' @export
-fetch_parameters <- function(x, name) {
+fetch_tidy <- function(x, name) {
 
 	y <- x$model_map
-	pars <- y$tidy[y$name == name]
+	res <- y$tidy[y$name == name]
 
 	# Return
-	pars
+	res
+
+}
+
+#' @rdname retrieval
+#' @export
+fetch_raw <- function(x, name) {
+
+	y <- x$model_map
+	res <- y$fit[y$name == name]
+
+	# Return
+	res
 
 }
 
@@ -127,29 +139,17 @@ fetch_names <- function(x, ...) {
 
 }
 
-#' @rdname retrieval
-#' @param stage Hypothesis stage
-#' @param run If model has been built
-#' @param path Variable for path status
-#' @export
-update_study <- function(x, name, stage = NA, run = FALSE, path = FALSE) {
-
-	if (!is.na(stage)) {
-		status <- attributes(x)$status_table
-		status$run <- run
-		status$stage <- stage
-		attributes(x)$status_table <- status
-	}
-
-	# Return
-	invisible(x)
-}
-
 #' Study Modifications
+#'
+#' Either add, update, or remove components or attributes of a `study`
+#'
+#' @return A `study` object
 #'
 #' @param study Object of `study` class
 #' @param hypothesis Object of `hypothesis` class
 #' @param name Name of `hypothesis`, given from parent function
+#' @param ... additional arguments to pass along
+#'
 #' @name modify_study
 #' @keywords internal
 NULL
@@ -182,46 +182,6 @@ add_study_formula <- function(study, hypothesis, name) {
 
 }
 
-#' @rdname modify_study
-#' @keywords internal
-#' @export
-add_study_paths <- function(study, hypothesis, name) {
-
-	models <-
-		study$model_map %>%
-		.[.$name == name & .$number == max(.$number), ] %>%
-		.[c("name", "outcome", "exposure", "formulae")] %>%
-		unique()
-
-	for (i in 1:nrow(models)) {
-
-		# Terms
-		f <- models[i, ]$formulae[[1]]
-		exp <- models[i, ]$exposure[[1]]
-		out <- as.character(f[[2]])
-
-		# Path formulas
-		paths <- expand_paths(f)
-
-		for (j in 1:length(paths)) {
-			study$path_map <-
-				study$path_map %>%
-				tibble::add_row(
-					name = name,
-					outcome = out,
-					exposure = exp,
-					relationship = paths[j],
-					term = as.character(paths[[j]][[3]]),
-					direction = "->",
-					to = as.character(paths[[j]][[2]])
-				)
-		}
-	}
-
-	# Return
-	invisible(study)
-
-}
 
 #' @rdname modify_study
 #' @keywords internal
@@ -278,12 +238,12 @@ add_study_data <- function(study, hypothesis, name) {
 #' @keywords internal
 #' @export
 add_study_status <- function(study,
-																hypothesis,
-																name,
-																run = FALSE,
-																error = FALSE,
-																stage = NA,
-																path = FALSE) {
+														 hypothesis,
+														 name,
+														 run = FALSE,
+														 error = FALSE,
+														 path = FALSE,
+														 origin = NA) {
 
 	# Modify the Status Table
 	attributes(study)$status_table <-
@@ -291,12 +251,44 @@ add_study_status <- function(study,
 		tibble::add_row(
 			name = name,
 			run = run,
+			path = path,
 			error = error,
-			stage = stage,
-			path = path
+			origin = origin
 		)
 
 	# Return study
 	invisible(study)
 
 }
+
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+update_study_status <- function(study, name, ...) {
+
+	# Match call
+	mc <- match.call(expand.dots = TRUE)
+	changes <- list(...)
+
+	# Get named study status
+	x <- attr(study, "status_table")
+	y <- x[x$name == name, ]
+
+	# Names
+	new_names <- names(changes)
+	old_names <- names(y)
+
+	# Update status
+	for (i in new_names) {
+		y[[i]] <- changes[[i]]
+	}
+
+	# Replace in study
+	x[x$name == name, ] <- y
+	attr(study, "status_table") <- x
+
+	# Return invisibly
+	invisible(study)
+
+}
+

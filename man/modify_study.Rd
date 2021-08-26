@@ -3,15 +3,13 @@
 \name{modify_study}
 \alias{modify_study}
 \alias{add_study_formula}
-\alias{add_study_paths}
 \alias{add_study_test}
 \alias{add_study_data}
 \alias{add_study_status}
+\alias{update_study_status}
 \title{Study Modifications}
 \usage{
 add_study_formula(study, hypothesis, name)
-
-add_study_paths(study, hypothesis, name)
 
 add_study_test(study, hypothesis, name)
 
@@ -23,9 +21,11 @@ add_study_status(
   name,
   run = FALSE,
   error = FALSE,
-  stage = NA,
-  path = FALSE
+  path = FALSE,
+  origin = NA
 )
+
+update_study_status(study, name, ...)
 }
 \arguments{
 \item{study}{Object of \code{study} class}
@@ -33,8 +33,13 @@ add_study_status(
 \item{hypothesis}{Object of \code{hypothesis} class}
 
 \item{name}{Name of \code{hypothesis}, given from parent function}
+
+\item{...}{additional arguments to pass along}
+}
+\value{
+A \code{study} object
 }
 \description{
-Study Modifications
+Either add, update, or remove components or attributes of a \code{study}
 }
 \keyword{internal}

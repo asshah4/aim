@@ -6,19 +6,22 @@
 #' forcibly re-run these, otherwise the default behavior is to only run models
 #' that have not yet been fitted.
 #'
-#' @return Returns a `study` object that has be fitted and tidied.
+#' @return Invisibly returns a `study` object that has be fitted and tidied
 #'
-#' @inheritParams draw_hypothesis
+#' @param study A `study` object that contains `hypothesis` objects
 #'
-#' @param which_ones Vector of which hypothesis should be built. Defaults to
-#'   building all hypotheses that have not been run yet. If given a name, will
-#'   forcibly re-run the analysis.
+#' @param which_ones Vector of which hypothesis should be constructed. It
+#'   defaults to NULL, which constructs all hypotheses that have not yet been
+#'   processed. If a vector of names is given, will forcibly re-analyze them.
+#'
+#' @param ... For extensibility
 #'
 #' @family studies
 #' @export
 construct_models <- function(study, which_ones = NULL, ...) {
 
 	validate_class(study, "study")
+	validate_stage(study, "hypothesis")
 
 	# Model map
 	m <- study$model_map
@@ -52,9 +55,9 @@ construct_models <- function(study, which_ones = NULL, ...) {
 			m$fit[m$name == name] <- fits
 			m$tidy[m$name == name] <- tidied
 
-			# Update stage
+			# Update status
 			study <-
-				update_study(study, name = name, stage = "built", run = TRUE)
+				update_study_status(study, name, run = TRUE)
 		}
 	} else {
 		message("All tests are already built. To force build, set `which_ones` to desired hypotheses.")
@@ -64,40 +67,89 @@ construct_models <- function(study, which_ones = NULL, ...) {
 	study$model_map <- m
 
 	# Return
-	study
+	invisible(study)
 
 }
 
-#' Construct Path Maps
-#' @export
-construct_maps <- function(...) {
-
-}
-
-#' Construct Directed Acyclic Graphs
+#' Construct Paths
 #'
-#' This function converts a hypothesis into a `dagitty` object (or
-#' `tidy_dagitty` if requested). This can subsequently be passed onto the
-#' [ggdag::ggdag()] function for additional plotting.
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' Takes the `hypothesis` objects that were added to the `study` and decomposes
+#' them into specific **paths** that are used to help define relationships
+#' between variables. These paths are stored in the `study` itself in the form
+#' of a `data.frame`. This is currently experimental in that the directionality,
+#' relationships, and patterns are intended to be used to help identify certain
+#' variables for future modeling, but the implementation is not yet complete.
 #'
-#' @return `dagitty` or `tidy_dagitty` object
-#' @inheritParams draw_hypothesis
-#' @param tidy Defaults to FALSE, thus returning a `dagitty` object. If TRUE, then will return a `tidy_dagitty` object.
-#' @importFrom rlang !!!
+#' @inheritParams construct_models
+#'
+#' @return A `study` object with paths added
+#'
+#' @family studies
 #' @export
-construct_dag <- function(study, name, tidy = FALSE) {
+construct_paths <- function(study, which_ones = NULL, ...) {
 
-	p <- study$path_map
-	f <- p$relationship
+	validate_class(study, "study")
+	validate_stage(study, "hypothesis")
 
-	exp <- unique(p$exposure[p$name == name])
-	out <- unique(p$outcome[p$name == name])
-
-	if (tidy) {
-		rlang::exec(ggdag::dagify, !!!f, exposure = exp, outcome = out) %>%
-		ggdag::tidy_dagitty(.)
+	# Select out models that have not yet been run
+	# If specified hypothesis are named, force them to be re-run
+	if (is.null(which_ones)) {
+		x <-
+			attributes(study)$status_table[c("name", "path")] %>%
+			subset(., path == FALSE)
 	} else {
-		rlang::exec(ggdag::dagify, !!!f, exposure = exp, outcome = out)
+		x <-
+			attributes(study)$status_table[c("name", "path")] %>%
+			subset(., name %in% which_ones)
 	}
 
+	if (nrow(x) > 0) {
+		for (i in 1:nrow(x)) {
+			name <- x$name[i]
+
+			# List of appropriate models
+			models <-
+				study$model_map %>%
+				.[.$name == name, ] %>%
+				.[.$number == max(.$number), ] %>%
+				unique()
+
+			for (j in 1:nrow(models)) {
+
+				# Terms
+				f <- models[j, ]$formulae[[1]]
+				exp <- models[j, ]$exposure[[1]]
+				out <- as.character(f[[2]])
+
+				# Path formulas
+				paths <- expand_paths(f)
+
+				# Create paths and update original data
+				for (k in 1:length(paths)) {
+					study$path_map <-
+						study$path_map %>%
+						tibble::add_row(
+							name = name,
+							outcome = out,
+							exposure = exp,
+							relationship = paths[k],
+							term = as.character(paths[[k]][[3]]),
+							direction = "->",
+							to = as.character(paths[[k]][[2]])
+						)
+				}
+			}
+
+			# Update status
+			study <-
+				update_study_status(study, name, path = TRUE)
+		}
+	}
+
+	# Return
+	invisible(study)
+
 }
+

@@ -31,3 +31,37 @@ validate_class <- function(x, what) {
 	# Return
 	invisible(TRUE)
 }
+
+#' Validate that study is at the appropriate stage for subsequent pipe functions
+#' @noRd
+validate_stage <- function(x, stage) {
+
+	# Get status table
+	y <- attr(x, "status_table")
+
+	# Validate that the study contains hypothesis objects
+	switch(
+		stage,
+		hypothesis = {
+			if (nrow(y) == 0) {
+				stop(
+					deparse(substitute(x)),
+					" does not yet have `hypothesis` objects added. Please call `draw_hypothesis()` prior to construction.",
+					call. = FALSE
+				)
+			}
+		},
+		run = {
+			if (!any(y$run)) {
+				stop(
+					deparse(substitute(x)),
+					" does not have any `hypothesis` objects that have been run. Please call `construct_models()` first.",
+					call. = FALSE
+				)
+			}
+		}
+	)
+
+	# Return
+	invisible(TRUE)
+}

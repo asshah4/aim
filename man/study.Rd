@@ -6,6 +6,27 @@
 \usage{
 study(...)
 }
-\description{
-Mapping Many Hypotheses Together
+\arguments{
+\item{...}{For extensibility}
 }
+\value{
+A \code{study} object
+}
+\description{
+Calling \code{study()} initializes a list object that stores \code{hypothesis} objects,
+which are used to explore a research project. It allows for delayed building
+of models, and is used to help study the relationship between variables.
+}
+\details{
+A \code{study} object is a essentially a modified list containing two
+complementary table structures, which are interrelated via the \code{hypothesis}
+objects, and several attributes that allow for information storage about the
+object itself.
+}
+\seealso{
+Other studies: 
+\code{\link{construct_models}()},
+\code{\link{construct_paths}()},
+\code{\link{draw_hypothesis}()}
+}
+\concept{studies}

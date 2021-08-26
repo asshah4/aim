@@ -23,3 +23,9 @@ This allows for the simple testing of multiple h-test objects.
 It requires three components: a formula, a {parsnip} model definition, and
 a data set to analyze.
 }
+\seealso{
+Other helpers: 
+\code{\link{fit_parsnip_models}()},
+\code{\link{tidy_tests}()}
+}
+\concept{helpers}

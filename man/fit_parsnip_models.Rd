@@ -24,8 +24,8 @@ requires three components: a formula, a {parsnip} model definition, and a
 data set to analyze.
 }
 \seealso{
-Other studies: 
-\code{\link{construct_models}()},
-\code{\link{draw_hypothesis}()}
+Other helpers: 
+\code{\link{fit_calls}()},
+\code{\link{tidy_tests}()}
 }
-\concept{studies}
+\concept{helpers}

@@ -147,24 +147,29 @@ that have not yet been fitted.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>study</th>
-      <td><p>Object of class <code>study</code></p></td>
+      <td><p>A <code>study</code> object that contains <code>hypothesis</code> objects</p></td>
     </tr>
     <tr>
       <th>which_ones</th>
-      <td><p>Vector of which hypothesis should be built. Defaults to
-building all hypotheses that have not been run yet. If given a name, will
-forcibly re-run the analysis.</p></td>
+      <td><p>Vector of which hypothesis should be constructed. It
+defaults to NULL, which constructs all hypotheses that have not yet been
+processed. If a vector of names is given, will forcibly re-analyze them.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>For extensibility</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Returns a <code>study</code> object that has be fitted and tidied.</p>
+    <p>Invisibly returns a <code>study</code> object that has be fitted and tidied</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other studies: 
+<code><a href='construct_paths.html'>construct_paths</a>()</code>,
 <code><a href='draw_hypothesis.html'>draw_hypothesis</a>()</code>,
-<code><a href='fit_parsnip_models.html'>fit_parsnip_models</a>()</code></p></div>
+<code><a href='study.html'>study</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

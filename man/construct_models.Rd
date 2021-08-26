@@ -7,14 +7,16 @@
 construct_models(study, which_ones = NULL, ...)
 }
 \arguments{
-\item{study}{Object of class \code{study}}
+\item{study}{A \code{study} object that contains \code{hypothesis} objects}
 
-\item{which_ones}{Vector of which hypothesis should be built. Defaults to
-building all hypotheses that have not been run yet. If given a name, will
-forcibly re-run the analysis.}
+\item{which_ones}{Vector of which hypothesis should be constructed. It
+defaults to NULL, which constructs all hypotheses that have not yet been
+processed. If a vector of names is given, will forcibly re-analyze them.}
+
+\item{...}{For extensibility}
 }
 \value{
-Returns a \code{study} object that has be fitted and tidied.
+Invisibly returns a \code{study} object that has be fitted and tidied
 }
 \description{
 This function allows for delayed building of multiple hypothesis. It uses the
@@ -25,7 +27,8 @@ that have not yet been fitted.
 }
 \seealso{
 Other studies: 
+\code{\link{construct_paths}()},
 \code{\link{draw_hypothesis}()},
-\code{\link{fit_parsnip_models}()}
+\code{\link{study}()}
 }
 \concept{studies}

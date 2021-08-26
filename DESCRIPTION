@@ -7,13 +7,13 @@ Authors@R:
            role = c("aut", "cre"),
            email = "ashah282@uic.edu",
            comment = c(ORCID = "0000-0002-9729-1558"))
-Description: A simple and tidy way to organize the many models built during a 
-    research project. The package consists of formulating hypothesis, testing or
-    modeling the findings, and understanding the parameters. In causality-based 
-    research, such as epidemiology, the focus is on a specific aim that 
-    can be tested, which helps to contextualize variables, and provides 
-    relationships between outcomes, exposures, and covariates. This package 
-    attempts to provide a framework for these types of analyses.
+Description: Organize many models and hypotheses, generate directed acyclic 
+    graphs from these models, and cut out variables in a causality-based 
+    approach to analyses. The package consists of formulating hypothesis, 
+    testing the relationships, and analyzing the parameters. In causality-based 
+    studies, the focus is on understanding and contextualizing variables. This
+    package provides methods to understand the relationships between outcomes, 
+    exposures, and other covariates.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -22,18 +22,22 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggdag,
+    glue,
 Imports: 
     dplyr,
     magrittr,
     parsnip,
+    broom,
     purrr,
     tibble,
     tidyr,
     methods,
     rlang,
+    lifecycle
 Remotes:
-    asshah4/path
+    asshah4/dagger
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/dagger
 BugReports: https://github.com/asshah4/dagger/issues

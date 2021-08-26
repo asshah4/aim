@@ -54,8 +54,8 @@ test_that("multiple hypotheses can be added and fitted", {
 
 	# Unadjusted h1 and h2 should be the same
 	f <- f %>% construct_models()
-	t1 <- fetch_parameters(f, "h1")
-	t2 <- fetch_parameters(f, "h2")
+	t1 <- fetch_tidy(f, "h1")
+	t2 <- fetch_tidy(f, "h2")
 	expect_identical(t1[[1]], t2[[1]])
 })
 

@@ -8,6 +8,9 @@ update_hypothesis(hypothesis, ...)
 }
 \arguments{
 \item{hypothesis}{A \code{hypothesis} object}
+
+\item{...}{Additional named arguments to pass (should be named components of
+a \code{hypothesis} object)}
 }
 \value{
 A \code{hypothesis} object

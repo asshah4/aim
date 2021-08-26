@@ -6,16 +6,11 @@ utils::globalVariables(c(
 	"outcomes",
 	"formulas",
 	"fit",
-	"varying",
 	"type",
-	"approach",
-	"vars",
-	"pars",
-	"pred",
-	"level",
-	"tests",
 	"number",
-	"tidied",
+	"vars",
 	"name",
-	"data"
+	"data",
+	"run",
+	"path"
 ))

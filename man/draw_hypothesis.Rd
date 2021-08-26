@@ -14,6 +14,8 @@ data already added)}
 
 \item{name}{Name of the \code{hypothesis} object, which defaults to the name of
 the \code{hypothesis} object itself}
+
+\item{...}{For extensibility}
 }
 \value{
 A \code{study} object that has had a \code{hypothesis} added
@@ -25,6 +27,7 @@ potential hypotheses to be put together for eventual analysis and comparison.
 \seealso{
 Other studies: 
 \code{\link{construct_models}()},
-\code{\link{fit_parsnip_models}()}
+\code{\link{construct_paths}()},
+\code{\link{study}()}
 }
 \concept{studies}

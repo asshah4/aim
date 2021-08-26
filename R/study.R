@@ -2,6 +2,19 @@
 
 #' Mapping Many Hypotheses Together
 #'
+#' Calling `study()` initializes a list object that stores `hypothesis` objects,
+#' which are used to explore a research project. It allows for delayed building
+#' of models, and is used to help study the relationship between variables.
+#'
+#' A `study` object is a essentially a modified list containing two
+#' complementary table structures, which are interrelated via the `hypothesis`
+#' objects, and several attributes that allow for information storage about the
+#' object itself.
+#'
+#' @param ... For extensibility
+#'
+#' @return A `study` object
+#' @family studies
 #' @export
 study <- function(...) {
 
@@ -25,14 +38,14 @@ study <- function(...) {
 		~data_name, ~data
 	)
 
-	# Identify the tests
+	# Identify the tests, with origin of hypothesis being related for reformulation
 	attr(study, "test_table") <- tibble::tribble(
 		~name, ~call, ~test, ~test_opts, ~combination, ~type
 	)
 
 	# Recording of status updates
 	attr(study, "status_table") <- tibble::tribble(
-		~name, ~run, ~error, ~stage, ~path
+		~name, ~run, ~path, ~error, ~origin
 	)
 
 	# Return
@@ -58,6 +71,8 @@ study <- function(...) {
 #' @param name Name of the `hypothesis` object, which defaults to the name of
 #'   the `hypothesis` object itself
 #'
+#' @param ... For extensibility
+#'
 #' @family studies
 #' @export
 draw_hypothesis <- function(study,
@@ -71,14 +86,13 @@ draw_hypothesis <- function(study,
 	study <-
 		study %>%
 		add_study_formula(hypothesis, name) %>%
-		add_study_paths(hypothesis, name) %>%
 		add_study_test(hypothesis, name) %>%
 		add_study_data(hypothesis, name) %>%
 		add_study_status(hypothesis,
 										 name,
 										 run = FALSE,
-										 stage = "hypothesis",
-										 path = TRUE)
+										 path = FALSE,
+										 origin = NA)
 
 	# Return
 	study
@@ -94,16 +108,18 @@ print.study <- function(x, ...) {
 
 	# Retrieve variables
 	s <- deparse(substitute(x))
-	y <- x$model_map
-	h <- unique(y$name)
+	m <- x$model_map
+	h <- unique(m$name)
+	p <- x$path_map
+	n <- length(unique(as.character(p$relationship)))
 
 	# Printing
 	cat(glue::glue(
 		"
-		# A study with `{length(h)}` hypothesis
+		# A study with {length(h)} hypothesis and {n} unique paths
 		# \n
 		"
 	))
-	print(y)
+	print(m)
 
 }
