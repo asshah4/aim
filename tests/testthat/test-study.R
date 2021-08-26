@@ -26,7 +26,7 @@ test_that("study can be fitted", {
 	f <-
 		study() %>%
 		draw_hypothesis(hyp) %>%
-		construct_models()
+		construct_map()
 
 	expect_type(f$model_map$fit, "list")
 	expect_s3_class(f$model_map$tidy[[1]], "tbl_df")

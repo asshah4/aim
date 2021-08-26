@@ -22,6 +22,7 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     knitr,
+    markdown,
     rmarkdown,
     ggdag,
     glue,

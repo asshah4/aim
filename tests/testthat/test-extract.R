@@ -23,7 +23,7 @@ test_that("models can be extracted if available", {
 	# Fit some models
 	y <-
 		x %>%
-		construct_models() %>%
+		construct_map() %>%
 		draw_hypothesis(h2)
 
 	# Extract tidy models

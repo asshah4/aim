@@ -97,6 +97,19 @@ fetch_formulae <- function(x, name) {
 
 #' @rdname retrieval
 #' @export
+fetch_call <- function(x, name) {
+
+
+	y <- attr(x, "test_table")
+	cl <- y$call[y$name == name][[1]]
+
+	# Return
+	cl
+
+}
+
+#' @rdname retrieval
+#' @export
 fetch_tidy <- function(x, name) {
 
 	y <- x$model_map

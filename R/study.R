@@ -24,7 +24,7 @@ study <- function(...) {
 			~name, ~outcome, ~exposure, ~number, ~formulae, ~fit, ~tidy
 		),
 		path_map = tibble::tribble(
-			~name, ~outcome, ~exposure, ~relationship, ~term, ~direction, ~to, ~type
+			~name, ~outcome, ~exposure, ~from, ~direction, ~to, ~formulae, ~type, ~related
 		)
 	)
 
@@ -102,7 +102,7 @@ draw_hypothesis <- function(study,
 
 #' Print a Study
 #' @param x A `study` object
-#' @inheritParams base::print
+#' @param ... further arguments passed to or from other methods
 #' @export
 print.study <- function(x, ...) {
 
@@ -111,7 +111,7 @@ print.study <- function(x, ...) {
 	m <- x$model_map
 	h <- unique(m$name)
 	p <- x$path_map
-	n <- length(unique(as.character(p$relationship)))
+	n <- length(unique(as.character(p$formulae)))
 
 	# Printing
 	cat(glue::glue(

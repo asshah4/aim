@@ -26,8 +26,7 @@ potential hypotheses to be put together for eventual analysis and comparison.
 }
 \seealso{
 Other studies: 
-\code{\link{construct_models}()},
-\code{\link{construct_paths}()},
+\code{\link{construct_map}()},
 \code{\link{study}()}
 }
 \concept{studies}

@@ -54,7 +54,7 @@ expand_paths <- function(formula, ...) {
 map_dag <- function(study, name, tidy = FALSE) {
 
 	p <- study$path_map
-	f <- p$relationship
+	f <- p$formulae
 
 	exp <- unique(p$exposure[p$name == name])
 	out <- unique(p$outcome[p$name == name])

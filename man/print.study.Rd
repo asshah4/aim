@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{A \code{study} object}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{...}{further arguments passed to or from other methods}
 }
 \description{
 Print a Study

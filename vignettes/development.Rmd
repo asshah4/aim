@@ -82,73 +82,6 @@ As described, the name helps to determine the function's purpose. The core funct
 - `build_models()` runs the tests, whether it is basic statistics or more complex inferential models, with the capacity to update only the newly added arms
 - `collect_findings()` recalls information from the `project` structure in a flexible way
 
-**Defining the Structure**
-
-There should be a core function that establishes the underlying structure. Should the data be given at this time, or added in a separate function? Initialization should likely be a list structure due to its malleability.
-
-```{r, eval=FALSE}
-project()
-```
-
-**Data Sets**
-
-It seems that it should be a specific, but necessary, step to add data. The data structure, hopefully **tidy**, would provide the parameters by column names. It may allow for creating more effective selection commands as well.
-
-```{r, eval=FALSE}
-set_data(
-  data = NULL,
-  ...
-)
-```
-
-**Adding Hypotheses**
-
-This is probably the most important feature. A function such as `add_arm()` could help to stack on different potential tests. 
-
-The complex part of this is that each *arm* would allow for variations of a hypothesis formula. Multiple predictors, multiple outcomes. In an epidemiological sense, its important that certain predictors are maintained as *exposures*. Each hypothesis thus needs to allow flexibility for the complexity of a model formula.
-
-- Unique name for each arm, to be "pulled" later on
-- A global formula or plan to be specified, and potentially varied or recombined (e.g. different "patterns" of combinations based on the testing strategy). It would be helpful to label certain variables as fixed exposures in some way as well.
-- The type of "test" that is being used. This should likely draw from a common system, such as `parsnip`, to have consistent model representations. The other aspect would be more straightforward testing, such as from the `stats` base package.
-- Subgroups of the data should be allowed to be analyzed via this as well. This is such a common pattern that it should likely be defined as a specific parameter.
-
-```{r, eval=FALSE}
-add_arm(
-  title = "first_example",
-  description = NULL,
-  plan = outcome ~ exposure + covariate,
-  exposure = "exposure",
-  pattern = "parallel",
-  test = linear_reg() %>% set_engine("lm"),
-  ...
-)
-```
-
-**Running Tests**
-
-The ability to then run tests would be the next logical step. This capacity should allow for identifying if tests have already been run or not, and only run newly added components. 
-
-```{r, eval=FALSE}
-build_models(
-  run_all = FALSE,
-  which_tests = NULL,
-  ...
-)
-```
-
-**Data Extraction**
-
-The final structure of the project should be flexible in terms of extracting or pulling data. Its imagined as a list structure, and thus components could be called by the `$` operator. That depends on quality of names, and making sure they are well described. 
-
-```{r, eval=FALSE}
-collect_findings(
-  which_tests = NULL,
-  ...
-)
-```
-
-This is an important and difficult process of deciding how the user should be able to visualize information and extract findings. This will end up including `summary()` and `print()` functions as well.
-
 ### Project Structure
 
 The overall project structure requires a specific *class* that will contain a pattern of an internal structure. The `project` object should hold:
@@ -160,8 +93,6 @@ The overall project structure requires a specific *class* that will contain a pa
 ## Third Draft
 
 I realized this approach was not effective in that it was overly complicated in having multiple names, data frames, and connections between them. I simplified the pipeline to focus on a specific S3 classes that could be used to generate hypotheses, and iterate through to help look at variable relationship.
-
-### Core Functions
 
 ```{r, eval=FALSE}
 study() %>%
@@ -175,9 +106,14 @@ Essentially, this was a list based concept of adding hypotheses to a modified li
 
 I decided that I was not really seeing the big picture. What I wanted was a way to store a set of multiple tests with the purpose of studying the relationship between two variables (an exposure and an outcome), and potentially looking at covariates. The *basic* concept was essentially a **directed acyclic graph**, with the relationships storing the hypotheses that were tested. The functionality was the same, but the API was different.
 
+### Classes
+
 The major classes needed would be ...
 
 - `hypothesis` object, that showed and/or carried the relationship between variables, likely a complex formula object
 - `map` object that drew the relationships between the variables, and allowed for the storage of multiple tests
 - `path` object that is extracted after the map has been drawn (if you will), should be able to be evaluated to help understand which variables may be confounders, etc
 
+### Confounding
+
+A purpose of having parallel and sequential model sets, built into a hypothesis, was to identify confounding variables and help remove them.

@@ -38,7 +38,8 @@ a table. Defaults to FALSE, leading to a list generation.}
 \item{...}{Not currently used}
 }
 \value{
-List or table of formulae and extracted terms (to be determined by the \strong{table} argument).
+List or table of formulae and extracted terms (to be determined by
+the \strong{table} argument).
 }
 \description{
 This is an internal function that helps to create the appropriate formula

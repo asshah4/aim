@@ -1,12 +1,23 @@
-#' Construct Models
+#' Construct Map
 #'
+#' @description
+#' `r lifecycle::badge('experimental')`
 #' This function allows for delayed building of multiple hypothesis. It uses the
 #' `hypothesis` objects with the corresponding __test__ arguments against the
 #' prescribed __data__. Which hypotheses to run can be specified, which will
 #' forcibly re-run these, otherwise the default behavior is to only run models
 #' that have not yet been fitted.
 #'
-#' @return Invisibly returns a `study` object that has be fitted and tidied
+#' Simultaneously, Takes the `hypothesis` objects that were added to the `study`
+#' and decomposes them into specific **paths** that are used to help define
+#' relationships between variables. These paths are stored in the `study` itself
+#' in the form of a `data.frame`. This is currently experimental in that the
+#' directionality, relationships, and patterns are intended to be used to help
+#' identify certain variables for future modeling, but the implementation is not
+#' yet complete.
+#'
+#' @return Invisibly returns a `study` object that has the hypotheses mapped to
+#'   it, including fits and paths
 #'
 #' @param study A `study` object that contains `hypothesis` objects
 #'
@@ -18,7 +29,7 @@
 #'
 #' @family studies
 #' @export
-construct_models <- function(study, which_ones = NULL, ...) {
+construct_map <- function(study, which_ones = NULL, ...) {
 
 	validate_class(study, "study")
 	validate_stage(study, "hypothesis")
@@ -63,48 +74,10 @@ construct_models <- function(study, which_ones = NULL, ...) {
 		message("All tests are already built. To force build, set `which_ones` to desired hypotheses.")
 	}
 
-	# Replace
+	# Replace model data
 	study$model_map <- m
 
-	# Return
-	invisible(study)
-
-}
-
-#' Construct Paths
-#'
-#' @description
-#' `r lifecycle::badge('experimental')`
-#' Takes the `hypothesis` objects that were added to the `study` and decomposes
-#' them into specific **paths** that are used to help define relationships
-#' between variables. These paths are stored in the `study` itself in the form
-#' of a `data.frame`. This is currently experimental in that the directionality,
-#' relationships, and patterns are intended to be used to help identify certain
-#' variables for future modeling, but the implementation is not yet complete.
-#'
-#' @inheritParams construct_models
-#'
-#' @return A `study` object with paths added
-#'
-#' @family studies
-#' @export
-construct_paths <- function(study, which_ones = NULL, ...) {
-
-	validate_class(study, "study")
-	validate_stage(study, "hypothesis")
-
-	# Select out models that have not yet been run
-	# If specified hypothesis are named, force them to be re-run
-	if (is.null(which_ones)) {
-		x <-
-			attributes(study)$status_table[c("name", "path")] %>%
-			subset(., path == FALSE)
-	} else {
-		x <-
-			attributes(study)$status_table[c("name", "path")] %>%
-			subset(., name %in% which_ones)
-	}
-
+	# Now create paths
 	if (nrow(x) > 0) {
 		for (i in 1:nrow(x)) {
 			name <- x$name[i]
@@ -134,10 +107,12 @@ construct_paths <- function(study, which_ones = NULL, ...) {
 							name = name,
 							outcome = out,
 							exposure = exp,
-							relationship = paths[k],
-							term = as.character(paths[[k]][[3]]),
+							formulae = paths[k],
+							from = as.character(paths[[k]][[3]]),
 							direction = "->",
-							to = as.character(paths[[k]][[2]])
+							to = as.character(paths[[k]][[2]]),
+							type = NA,
+							related = NA
 						)
 				}
 			}
@@ -152,4 +127,3 @@ construct_paths <- function(study, which_ones = NULL, ...) {
 	invisible(study)
 
 }
-

@@ -144,7 +144,9 @@ new_hypothesis <- function(hypothesis,
 
 # Generics ----
 
-#' @inheritParams base::print
+#' Print a Hypothesis
+#' @param x Print a `hypothesis` object
+#' @param ... further arguments passed to or from other methods
 #' @export
 print.hypothesis <- function(x, ...) {
 

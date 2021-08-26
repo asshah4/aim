@@ -3,7 +3,8 @@
 #' This is an internal function that helps to create the appropriate formula
 #' combinations for adding hypotheses.
 #'
-#' @return List or table of formulae and extracted terms (to be determined by the __table__ argument).
+#' @return List or table of formulae and extracted terms (to be determined by
+#'   the __table__ argument).
 #'
 #' @param formula Formula showing relationship of outcomes and predictors, and
 #'   is essentially the hypothesis. It allows for complex formulae e.g. multiple
