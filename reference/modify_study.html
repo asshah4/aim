@@ -40,7 +40,7 @@
 
 
 <meta property="og:title" content="Study Modifications — modify_study" />
-<meta property="og:description" content="Study Modifications" />
+<meta property="og:description" content="Either add, update, or remove components or attributes of a study" />
 
 
 
@@ -129,12 +129,10 @@
     </div>
 
     <div class="ref-description">
-    <p>Study Modifications</p>
+    <p>Either add, update, or remove components or attributes of a <code>study</code></p>
     </div>
 
     <pre class="usage"><span class='fu'>add_study_formula</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, <span class='va'>name</span><span class='op'>)</span>
-
-<span class='fu'>add_study_paths</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, <span class='va'>name</span><span class='op'>)</span>
 
 <span class='fu'>add_study_test</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, <span class='va'>name</span><span class='op'>)</span>
 
@@ -146,9 +144,11 @@
   <span class='va'>name</span>,
   run <span class='op'>=</span> <span class='cn'>FALSE</span>,
   error <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  stage <span class='op'>=</span> <span class='cn'>NA</span>,
-  path <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+  path <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  origin <span class='op'>=</span> <span class='cn'>NA</span>
+<span class='op'>)</span>
+
+<span class='fu'>update_study_status</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -165,8 +165,15 @@
       <th>name</th>
       <td><p>Name of <code>hypothesis</code>, given from parent function</p></td>
     </tr>
+    <tr>
+      <th>...</th>
+      <td><p>additional arguments to pass along</p></td>
+    </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>study</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Update a Hypothesis — update_hypothesis • dagger</title>
+<title>Construct Paths — construct_paths • dagger</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,14 @@
 
 
 
-<meta property="og:title" content="Update a Hypothesis — update_hypothesis" />
-<meta property="og:description" content="A hypothesis object can be modified to generate an updated hypothesis,
-which can then be placed into a framework as needed. The strata and
-test_opts arguments can only be updated if the data and test
-options are also given, respectively." />
+<meta property="og:title" content="Construct Paths — construct_paths" />
+<meta property="og:description" content="
+Takes the hypothesis objects that were added to the study and decomposes
+them into specific paths that are used to help define relationships
+between variables. These paths are stored in the study itself in the form
+of a data.frame. This is currently experimental in that the directionality,
+relationships, and patterns are intended to be used to help identify certain
+variables for future modeling, but the implementation is not yet complete." />
 
 
 
@@ -126,37 +129,51 @@ options are also given, respectively." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Update a Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/hypothesis-helpers.R'><code>R/hypothesis-helpers.R</code></a></small>
-    <div class="hidden name"><code>update_hypothesis.Rd</code></div>
+    <h1>Construct Paths</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/construct.R'><code>R/construct.R</code></a></small>
+    <div class="hidden name"><code>construct_paths.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A <code>hypothesis</code> object can be modified to generate an updated hypothesis,
-which can then be placed into a <code>framework</code> as needed. The <strong>strata</strong> and
-<strong>test_opts</strong> arguments can only be updated if the <strong>data</strong> and <strong>test</strong>
-options are also given, respectively.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a>
+Takes the <code>hypothesis</code> objects that were added to the <code>study</code> and decomposes
+them into specific <strong>paths</strong> that are used to help define relationships
+between variables. These paths are stored in the <code>study</code> itself in the form
+of a <code>data.frame</code>. This is currently experimental in that the directionality,
+relationships, and patterns are intended to be used to help identify certain
+variables for future modeling, but the implementation is not yet complete.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>update_hypothesis</span><span class='op'>(</span><span class='va'>hypothesis</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>construct_paths</span><span class='op'>(</span><span class='va'>study</span>, which_ones <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>hypothesis</th>
-      <td><p>A <code>hypothesis</code> object</p></td>
+      <th>study</th>
+      <td><p>A <code>study</code> object that contains <code>hypothesis</code> objects</p></td>
+    </tr>
+    <tr>
+      <th>which_ones</th>
+      <td><p>Vector of which hypothesis should be constructed. It
+defaults to NULL, which constructs all hypotheses that have not yet been
+processed. If a vector of names is given, will forcibly re-analyze them.</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Additional named arguments to pass (should be named components of
-a <code>hypothesis</code> object)</p></td>
+      <td><p>For extensibility</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>hypothesis</code> object</p>
+    <p>A <code>study</code> object with paths added</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other studies: 
+<code><a href='construct_models.html'>construct_models</a>()</code>,
+<code><a href='draw_hypothesis.html'>draw_hypothesis</a>()</code>,
+<code><a href='study.html'>study</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
