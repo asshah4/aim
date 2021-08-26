@@ -4,10 +4,10 @@
     <loc>https://asshah4.github.io/dagger//index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/construct_models.html</loc>
+    <loc>https://asshah4.github.io/dagger//reference/carve_out.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/construct_paths.html</loc>
+    <loc>https://asshah4.github.io/dagger//reference/construct_map.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/dagger-package.html</loc>
@@ -44,6 +44,9 @@
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/print.hypothesis.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/print.study.html</loc>

@@ -228,52 +228,6 @@
 <li>
 <code>collect_findings()</code> recalls information from the <code>project</code> structure in a flexible way</li>
 </ul>
-<p><strong>Defining the Structure</strong></p>
-<p>There should be a core function that establishes the underlying structure. Should the data be given at this time, or added in a separate function? Initialization should likely be a list structure due to its malleability.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">project</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><strong>Data Sets</strong></p>
-<p>It seems that it should be a specific, but necessary, step to add data. The data structure, hopefully <strong>tidy</strong>, would provide the parameters by column names. It may allow for creating more effective selection commands as well.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/modify_hypothesis.html">set_data</a></span><span class="op">(</span>
-  data <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
-<p><strong>Adding Hypotheses</strong></p>
-<p>This is probably the most important feature. A function such as <code>add_arm()</code> could help to stack on different potential tests.</p>
-<p>The complex part of this is that each <em>arm</em> would allow for variations of a hypothesis formula. Multiple predictors, multiple outcomes. In an epidemiological sense, its important that certain predictors are maintained as <em>exposures</em>. Each hypothesis thus needs to allow flexibility for the complexity of a model formula.</p>
-<ul>
-<li>Unique name for each arm, to be “pulled” later on</li>
-<li>A global formula or plan to be specified, and potentially varied or recombined (e.g. different “patterns” of combinations based on the testing strategy). It would be helpful to label certain variables as fixed exposures in some way as well.</li>
-<li>The type of “test” that is being used. This should likely draw from a common system, such as <code>parsnip</code>, to have consistent model representations. The other aspect would be more straightforward testing, such as from the <code>stats</code> base package.</li>
-<li>Subgroups of the data should be allowed to be analyzed via this as well. This is such a common pattern that it should likely be defined as a specific parameter.</li>
-</ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">add_arm</span><span class="op">(</span>
-  title <span class="op">=</span> <span class="st">"first_example"</span>,
-  description <span class="op">=</span> <span class="cn">NULL</span>,
-  plan <span class="op">=</span> <span class="va">outcome</span> <span class="op">~</span> <span class="va">exposure</span> <span class="op">+</span> <span class="va">covariate</span>,
-  exposure <span class="op">=</span> <span class="st">"exposure"</span>,
-  pattern <span class="op">=</span> <span class="st">"parallel"</span>,
-  test <span class="op">=</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/linear_reg.html">linear_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
-<p><strong>Running Tests</strong></p>
-<p>The ability to then run tests would be the next logical step. This capacity should allow for identifying if tests have already been run or not, and only run newly added components.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">build_models</span><span class="op">(</span>
-  run_all <span class="op">=</span> <span class="cn">FALSE</span>,
-  which_tests <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
-<p><strong>Data Extraction</strong></p>
-<p>The final structure of the project should be flexible in terms of extracting or pulling data. Its imagined as a list structure, and thus components could be called by the <code><a href="https://rdrr.io/r/base/Extract.html">$</a></code> operator. That depends on quality of names, and making sure they are well described.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">collect_findings</span><span class="op">(</span>
-  which_tests <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
-<p>This is an important and difficult process of deciding how the user should be able to visualize information and extract findings. This will end up including <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> and <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> functions as well.</p>
 </div>
 <div id="project-structure" class="section level3">
 <h3 class="hasAnchor">
@@ -290,20 +244,19 @@
 <h2 class="hasAnchor">
 <a href="#third-draft" class="anchor"></a>Third Draft</h2>
 <p>I realized this approach was not effective in that it was overly complicated in having multiple names, data frames, and connections between them. I simplified the pipeline to focus on a specific S3 classes that could be used to generate hypotheses, and iterate through to help look at variable relationship.</p>
-<div id="core-functions-1" class="section level3">
-<h3 class="hasAnchor">
-<a href="#core-functions-1" class="anchor"></a>Core Functions</h3>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/study.html">study</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu">add_hypothesis</span><span class="op">(</span><span class="va">hypothesis</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu">build_study</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Essentially, this was a list based concept of adding hypotheses to a modified list/tibble structure that had important data stored as attributes.</p>
 </div>
-</div>
 <div id="fourth-draft" class="section level2">
 <h2 class="hasAnchor">
 <a href="#fourth-draft" class="anchor"></a>Fourth Draft</h2>
 <p>I decided that I was not really seeing the big picture. What I wanted was a way to store a set of multiple tests with the purpose of studying the relationship between two variables (an exposure and an outcome), and potentially looking at covariates. The <em>basic</em> concept was essentially a <strong>directed acyclic graph</strong>, with the relationships storing the hypotheses that were tested. The functionality was the same, but the API was different.</p>
+<div id="classes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#classes" class="anchor"></a>Classes</h3>
 <p>The major classes needed would be …</p>
 <ul>
 <li>
@@ -313,6 +266,12 @@
 <li>
 <code>path</code> object that is extracted after the map has been drawn (if you will), should be able to be evaluated to help understand which variables may be confounders, etc</li>
 </ul>
+</div>
+<div id="confounding" class="section level3">
+<h3 class="hasAnchor">
+<a href="#confounding" class="anchor"></a>Confounding</h3>
+<p>A purpose of having parallel and sequential model sets, built into a hypothesis, was to identify confounding variables and help remove them.</p>
+</div>
 </div>
 </div>
   </div>
