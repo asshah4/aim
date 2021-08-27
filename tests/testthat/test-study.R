@@ -53,7 +53,7 @@ test_that("multiple hypotheses can be added and fitted", {
 	expect_equal(nrow(attr(f, "data_table")), 2)
 
 	# Unadjusted h1 and h2 should be the same
-	f <- f %>% construct_models()
+	f <- f %>% construct_map()
 	t1 <- fetch_tidy(f, "h1")
 	t2 <- fetch_tidy(f, "h2")
 	expect_identical(t1[[1]], t2[[1]])

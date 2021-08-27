@@ -6,8 +6,12 @@
 \usage{
 carve_out(study, name, ...)
 }
-\value{
-A \code{hypothesis} object
+\arguments{
+\item{study}{A \code{study} object that has been constructed}
+
+\item{name}{Name of a \code{hypothesis} object}
+
+\item{...}{For extensibility}
 }
 \description{
 Carve Out Confounders

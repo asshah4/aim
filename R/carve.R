@@ -1,6 +1,8 @@
 #' Carve Out Confounders
 #'
-#' @return A `hypothesis` object
+#' @param study A `study` object that has been constructed
+#' @param name Name of a `hypothesis` object
+#' @param ... For extensibility
 #' @export
 carve_out <- function(study, name, ...) {
 
