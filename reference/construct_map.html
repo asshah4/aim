@@ -45,14 +45,7 @@ This function allows for delayed building of multiple hypothesis. It uses the
 hypothesis objects with the corresponding test arguments against the
 prescribed data. Which hypotheses to run can be specified, which will
 forcibly re-run these, otherwise the default behavior is to only run models
-that have not yet been fitted.
-Simultaneously, Takes the hypothesis objects that were added to the study
-and decomposes them into specific paths that are used to help define
-relationships between variables. These paths are stored in the study itself
-in the form of a data.frame. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete." />
+that have not yet been fitted." />
 
 
 
@@ -147,13 +140,6 @@ This function allows for delayed building of multiple hypothesis. It uses the
 prescribed <strong>data</strong>. Which hypotheses to run can be specified, which will
 forcibly re-run these, otherwise the default behavior is to only run models
 that have not yet been fitted.</p>
-<p>Simultaneously, Takes the <code>hypothesis</code> objects that were added to the <code>study</code>
-and decomposes them into specific <strong>paths</strong> that are used to help define
-relationships between variables. These paths are stored in the <code>study</code> itself
-in the form of a <code>data.frame</code>. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete.</p>
     </div>
 
     <pre class="usage"><span class='fu'>construct_map</span><span class='op'>(</span><span class='va'>study</span>, which_ones <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span></pre>

@@ -152,7 +152,7 @@
 
 <span class="co"># Print study</span>
 <span class="va">m1</span>
-<span class="co">#&gt; # A study with 2 hypothesis and 0 unique paths</span>
+<span class="co">#&gt; # A study with 2 hypothesis and 5 unique paths</span>
 <span class="co">#&gt; # </span>
 <span class="co">#&gt; # A tibble: 6 × 7</span>
 <span class="co">#&gt;   name  outcome exposure number formulae  fit   tidy </span>
@@ -167,8 +167,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span>
     <span class="va">m1</span> <span class="op">%&gt;%</span>
-    <span class="fu">construct_paths</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">construct_models</span><span class="op">(</span><span class="op">)</span>
+    <span class="fu"><a href="reference/construct_map.html">construct_map</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Print analyzed study</span>
 <span class="va">m2</span>
@@ -182,7 +181,14 @@
 <span class="co">#&gt; 3 h1    mpg     wt            3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
 <span class="co">#&gt; 4 h2    mpg     wt            1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
 <span class="co">#&gt; 5 h2    mpg     wt            2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
-<span class="co">#&gt; 6 h2    mpg     wt            3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span></code></pre></div>
+<span class="co">#&gt; 6 h2    mpg     wt            3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
+
+<span class="co"># Plot analyzed study</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="va">m2</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/map_dag.html">map_dag</a></span><span class="op">(</span><span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu">ggdag</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggdag/man/ggdag.html">ggdag</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 <p>Then, for analysis and display of results, the findings can easily be extracted.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">%&gt;%</span> 
