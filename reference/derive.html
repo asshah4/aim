@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • dagger</title>
+<title>Derive Formula With Confounders — derive • dagger</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,15 @@
 
 
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Derive Formula With Confounders — derive" />
+<meta property="og:description" content="
+Removes confounders from a hypothesis object based on different approaches.
+sequential = The model is analyzed for each additional covariate
+added, looking for changes in effect size defined by the variable delta.
+If the change is significant, the covariate is maintained as a potential
+confounder, otherwise removed.
+
+" />
 
 
 
@@ -58,7 +66,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -120,132 +128,73 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Derive Formula With Confounders</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/derive.R'><code>R/derive.R</code></a></small>
+    <div class="hidden name"><code>derive.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a>
+Removes confounders from a hypothesis object based on different approaches.</p><ul>
+<li><p><strong>sequential</strong> = The model is analyzed for each additional covariate
+added, looking for changes in effect size defined by the variable <code>delta</code>.
+If the change is significant, the covariate is maintained as a potential
+confounder, otherwise removed.</p></li>
+</ul>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    </div>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="construct.html">construct()</a></code> </p>
-        </td>
-        <td><p>Construct Map</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="derive.html">derive()</a></code> </p>
-        </td>
-        <td><p>Derive Formula With Confounders</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="draw.html">draw()</a></code> </p>
-        </td>
-        <td><p>Draw Hypothesis onto Map</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
-        </td>
-        <td><p>Expand Formulae for a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="expand_paths.html">expand_paths()</a></code> </p>
-        </td>
-        <td><p>Expand Paths of a Formula</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="extract.html">extract()</a></code> </p>
-        </td>
-        <td><p>Extract a Model Hypothesis from a Study</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_calls.html">fit_calls()</a></code> </p>
-        </td>
-        <td><p>Fit a list of <code>htest</code> objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fit_parsnip_models.html">fit_parsnip_models()</a></code> </p>
-        </td>
-        <td><p>Fit a list of parsnip models</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
-        </td>
-        <td><p>Draw A Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="map_dag.html">map_dag()</a></code> </p>
-        </td>
-        <td><p>Map Out A Directed Acyclic Graph</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.hypothesis.html">print(<i>&lt;hypothesis&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a Hypothesis</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="print.study.html">print(<i>&lt;study&gt;</i>)</a></code> </p>
-        </td>
-        <td><p>Print a Study</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="retrieval.html">fetch_data()</a></code> <code><a href="retrieval.html">fetch_data_name()</a></code> <code><a href="retrieval.html">fetch_strata()</a></code> <code><a href="retrieval.html">fetch_test()</a></code> <code><a href="retrieval.html">fetch_test_opts()</a></code> <code><a href="retrieval.html">fetch_combination()</a></code> <code><a href="retrieval.html">fetch_formulae()</a></code> <code><a href="retrieval.html">fetch_call()</a></code> <code><a href="retrieval.html">fetch_tidy()</a></code> <code><a href="retrieval.html">fetch_raw()</a></code> <code><a href="retrieval.html">fetch_names()</a></code> </p>
-        </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="study.html">study()</a></code> </p>
-        </td>
-        <td><p>Mapping Many Hypotheses Together</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
-        </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
-      </tr>
-    </tbody>
+    <pre class="usage"><span class='fu'>derive</span><span class='op'>(</span>
+  <span class='va'>study</span>,
+  <span class='va'>name</span>,
+  new_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>"_cut"</span><span class='op'>)</span>,
+  delta <span class='op'>=</span> <span class='fl'>0.1</span>,
+  return_study <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
+
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>study</th>
+      <td><p>A <code>study</code> object that has been constructed</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name of a an existing <code>hypothesis</code> object</p></td>
+    </tr>
+    <tr>
+      <th>new_name</th>
+      <td><p>Name of the new <code>hypothesis</code> that is created after checking
+for confounding. Defaults to modifying the original <strong>name</strong> by appending
+<code>*_cut</code>.</p></td>
+    </tr>
+    <tr>
+      <th>delta</th>
+      <td><p>Percent change to be used as cut-off for considering an
+important change in the outcome ~ exposure relationship. Defaults to
+<strong>0.10</strong> as supported by the epidemiology literature.</p></td>
+    </tr>
+    <tr>
+      <th>return_study</th>
+      <td><p>Logical option for returning an updated <code>study</code> object or a list of <code>hypothesis</code> object. Defaults to TRUE, indicating the study should be returned.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>For extensibility</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Either a <code>study</code> object, invisibly, that has been updated with a modified
+<code>hypothesis</code> or the modified <code>hypothesis</code> object on their own in a list,
+set by the user.</p>
+
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
