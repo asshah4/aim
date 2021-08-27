@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   development: development.html
-last_built: 2021-08-27T11:50Z
+last_built: 2021-08-27T12:02Z
 urls:
   reference: https://asshah4.github.io/dagger//reference
   article: https://asshah4.github.io/dagger//articles
