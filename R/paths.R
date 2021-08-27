@@ -34,7 +34,7 @@ expand_paths <- function(formula, ...) {
 	}}
 
 	# Return list of paths
-	paths
+	unique(paths)
 
 }
 
@@ -56,8 +56,8 @@ map_dag <- function(study, name, tidy = FALSE) {
 	p <- study$path_map
 	f <- p$formulae
 
-	exp <- unique(p$exposure[p$name == name])
-	out <- unique(p$outcome[p$name == name])
+	exp <- unique(p$exposures[p$name == name])
+	out <- unique(p$outcomes[p$name == name])
 
 	if (tidy) {
 		rlang::exec(ggdag::dagify, !!!f, exposure = exp, outcome = out) %>%

@@ -15,27 +15,31 @@ test_that("models can be extracted if available", {
 
 	x <-
 		study() %>%
-		draw_hypothesis(h1)
+		draw(h1)
 
 	# Extract unfitted should error
-	expect_error(extract_models(x))
+	expect_error({
+		extract_models(x)
+	})
 
 	# Fit some models
 	y <-
 		x %>%
-		construct_map() %>%
-		draw_hypothesis(h2)
+		construct() %>%
+		draw(h2)
 
 	# Extract tidy models
-	m <- extract_models(y)
+	m <- extract(y)
 	expect_length(m, 11)
 	expect_equal(nrow(m), 6)
 
 	# Extract raw models
-	m <- extract_models(y, tidy = FALSE)
-	expect_named(m, expected = c("name", "outcome", "exposure", "number", "fit"))
+	m <- extract(y, tidy = FALSE)
+	expect_named(m, expected = c("name", "outcomes", "exposures", "number", "fit"))
 
 	# Message on pulling unfitted model by name
-	expect_message(extract_models(y, which_ones = "h2"))
+	expect_message({
+		extract(y, which_ones = "h2")
+	})
 
 })

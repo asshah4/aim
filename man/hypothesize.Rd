@@ -8,7 +8,16 @@
 \usage{
 hypothesize(h, ...)
 
-\method{hypothesize}{formula}(h, combination, test, test_opts = NULL, data, strata = NULL, ...)
+\method{hypothesize}{formula}(
+  h,
+  combination,
+  test,
+  test_opts = NULL,
+  data,
+  strata = NULL,
+  origin = "independent",
+  ...
+)
 
 \method{hypothesize}{default}(h, ...)
 }
@@ -61,6 +70,9 @@ splitting the data into subsets. This helps to perform hypothesis testing
 on subsets or strata of the data. It defaults to NULL (which means the full
 data will be used). This argument will only be incorporated if \code{data} is
 present.}
+
+\item{origin}{Variable that serves as an attribute to help track the
+hypothesis evolution through the study.}
 }
 \value{
 An object of class \code{hypothesis}

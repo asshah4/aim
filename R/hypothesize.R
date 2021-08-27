@@ -55,6 +55,9 @@
 #'   data will be used). This argument will only be incorporated if `data` is
 #'   present.
 #'
+#' @param origin Variable that serves as an attribute to help track the
+#'   hypothesis evolution through the study.
+#'
 #' @param ... For additional variables based on the generic method invoked.
 #'
 #' @section Warning:
@@ -78,6 +81,7 @@ hypothesize.formula <- function(h,
 																test_opts = NULL,
 																data,
 																strata = NULL,
+																origin = "independent",
 																...) {
 
 	# Check for test_opts
@@ -99,7 +103,8 @@ hypothesize.formula <- function(h,
 		test_opts = test_opts,
 		data = data,
 		data_name = data_name,
-		strata = strata
+		strata = strata,
+		origin = origin
 	)
 
 	# Validate
@@ -127,7 +132,8 @@ new_hypothesis <- function(hypothesis,
 													 test_opts,
 													 data,
 													 data_name,
-													 strata) {
+													 strata,
+													 origin) {
 
 	structure(
 		hypothesis,
@@ -137,6 +143,7 @@ new_hypothesis <- function(hypothesis,
 		data = data, # Unnamed data
 		data_name = data_name, # Name of data frame
 		strata = strata, # Name of variable for stratification
+		origin = origin, # How the hypothesis was generated
 		class = c("hypothesis", class(hypothesis)) # Class definition
 	)
 

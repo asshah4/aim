@@ -3,7 +3,10 @@
 \name{retrieval}
 \alias{retrieval}
 \alias{fetch_data}
+\alias{fetch_data_name}
+\alias{fetch_strata}
 \alias{fetch_test}
+\alias{fetch_test_opts}
 \alias{fetch_combination}
 \alias{fetch_formulae}
 \alias{fetch_call}
@@ -14,7 +17,13 @@
 \usage{
 fetch_data(x, name)
 
+fetch_data_name(x, name)
+
+fetch_strata(x, name)
+
 fetch_test(x, name)
+
+fetch_test_opts(x, name)
 
 fetch_combination(x, name)
 

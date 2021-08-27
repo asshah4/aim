@@ -29,7 +29,7 @@
 #'
 #' @family studies
 #' @export
-draw_hypothesis <- function(study,
+draw <- function(study,
 														hypothesis,
 														name = deparse(substitute(hypothesis)),
 														...) {
@@ -46,7 +46,7 @@ draw_hypothesis <- function(study,
 										 name,
 										 run = FALSE,
 										 path = FALSE,
-										 origin = NA)
+										 origin = attr(hypothesis, "origin"))
 
 	# Paths can subsequently be added
 	study <-

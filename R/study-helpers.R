@@ -46,13 +46,30 @@ fetch_data <- function(x, name) {
 
 	y <- attributes(x)$data_table
 	data_name <- y$data_name[y$name == name]
-
 	z <- attributes(x)$data_list
 	index <- match(data_name, z$data_name)
 	data <- z$data[[index]]
-
-	# Returns data
 	data
+
+}
+
+#' @rdname retrieval
+#' @export
+fetch_data_name <- function(x, name) {
+
+	y <- attributes(x)$data_table
+	data_name <- y$data_name[y$name == name]
+	data_name
+
+}
+
+#' @rdname retrieval
+#' @export
+fetch_strata <- function(x, name) {
+
+	y <- attributes(x)$data_table
+	strata <- y$strata[y$name == name]
+	strata
 
 }
 
@@ -61,13 +78,18 @@ fetch_data <- function(x, name) {
 fetch_test <- function(x, name) {
 
 	y <- attributes(x)$test_table
-	if (y$type[y$name == name] == "model_spec") {
-		index <- match(name, y$name)
-		test <- y$test[[index]]
-	}
-
-	# Return
+	test <- unique(y$test[y$name == name])[[1]]
 	test
+
+}
+
+#' @rdname retrieval
+#' @export
+fetch_test_opts <- function(x, name) {
+
+	y <- attributes(x)$test_table
+	test_opts <- unique(y$test_opts[y$name == name])[[1]]
+	test_opts
 
 }
 
@@ -77,8 +99,6 @@ fetch_combination <- function(x, name) {
 
 	y <- attributes(x)$test_table
 	combination <- y$combination[y$name == name]
-
-	# Return
 	combination
 
 }
@@ -89,8 +109,6 @@ fetch_formulae <- function(x, name) {
 
 	y <- x$model_map
 	formulae <- y$formulae[y$name == name]
-
-	# Return
 	formulae
 
 }
@@ -99,11 +117,8 @@ fetch_formulae <- function(x, name) {
 #' @export
 fetch_call <- function(x, name) {
 
-
 	y <- attr(x, "test_table")
 	cl <- y$call[y$name == name][[1]]
-
-	# Return
 	cl
 
 }
@@ -114,8 +129,6 @@ fetch_tidy <- function(x, name) {
 
 	y <- x$model_map
 	res <- y$tidy[y$name == name]
-
-	# Return
 	res
 
 }
@@ -126,8 +139,6 @@ fetch_raw <- function(x, name) {
 
 	y <- x$model_map
 	res <- y$fit[y$name == name]
-
-	# Return
 	res
 
 }
@@ -184,10 +195,22 @@ add_study_formula <- function(study, hypothesis, name) {
 			tibble::add_row(
 				name = name,
 				number = parameters$number[i],
-				outcome = parameters$outcomes[i],
-				exposure = parameters$exposures[i],
+				outcomes = parameters$outcomes[i],
+				exposures = parameters$exposures[i],
 				formulae = parameters$formulae[i]
-			)
+			) %>%
+			unique()
+
+		# Store the key variables
+		attributes(study)$var_table <-
+			attributes(study)$var_table %>%
+			tibble::add_row(
+				name = name,
+				outcomes = parameters$outcomes[i],
+				exposures = parameters$exposures[i],
+				confounders = list(NA)
+			) %>%
+			unique()
 	}
 
 	# Return
@@ -212,7 +235,7 @@ add_study_path <- function(study, name) {
 
 		# Terms
 		f <- models[i, ]$formulae[[1]]
-		exp <- models[i, ]$exposure[[1]]
+		exp <- models[i, ]$exposures[[1]]
 		out <- as.character(f[[2]])
 
 		# Path formulas
@@ -224,15 +247,16 @@ add_study_path <- function(study, name) {
 				study$path_map %>%
 				tibble::add_row(
 					name = name,
-					outcome = out,
-					exposure = exp,
+					outcomes = out,
+					exposures = exp,
 					formulae = paths[j],
 					from = as.character(paths[[j]][[3]]),
 					direction = "->",
 					to = as.character(paths[[j]][[2]]),
 					type = NA,
 					related = NA
-				)
+				) %>%
+				.[!duplicated(.[1:6]), ]
 		}
 	}
 
@@ -250,12 +274,13 @@ add_study_test <- function(study, hypothesis, name) {
 		attr(study, "test_table") %>%
 		tibble::add_row(
 			name = name,
-			call = list(stats::formula(stats::terms(hypothesis))),
+			call = deparse(stats::formula(stats::terms(hypothesis))),
 			test = list(attributes(hypothesis)$test),
 			test_opts = attributes(hypothesis)$test_opts,
 			combination = attributes(hypothesis)$combination,
 			type = utils::tail(class(attributes(hypothesis)$test), 1)
-		)
+		) %>%
+		unique()
 
 	# Return
 	invisible(study)
@@ -275,7 +300,8 @@ add_study_data <- function(study, hypothesis, name) {
 			name = name,
 			data_name = attributes(hypothesis)$data_name,
 			strata = attributes(hypothesis)$strata
-		)
+		) %>%
+		unique()
 
 	# Data list (to minimize too many data sets)
 	attributes(study)$data_list <-
@@ -311,7 +337,8 @@ add_study_status <- function(study,
 			path = path,
 			error = error,
 			origin = origin
-		)
+		) %>%
+		unique()
 
 	# Return study
 	invisible(study)

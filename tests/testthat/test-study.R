@@ -9,7 +9,7 @@ test_that("hypothesis can be added to study", {
 		)
 
 	f <- study() %>%
-		draw_hypothesis(h)
+		draw(h)
 
 	expect_s3_class(f, "study")
 })
@@ -25,8 +25,8 @@ test_that("study can be fitted", {
 
 	f <-
 		study() %>%
-		draw_hypothesis(hyp) %>%
-		construct_map()
+		draw(hyp) %>%
+		construct()
 
 	expect_type(f$model_map$fit, "list")
 	expect_s3_class(f$model_map$tidy[[1]], "tbl_df")
@@ -44,8 +44,8 @@ test_that("multiple hypotheses can be added and fitted", {
 
 	f <-
 		study() %>%
-		draw_hypothesis(h1) %>%
-		draw_hypothesis(h2)
+		draw(h1) %>%
+		draw(h2)
 
 	# Should be a list of formulas with only a single data set saved
 	expect_equal(nrow(f$model_map), 4)
@@ -53,7 +53,7 @@ test_that("multiple hypotheses can be added and fitted", {
 	expect_equal(nrow(attr(f, "data_table")), 2)
 
 	# Unadjusted h1 and h2 should be the same
-	f <- f %>% construct_map()
+	f <- f %>% construct()
 	t1 <- fetch_tidy(f, "h1")
 	t2 <- fetch_tidy(f, "h2")
 	expect_identical(t1[[1]], t2[[1]])

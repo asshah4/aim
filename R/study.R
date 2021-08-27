@@ -19,10 +19,10 @@ study <- function(...) {
 	# Base structure is that of a list of two tibbles
 	study <- list(
 		model_map = tibble::tribble(
-			~name, ~outcome, ~exposure, ~number, ~formulae, ~fit, ~tidy
+			~name, ~outcomes, ~exposures, ~number, ~formulae, ~fit, ~tidy
 		),
 		path_map = tibble::tribble(
-			~name, ~outcome, ~exposure, ~from, ~direction, ~to, ~formulae, ~type, ~related
+			~name, ~outcomes, ~exposures, ~from, ~direction, ~to, ~formulae, ~type, ~related
 		)
 	)
 
@@ -44,6 +44,11 @@ study <- function(...) {
 	# Recording of status updates
 	attr(study, "status_table") <- tibble::tribble(
 		~name, ~run, ~path, ~error, ~origin
+	)
+
+	# Variable table
+	attr(study, "var_table") <- tibble::tribble(
+		~name, ~outcomes, ~exposures, ~confounders, ~fixed
 	)
 
 	# Return

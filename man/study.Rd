@@ -25,7 +25,7 @@ object itself.
 }
 \seealso{
 Other studies: 
-\code{\link{construct_map}()},
-\code{\link{draw_hypothesis}()}
+\code{\link{construct}()},
+\code{\link{draw}()}
 }
 \concept{studies}

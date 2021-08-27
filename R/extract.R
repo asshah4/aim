@@ -14,7 +14,7 @@
 #'
 #' @param ... For extensibility
 #' @export
-extract_models <- function(study, which_ones = NULL, tidy = TRUE, ...) {
+extract <- function(study, which_ones = NULL, tidy = TRUE, ...) {
 
 	# Validate
 	validate_class(study, "study")
@@ -38,13 +38,13 @@ extract_models <- function(study, which_ones = NULL, tidy = TRUE, ...) {
 
 		study$model_map %>%
 			.[.$name %in% x$name, ] %>%
-			.[c("name", "outcome", "exposure", "number", "fit")]
+			.[c("name", "outcomes", "exposures", "number", "fit")]
 
 	} else if (nrow(x) > 0 & tidy) {
 
 		study$model_map %>%
 			.[.$name %in% x$name, ] %>%
-			.[c("name", "outcome", "exposure", "number", "tidy")] %>%
+			.[c("name", "outcomes", "exposures", "number", "tidy")] %>%
 			tidyr::unnest(tidy)
 
 	} else {

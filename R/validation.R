@@ -11,6 +11,11 @@ validate_hypothesis <- function(h) {
 	# Combination
 	validate_class(attr(h, "combination"), "character")
 
+	# Check optional parameters
+
+	# Return check
+	invisible(TRUE)
+
 }
 
 #' Validation of class inheritance
