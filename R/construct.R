@@ -8,14 +8,6 @@
 #' forcibly re-run these, otherwise the default behavior is to only run models
 #' that have not yet been fitted.
 #'
-#' Simultaneously, Takes the `hypothesis` objects that were added to the `study`
-#' and decomposes them into specific **paths** that are used to help define
-#' relationships between variables. These paths are stored in the `study` itself
-#' in the form of a `data.frame`. This is currently experimental in that the
-#' directionality, relationships, and patterns are intended to be used to help
-#' identify certain variables for future modeling, but the implementation is not
-#' yet complete.
-#'
 #' @return Invisibly returns a `study` object that has the hypotheses mapped to
 #'   it, including fits and paths
 #'
@@ -76,52 +68,6 @@ construct_map <- function(study, which_ones = NULL, ...) {
 
 	# Replace model data
 	study$model_map <- m
-
-	# Now create paths
-	if (nrow(x) > 0) {
-		for (i in 1:nrow(x)) {
-			name <- x$name[i]
-
-			# List of appropriate models
-			models <-
-				study$model_map %>%
-				.[.$name == name, ] %>%
-				.[.$number == max(.$number), ] %>%
-				unique()
-
-			for (j in 1:nrow(models)) {
-
-				# Terms
-				f <- models[j, ]$formulae[[1]]
-				exp <- models[j, ]$exposure[[1]]
-				out <- as.character(f[[2]])
-
-				# Path formulas
-				paths <- expand_paths(f)
-
-				# Create paths and update original data
-				for (k in 1:length(paths)) {
-					study$path_map <-
-						study$path_map %>%
-						tibble::add_row(
-							name = name,
-							outcome = out,
-							exposure = exp,
-							formulae = paths[k],
-							from = as.character(paths[[k]][[3]]),
-							direction = "->",
-							to = as.character(paths[[k]][[2]]),
-							type = NA,
-							related = NA
-						)
-				}
-			}
-
-			# Update status
-			study <-
-				update_study_status(study, name, path = TRUE)
-		}
-	}
 
 	# Return
 	invisible(study)

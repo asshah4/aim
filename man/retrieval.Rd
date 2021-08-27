@@ -6,6 +6,7 @@
 \alias{fetch_test}
 \alias{fetch_combination}
 \alias{fetch_formulae}
+\alias{fetch_call}
 \alias{fetch_tidy}
 \alias{fetch_raw}
 \alias{fetch_names}
@@ -18,6 +19,8 @@ fetch_test(x, name)
 fetch_combination(x, name)
 
 fetch_formulae(x, name)
+
+fetch_call(x, name)
 
 fetch_tidy(x, name)
 

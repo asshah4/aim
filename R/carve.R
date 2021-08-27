@@ -4,41 +4,40 @@
 #' @export
 carve_out <- function(study, name, ...) {
 
-	m <- study$model_map %>%
-		.[.$name == name, ]
-	p <- study$path_map %>%
-		.[.$name == name, ]
-
+	# Get variables
 	combination <- fetch_combination(study, name)
 	data <- fetch_data(study, name)
 	test <- fetch_test(study, name)
 	formulae <- fetch_formulae(study, name)
 
-	# In sequential models, care about the relationship between exposure and outcome
-	# When each covariate is added, care about if it changes y ~ x relationship
-	x <- extract_models(study, name)
-	y <- x[x$term == x$exposure, ]
+	switch(
+		combination,
+		sequential = {
 
-	t <- attr(study, "test_table")
-	t$call
+			# In sequential models, care about the relationship between exposure and outcome
+			# When each covariate is added, care about if it changes y ~ x relationship
+			x <- extract_models(study, name)
+			y <- x[x$term == x$exposure, ]
 
-	# Look for change in effect size
-	n <- nrow(y)
-	confounders
-	f <- tail(formulae, n = 1)[[1]]
-	labels(stats::terms(f))
-	delta <- 0.10
+			# Look for change in effect size
+			n <- nrow(y)
+			f <- formulae[[n]]
+			confounders <- labels(stats::terms(f))[-1]
+			delta <- 0.10
 
-	for (i in 2:n) {
-		base_est <- y$estimate[y$number == (i - 1)]
-		new_est <- y$estimate[y$number == i]
-		delta_est <- abs(base_est - new_est) / base_est
-		if (abs(delta_est) > delta) {
-			confounders[i - 1]
-			x$term[x$number == i]
-			confounders[i - 1] <- y$term[y$number == i & y$term == vars[i]]
+			for (i in 2:n) {
+				base_est <- y$estimate[y$number == (i - 1)]
+				new_est <- y$estimate[y$number == i]
+				delta_est <- abs(base_est - new_est) / base_est
+				if (!(abs(delta_est) > delta)) {
+					confounders[i - 1] <- NA
+				}
+			}
+
+			# Remove NA variables, leaving behind only that which should be adjusted
+			confounders <- na.omit(confounders)
 		}
-	}
+	)
 
 }
 

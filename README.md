@@ -102,7 +102,7 @@ m1 <-
 
 # Print study
 m1
-#> # A study with 2 hypothesis and 0 unique paths
+#> # A study with 2 hypothesis and 5 unique paths
 #> # 
 #> # A tibble: 6 × 7
 #>   name  outcome exposure number formulae  fit   tidy 
@@ -123,8 +123,7 @@ or selectively.
 ``` r
 m2 <-
     m1 %>%
-    construct_paths() %>%
-    construct_models()
+    construct_map()
 
 # Print analyzed study
 m2
@@ -139,7 +138,15 @@ m2
 #> 4 h2    mpg     wt            1 <formula> <fit[+]> <tibble [2 × 7]>
 #> 5 h2    mpg     wt            2 <formula> <fit[+]> <tibble [3 × 7]>
 #> 6 h2    mpg     wt            3 <formula> <fit[+]> <tibble [4 × 7]>
+
+# Plot analyzed study
+library(ggplot2)
+m2 %>%
+    map_dag("h1", tidy = TRUE) %>%
+    ggdag::ggdag()
 ```
+
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
 
 Then, for analysis and display of results, the findings can easily be
 extracted.

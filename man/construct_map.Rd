@@ -26,14 +26,6 @@ This function allows for delayed building of multiple hypothesis. It uses the
 prescribed \strong{data}. Which hypotheses to run can be specified, which will
 forcibly re-run these, otherwise the default behavior is to only run models
 that have not yet been fitted.
-
-Simultaneously, Takes the \code{hypothesis} objects that were added to the \code{study}
-and decomposes them into specific \strong{paths} that are used to help define
-relationships between variables. These paths are stored in the \code{study} itself
-in the form of a \code{data.frame}. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete.
 }
 \seealso{
 Other studies: 

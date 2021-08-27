@@ -195,6 +195,50 @@ add_study_formula <- function(study, hypothesis, name) {
 
 }
 
+#' @rdname modify_study
+#' @keywords internal
+#' @export
+add_study_path <- function(study, name) {
+
+	# Must be called AFTER the formulas have been decomposed
+	# List of appropriate models
+	models <-
+		study$model_map %>%
+		.[.$name == name, ] %>%
+		.[.$number == max(.$number), ] %>%
+		unique()
+
+	for (i in 1:nrow(models)) {
+
+		# Terms
+		f <- models[i, ]$formulae[[1]]
+		exp <- models[i, ]$exposure[[1]]
+		out <- as.character(f[[2]])
+
+		# Path formulas
+		paths <- expand_paths(f)
+
+		# Create paths and update original data
+		for (j in 1:length(paths)) {
+			study$path_map <-
+				study$path_map %>%
+				tibble::add_row(
+					name = name,
+					outcome = out,
+					exposure = exp,
+					formulae = paths[j],
+					from = as.character(paths[[j]][[3]]),
+					direction = "->",
+					to = as.character(paths[[j]][[2]]),
+					type = NA,
+					related = NA
+				)
+		}
+	}
+
+	# Return
+	invisible(study)
+}
 
 #' @rdname modify_study
 #' @keywords internal

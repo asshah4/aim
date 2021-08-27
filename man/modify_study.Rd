@@ -3,6 +3,7 @@
 \name{modify_study}
 \alias{modify_study}
 \alias{add_study_formula}
+\alias{add_study_path}
 \alias{add_study_test}
 \alias{add_study_data}
 \alias{add_study_status}
@@ -10,6 +11,8 @@
 \title{Study Modifications}
 \usage{
 add_study_formula(study, hypothesis, name)
+
+add_study_path(study, name)
 
 add_study_test(study, hypothesis, name)
 

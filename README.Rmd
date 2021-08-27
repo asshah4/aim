@@ -82,11 +82,16 @@ Subsequently, we can fit the models and add the paths that were required. The **
 ```{r}
 m2 <-
 	m1 %>%
-	construct_paths() %>%
-	construct_models()
+	construct_map()
 
 # Print analyzed study
 m2
+
+# Plot analyzed study
+library(ggplot2)
+m2 %>%
+	map_dag("h1", tidy = TRUE) %>%
+	ggdag::ggdag()
 ```
 
 Then, for analysis and display of results, the findings can easily be extracted.

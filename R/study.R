@@ -1,5 +1,3 @@
-# Core Functions ----
-
 #' Mapping Many Hypotheses Together
 #'
 #' Calling `study()` initializes a list object that stores `hypothesis` objects,
@@ -56,47 +54,6 @@ study <- function(...) {
 
 }
 
-#' Draw Hypothesis onto Map
-#'
-#' Takes a `hypothesis` object and adds it to a `study`, allowing multiple
-#' potential hypotheses to be put together for eventual analysis and comparison.
-#'
-#' @return A `study` object that has had a `hypothesis` added
-#'
-#' @param study Object of class `study`
-#'
-#' @param hypothesis Object of class `hypothesis` (which may or may not include
-#'   data already added)
-#'
-#' @param name Name of the `hypothesis` object, which defaults to the name of
-#'   the `hypothesis` object itself
-#'
-#' @param ... For extensibility
-#'
-#' @family studies
-#' @export
-draw_hypothesis <- function(study,
-														hypothesis,
-														name = deparse(substitute(hypothesis)),
-														...) {
-
-	validate_class(study, "study")
-
-	# The hypothesis should be broken down to be incorporated into the study
-	study <-
-		study %>%
-		add_study_formula(hypothesis, name) %>%
-		add_study_test(hypothesis, name) %>%
-		add_study_data(hypothesis, name) %>%
-		add_study_status(hypothesis,
-										 name,
-										 run = FALSE,
-										 path = FALSE,
-										 origin = NA)
-
-	# Return
-	study
-}
 
 # Generics ----
 
