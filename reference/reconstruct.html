@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Derive Formula With Confounders — derive • dagger</title>
+<title>Reconstruct a Hypothesis — reconstruct • dagger</title>
 
 
 <!-- jquery -->
@@ -39,20 +39,9 @@
 
 
 
-<meta property="og:title" content="Derive Formula With Confounders — derive" />
+<meta property="og:title" content="Reconstruct a Hypothesis — reconstruct" />
 <meta property="og:description" content="
-Removes confounders from a hypothesis object based on different approaches.
-sequential = The model is analyzed for each additional covariate
-added, looking for changes in effect size defined by the variable delta.
-If the change is significant, the covariate is maintained as a potential
-confounder, otherwise removed.
-parallel = The parallel models are analyzed for the effect of each
-individual covariate that was tested against the outcome ~ exposure
-relationship. The change in effect size of that relationship is examined
-for being of size delta. If so, the covariate is retained as a potential
-confounder (or otherwise removed).
-
-" />
+Modify a hypothesis within a study with different approaches." />
 
 
 
@@ -135,28 +124,23 @@ confounder (or otherwise removed).
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Derive Formula With Confounders</h1>
+    <h1>Reconstruct a Hypothesis</h1>
     <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/derive.R'><code>R/derive.R</code></a></small>
-    <div class="hidden name"><code>derive.Rd</code></div>
+    <div class="hidden name"><code>reconstruct.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>Removes confounders from a hypothesis object based on different approaches.</p><ul>
-<li><p><strong>sequential</strong> = The model is analyzed for each additional covariate
-added, looking for changes in effect size defined by the variable <code>delta</code>.
-If the change is significant, the covariate is maintained as a potential
-confounder, otherwise removed.</p></li>
-<li><p><strong>parallel</strong> = The parallel models are analyzed for the effect of each
-individual covariate that was tested against the <em>outcome ~ exposure</em>
-relationship. The change in effect size of that relationship is examined
-for being of size <code>delta</code>. If so, the covariate is retained as a potential
-confounder (or otherwise removed).</p></li>
-</ul>
-
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a>
+Modify a <code>hypothesis</code> within a study with different approaches.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>derive</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, new_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>"_cut"</span><span class='op'>)</span>, delta <span class='op'>=</span> <span class='fl'>0.1</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>reconstruct</span><span class='op'>(</span>
+  <span class='va'>study</span>,
+  <span class='va'>name</span>,
+  new_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>"_cut"</span><span class='op'>)</span>,
+  approach <span class='op'>=</span> <span class='st'>"confounding"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -170,10 +154,17 @@ confounder (or otherwise removed).</p></li>
       <td><p>Name of a an existing <code>hypothesis</code> object</p></td>
     </tr>
     <tr>
-      <th>delta</th>
-      <td><p>Percent change to be used as cut-off for considering an
-important change in the outcome ~ exposure relationship. Defaults to
-<strong>0.10</strong> as supported by the epidemiology literature.</p></td>
+      <th>new_name</th>
+      <td><p>Name of the new <code>hypothesis</code> that is created after
+modification. Defaults to modifying the original <strong>name</strong> by appending
+<code>*_cut</code>.</p></td>
+    </tr>
+    <tr>
+      <th>approach</th>
+      <td><p>String that informs <em>how</em> to reconstruct the
+hypothesis. Options include:</p><ul>
+<li><p><strong>confounding</strong> = Check for relevant terms based on [<code><a href='derive.html'>derive()</a></code>]</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>...</th>
@@ -183,7 +174,7 @@ important change in the outcome ~ exposure relationship. Defaults to
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of <code>hypothesis</code> objects that have been modified</p>
+    <p>A <code>study</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
