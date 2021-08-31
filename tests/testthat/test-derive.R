@@ -1,20 +1,25 @@
 test_that("confounders can be found and manipulated", {
 	library(parsnip)
-	h <-
+	h = mpg + wt ~ X(hp) + X(qsec) + hp + disp + drat + cyl
+	test = linear_reg() %>% set_engine("lm")
+
+	h1 <-
 		hypothesize(
-			mpg + hp ~ X(wt) + cyl,
-			combination = "sequential",
-			test = linear_reg() %>% set_engine("lm"),
-			data = mtcars
+			h,
+			combination = "parallel",
+			test = test,
+			data = mtcars,
 		)
+	h2 <- update_hypothesis(h1, combination = "sequential")
 
 	x <-
 		study() %>%
-		draw(h) %>%
+		draw(h1) %>%
+		draw(h2) %>%
 		construct() %>%
-		derive("h") %>%
-		construct() %>%
-		extract("h_cut")
+		reconstruct("h2") %>%
+		reconstruct("h1") %>%
+		extract("h2_cut")
 
 	expect_length(x, 11)
 

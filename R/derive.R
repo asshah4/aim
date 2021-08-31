@@ -2,6 +2,7 @@
 #'
 #' @description
 #' `r lifecycle::badge('experimental')`
+#'
 #' Removes confounders from a hypothesis object based on different approaches.
 #'
 #'   * __sequential__ = The model is analyzed for each additional covariate
@@ -9,23 +10,21 @@
 #'   If the change is significant, the covariate is maintained as a potential
 #'   confounder, otherwise removed.
 #'
-#' @return Either a `study` object, invisibly, that has been updated with a modified
-#'   `hypothesis` or the modified `hypothesis` object on their own in a list,
-#'   set by the user.
+#'   * __parallel__ = The parallel models are analyzed for the effect of each
+#'   individual covariate that was tested against the _outcome ~ exposure_
+#'   relationship. The change in effect size of that relationship is examined
+#'   for being of size `delta`. If so, the covariate is retained as a potential
+#'   confounder (or otherwise removed).
+#'
+#' @return A list of `hypothesis` objects that have been modified
 #'
 #' @param study A `study` object that has been constructed
 #'
 #' @param name Name of a an existing `hypothesis` object
 #'
-#' @param new_name Name of the new `hypothesis` that is created after checking
-#'   for confounding. Defaults to modifying the original **name** by appending
-#'   `*_cut`.
-#'
 #' @param delta Percent change to be used as cut-off for considering an
 #'   important change in the outcome ~ exposure relationship. Defaults to
 #'   **0.10** as supported by the epidemiology literature.
-#'
-#' @param return_study Logical option for returning an updated `study` object or a list of `hypothesis` object. Defaults to TRUE, indicating the study should be returned.
 #'
 #' @param ... For extensibility
 #' @export
@@ -33,7 +32,6 @@ derive <- function(study,
 									 name,
 									 new_name = paste0(name, "_cut"),
 									 delta = 0.10,
-									 return_study = TRUE,
 									 ...) {
 
 	# Get variables
@@ -45,6 +43,9 @@ derive <- function(study,
 	strata				<- fetch_strata(study, name)
 	formulae			<- fetch_formulae(study, name)
 	vars					<- attributes(study)$var_table
+
+	# The test needs to have been run already for analysis
+	check_hypothesis(study, name, run = TRUE)
 
 	switch(
 		combination,
@@ -98,6 +99,46 @@ derive <- function(study,
 			}
 		},
 		parallel = {
+			# In a parallel combination, the relationship should be y ~ x + c
+
+			# Check for each unique outcome, and for each unique exposure combination
+			m <-
+				study$model_map %>%
+				.[.$name == name,]
+			x <- extract(study, name)
+			out <- unique(x$outcomes)
+			exp <- unique(x$exposures)
+
+			for (i in out) {
+				for (j in exp) {
+
+					# Need base estimate relationsihp
+					f <- stats::formula(paste(i, j, sep = " ~ "))
+					effect <-
+						fit_parsnip_models(list(f), test, .data = data) %>%
+						tidy_tests() %>%
+						.[[1]]
+					base_est <- effect$estimate[effect$term == j]
+
+					# Subset of models for comparison
+					y <- x[x$outcomes == i & x$exposures == j, ]
+					z <- subset(y, term == j)
+					z$delta <- abs((base_est - z$estimate) / base_est)
+					n <- z$number[z$delta > delta]
+
+					confounders <-
+						y %>%
+						.[.$number %in% n, ] %>%
+						.[!(.$term %in% c("(Intercept)", j)), ] %>%
+						.$term
+
+					# Update variable table to include confounders
+					vars$confounders[vars$name == name &
+													 	vars$outcomes == i &
+													 	vars$exposures == j] <- list(confounders)
+
+				}
+			}
 
 		}
 	)
@@ -105,77 +146,87 @@ derive <- function(study,
 	# Return to confounders to the study
 	attr(study, "var_table") <- vars
 
-	# Return the study, if indicated
-	if (return_study) {
-		x <- vars[vars$name == name,]
-		n <- nrow(x)
-		for (i in 1:n) {
+	# Create and return a list of hypothesis objects
 
-			f <-
-				paste(x$confounders[[i]], collapse = " + ") %>%
-				paste(paste0("X(", x$exposures[i], ")"), ., sep = " + ") %>%
-				paste(x$outcomes[i], ., sep = " ~ ") %>%
-				stats::formula()
+	x <- vars[vars$name == name,]
+	n <- nrow(x)
+	hlist <- list()
 
-			# Create new hypothesis object
-			h <- new_hypothesis(
-				hypothesis = f,
-				combination = "direct",
-				test = test,
-				test_opts = test_opts,
-				data = data,
-				data_name = data_name,
-				strata = strata,
-				origin = name
-			)
+	for (i in 1:n) {
 
-			validate_hypothesis(h)
+		f <-
+			paste(x$confounders[[i]], collapse = " + ") %>%
+			paste(paste0("X(", x$exposures[i], ")"), ., sep = " + ") %>%
+			paste(x$outcomes[i], ., sep = " ~ ") %>%
+			stats::formula()
 
-			# Add back to study
-			study <-
-				study %>%
-				draw(h, name = new_name)
-		}
+		# Create new hypothesis object
+		h <- new_hypothesis(
+			hypothesis = f,
+			combination = "direct",
+			test = test,
+			test_opts = test_opts,
+			data = data,
+			data_name = data_name,
+			strata = strata,
+			origin = name
+		)
 
-		# Return invisibly
-		invisible(study)
+		validate_hypothesis(h)
+
+		# Add to list
+		hlist[[i]] <- h
+
 	}
-	# Else, create and return the new hypothesis object
-	else {
-		x <- vars[vars$name == name,]
-		n <- nrow(x)
-		hlist <- list()
 
-		for (i in 1:n) {
-
-			f <-
-				paste(x$confounders[[i]], collapse = " + ") %>%
-				paste(paste0("X(", x$exposures[i], ")"), ., sep = " + ") %>%
-				paste(x$outcomes[i], ., sep = " ~ ") %>%
-				stats::formula()
-
-			# Create new hypothesis object
-			h <- new_hypothesis(
-				hypothesis = f,
-				combination = "direct",
-				test = test,
-				test_opts = test_opts,
-				data = data,
-				data_name = data_name,
-				strata = strata,
-				origin = name
-			)
-
-			validate_hypothesis(h)
-
-			# Add to list
-			hlist[[i]] <- h
-
-		}
-
-		# Return visibly
-		return(hlist)
-	}
+	# Return
+	hlist
 
 }
 
+#' Reconstruct a Hypothesis
+#'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#' Modify a `hypothesis` within a study with different approaches.
+#'
+#' @return A `study` object
+#'
+#' @inheritParams derive
+#'
+#' @param new_name Name of the new `hypothesis` that is created after
+#'   modification. Defaults to modifying the original __name__ by appending
+#'   `*_cut`.
+#'
+#' @param approach String that informs _how_ to reconstruct the
+#'   hypothesis. Options include:
+#'
+#'   * __confounding__ = Check for relevant terms based on [[dagger::derive()]]
+#'
+#' @export
+reconstruct <- function(study,
+												name,
+												new_name = paste0(name, "_cut"),
+												approach = "confounding",
+												...) {
+
+	switch(
+		approach,
+		confounding = {
+			hlist <- derive(study, name, new_name)
+
+			# Add back to study
+			for (i in 1:length(hlist)) {
+				study <-
+					study %>%
+					draw(hlist[[i]], name = new_name)
+			}
+		}
+	)
+
+	# Fit updated models
+	study <- construct(study)
+
+	# Return
+	invisible(study)
+}

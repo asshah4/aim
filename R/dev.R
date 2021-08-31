@@ -1,25 +1,3 @@
-#' Reformulate a Hypothesis
-#'
-#' After `hypothesis` objects have been fitted in a `study`, the generated list of models can be evaluated based on how the models were composed via the __combination__ argument.
-#'
-#' @return A `study` object with an additional hypothesis
-#'
-#' @inheritParams add_hypothesis
-#'
-#' @export
-reformulate <- function(study, name) {
-
-	# Start with tidy table for a hypothesis
-	f <-
-		study[study$name == name,] %>%
-		tidyr::unnest(tidy) %>%
-		dplyr::select(-c(name, fit, statistic))
-
-	# Trimmed data set is no longer a study object
-	f
-}
-
-
 #' Reduce full term formula to only significant variables
 #' Takes a tidy tibble and returns only the parameters that are significant, excluding intercept.
 find_significant_terms <- function(x, p.value = 0.05) {

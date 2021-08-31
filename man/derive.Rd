@@ -4,44 +4,35 @@
 \alias{derive}
 \title{Derive Formula With Confounders}
 \usage{
-derive(
-  study,
-  name,
-  new_name = paste0(name, "_cut"),
-  delta = 0.1,
-  return_study = TRUE,
-  ...
-)
+derive(study, name, new_name = paste0(name, "_cut"), delta = 0.1, ...)
 }
 \arguments{
 \item{study}{A \code{study} object that has been constructed}
 
 \item{name}{Name of a an existing \code{hypothesis} object}
 
-\item{new_name}{Name of the new \code{hypothesis} that is created after checking
-for confounding. Defaults to modifying the original \strong{name} by appending
-\verb{*_cut}.}
-
 \item{delta}{Percent change to be used as cut-off for considering an
 important change in the outcome ~ exposure relationship. Defaults to
 \strong{0.10} as supported by the epidemiology literature.}
 
-\item{return_study}{Logical option for returning an updated \code{study} object or a list of \code{hypothesis} object. Defaults to TRUE, indicating the study should be returned.}
-
 \item{...}{For extensibility}
 }
 \value{
-Either a \code{study} object, invisibly, that has been updated with a modified
-\code{hypothesis} or the modified \code{hypothesis} object on their own in a list,
-set by the user.
+A list of \code{hypothesis} objects that have been modified
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 Removes confounders from a hypothesis object based on different approaches.
 \itemize{
 \item \strong{sequential} = The model is analyzed for each additional covariate
 added, looking for changes in effect size defined by the variable \code{delta}.
 If the change is significant, the covariate is maintained as a potential
 confounder, otherwise removed.
+\item \strong{parallel} = The parallel models are analyzed for the effect of each
+individual covariate that was tested against the \emph{outcome ~ exposure}
+relationship. The change in effect size of that relationship is examined
+for being of size \code{delta}. If so, the covariate is retained as a potential
+confounder (or otherwise removed).
 }
 }

@@ -70,3 +70,23 @@ validate_stage <- function(x, stage) {
 	# Return
 	invisible(TRUE)
 }
+
+#' Check if hypothesis in study has been run or not
+#' @noRd
+check_hypothesis <- function(x, name, run = TRUE) {
+
+	# Get status table
+	y <- attr(x, "status_table")
+	if (run %in% y$run[y$name == name]) {
+		# Hypothesis has requested status
+		invisible(TRUE)
+	} else {
+		stop("Hypothesis `",
+				 name,
+				 "` should have run status of `",
+				 run,
+				 "` for this test."
+		)
+	}
+
+}
