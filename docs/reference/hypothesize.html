@@ -139,7 +139,16 @@ modeled, and allows for assessment of confounding variables.</p>
     <pre class="usage"><span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for formula</span>
-<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>combination</span>, <span class='va'>test</span>, test_opts <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>data</span>, strata <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span>
+  <span class='va'>h</span>,
+  <span class='va'>combination</span>,
+  <span class='va'>test</span>,
+  test_opts <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>data</span>,
+  strata <span class='op'>=</span> <span class='cn'>NULL</span>,
+  origin <span class='op'>=</span> <span class='st'>"independent"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -206,6 +215,11 @@ splitting the data into subsets. This helps to perform hypothesis testing
 on subsets or strata of the data. It defaults to NULL (which means the full
 data will be used). This argument will only be incorporated if <code>data</code> is
 present.</p></td>
+    </tr>
+    <tr>
+      <th>origin</th>
+      <td><p>Variable that serves as an attribute to help track the
+hypothesis evolution through the study.</p></td>
     </tr>
     </table>
 

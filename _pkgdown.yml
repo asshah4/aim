@@ -26,3 +26,34 @@ navbar:
     github:
       icon: fab fa-github fa-lg
       href: https://github.com/asshah4/dagger/
+
+reference:
+- title: "Core Mapping Functions"
+  desc: "Core tools to construct the model and path maps"
+- contents:
+  - study
+  - hypothesize
+  - draw
+  - construct
+  - extract
+- title: "Study Helpers"
+  desc: "Utility functions for helping build a study"
+- contents:
+  - starts_with("expand")
+  - starts_with("fit")
+  - starts_with("tidy")
+  - starts_with("update")
+  - starts_with("print")
+- title: "Check Confounding"
+  desc: "Approaches to evaluate confounders"
+- contents:
+  - derive
+  - reconstruct
+- title: "Mapping Paths"
+  desc: "Approaches to drawing out relational paths"
+- contents:
+  - starts_with("map")
+- title: "Fetch Parts of a Study"
+  desc: "Functions for retrieval of components from a `study`"
+- contents:
+  - starts_with("fetch")

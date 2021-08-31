@@ -212,7 +212,7 @@ reconstruct <- function(study,
 	switch(
 		approach,
 		confounding = {
-			hlist <- derive(study, name, new_name)
+			hlist <- derive(study, name)
 
 			# Add back to study
 			for (i in 1:length(hlist)) {

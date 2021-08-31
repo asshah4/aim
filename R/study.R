@@ -1,5 +1,9 @@
 #' Mapping Many Hypotheses Together
 #'
+#' @description
+#'
+#' `r lifecycle::badge('stable')`
+#'
 #' Calling `study()` initializes a list object that stores `hypothesis` objects,
 #' which are used to explore a research project. It allows for delayed building
 #' of models, and is used to help study the relationship between variables.
@@ -49,6 +53,11 @@ study <- function(...) {
 	# Variable table
 	attr(study, "var_table") <- tibble::tribble(
 		~name, ~outcomes, ~exposures, ~confounders, ~fixed
+	)
+
+	# Distribution table
+	attr(study, "dist_table") <- tibble::tribble(
+		~term, ~distribution, ~data_name
 	)
 
 	# Return

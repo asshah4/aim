@@ -1,6 +1,6 @@
 test_that("confounders can be found and manipulated", {
 	library(parsnip)
-	h = mpg + wt ~ X(hp) + X(qsec) + hp + disp + drat + cyl
+	h = mpg + wt ~ X(hp) + X(qsec) + disp + drat + cyl
 	test = linear_reg() %>% set_engine("lm")
 
 	h1 <-

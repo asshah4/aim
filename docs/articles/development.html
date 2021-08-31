@@ -92,7 +92,7 @@
 
     
     
-<p><strong>As of August 26, 2021, this is still being <em>iterated</em>.</strong></p>
+<p><strong>As of August 31, 2021, this is still being <em>iterated</em>.</strong></p>
 <div id="background" class="section level1">
 <h1 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h1>
@@ -254,6 +254,9 @@
 <h2 class="hasAnchor">
 <a href="#fourth-draft" class="anchor"></a>Fourth Draft</h2>
 <p>I decided that I was not really seeing the big picture. What I wanted was a way to store a set of multiple tests with the purpose of studying the relationship between two variables (an exposure and an outcome), and potentially looking at covariates. The <em>basic</em> concept was essentially a <strong>directed acyclic graph</strong>, with the relationships storing the hypotheses that were tested. The functionality was the same, but the API was different.</p>
+<div id="classes" class="section level3">
+<h3 class="hasAnchor">
+<a href="#classes" class="anchor"></a>Classes</h3>
 <p>The major classes needed would be …</p>
 <ul>
 <li>
@@ -263,6 +266,12 @@
 <li>
 <code>path</code> object that is extracted after the map has been drawn (if you will), should be able to be evaluated to help understand which variables may be confounders, etc</li>
 </ul>
+</div>
+<div id="confounding" class="section level3">
+<h3 class="hasAnchor">
+<a href="#confounding" class="anchor"></a>Confounding</h3>
+<p>A purpose of having parallel and sequential model sets, built into a hypothesis, was to identify confounding variables and help remove them.</p>
+</div>
 </div>
 </div>
   </div>

@@ -147,12 +147,12 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span>
     <span class="fu"><a href="reference/study.html">study</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/draw_hypothesis.html">draw_hypothesis</a></span><span class="op">(</span><span class="va">h1</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/draw_hypothesis.html">draw_hypothesis</a></span><span class="op">(</span><span class="va">h2</span><span class="op">)</span> 
+    <span class="fu">draw_hypothesis</span><span class="op">(</span><span class="va">h1</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu">draw_hypothesis</span><span class="op">(</span><span class="va">h2</span><span class="op">)</span> 
 
 <span class="co"># Print study</span>
 <span class="va">m1</span>
-<span class="co">#&gt; # A study with 2 hypothesis and 0 unique paths</span>
+<span class="co">#&gt; # A study with 2 hypothesis and 5 unique paths</span>
 <span class="co">#&gt; # </span>
 <span class="co">#&gt; # A tibble: 6 × 7</span>
 <span class="co">#&gt;   name  outcome exposure number formulae  fit   tidy </span>
@@ -167,8 +167,7 @@
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span>
     <span class="va">m1</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/construct_paths.html">construct_paths</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/construct_models.html">construct_models</a></span><span class="op">(</span><span class="op">)</span>
+    <span class="fu">construct_map</span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Print analyzed study</span>
 <span class="va">m2</span>
@@ -182,11 +181,18 @@
 <span class="co">#&gt; 3 h1    mpg     wt            3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
 <span class="co">#&gt; 4 h2    mpg     wt            1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
 <span class="co">#&gt; 5 h2    mpg     wt            2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
-<span class="co">#&gt; 6 h2    mpg     wt            3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span></code></pre></div>
+<span class="co">#&gt; 6 h2    mpg     wt            3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
+
+<span class="co"># Plot analyzed study</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
+<span class="va">m2</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/map_dag.html">map_dag</a></span><span class="op">(</span><span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu">ggdag</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggdag/man/ggdag.html">ggdag</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 <p>Then, for analysis and display of results, the findings can easily be extracted.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="reference/extract_models.html">extract_models</a></span><span class="op">(</span>which_ones <span class="op">=</span> <span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="fu">extract_models</span><span class="op">(</span>which_ones <span class="op">=</span> <span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="co">#&gt; # A tibble: 9 × 11</span>
 <span class="co">#&gt;   name  outcome exposure number term        estimate std.error statistic  p.value</span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;     &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>

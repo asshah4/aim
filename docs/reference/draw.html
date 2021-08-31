@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Print a Study — print.study • dagger</title>
+<title>Draw Hypothesis onto Map — draw • dagger</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,19 @@
 
 
 
-<meta property="og:title" content="Print a Study — print.study" />
-<meta property="og:description" content="Print a Study" />
+<meta property="og:title" content="Draw Hypothesis onto Map — draw" />
+<meta property="og:description" content="
+Takes a hypothesis object and adds it to a study, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison.
+This involves the deconstructing of the hypothesis into its individual parts
+and recomposition of the theorized formula.
+Simultaneously, takes the hypothesis objects that were added to the study
+and decomposes them into specific paths that are used to help define
+relationships between variables. These paths are stored in the study itself
+in the form of a data.frame. This is currently experimental in that the
+directionality, relationships, and patterns are intended to be used to help
+identify certain variables for future modeling, but the implementation is not
+yet complete." />
 
 
 
@@ -123,31 +134,59 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Print a Study</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/study.R'><code>R/study.R</code></a></small>
-    <div class="hidden name"><code>print.study.Rd</code></div>
+    <h1>Draw Hypothesis onto Map</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/draw.R'><code>R/draw.R</code></a></small>
+    <div class="hidden name"><code>draw.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Print a Study</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a>
+Takes a <code>hypothesis</code> object and adds it to a <code>study</code>, allowing multiple
+potential hypotheses to be put together for eventual analysis and comparison.
+This involves the deconstructing of the hypothesis into its individual parts
+and recomposition of the theorized formula.</p>
+<p>Simultaneously, takes the <code>hypothesis</code> objects that were added to the <code>study</code>
+and decomposes them into specific <strong>paths</strong> that are used to help define
+relationships between variables. These paths are stored in the <code>study</code> itself
+in the form of a <code>data.frame</code>. This is currently experimental in that the
+directionality, relationships, and patterns are intended to be used to help
+identify certain variables for future modeling, but the implementation is not
+yet complete.</p>
     </div>
 
-    <pre class="usage"><span class='co'># S3 method for study</span>
-<span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>draw</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>hypothesis</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>x</th>
-      <td><p>A <code>study</code> object</p></td>
+      <th>study</th>
+      <td><p>Object of class <code>study</code></p></td>
+    </tr>
+    <tr>
+      <th>hypothesis</th>
+      <td><p>Object of class <code>hypothesis</code> (which may or may not include
+data already added)</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name of the <code>hypothesis</code> object, which defaults to the name of
+the <code>hypothesis</code> object itself</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>further arguments passed to or from other methods</p></td>
+      <td><p>For extensibility</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A <code>study</code> object that has had a <code>hypothesis</code> added</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other studies: 
+<code><a href='construct.html'>construct</a>()</code>,
+<code><a href='study.html'>study</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

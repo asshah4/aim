@@ -1,5 +1,9 @@
 #' Draw A Hypothesis
 #'
+#' @description
+#'
+#' `r lifecycle::badge('experimental')`
+#'
 #' `hypothesis()` creates a `hypothesis` object that can be placed into a
 #' modeling framework. This framework allows for multiple hypotheses to be
 #' modeled, and allows for assessment of confounding variables.

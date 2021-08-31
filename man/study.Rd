@@ -13,11 +13,12 @@ study(...)
 A \code{study} object
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
 Calling \code{study()} initializes a list object that stores \code{hypothesis} objects,
 which are used to explore a research project. It allows for delayed building
 of models, and is used to help study the relationship between variables.
-}
-\details{
+
 A \code{study} object is a essentially a modified list containing two
 complementary table structures, which are interrelated via the \code{hypothesis}
 objects, and several attributes that allow for information storage about the

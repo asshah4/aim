@@ -78,6 +78,8 @@ hypothesis evolution through the study.}
 An object of class \code{hypothesis}
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 \code{hypothesis()} creates a \code{hypothesis} object that can be placed into a
 modeling framework. This framework allows for multiple hypotheses to be
 modeled, and allows for assessment of confounding variables.
