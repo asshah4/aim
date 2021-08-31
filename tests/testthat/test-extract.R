@@ -15,7 +15,7 @@ test_that("models can be extracted if available", {
 
 	x <-
 		study() %>%
-		draw(h1)
+		propose(h1)
 
 	# Extract unfitted should error
 	expect_error({
@@ -26,7 +26,7 @@ test_that("models can be extracted if available", {
 	y <-
 		x %>%
 		construct() %>%
-		draw(h2)
+		propose(h2)
 
 	# Extract tidy models
 	m <- extract(y)

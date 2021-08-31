@@ -9,7 +9,7 @@ test_that("hypothesis can be added to study", {
 		)
 
 	f <- study() %>%
-		draw(h)
+		propose(h)
 
 	expect_s3_class(f, "study")
 })
@@ -25,7 +25,7 @@ test_that("study can be fitted", {
 
 	f <-
 		study() %>%
-		draw(hyp) %>%
+		propose(hyp) %>%
 		construct()
 
 	expect_type(f$model_map$fit, "list")
@@ -44,8 +44,8 @@ test_that("multiple hypotheses can be added and fitted", {
 
 	f <-
 		study() %>%
-		draw(h1) %>%
-		draw(h2)
+		propose(h1) %>%
+		propose(h2)
 
 	# Should be a list of formulas with only a single data set saved
 	expect_equal(nrow(f$model_map), 4)

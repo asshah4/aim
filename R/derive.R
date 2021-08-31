@@ -218,7 +218,7 @@ reconstruct <- function(study,
 			for (i in 1:length(hlist)) {
 				study <-
 					study %>%
-					draw(hlist[[i]], name = new_name)
+					propose(hlist[[i]], name = new_name)
 			}
 		}
 	)

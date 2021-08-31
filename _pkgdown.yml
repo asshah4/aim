@@ -33,7 +33,7 @@ reference:
 - contents:
   - study
   - hypothesize
-  - draw
+  - propose
   - construct
   - extract
 - title: "Study Helpers"
@@ -52,7 +52,7 @@ reference:
 - title: "Mapping Paths"
   desc: "Approaches to drawing out relational paths"
 - contents:
-  - starts_with("map")
+  - starts_with("draw")
 - title: "Fetch Parts of a Study"
   desc: "Functions for retrieval of components from a `study`"
 - contents:

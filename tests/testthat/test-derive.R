@@ -14,8 +14,8 @@ test_that("confounders can be found and manipulated", {
 
 	x <-
 		study() %>%
-		draw(h1) %>%
-		draw(h2) %>%
+		propose(h1) %>%
+		propose(h2) %>%
 		construct() %>%
 		reconstruct("h2") %>%
 		reconstruct("h1") %>%

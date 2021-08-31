@@ -23,5 +23,8 @@ a tidy table or as a list of raw model/test fits. Defaults to TRUE.}
 A table of model/test fits, with either raw or tidied results
 }
 \description{
-Extract a Model Hypothesis from a Study
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
+
+Extracts the model components of a hypothesis that has been ran. Everything
+is returned as a table, with a column of either tidy or raw results.
 }

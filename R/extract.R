@@ -1,5 +1,12 @@
 #' Extract a Model Hypothesis from a Study
 #'
+#' @description
+#'
+#' `r lifecycle::badge('stable')`
+#'
+#' Extracts the model components of a hypothesis that has been ran. Everything
+#' is returned as a table, with a column of either tidy or raw results.
+#'
 #' @return A table of model/test fits, with either raw or tidied results
 #'
 #' @param study A `study` object that contains `hypothesis` objects that have

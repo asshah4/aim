@@ -27,6 +27,6 @@ object itself.
 \seealso{
 Other studies: 
 \code{\link{construct}()},
-\code{\link{draw}()}
+\code{\link{propose}()}
 }
 \concept{studies}

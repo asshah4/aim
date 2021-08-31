@@ -1,7 +1,9 @@
 #' Construct Map
 #'
 #' @description
+#'
 #' `r lifecycle::badge('experimental')`
+#'
 #' This function allows for delayed building of multiple hypothesis. It uses the
 #' `hypothesis` objects with the corresponding __test__ arguments against the
 #' prescribed __data__. Which hypotheses to run can be specified, which will

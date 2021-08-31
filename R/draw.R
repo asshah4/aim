@@ -1,7 +1,9 @@
-#' Draw Hypothesis onto Map
+#' Propose Hypothesis for a Study
 #'
 #' @description
+#'
 #' `r lifecycle::badge('experimental')`
+#'
 #' Takes a `hypothesis` object and adds it to a `study`, allowing multiple
 #' potential hypotheses to be put together for eventual analysis and comparison.
 #' This involves the deconstructing of the hypothesis into its individual parts
@@ -29,10 +31,10 @@
 #'
 #' @family studies
 #' @export
-draw <- function(study,
-														hypothesis,
-														name = deparse(substitute(hypothesis)),
-														...) {
+propose <- function(study,
+										hypothesis,
+										name = deparse(substitute(hypothesis)),
+										...) {
 
 	validate_class(study, "study")
 

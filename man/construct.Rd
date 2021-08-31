@@ -21,6 +21,7 @@ it, including fits and paths
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 This function allows for delayed building of multiple hypothesis. It uses the
 \code{hypothesis} objects with the corresponding \strong{test} arguments against the
 prescribed \strong{data}. Which hypotheses to run can be specified, which will
@@ -29,7 +30,7 @@ that have not yet been fitted.
 }
 \seealso{
 Other studies: 
-\code{\link{draw}()},
+\code{\link{propose}()},
 \code{\link{study}()}
 }
 \concept{studies}
