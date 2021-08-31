@@ -9,6 +9,7 @@ utils::globalVariables(c(
 	"type",
 	"number",
 	"vars",
+	"term",
 	"name",
 	"data",
 	"run",

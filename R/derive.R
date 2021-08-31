@@ -30,7 +30,6 @@
 #' @export
 derive <- function(study,
 									 name,
-									 new_name = paste0(name, "_cut"),
 									 delta = 0.10,
 									 ...) {
 

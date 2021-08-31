@@ -4,7 +4,7 @@
 \alias{derive}
 \title{Derive Formula With Confounders}
 \usage{
-derive(study, name, new_name = paste0(name, "_cut"), delta = 0.1, ...)
+derive(study, name, delta = 0.1, ...)
 }
 \arguments{
 \item{study}{A \code{study} object that has been constructed}
