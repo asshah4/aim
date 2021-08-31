@@ -40,9 +40,14 @@
 
 
 <meta property="og:title" content="Mapping Many Hypotheses Together — study" />
-<meta property="og:description" content="Calling study() initializes a list object that stores hypothesis objects,
+<meta property="og:description" content="
+Calling study() initializes a list object that stores hypothesis objects,
 which are used to explore a research project. It allows for delayed building
-of models, and is used to help study the relationship between variables." />
+of models, and is used to help study the relationship between variables.
+A study object is a essentially a modified list containing two
+complementary table structures, which are interrelated via the hypothesis
+objects, and several attributes that allow for information storage about the
+object itself." />
 
 
 
@@ -131,9 +136,14 @@ of models, and is used to help study the relationship between variables." />
     </div>
 
     <div class="ref-description">
-    <p>Calling <code>study()</code> initializes a list object that stores <code>hypothesis</code> objects,
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Calling <code>study()</code> initializes a list object that stores <code>hypothesis</code> objects,
 which are used to explore a research project. It allows for delayed building
 of models, and is used to help study the relationship between variables.</p>
+<p>A <code>study</code> object is a essentially a modified list containing two
+complementary table structures, which are interrelated via the <code>hypothesis</code>
+objects, and several attributes that allow for information storage about the
+object itself.</p>
     </div>
 
     <pre class="usage"><span class='fu'>study</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
@@ -150,12 +160,6 @@ of models, and is used to help study the relationship between variables.</p>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A <code>study</code> object</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>A <code>study</code> object is a essentially a modified list containing two
-complementary table structures, which are interrelated via the <code>hypothesis</code>
-objects, and several attributes that allow for information storage about the
-object itself.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p>Other studies: 
