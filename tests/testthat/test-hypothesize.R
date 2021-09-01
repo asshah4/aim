@@ -21,16 +21,16 @@ test_that("hypothesis must be made with data present", {
 
 test_that("new hypotheses can easily be generated", {
 	library(parsnip)
-	h = mpg ~ X(wt) + hp + disp + cyl
+	h = mpg ~ X(wt) + hp + disp + cyl + vs
 	combination = "sequential"
 	test = linear_reg() %>% set_engine("lm")
 	h1 <- hypothesize(h, combination, test, data = mtcars)
 	h2 <- update_hypothesis(h1, combination = "parallel")
-	h3 <- update_hypothesis(h2, combination = "direct", data = iris)
+	h3 <- update_hypothesis(h2, data = mtcars, strata = "vs")
 
 	expect_s3_class(h2, "hypothesis")
-	expect_length(attributes(h2)$parameters, 4)
-	expect_identical(attributes(h3)$data, iris)
+	expect_false("vs" %in% labels(stats::terms(h3)))
+	expect_true("vs" %in% labels(stats::terms(h2)))
 })
 
 test_that("generic print methods work", {

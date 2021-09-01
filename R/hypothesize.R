@@ -98,6 +98,9 @@ hypothesize.formula <- function(h,
 	data_name <- deparse(substitute(data))
 
 	# Validate/ensure appropriate test object: TODO
+	if (!is.na(strata)) {
+		h <- update(h, bquote(. ~ . - .(as.name(strata))))
+	}
 
 	# Construct
 	h <- new_hypothesis(
