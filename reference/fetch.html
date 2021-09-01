@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add a Hypothesis for a Study — add_hypothesis • dagger</title>
+<title>Retrieve, Modify, and Destroy Components From study Object — fetch • dagger</title>
 
 
 <!-- jquery -->
@@ -39,19 +39,26 @@
 
 
 
-<meta property="og:title" content="Add a Hypothesis for a Study — add_hypothesis" />
-<meta property="og:description" content="
-Takes a hypothesis object and adds it to a study, allowing multiple
-potential hypotheses to be put together for eventual analysis and comparison.
-This involves the deconstructing of the hypothesis into its individual parts
-and recomposition of the theorized formula.
-Simultaneously, takes the hypothesis objects that were added to the study
-and decomposes them into specific paths that are used to help define
-relationships between variables. These paths are stored in the study itself
-in the form of a data.frame. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete." />
+<meta property="og:title" content="Retrieve, Modify, and Destroy Components From study Object — fetch" />
+<meta property="og:description" content="These functions are essentially helper functions to simplify the manipulation
+of study objects. They may retrieve or modify or destroy components of
+the study object as described.
+Retrieval functions:
+fetch_data() retrieves the data set associated with a specified hypothesis
+and data name
+fetch_test() retrieves the test associated with a hypothesis
+fetch_formulae() retrieves the list of formulas associated with a
+hypothesis
+fetch_combination() retrieves how a hypothesis was combined to generate its
+formula list
+fetch_names() retrieves the hypothesis names that match a certain argument, such as combination = &quot;parallel&quot; or data_name = &quot;mtcars&quot;
+
+
+Update functions:
+update_study() modifies the components of a study, usually used
+internally to help update the stage/status of the specified object
+
+" />
 
 
 
@@ -134,54 +141,76 @@ yet complete." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add a Hypothesis for a Study</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/add.R'><code>R/add.R</code></a></small>
-    <div class="hidden name"><code>add_hypothesis.Rd</code></div>
+    <h1>Retrieve, Modify, and Destroy Components From <code>study</code> Object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/study-helpers.R'><code>R/study-helpers.R</code></a></small>
+    <div class="hidden name"><code>fetch.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>Takes a <code>hypothesis</code> object and adds it to a <code>study</code>, allowing multiple
-potential hypotheses to be put together for eventual analysis and comparison.
-This involves the deconstructing of the hypothesis into its individual parts
-and recomposition of the theorized formula.</p>
-<p>Simultaneously, takes the <code>hypothesis</code> objects that were added to the <code>study</code>
-and decomposes them into specific <strong>paths</strong> that are used to help define
-relationships between variables. These paths are stored in the <code>study</code> itself
-in the form of a <code>data.frame</code>. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete.</p>
+    <p>These functions are essentially helper functions to simplify the manipulation
+of <code>study</code> objects. They may retrieve or modify or destroy components of
+the <code>study</code> object as described.</p>
+<p><strong>Retrieval functions</strong>:</p><ul>
+<li><p><code>fetch_data()</code> retrieves the data set associated with a specified hypothesis
+and data name</p></li>
+<li><p><code>fetch_test()</code> retrieves the test associated with a hypothesis</p></li>
+<li><p><code>fetch_formulae()</code> retrieves the list of formulas associated with a
+hypothesis</p></li>
+<li><p><code>fetch_combination()</code> retrieves how a hypothesis was combined to generate its
+formula list</p></li>
+<li><p><code>fetch_names()</code> retrieves the hypothesis names that match a certain argument, such as <code>combination = "parallel"</code> or <code>data_name = "mtcars"</code></p></li>
+</ul>
+
+<p><strong>Update functions</strong>:</p><ul>
+<li><p><code>update_study()</code> modifies the components of a study, usually used
+internally to help update the stage/status of the specified object</p></li>
+</ul>
+
     </div>
 
-    <pre class="usage"><span class='fu'>add_hypothesis</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>hypothesis</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>fetch_data</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_data_name</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_strata</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_test</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_test_opts</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_combination</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_formulae</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_call</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_tidy</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_raw</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>name</span><span class='op'>)</span>
+
+<span class='fu'>fetch_names</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>study</th>
-      <td><p>Object of class <code>study</code></p></td>
-    </tr>
-    <tr>
-      <th>hypothesis</th>
-      <td><p>Object of class <code>hypothesis</code> (which may or may not include
-data already added)</p></td>
+      <th>x</th>
+      <td><p><code>study</code> object</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>Name of the <code>hypothesis</code> object, which defaults to the name of
-the <code>hypothesis</code> object itself</p></td>
+      <td><p>Name of <code>hypothesis</code> object to pull components from</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>For extensibility</p></td>
+      <td><p>For additional parameters to be passed on</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>study</code> object that has had a <code>hypothesis</code> added</p>
+    <p>The <code>fetch_*()</code> functions return the named object from the <code>study</code>.
+The <code>update_*()</code> functions return the entire study after modification.</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

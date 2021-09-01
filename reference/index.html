@@ -136,22 +136,25 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-core-mapping-functions" class="hasAnchor"><a href="#section-core-mapping-functions" class="anchor"></a>Core Mapping Functions</h2>
-          <p class="section-desc"><p>Core tools to construct the model and path maps</p></p>
+          <h2 id="section-study-tools" class="hasAnchor"><a href="#section-study-tools" class="anchor"></a>Study Tools</h2>
+          <p class="section-desc"><p>The core functions for creating <code>study</code> and <code>hypothesis</code> objects</p></p>
         </th>
       </tr>
       
       
     </tbody><tbody>
       
+      <tr>
+        <th colspan="2">
+          <h3 id="section-hypothesis-creation" class="hasAnchor"><a href="#section-hypothesis-creation" class="anchor"></a>Hypothesis Creation</h3>
+          <p class="section-desc"><p>Make <code>hypothesis</code> objects for further analysis</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
       
       <tr>
-        
-        <td>
-          <p><code><a href="study.html">study()</a></code> </p>
-        </td>
-        <td><p>Mapping Many Hypotheses Together</p></td>
-      </tr><tr>
         
         <td>
           <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
@@ -160,35 +163,125 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="propose.html">propose()</a></code> </p>
+          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
         </td>
-        <td><p>Propose Hypothesis for a Study</p></td>
+        <td><p>Update a Hypothesis</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="construct.html">construct()</a></code> </p>
+          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
+        </td>
+        <td><p>Expand Formulae for a Hypothesis</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-core-mapping-functions" class="hasAnchor"><a href="#section-core-mapping-functions" class="anchor"></a>Core Mapping Functions</h3>
+          <p class="section-desc"><p>Allows for the layering and fitting of <code>hypothesis</code> objects</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="create_study.html">create_study()</a></code> </p>
+        </td>
+        <td><p>Mapping Many Hypotheses Together</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="add_hypothesis.html">add_hypothesis()</a></code> </p>
+        </td>
+        <td><p>Add a Hypothesis for a Study</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="construct_map.html">construct_map()</a></code> </p>
         </td>
         <td><p>Construct Map</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-extract-components-from-study" class="hasAnchor"><a href="#section-extract-components-from-study" class="anchor"></a>Extract Components from Study</h3>
+          <p class="section-desc"><p>Retrieves and distills components from the study for further display</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="extract_dagitty.html">extract_dagitty()</a></code> </p>
+        </td>
+        <td><p>Extract a <code>tidy_dagitty</code> object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="extract.html">extract()</a></code> </p>
+          <p><code><a href="extract_models.html">extract_models()</a></code> </p>
         </td>
-        <td><p>Extract a Model Hypothesis from a Study</p></td>
+        <td><p>Extract models from a study</p></td>
       </tr>
     </tbody><tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-study-helpers" class="hasAnchor"><a href="#section-study-helpers" class="anchor"></a>Study Helpers</h2>
-          <p class="section-desc"><p>Utility functions for helping build a study</p></p>
+          <h2 id="section-path-analysis" class="hasAnchor"><a href="#section-path-analysis" class="anchor"></a>Path Analysis</h2>
+          <p class="section-desc"><p>Building block tools for mapping variable relationships and checking their effects and directionality.</p></p>
         </th>
       </tr>
       
       
     </tbody><tbody>
       
+      <tr>
+        <th colspan="2">
+          <h3 id="section-check-confounding" class="hasAnchor"><a href="#section-check-confounding" class="anchor"></a>Check Confounding</h3>
+          <p class="section-desc"><p>Approaches to evaluate confounders</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
       
       <tr>
+        
+        <td>
+          <p><code><a href="find_confounders.html">find_confounders()</a></code> </p>
+        </td>
+        <td><p>Derive Formula With Confounders</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="reconstruct_map.html">reconstruct_map()</a></code> </p>
+        </td>
+        <td><p>Reconstruct a Hypothesis</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-mapping-paths" class="hasAnchor"><a href="#section-mapping-paths" class="anchor"></a>Mapping Paths</h3>
+          <p class="section-desc"><p>Approaches to drawing out relational paths</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="draw.html">draw()</a></code> </p>
+        </td>
+        <td><p>Draw out the map</p></td>
+      </tr><tr>
         
         <td>
           <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
@@ -199,7 +292,108 @@
         <td>
           <p><code><a href="expand_paths.html">expand_paths()</a></code> </p>
         </td>
-        <td><p>Expand Paths of a Formula</p></td>
+        <td><p>Expand paths of a formula</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-helper-functions" class="hasAnchor"><a href="#section-helper-functions" class="anchor"></a>Helper Functions</h2>
+          <p class="section-desc"></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-fetch-parts-of-a-study" class="hasAnchor"><a href="#section-fetch-parts-of-a-study" class="anchor"></a>Fetch Parts of a Study</h3>
+          <p class="section-desc"><p>Functions for retrieval of components from a <code>study</code></p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="fetch.html">fetch_data()</a></code> <code><a href="fetch.html">fetch_data_name()</a></code> <code><a href="fetch.html">fetch_strata()</a></code> <code><a href="fetch.html">fetch_test()</a></code> <code><a href="fetch.html">fetch_test_opts()</a></code> <code><a href="fetch.html">fetch_combination()</a></code> <code><a href="fetch.html">fetch_formulae()</a></code> <code><a href="fetch.html">fetch_call()</a></code> <code><a href="fetch.html">fetch_tidy()</a></code> <code><a href="fetch.html">fetch_raw()</a></code> <code><a href="fetch.html">fetch_names()</a></code> </p>
+        </td>
+        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      <tr>
+        <th colspan="2">
+          <h3 id="section-internal-helpers" class="hasAnchor"><a href="#section-internal-helpers" class="anchor"></a>Internal Helpers</h3>
+          <p class="section-desc"><p>Utility functions for helping build a hypothesis or study object.</p></p>
+        </th>
+      </tr>
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="add_hypothesis.html">add_hypothesis()</a></code> </p>
+        </td>
+        <td><p>Add a Hypothesis for a Study</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="construct_map.html">construct_map()</a></code> </p>
+        </td>
+        <td><p>Construct Map</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_study.html">create_study()</a></code> </p>
+        </td>
+        <td><p>Mapping Many Hypotheses Together</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="draw.html">draw()</a></code> </p>
+        </td>
+        <td><p>Draw out the map</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="expand_formula.html">expand_formula()</a></code> </p>
+        </td>
+        <td><p>Expand Formulae for a Hypothesis</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="expand_paths.html">expand_paths()</a></code> </p>
+        </td>
+        <td><p>Expand paths of a formula</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="extract_dagitty.html">extract_dagitty()</a></code> </p>
+        </td>
+        <td><p>Extract a <code>tidy_dagitty</code> object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="extract_models.html">extract_models()</a></code> </p>
+        </td>
+        <td><p>Extract models from a study</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="fetch.html">fetch_data()</a></code> <code><a href="fetch.html">fetch_data_name()</a></code> <code><a href="fetch.html">fetch_strata()</a></code> <code><a href="fetch.html">fetch_test()</a></code> <code><a href="fetch.html">fetch_test_opts()</a></code> <code><a href="fetch.html">fetch_combination()</a></code> <code><a href="fetch.html">fetch_formulae()</a></code> <code><a href="fetch.html">fetch_call()</a></code> <code><a href="fetch.html">fetch_tidy()</a></code> <code><a href="fetch.html">fetch_raw()</a></code> <code><a href="fetch.html">fetch_names()</a></code> </p>
+        </td>
+        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="find_confounders.html">find_confounders()</a></code> </p>
+        </td>
+        <td><p>Derive Formula With Confounders</p></td>
       </tr><tr>
         
         <td>
@@ -215,15 +409,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
+          <p><code><a href="hypothesize.html">hypothesize()</a></code> </p>
         </td>
-        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
-        </td>
-        <td><p>Update a Hypothesis</p></td>
+        <td><p>Draw A Hypothesis</p></td>
       </tr><tr>
         
         <td>
@@ -236,40 +424,33 @@
           <p><code><a href="print.study.html">print(<i>&lt;study&gt;</i>)</a></code> </p>
         </td>
         <td><p>Print a Study</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-check-confounding" class="hasAnchor"><a href="#section-check-confounding" class="anchor"></a>Check Confounding</h2>
-          <p class="section-desc"><p>Approaches to evaluate confounders</p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="derive.html">derive()</a></code> </p>
-        </td>
-        <td><p>Derive Formula With Confounders</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="reconstruct.html">reconstruct()</a></code> </p>
+          <p><code><a href="reconstruct_map.html">reconstruct_map()</a></code> </p>
         </td>
         <td><p>Reconstruct a Hypothesis</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="tidy_tests.html">tidy_tests()</a></code> </p>
+        </td>
+        <td><p>Tidy a list of <code>htest</code> or model objects</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="update_hypothesis.html">update_hypothesis()</a></code> </p>
+        </td>
+        <td><p>Update a Hypothesis</p></td>
       </tr>
     </tbody><tbody>
+      
       <tr>
         <th colspan="2">
-          <h2 id="section-mapping-paths" class="hasAnchor"><a href="#section-mapping-paths" class="anchor"></a>Mapping Paths</h2>
-          <p class="section-desc"><p>Approaches to drawing out relational paths</p></p>
+          <h3 id="section-printing-functions" class="hasAnchor"><a href="#section-printing-functions" class="anchor"></a>Printing functions</h3>
+          <p class="section-desc"></p>
         </th>
       </tr>
-      
       
     </tbody><tbody>
       
@@ -277,28 +458,15 @@
       <tr>
         
         <td>
-          <p><code><a href="draw.html">draw()</a></code> </p>
+          <p><code><a href="print.hypothesis.html">print(<i>&lt;hypothesis&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Map Out A Directed Acyclic Graph</p></td>
-      </tr>
-    </tbody><tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-fetch-parts-of-a-study" class="hasAnchor"><a href="#section-fetch-parts-of-a-study" class="anchor"></a>Fetch Parts of a Study</h2>
-          <p class="section-desc"><p>Functions for retrieval of components from a <code>study</code></p></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
+        <td><p>Print a Hypothesis</p></td>
+      </tr><tr>
         
         <td>
-          <p><code><a href="retrieval.html">fetch_data()</a></code> <code><a href="retrieval.html">fetch_data_name()</a></code> <code><a href="retrieval.html">fetch_strata()</a></code> <code><a href="retrieval.html">fetch_test()</a></code> <code><a href="retrieval.html">fetch_test_opts()</a></code> <code><a href="retrieval.html">fetch_combination()</a></code> <code><a href="retrieval.html">fetch_formulae()</a></code> <code><a href="retrieval.html">fetch_call()</a></code> <code><a href="retrieval.html">fetch_tidy()</a></code> <code><a href="retrieval.html">fetch_raw()</a></code> <code><a href="retrieval.html">fetch_names()</a></code> </p>
+          <p><code><a href="print.study.html">print(<i>&lt;study&gt;</i>)</a></code> </p>
         </td>
-        <td><p>Retrieve, Modify, and Destroy Components From <code>study</code> Object</p></td>
+        <td><p>Print a Study</p></td>
       </tr>
     </tbody>
     </table>

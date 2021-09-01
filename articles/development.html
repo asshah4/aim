@@ -92,7 +92,7 @@
 
     
     
-<p><strong>As of August 31, 2021, this is still being <em>iterated</em>.</strong></p>
+<p><strong>As of September 01, 2021, this is still being <em>iterated</em>.</strong></p>
 <div id="background" class="section level1">
 <h1 class="hasAnchor">
 <a href="#background" class="anchor"></a>Background</h1>
@@ -245,8 +245,8 @@
 <a href="#third-draft" class="anchor"></a>Third Draft</h2>
 <p>I realized this approach was not effective in that it was overly complicated in having multiple names, data frames, and connections between them. I simplified the pipeline to focus on a specific S3 classes that could be used to generate hypotheses, and iterate through to help look at variable relationship.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/study.html">study</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">add_hypothesis</span><span class="op">(</span><span class="va">hypothesis</span><span class="op">)</span> <span class="op">%&gt;%</span>
+<code class="sourceCode R"><span class="fu">study</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="../reference/add_hypothesis.html">add_hypothesis</a></span><span class="op">(</span><span class="va">hypothesis</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu">build_study</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>Essentially, this was a list based concept of adding hypotheses to a modified list/tibble structure that had important data stored as attributes.</p>
 </div>

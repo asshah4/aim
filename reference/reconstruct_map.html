@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add a Hypothesis for a Study — add_hypothesis • dagger</title>
+<title>Reconstruct a Hypothesis — reconstruct_map • dagger</title>
 
 
 <!-- jquery -->
@@ -39,19 +39,9 @@
 
 
 
-<meta property="og:title" content="Add a Hypothesis for a Study — add_hypothesis" />
+<meta property="og:title" content="Reconstruct a Hypothesis — reconstruct_map" />
 <meta property="og:description" content="
-Takes a hypothesis object and adds it to a study, allowing multiple
-potential hypotheses to be put together for eventual analysis and comparison.
-This involves the deconstructing of the hypothesis into its individual parts
-and recomposition of the theorized formula.
-Simultaneously, takes the hypothesis objects that were added to the study
-and decomposes them into specific paths that are used to help define
-relationships between variables. These paths are stored in the study itself
-in the form of a data.frame. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete." />
+Modify a hypothesis within a study with different approaches." />
 
 
 
@@ -134,54 +124,57 @@ yet complete." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add a Hypothesis for a Study</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/add.R'><code>R/add.R</code></a></small>
-    <div class="hidden name"><code>add_hypothesis.Rd</code></div>
+    <h1>Reconstruct a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/confound.R'><code>R/confound.R</code></a></small>
+    <div class="hidden name"><code>reconstruct_map.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>Takes a <code>hypothesis</code> object and adds it to a <code>study</code>, allowing multiple
-potential hypotheses to be put together for eventual analysis and comparison.
-This involves the deconstructing of the hypothesis into its individual parts
-and recomposition of the theorized formula.</p>
-<p>Simultaneously, takes the <code>hypothesis</code> objects that were added to the <code>study</code>
-and decomposes them into specific <strong>paths</strong> that are used to help define
-relationships between variables. These paths are stored in the <code>study</code> itself
-in the form of a <code>data.frame</code>. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete.</p>
+<p>Modify a <code>hypothesis</code> within a study with different approaches.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_hypothesis</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>hypothesis</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>reconstruct_map</span><span class='op'>(</span>
+  <span class='va'>study</span>,
+  <span class='va'>name</span>,
+  new_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>"_cut"</span><span class='op'>)</span>,
+  approach <span class='op'>=</span> <span class='st'>"confounding"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>study</th>
-      <td><p>Object of class <code>study</code></p></td>
-    </tr>
-    <tr>
-      <th>hypothesis</th>
-      <td><p>Object of class <code>hypothesis</code> (which may or may not include
-data already added)</p></td>
+      <td><p>A <code>study</code> object that has been constructed</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>Name of the <code>hypothesis</code> object, which defaults to the name of
-the <code>hypothesis</code> object itself</p></td>
+      <td><p>Name of a an existing <code>hypothesis</code> object</p></td>
+    </tr>
+    <tr>
+      <th>new_name</th>
+      <td><p>Name of the new <code>hypothesis</code> that is created after
+modification. Defaults to modifying the original <strong>name</strong> by appending
+<code>*_cut</code>.</p></td>
+    </tr>
+    <tr>
+      <th>approach</th>
+      <td><p>String that informs <em>how</em> to reconstruct the
+hypothesis. Options include:</p><ul>
+<li><p><strong>confounding</strong> = Check for relevant terms based on [<code><a href='find_confounders.html'>find_confounders()</a></code>]</p></li>
+</ul></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>For extensibility</p></td>
+      <td><p>Additional, optional parameters based on approach being used</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>study</code> object that has had a <code>hypothesis</code> added</p>
+    <p>A <code>study</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

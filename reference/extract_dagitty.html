@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add a Hypothesis for a Study — add_hypothesis • dagger</title>
+<title>Extract a tidy_dagitty object — extract_dagitty • dagger</title>
 
 
 <!-- jquery -->
@@ -39,19 +39,11 @@
 
 
 
-<meta property="og:title" content="Add a Hypothesis for a Study — add_hypothesis" />
+<meta property="og:title" content="Extract a tidy_dagitty object — extract_dagitty" />
 <meta property="og:description" content="
-Takes a hypothesis object and adds it to a study, allowing multiple
-potential hypotheses to be put together for eventual analysis and comparison.
-This involves the deconstructing of the hypothesis into its individual parts
-and recomposition of the theorized formula.
-Simultaneously, takes the hypothesis objects that were added to the study
-and decomposes them into specific paths that are used to help define
-relationships between variables. These paths are stored in the study itself
-in the form of a data.frame. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete." />
+This function converts a hypothesis into a dagitty object (or
+tidy_dagitty if requested). This can subsequently be passed onto the
+ggdag::ggdag() function for additional plotting." />
 
 
 
@@ -134,54 +126,41 @@ yet complete." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add a Hypothesis for a Study</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/add.R'><code>R/add.R</code></a></small>
-    <div class="hidden name"><code>add_hypothesis.Rd</code></div>
+    <h1>Extract a <code>tidy_dagitty</code> object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/extract.R'><code>R/extract.R</code></a></small>
+    <div class="hidden name"><code>extract_dagitty.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>Takes a <code>hypothesis</code> object and adds it to a <code>study</code>, allowing multiple
-potential hypotheses to be put together for eventual analysis and comparison.
-This involves the deconstructing of the hypothesis into its individual parts
-and recomposition of the theorized formula.</p>
-<p>Simultaneously, takes the <code>hypothesis</code> objects that were added to the <code>study</code>
-and decomposes them into specific <strong>paths</strong> that are used to help define
-relationships between variables. These paths are stored in the <code>study</code> itself
-in the form of a <code>data.frame</code>. This is currently experimental in that the
-directionality, relationships, and patterns are intended to be used to help
-identify certain variables for future modeling, but the implementation is not
-yet complete.</p>
+<p>This function converts a hypothesis into a <code>dagitty</code> object (or
+<code>tidy_dagitty</code> if requested). This can subsequently be passed onto the
+<code><a href='https://rdrr.io/pkg/ggdag/man/ggdag.html'>ggdag::ggdag()</a></code> function for additional plotting.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_hypothesis</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>hypothesis</span>, name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/deparse.html'>deparse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substitute.html'>substitute</a></span><span class='op'>(</span><span class='va'>hypothesis</span><span class='op'>)</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>extract_dagitty</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, tidy <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>study</th>
-      <td><p>Object of class <code>study</code></p></td>
-    </tr>
-    <tr>
-      <th>hypothesis</th>
-      <td><p>Object of class <code>hypothesis</code> (which may or may not include
-data already added)</p></td>
+      <td><p>A <code>study</code> object</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>Name of the <code>hypothesis</code> object, which defaults to the name of
-the <code>hypothesis</code> object itself</p></td>
+      <td><p>The name of a hypothesis added to the study</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>For extensibility</p></td>
+      <th>tidy</th>
+      <td><p>Defaults to FALSE, thus returning a <code>dagitty</code> object. If TRUE,
+then will return a <code>tidy_dagitty</code> object.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>study</code> object that has had a <code>hypothesis</code> added</p>
+    <p><code>dagitty</code> or <code>tidy_dagitty</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
