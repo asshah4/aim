@@ -23,7 +23,7 @@
 #'
 #' @family studies
 #' @export
-construct <- function(study, which_ones = NULL, ...) {
+construct_map <- function(study, which_ones = NULL, ...) {
 
 	validate_class(study, "study")
 	validate_stage(study, "hypothesis")

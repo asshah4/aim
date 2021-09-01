@@ -37,10 +37,10 @@
 #'
 #' @param ... For additional parameters to be passed on
 #'
-#' @name retrieval
+#' @name fetch
 NULL
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_data <- function(x, name) {
 
@@ -53,7 +53,7 @@ fetch_data <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_data_name <- function(x, name) {
 
@@ -63,7 +63,7 @@ fetch_data_name <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_strata <- function(x, name) {
 
@@ -73,7 +73,7 @@ fetch_strata <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_test <- function(x, name) {
 
@@ -83,7 +83,7 @@ fetch_test <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_test_opts <- function(x, name) {
 
@@ -93,7 +93,7 @@ fetch_test_opts <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_combination <- function(x, name) {
 
@@ -103,7 +103,7 @@ fetch_combination <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_formulae <- function(x, name) {
 
@@ -113,7 +113,7 @@ fetch_formulae <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_call <- function(x, name) {
 
@@ -123,7 +123,7 @@ fetch_call <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_tidy <- function(x, name) {
 
@@ -133,7 +133,7 @@ fetch_tidy <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_raw <- function(x, name) {
 
@@ -143,7 +143,7 @@ fetch_raw <- function(x, name) {
 
 }
 
-#' @rdname retrieval
+#' @rdname fetch
 #' @export
 fetch_names <- function(x, ...) {
 

@@ -4,7 +4,7 @@
 #'
 #' `r lifecycle::badge('stable')`
 #'
-#' Calling `study()` initializes a list object that stores `hypothesis` objects,
+#' Calling `create_study()` initializes a list object that stores `hypothesis` objects,
 #' which are used to explore a research project. It allows for delayed building
 #' of models, and is used to help study the relationship between variables.
 #'
@@ -18,7 +18,7 @@
 #' @return A `study` object
 #' @family studies
 #' @export
-study <- function(...) {
+create_study <- function(...) {
 
 	# Base structure is that of a list of two tibbles
 	study <- list(

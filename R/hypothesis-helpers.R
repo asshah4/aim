@@ -33,6 +33,7 @@ NULL
 
 #' @rdname modify_hypothesis
 #' @keywords internal
+#' @export
 set_formulae <- function(hypothesis, formula, combination) {
 	# Validate class
 	validate_class(formula, "formula")
@@ -52,6 +53,7 @@ set_formulae <- function(hypothesis, formula, combination) {
 
 #' @rdname modify_hypothesis
 #' @keywords internal
+#' @export
 set_data <- function(hypothesis, data, data_name, strata = NULL) {
 
 	# Validate if present
@@ -75,6 +77,7 @@ set_data <- function(hypothesis, data, data_name, strata = NULL) {
 
 #' @rdname modify_hypothesis
 #' @keywords internal
+#' @export
 set_tests <- function(hypothesis, test, .test_opts) {
 
 	# Validate classes
@@ -90,6 +93,7 @@ set_tests <- function(hypothesis, test, .test_opts) {
 
 #' @rdname modify_hypothesis
 #' @keywords internal
+#' @export
 set_vars <- function(hypothesis, formula, confounders = NULL) {
 
 	# Outcomes

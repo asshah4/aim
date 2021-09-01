@@ -28,32 +28,51 @@ navbar:
       href: https://github.com/asshah4/dagger/
 
 reference:
-- title: "Core Mapping Functions"
-  desc: "Core tools to construct the model and path maps"
+- title: Study Tools
+  desc: The core functions for creating `study` and `hypothesis` objects
+- subtitle: Hypothesis Creation
+  desc: Make `hypothesis` objects for further analysis
 - contents:
-  - study
   - hypothesize
-  - propose
-  - construct
-  - extract
-- title: "Study Helpers"
-  desc: "Utility functions for helping build a study"
+  - update_hypothesis
+  - expand_formula
+- subtitle: Core Mapping Functions
+  desc: Allows for the layering and fitting of `hypothesis` objects
 - contents:
-  - starts_with("expand")
-  - starts_with("fit")
-  - starts_with("tidy")
-  - starts_with("update")
-  - starts_with("print")
-- title: "Check Confounding"
-  desc: "Approaches to evaluate confounders"
+  - create_study
+  - add_hypothesis
+  - construct_map
+- subtitle: Extract Components from Study
+  desc: Retrieves and distills components from the study for further display
 - contents:
-  - derive
-  - reconstruct
-- title: "Mapping Paths"
-  desc: "Approaches to drawing out relational paths"
+  - starts_with("extract")
+
+- title: Path Analysis
+  desc: >
+    Building block tools for mapping variable relationships and checking
+    their effects and directionality.
+- subtitle: Check Confounding
+  desc: Approaches to evaluate confounders
+- contents:
+  - find_confounders
+  - reconstruct_map
+- subtitle: Mapping Paths
+  desc: Approaches to drawing out relational paths
 - contents:
   - starts_with("draw")
-- title: "Fetch Parts of a Study"
-  desc: "Functions for retrieval of components from a `study`"
+  - contains("expand")
+
+- title: Helper Functions
+- subtitle: Fetch Parts of a Study
+  desc: Functions for retrieval of components from a `study`
 - contents:
   - starts_with("fetch")
+- subtitle: Internal Helpers
+  desc: Utility functions for helping build a hypothesis or study object.
+- contents:
+  - starts_with("set")
+  - starts_with("fit")
+  - starts_with("tidy")
+- subtitle: Printing functions
+  contents:
+  - starts_with("print")

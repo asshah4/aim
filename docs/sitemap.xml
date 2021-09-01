@@ -4,13 +4,16 @@
     <loc>https://asshah4.github.io/dagger//index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/construct.html</loc>
+    <loc>https://asshah4.github.io/dagger//reference/add_hypothesis.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/construct_map.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/create_study.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/dagger-package.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/dagger//reference/derive.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/draw.html</loc>
@@ -22,7 +25,16 @@
     <loc>https://asshah4.github.io/dagger//reference/expand_paths.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/extract.html</loc>
+    <loc>https://asshah4.github.io/dagger//reference/extract_dagitty.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/extract_models.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/fetch.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/find_confounders.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/fit_calls.html</loc>
@@ -49,16 +61,7 @@
     <loc>https://asshah4.github.io/dagger//reference/print.study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/propose.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/dagger//reference/reconstruct.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/dagger//reference/retrieval.html</loc>
-  </url>
-  <url>
-    <loc>https://asshah4.github.io/dagger//reference/study.html</loc>
+    <loc>https://asshah4.github.io/dagger//reference/reconstruct_map.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/tidy_tests.html</loc>

@@ -1,27 +1,29 @@
-#' Extract a Model Hypothesis from a Study
+#' Extract models from a study
 #'
 #' @description
 #'
-#' `r lifecycle::badge('stable')`
+#' `r lifecycle::badge('experimental')`
 #'
-#' Extracts the model components of a hypothesis that has been ran. Everything
-#' is returned as a table, with a column of either tidy or raw results.
+#' This function serves as a non-pipeable extraction function to obtain
+#' aggregate components from a `study` object. Its designed to have a simple
+#' call interface to allow for retrieval of model objects to be formatted and
+#' displayed.
 #'
-#' @return A table of model/test fits, with either raw or tidied results
+#' @return A table that has either raw or tidy lists of model fits
 #'
 #' @param study A `study` object that contains `hypothesis` objects that have
 #'   been run
 #'
-#' @param which_ones Vector of names of hypotheses that should be extracted.
-#'   Will only return models that have been fit. Defaults to NULL, for which all
-#'   tests will be returned.
+#' @param which_ones Vector of names of hypotheses that should be extracted and
+#'   distilled. Will only be applied to models that have been fit. Defaults to
+#'   NULL, for which all tests will be returned.
 #'
 #' @param tidy Logical value for if the returned models should be collected into
 #'   a tidy table or as a list of raw model/test fits. Defaults to TRUE.
 #'
 #' @param ... For extensibility
 #' @export
-extract <- function(study, which_ones = NULL, tidy = TRUE, ...) {
+extract_models <- function(study, which_ones = NULL, tidy = TRUE, ...) {
 
 	# Validate
 	validate_class(study, "study")
@@ -56,6 +58,43 @@ extract <- function(study, which_ones = NULL, tidy = TRUE, ...) {
 
 	} else {
 		message("The models `", paste(which_ones, sep = ", "), "` have not been fit.")
+	}
+
+}
+
+#' Extract a `tidy_dagitty` object
+#'
+#' @description
+#' `r lifecycle::badge('experimental')`
+#'
+#' This function converts a hypothesis into a `dagitty` object (or
+#' `tidy_dagitty` if requested). This can subsequently be passed onto the
+#' [ggdag::ggdag()] function for additional plotting.
+#'
+#' @return `dagitty` or `tidy_dagitty` object
+#'
+#' @param study A `study` object
+#'
+#' @param name The name of a hypothesis added to the study
+#'
+#' @param tidy Defaults to FALSE, thus returning a `dagitty` object. If TRUE,
+#'   then will return a `tidy_dagitty` object.
+#'
+#' @importFrom rlang !!!
+#' @export
+extract_dagitty <- function(study, name, tidy = FALSE) {
+
+	p <- study$path_map
+	f <- p$formulae
+
+	exp <- unique(p$exposures[p$name == name])
+	out <- unique(p$outcomes[p$name == name])
+
+	if (tidy) {
+		rlang::exec(ggdag::dagify, !!!f, exposure = exp, outcome = out) %>%
+		ggdag::tidy_dagitty(.)
+	} else {
+		rlang::exec(ggdag::dagify, !!!f, exposure = exp, outcome = out)
 	}
 
 }

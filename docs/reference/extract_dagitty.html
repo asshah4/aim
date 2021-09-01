@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw out the map — draw • dagger</title>
+<title>Extract a tidy_dagitty object — extract_dagitty • dagger</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,11 @@
 
 
 
-<meta property="og:title" content="Draw out the map — draw" />
+<meta property="og:title" content="Extract a tidy_dagitty object — extract_dagitty" />
 <meta property="og:description" content="
-This experimental function is to integrate with ggraph::ggraph() to help look at path relationships in the variables that are described. It may start to resemble a DAG as the program develops." />
+This function converts a hypothesis into a dagitty object (or
+tidy_dagitty if requested). This can subsequently be passed onto the
+ggdag::ggdag() function for additional plotting." />
 
 
 
@@ -124,30 +126,41 @@ This experimental function is to integrate with ggraph::ggraph() to help look at
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Draw out the map</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/draw.R'><code>R/draw.R</code></a></small>
-    <div class="hidden name"><code>draw.Rd</code></div>
+    <h1>Extract a <code>tidy_dagitty</code> object</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/extract.R'><code>R/extract.R</code></a></small>
+    <div class="hidden name"><code>extract_dagitty.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>This experimental function is to integrate with <code><a href='https://ggraph.data-imaginist.com/reference/ggraph.html'>ggraph::ggraph()</a></code> to help look at path relationships in the variables that are described. It may start to resemble a <em>DAG</em> as the program develops.</p>
+<p>This function converts a hypothesis into a <code>dagitty</code> object (or
+<code>tidy_dagitty</code> if requested). This can subsequently be passed onto the
+<code><a href='https://rdrr.io/pkg/ggdag/man/ggdag.html'>ggdag::ggdag()</a></code> function for additional plotting.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>extract_dagitty</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, tidy <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>...</th>
-      <td><p>For extensibility</p></td>
+      <th>study</th>
+      <td><p>A <code>study</code> object</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>The name of a hypothesis added to the study</p></td>
+    </tr>
+    <tr>
+      <th>tidy</th>
+      <td><p>Defaults to FALSE, thus returning a <code>dagitty</code> object. If TRUE,
+then will return a <code>tidy_dagitty</code> object.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>ggraph</code> object</p>
+    <p><code>dagitty</code> or <code>tidy_dagitty</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

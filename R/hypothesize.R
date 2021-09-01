@@ -162,21 +162,30 @@ new_hypothesis <- function(hypothesis,
 print.hypothesis <- function(x, ...) {
 
 	# Retrieve variables
-	h <- stats::formula(stats::terms(x))
+	h <- strwrap(deparse(stats::formula(stats::terms(x))))
 	combination <- attr(x, "combination")
 	test <- attr(x, "test")
 	data_name <- attr(x, "data_name")
 
-	# Glue message
 	cat(glue::glue(
 		"
-		Hypothesis: {deparse(h)}
+		----------
+		Hypothesis
+		----------
+		"
+	))
+	cat("\n\n")
+	cat(glue::glue("{h}"))
+	cat("\n\n")
+	cat(glue::glue(
+		"
+		-----------
+		Description
+		-----------
 
-		Description:
-
-		Combination	{combination}
-		Test		{class(test)[1]}
-		Data		{data_name}
+		Combination  	{combination}
+		Test 		{paste0(class(test), collapse = ', ')}
+		Data 		{data_name}
 		"
 	))
 

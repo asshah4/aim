@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw out the map — draw • dagger</title>
+<title>Reconstruct a Hypothesis — reconstruct_map • dagger</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,9 @@
 
 
 
-<meta property="og:title" content="Draw out the map — draw" />
+<meta property="og:title" content="Reconstruct a Hypothesis — reconstruct_map" />
 <meta property="og:description" content="
-This experimental function is to integrate with ggraph::ggraph() to help look at path relationships in the variables that are described. It may start to resemble a DAG as the program develops." />
+Modify a hypothesis within a study with different approaches." />
 
 
 
@@ -124,30 +124,57 @@ This experimental function is to integrate with ggraph::ggraph() to help look at
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Draw out the map</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/draw.R'><code>R/draw.R</code></a></small>
-    <div class="hidden name"><code>draw.Rd</code></div>
+    <h1>Reconstruct a Hypothesis</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/confound.R'><code>R/confound.R</code></a></small>
+    <div class="hidden name"><code>reconstruct_map.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>This experimental function is to integrate with <code><a href='https://ggraph.data-imaginist.com/reference/ggraph.html'>ggraph::ggraph()</a></code> to help look at path relationships in the variables that are described. It may start to resemble a <em>DAG</em> as the program develops.</p>
+<p>Modify a <code>hypothesis</code> within a study with different approaches.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>reconstruct_map</span><span class='op'>(</span>
+  <span class='va'>study</span>,
+  <span class='va'>name</span>,
+  new_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>"_cut"</span><span class='op'>)</span>,
+  approach <span class='op'>=</span> <span class='st'>"confounding"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>study</th>
+      <td><p>A <code>study</code> object that has been constructed</p></td>
+    </tr>
+    <tr>
+      <th>name</th>
+      <td><p>Name of a an existing <code>hypothesis</code> object</p></td>
+    </tr>
+    <tr>
+      <th>new_name</th>
+      <td><p>Name of the new <code>hypothesis</code> that is created after
+modification. Defaults to modifying the original <strong>name</strong> by appending
+<code>*_cut</code>.</p></td>
+    </tr>
+    <tr>
+      <th>approach</th>
+      <td><p>String that informs <em>how</em> to reconstruct the
+hypothesis. Options include:</p><ul>
+<li><p><strong>confounding</strong> = Check for relevant terms based on [<code><a href='find_confounders.html'>find_confounders()</a></code>]</p></li>
+</ul></td>
+    </tr>
+    <tr>
       <th>...</th>
-      <td><p>For extensibility</p></td>
+      <td><p>Additional, optional parameters based on approach being used</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>ggraph</code> object</p>
+    <p>A <code>study</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

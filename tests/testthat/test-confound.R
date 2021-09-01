@@ -13,15 +13,14 @@ test_that("confounders can be found and manipulated", {
 	h2 <- update_hypothesis(h1, combination = "sequential")
 
 	x <-
-		study() %>%
-		propose(h1) %>%
-		propose(h2) %>%
-		construct() %>%
-		reconstruct("h2") %>%
-		reconstruct("h1") %>%
-		extract("h2_cut")
+		create_study() %>%
+		add_hypothesis(h1) %>%
+		add_hypothesis(h2) %>%
+		construct_map() %>%
+		reconstruct_map("h2") %>%
+		reconstruct_map("h1") %>%
+		extract_models("h2_cut")
 
 	expect_length(x, 11)
 
 })
-

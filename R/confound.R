@@ -27,8 +27,9 @@
 #'   **0.10** as supported by the epidemiology literature.
 #'
 #' @param ... For extensibility
+#'
 #' @export
-derive <- function(study,
+find_confounders <- function(study,
 									 name,
 									 delta = 0.10,
 									 ...) {
@@ -55,7 +56,7 @@ derive <- function(study,
 			m <-
 				study$model_map %>%
 				.[.$name == name,]
-			x <- extract(study, name)
+			x <- extract_models(study, name)
 
 			# Check for each unique outcome, and for each unique exposure combination
 			out <- unique(x$outcomes)
@@ -104,7 +105,7 @@ derive <- function(study,
 			m <-
 				study$model_map %>%
 				.[.$name == name,]
-			x <- extract(study, name)
+			x <- extract_models(study, name)
 			out <- unique(x$outcomes)
 			exp <- unique(x$exposures)
 
@@ -186,12 +187,14 @@ derive <- function(study,
 #' Reconstruct a Hypothesis
 #'
 #' @description
+#'
 #' `r lifecycle::badge('experimental')`
+#'
 #' Modify a `hypothesis` within a study with different approaches.
 #'
 #' @return A `study` object
 #'
-#' @inheritParams derive
+#' @inheritParams find_confounders
 #'
 #' @param new_name Name of the new `hypothesis` that is created after
 #'   modification. Defaults to modifying the original __name__ by appending
@@ -200,31 +203,34 @@ derive <- function(study,
 #' @param approach String that informs _how_ to reconstruct the
 #'   hypothesis. Options include:
 #'
-#'   * __confounding__ = Check for relevant terms based on [[dagger::derive()]]
+#'   * __confounding__ = Check for relevant terms based on [[dagger::find_confounders()]]
+#'
+#' @param ... Additional, optional parameters based on approach being used
 #'
 #' @export
-reconstruct <- function(study,
-												name,
-												new_name = paste0(name, "_cut"),
-												approach = "confounding",
-												...) {
+reconstruct_map <- function(study,
+														name,
+														new_name = paste0(name, "_cut"),
+														approach = "confounding",
+														...) {
+
 
 	switch(
 		approach,
 		confounding = {
-			hlist <- derive(study, name)
+			hlist <- find_confounders(study, name)
 
 			# Add back to study
 			for (i in 1:length(hlist)) {
 				study <-
 					study %>%
-					propose(hlist[[i]], name = new_name)
+					add_hypothesis(hlist[[i]], name = new_name)
 			}
 		}
 	)
 
 	# Fit updated models
-	study <- construct(study)
+	study <- construct_map(study)
 
 	# Return
 	invisible(study)

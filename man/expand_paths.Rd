@@ -2,7 +2,7 @@
 % Please edit documentation in R/paths.R
 \name{expand_paths}
 \alias{expand_paths}
-\title{Expand Paths of a Formula}
+\title{Expand paths of a formula}
 \usage{
 expand_paths(formula, ...)
 }

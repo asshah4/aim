@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw out the map — draw • dagger</title>
+<title>Mapping Many Hypotheses Together — create_study • dagger</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,15 @@
 
 
 
-<meta property="og:title" content="Draw out the map — draw" />
+<meta property="og:title" content="Mapping Many Hypotheses Together — create_study" />
 <meta property="og:description" content="
-This experimental function is to integrate with ggraph::ggraph() to help look at path relationships in the variables that are described. It may start to resemble a DAG as the program develops." />
+Calling create_study() initializes a list object that stores hypothesis objects,
+which are used to explore a research project. It allows for delayed building
+of models, and is used to help study the relationship between variables.
+A study object is a essentially a modified list containing two
+complementary table structures, which are interrelated via the hypothesis
+objects, and several attributes that allow for information storage about the
+object itself." />
 
 
 
@@ -124,17 +130,23 @@ This experimental function is to integrate with ggraph::ggraph() to help look at
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Draw out the map</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/draw.R'><code>R/draw.R</code></a></small>
-    <div class="hidden name"><code>draw.Rd</code></div>
+    <h1>Mapping Many Hypotheses Together</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/study.R'><code>R/study.R</code></a></small>
+    <div class="hidden name"><code>create_study.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>This experimental function is to integrate with <code><a href='https://ggraph.data-imaginist.com/reference/ggraph.html'>ggraph::ggraph()</a></code> to help look at path relationships in the variables that are described. It may start to resemble a <em>DAG</em> as the program develops.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
+<p>Calling <code>create_study()</code> initializes a list object that stores <code>hypothesis</code> objects,
+which are used to explore a research project. It allows for delayed building
+of models, and is used to help study the relationship between variables.</p>
+<p>A <code>study</code> object is a essentially a modified list containing two
+complementary table structures, which are interrelated via the <code>hypothesis</code>
+objects, and several attributes that allow for information storage about the
+object itself.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>draw</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>create_study</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,7 +159,11 @@ This experimental function is to integrate with ggraph::ggraph() to help look at
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a <code>ggraph</code> object</p>
+    <p>A <code>study</code> object</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other studies: 
+<code><a href='construct_map.html'>construct_map</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

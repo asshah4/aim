@@ -13,7 +13,7 @@ This is current developmental version.
 
 - `hypothesize()` creates individual hypotheses to be tested
 - `study()` initializes a data structure for mapping on `hypothesis` objects
-- `draw_hypothesis()` composes a hypothesis onto a `study` object
-- `construct_models()` and `construct_paths()` create the corresponding component tables underlying the `study` object
-- `extract_models()` returns the tidy and raw versions of the 
+- `propose()` composes a hypothesis onto a `study` object
+- `construct()` creates the corresponding component tables underlying the `study` object
+- `extract()` returns the tidy and raw versions of the 
 

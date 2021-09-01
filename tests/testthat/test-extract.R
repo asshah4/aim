@@ -1,4 +1,4 @@
-test_that("models can be extracted if available", {
+test_that("models can be extract_modelsed if available", {
 	library(parsnip)
 	h = mpg ~ X(wt) + hp + disp
 	combination = "sequential"
@@ -14,10 +14,10 @@ test_that("models can be extracted if available", {
 	h2 <- update_hypothesis(h1, combination = "sequential")
 
 	x <-
-		study() %>%
-		propose(h1)
+		create_study() %>%
+		add_hypothesis(h1)
 
-	# Extract unfitted should error
+	# extract_models unfitted should error
 	expect_error({
 		extract_models(x)
 	})
@@ -25,21 +25,21 @@ test_that("models can be extracted if available", {
 	# Fit some models
 	y <-
 		x %>%
-		construct() %>%
-		propose(h2)
+		construct_map() %>%
+		add_hypothesis(h2)
 
-	# Extract tidy models
-	m <- extract(y)
+	# extract_models tidy models
+	m <- extract_models(y)
 	expect_length(m, 11)
 	expect_equal(nrow(m), 6)
 
-	# Extract raw models
-	m <- extract(y, tidy = FALSE)
+	# extract_models raw models
+	m <- extract_models(y, tidy = FALSE)
 	expect_named(m, expected = c("name", "outcomes", "exposures", "number", "fit"))
 
 	# Message on pulling unfitted model by name
 	expect_message({
-		extract(y, which_ones = "h2")
+		extract_models(y, which_ones = "h2")
 	})
 
 })

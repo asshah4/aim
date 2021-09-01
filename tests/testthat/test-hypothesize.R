@@ -42,6 +42,6 @@ test_that("generic print methods work", {
 			data = mtcars
 		)
 
-	expect_output(print(hyp), regexp = "Hypothesis:")
+	expect_output(print(hyp), regexp = "Hypothesis")
 
 })

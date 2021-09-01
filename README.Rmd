@@ -42,7 +42,7 @@ library(parsnip)
 The basic function of the package is the `study()` argument, which creates a empty data structure object.
 
 ```{r}
-study()
+create_study()
 ```
 
 This is accompanied by `hypothesis` objects, which are essentially modified `formula` objects that allow for a better understanding of variable relationships. We create two objects below, which have not yet been analyzed yet.
@@ -69,9 +69,9 @@ These hypotheses can then be *drawn* on to the *study map* as below.
 
 ```{r}
 m1 <-
-	study() %>%
-	draw_hypothesis(h1) %>%
-	draw_hypothesis(h2) 
+	create_study() %>%
+	add_hypothesis(h1) %>%
+	add_hypothesis(h2) 
 
 # Print study
 m1
@@ -90,7 +90,7 @@ m2
 # Plot analyzed study
 library(ggplot2)
 m2 %>%
-	map_dag("h1", tidy = TRUE) %>%
+	extract_dagitty("h1", tidy = TRUE) %>%
 	ggdag::ggdag()
 ```
 
