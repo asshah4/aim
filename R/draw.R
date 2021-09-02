@@ -14,3 +14,27 @@
 draw <- function(...) {
 
 }
+
+
+#' Convert paths to a `tidygraph`
+#'
+#' This is a wrapper function to convert a `study` to a `tbl_graph` object for use with [{ggraph}](https://ggraph.data-imaginist.com/) and [{tidygraph}](https://tidygraph.data-imaginist.com/reference/index.html).
+#'
+#' @return a `tbl_graph` object
+#'
+#' @param study A `study` object
+#'
+#' @inheritParams tidygraph::as_tbl_graph
+#'
+#' @param ... For extensibility
+#'
+#' @rdname as_tbl_graph
+#' @importFrom tidygraph as_tbl_graph
+#' @export
+as_tbl_graph.study <- function(x, directed = TRUE, ...) {
+
+	tidygraph::as_tbl_graph(x$path_map, directed = directed, ...)
+
+}
+
+

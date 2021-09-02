@@ -29,7 +29,7 @@
 #'
 #' @param ... For extensibility
 #'
-#' @family hypotheses
+#' @family hypotheses studies
 #' @export
 add_hypothesis <- function(study,
 													 hypothesis,
@@ -50,6 +50,11 @@ add_hypothesis <- function(study,
 										 run = FALSE,
 										 path = FALSE,
 										 origin = attr(hypothesis, "origin"))
+
+	# Add strata if available
+	study <-
+		study %>%
+		update_study_strata(hypothesis, name)
 
 	# Paths can subsequently be added
 	study <-

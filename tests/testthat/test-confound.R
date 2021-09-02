@@ -17,8 +17,8 @@ test_that("confounders can be found and manipulated", {
 		add_hypothesis(h1) %>%
 		add_hypothesis(h2) %>%
 		construct_map() %>%
-		reconstruct_map("h2") %>%
-		reconstruct_map("h1") %>%
+		reconstruct("h2") %>%
+		reconstruct("h1") %>%
 		extract_models("h2_cut")
 
 	expect_length(x, 11)

@@ -46,7 +46,8 @@
 #'
 #' @param test_opts For optional or additional parameters to be given to the
 #'   *test* argument. Should be in format of a list with name-pairs, such as
-#'   `list(name = argument)` pairs.
+#'   `list(name = argument)` pairs. Default is NA, indicating there are no test
+#'   options to pass along.
 #'
 #' @param data Data set to be linked to this hypothesis. It assumes data is one
 #'   of type `c("tbl_df", "tbl", "data.frame")`. The name of the data set is
@@ -55,9 +56,9 @@
 #' @param strata How the data should be split or stratified. References the
 #'   name of the data given in that the models will be with fit against,
 #'   splitting the data into subsets. This helps to perform hypothesis testing
-#'   on subsets or strata of the data. It defaults to NULL (which means the full
-#'   data will be used). This argument will only be incorporated if `data` is
-#'   present.
+#'   on subsets or strata of the data. It defaults to __NA__ (which means the
+#'   full data will be used). This argument will only be incorporated if `data`
+#'   is present.
 #'
 #' @param origin Variable that serves as an attribute to help track the
 #'   hypothesis evolution through the study.
@@ -66,12 +67,32 @@
 #'
 #' @section Warning:
 #'
-#'   The formula object does not necessarily work for `htest` objects as it is
-#'   still __experimental__.
+#'   The `hypothesis` object does not yet fully work for function-based
+#'   __tests__, such as:
+#'
+#'   * `htest` objects from functions like [stats::t.test()] and
+#'   [stats::cor.test()]
+#'
+#'   * `glm` and `lm` objects from functions like [stats::lm()] and
+#'   [stats::glm()]
+#'
+#'   The `hypothesis` doesn't have full functionality for the follow objects
+#'   yet:
+#'
+#'   * `dagitty` from [dagitty::dagitty()] or [ggdag::dagify()]
+#'
+#'   * `tidy_dagitty` from [ggdag::tidy_dagitty()]
+#'
+#'   * `recipe` from [recipes::recipe()]
+#'
+#'   * `list` objects
 #'
 #' @inheritSection expand_formula Formulae
 #'
 #' @rdname hypothesize
+#' @aliases hypothesize hypothesize.default hypothesize.formula hypothesize.list
+#'   hypothesize.dagitty hypothesize.tidy_dagitty hypothesize.recipe
+#' @family hypotheses
 #' @export
 hypothesize <- function(h, ...) {
 	UseMethod("hypothesize", object = h)
@@ -82,24 +103,18 @@ hypothesize <- function(h, ...) {
 hypothesize.formula <- function(h,
 																combination,
 																test,
-																test_opts = NULL,
+																test_opts = NA,
 																data,
-																strata = NULL,
+																strata = NA,
 																origin = "independent",
 																...) {
-
-	# Check for test_opts
-	if (is.null(test_opts)) {test_opts <- NA}
-
-	# Check for strata
-	if (is.null(strata)) {strata <- NA}
 
 	# Get data name
 	data_name <- deparse(substitute(data))
 
 	# Validate/ensure appropriate test object: TODO
 	if (!is.na(strata)) {
-		h <- update(h, bquote(. ~ . - .(as.name(strata))))
+		h <- stats::update(h, bquote(. ~ . - .(as.name(strata))))
 	}
 
 	# Construct
@@ -120,6 +135,38 @@ hypothesize.formula <- function(h,
 	# Return
 	h
 
+}
+
+#' @rdname hypothesize
+#' @export
+hypothesize.list <- function(h, ...) {
+	stop(
+		"`hypothesize()` does not yet have full functionality for `list` objects."
+	)
+}
+
+#' @rdname hypothesize
+#' @export
+hypothesize.dagitty <- function(h, ...) {
+	stop(
+		"`hypothesize()` does not yet have full functionality for `dagitty` objects."
+	)
+}
+
+#' @rdname hypothesize
+#' @export
+hypothesize.tidy_dagitty <- function(h, ...) {
+	stop(
+		"`hypothesize()` does not yet have full functionality for `tidy_dagitty` objects."
+	)
+}
+
+#' @rdname hypothesize
+#' @export
+hypothesize.recipe <- function(h, ...) {
+	stop(
+		"`hypothesize()` does not yet have full functionality for `recipe` objects."
+	)
 }
 
 #' @rdname hypothesize
@@ -169,6 +216,7 @@ print.hypothesis <- function(x, ...) {
 	combination <- attr(x, "combination")
 	test <- attr(x, "test")
 	data_name <- attr(x, "data_name")
+	strata <- attr(x, "strata")
 
 	cat(glue::glue(
 		"
@@ -189,6 +237,7 @@ print.hypothesis <- function(x, ...) {
 		Combination  	{combination}
 		Test 		{paste0(class(test), collapse = ', ')}
 		Data 		{data_name}
+		Strata		{if (is.na(strata)) 'none' else strata}
 		"
 	))
 

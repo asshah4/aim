@@ -147,18 +147,25 @@ find_confounders <- function(study,
 	attr(study, "var_table") <- vars
 
 	# Create and return a list of hypothesis objects
-
 	x <- vars[vars$name == name,]
 	n <- nrow(x)
 	hlist <- list()
 
 	for (i in 1:n) {
 
-		f <-
-			paste(x$confounders[[i]], collapse = " + ") %>%
-			paste(paste0("X(", x$exposures[i], ")"), ., sep = " + ") %>%
-			paste(x$outcomes[i], ., sep = " ~ ") %>%
-			stats::formula()
+		# Need to handle NA/missing objects
+		if (length(x$confounders[[i]]) > 0) {
+			f <-
+				paste(x$confounders[[i]], collapse = " + ") %>%
+				paste(paste0("X(", x$exposures[[i]], ")"), ., sep = " + ") %>%
+				paste(x$outcomes[i], ., sep = " ~ ") %>%
+				stats::formula()
+		} else {
+			f <-
+				paste0("X(", x$exposures[[i]], ")") %>%
+				paste(x$outcomes[i], ., sep = " ~ ") %>%
+				stats::formula()
+		}
 
 		# Create new hypothesis object
 		h <- new_hypothesis(
@@ -203,12 +210,14 @@ find_confounders <- function(study,
 #' @param approach String that informs _how_ to reconstruct the
 #'   hypothesis. Options include:
 #'
-#'   * __confounding__ = Check for relevant terms based on [[dagger::find_confounders()]]
+#'   * __confounding__ = Check for relevant terms based on
+#'   [dagger::find_confounders()]. This includes the __delta__ parameter to
+#'   set the threshold for changes in effect size that are considered relevant.
 #'
 #' @param ... Additional, optional parameters based on approach being used
 #'
 #' @export
-reconstruct_map <- function(study,
+reconstruct <- function(study,
 														name,
 														new_name = paste0(name, "_cut"),
 														approach = "confounding",

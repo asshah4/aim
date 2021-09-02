@@ -6,6 +6,7 @@
 \alias{add_study_path}
 \alias{add_study_test}
 \alias{add_study_data}
+\alias{update_study_strata}
 \alias{add_study_status}
 \alias{update_study_status}
 \title{Study Modifications}
@@ -17,6 +18,8 @@ add_study_path(study, name)
 add_study_test(study, hypothesis, name)
 
 add_study_data(study, hypothesis, name)
+
+update_study_strata(study, hypothesis, name)
 
 add_study_status(
   study,

@@ -2,8 +2,12 @@
 % Please edit documentation in R/hypothesize.R
 \name{hypothesize}
 \alias{hypothesize}
-\alias{hypothesize.formula}
 \alias{hypothesize.default}
+\alias{hypothesize.formula}
+\alias{hypothesize.list}
+\alias{hypothesize.dagitty}
+\alias{hypothesize.tidy_dagitty}
+\alias{hypothesize.recipe}
 \title{Draw A Hypothesis}
 \usage{
 hypothesize(h, ...)
@@ -12,12 +16,20 @@ hypothesize(h, ...)
   h,
   combination,
   test,
-  test_opts = NULL,
+  test_opts = NA,
   data,
-  strata = NULL,
+  strata = NA,
   origin = "independent",
   ...
 )
+
+\method{hypothesize}{list}(h, ...)
+
+\method{hypothesize}{dagitty}(h, ...)
+
+\method{hypothesize}{tidy_dagitty}(h, ...)
+
+\method{hypothesize}{recipe}(h, ...)
 
 \method{hypothesize}{default}(h, ...)
 }
@@ -58,7 +70,8 @@ option currently supports only hypothesis tests, of class \code{htest}.
 
 \item{test_opts}{For optional or additional parameters to be given to the
 \emph{test} argument. Should be in format of a list with name-pairs, such as
-\code{list(name = argument)} pairs.}
+\code{list(name = argument)} pairs. Default is NA, indicating there are no test
+options to pass along.}
 
 \item{data}{Data set to be linked to this hypothesis. It assumes data is one
 of type \code{c("tbl_df", "tbl", "data.frame")}. The name of the data set is
@@ -67,9 +80,9 @@ taken from the object itself.}
 \item{strata}{How the data should be split or stratified. References the
 name of the data given in that the models will be with fit against,
 splitting the data into subsets. This helps to perform hypothesis testing
-on subsets or strata of the data. It defaults to NULL (which means the full
-data will be used). This argument will only be incorporated if \code{data} is
-present.}
+on subsets or strata of the data. It defaults to \strong{NA} (which means the
+full data will be used). This argument will only be incorporated if \code{data}
+is present.}
 
 \item{origin}{Variable that serves as an attribute to help track the
 hypothesis evolution through the study.}
@@ -87,8 +100,23 @@ modeled, and allows for assessment of confounding variables.
 \section{Warning}{
 
 
-The formula object does not necessarily work for \code{htest} objects as it is
-still \strong{experimental}.
+The \code{hypothesis} object does not yet fully work for function-based
+\strong{tests}, such as:
+\itemize{
+\item \code{htest} objects from functions like \code{\link[stats:t.test]{stats::t.test()}} and
+\code{\link[stats:cor.test]{stats::cor.test()}}
+\item \code{glm} and \code{lm} objects from functions like \code{\link[stats:lm]{stats::lm()}} and
+\code{\link[stats:glm]{stats::glm()}}
+}
+
+The \code{hypothesis} doesn't have full functionality for the follow objects
+yet:
+\itemize{
+\item \code{dagitty} from \code{\link[dagitty:dagitty]{dagitty::dagitty()}} or \code{\link[ggdag:dagify]{ggdag::dagify()}}
+\item \code{tidy_dagitty} from \code{\link[ggdag:tidy_dagitty]{ggdag::tidy_dagitty()}}
+\item \code{recipe} from \code{\link[recipes:recipe]{recipes::recipe()}}
+\item \code{list} objects
+}
 }
 
 \section{Formulae}{
@@ -115,3 +143,4 @@ and "x2" that should be conditionally tested for every level of "z"
 \deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}
 }
 
+\concept{hypotheses}

@@ -36,4 +36,4 @@ directionality, relationships, and patterns are intended to be used to help
 identify certain variables for future modeling, but the implementation is not
 yet complete.
 }
-\concept{hypotheses}
+\concept{hypotheses studies}

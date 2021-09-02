@@ -37,12 +37,13 @@ update_hypothesis <- function(hypothesis, ...) {
 		else if (i == "data") {
 			attributes(hypothesis)$data <- changes[[i]]
 			new_data_name <- mc[[i]]
-			attributes(hypothesis)$data_name <- new_data_name
+			attributes(hypothesis)$data_name <- as.character(new_data_name)
 		}
 		# Modify formula if strata is new
 		else if (i == "strata") {
 			a <- attributes(hypothesis)
-			hypothesis <- update(hypothesis, bquote(. ~ . - .(as.name(changes[[i]]))))
+			hypothesis <-
+				stats::update(hypothesis, bquote(. ~ . - .(as.name(changes[[i]]))))
 			attributes(hypothesis) <- a
 			attributes(hypothesis)$strata <- changes[[i]]
 		}

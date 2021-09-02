@@ -46,19 +46,31 @@ construct_map <- function(study, which_ones = NULL, ...) {
 	if (nrow(x) > 0) {
 		for (i in 1:nrow(x)) {
 			name <- x$name[i]
+			y <- m[m$name == name, ]
 
 			# Retrieve information
 			test <- fetch_test(study, name)
 			data <- fetch_data(study, name)
-			formulae <- fetch_formulae(study, name)
+			strata <- fetch_strata(study, name)
 
 			# Apply fitting and tidying functions
-			fits <- fit_parsnip_models(.formula = formulae, .test = test, .data = data)
-			tidied <- tidy_tests(.fits = fits)
+			if (is.na(strata)) {
+				y <-
+					y %>%
+					mutate(fit = purrr::map(formulae, ~ possible_parsnip_fit(test, .x, data)))
+			} else if (!is.na(strata)) {
+				y <-
+					y %>%
+					mutate(fit = purrr::map2(formulae, level, ~ possible_parsnip_fit(test, .x, data[data[[strata]] == .y, ])))
+			}
+
+			# Tidy all fits
+			y <-
+				y %>%
+				mutate(tidy = purrr::map(fit, ~ tidy(.x, conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE)))
 
 			# Return to original study object
-			m$fit[m$name == name] <- fits
-			m$tidy[m$name == name] <- tidied
+			m[m$name == name, ] <- y
 
 			# Update status
 			study <-

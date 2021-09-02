@@ -47,13 +47,13 @@ extract_models <- function(study, which_ones = NULL, tidy = TRUE, ...) {
 
 		study$model_map %>%
 			.[.$name %in% x$name, ] %>%
-			.[c("name", "outcomes", "exposures", "number", "fit")]
+			.[c("name", "outcomes", "exposures", "level", "number", "fit")]
 
 	} else if (nrow(x) > 0 & tidy) {
 
 		study$model_map %>%
 			.[.$name %in% x$name, ] %>%
-			.[c("name", "outcomes", "exposures", "number", "tidy")] %>%
+			.[c("name", "outcomes", "exposures", "level", "number", "tidy")] %>%
 			tidyr::unnest(tidy)
 
 	} else {

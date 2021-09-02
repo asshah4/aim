@@ -24,6 +24,24 @@ complementary table structures, which are interrelated via the \code{hypothesis}
 objects, and several attributes that allow for information storage about the
 object itself.
 }
+\details{
+The two primary data structures for a \code{study} object are the \strong{model_map} table and the \strong{path_map} table, which are interrelated and allow for reformulation of hypotheses and graphical understanding of relationships. Additional attributes are stored in the study to help simplify analyses behind the scenes.
+\subsection{Model Maps}{
+
+This is the primarily visualized system and creates the base for the \code{study} object.
+}
+
+\subsection{Path Maps}{
+
+Paths are proposed variable relationships when adding hypotheses. The relationship directions are theoretical, as the user proposes a hypothesis with the primary exposure and covariates being considered as potential confounders. By adding additional hypotheses, the amount of paths that are analyzed are increased.
+
+When mapping paths, they are analyzed by which paths can coexist. This is judged by:
+\itemize{
+\item must come from the same \strong{data}
+\item may use the same \strong{test}
+}
+}
+}
 \seealso{
 Other studies: 
 \code{\link{construct_map}()}

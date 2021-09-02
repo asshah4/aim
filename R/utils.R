@@ -13,10 +13,23 @@
 #' @return The result of calling `rhs(lhs)`.
 NULL
 
-#' @description Create a "fail-safe" execution of fit to continue running models
-#' @family helpers
+#' Create a "fail-safe" of tidying fits
 #' @noRd
-possible_parsnip_fit <- purrr::possibly(parsnip::fit.model_spec, otherwise = NA, quiet = FALSE)
+my_tidy <- function(x,
+										conf.int = TRUE,
+										conf.level = 0.95,
+										exponentiate = TRUE,
+										...) {
+	broom::tidy(x, conf.int, conf.level, exponentiate)
+}
+possible_tidy <- purrr::possibly(my_tidy, otherwise = NA, quiet = FALSE)
+
+#' Create a "fail-safe" execution of fit to continue running models
+#' @noRd
+my_parsnip_fit <- function(...) {
+	parsnip::fit.model_spec(...)
+}
+possible_parsnip_fit <- purrr::possibly(my_parsnip_fit, otherwise = NA, quiet = FALSE)
 
 #' Fit a list of {parsnip} models
 #'

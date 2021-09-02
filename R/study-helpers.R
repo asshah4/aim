@@ -180,7 +180,6 @@ NULL
 
 #' @rdname modify_study
 #' @keywords internal
-#' @export
 add_study_formula <- function(study, hypothesis, name) {
 
 	formula <- stats::formula(stats::terms(hypothesis))
@@ -220,7 +219,6 @@ add_study_formula <- function(study, hypothesis, name) {
 
 #' @rdname modify_study
 #' @keywords internal
-#' @export
 add_study_path <- function(study, name) {
 
 	# Must be called AFTER the formulas have been decomposed
@@ -266,7 +264,6 @@ add_study_path <- function(study, name) {
 
 #' @rdname modify_study
 #' @keywords internal
-#' @export
 add_study_test <- function(study, hypothesis, name) {
 
 	# Update test information
@@ -274,7 +271,7 @@ add_study_test <- function(study, hypothesis, name) {
 		attr(study, "test_table") %>%
 		tibble::add_row(
 			name = name,
-			call = deparse(stats::formula(stats::terms(hypothesis))),
+			call = list(stats::formula(stats::terms(hypothesis))),
 			test = list(attributes(hypothesis)$test),
 			test_opts = attributes(hypothesis)$test_opts,
 			combination = attributes(hypothesis)$combination,
@@ -290,7 +287,6 @@ add_study_test <- function(study, hypothesis, name) {
 
 #' @rdname modify_study
 #' @keywords internal
-#' @export
 add_study_data <- function(study, hypothesis, name) {
 
 	# Data table for linking hypothesis to data
@@ -319,7 +315,49 @@ add_study_data <- function(study, hypothesis, name) {
 
 #' @rdname modify_study
 #' @keywords internal
-#' @export
+update_study_strata <- function(study, hypothesis, name) {
+
+	# Get basic variables
+	strata <- fetch_strata(study, name)
+	data <- fetch_data(study, name)
+
+	# Remove original hypothesis from model map for later row binding
+	m <- study$model_map
+	x <- m[m$name == name, ]
+	m <- m[m$name != name, ]
+
+	# If strata are available
+	if (!is.na(strata)) {
+		level <-
+			data[[strata]] %>%
+			factor() %>%
+			levels()
+
+		xlist <- list()
+
+		for (i in 1:length(level)) {
+			xlist[[i]] <- x
+		}
+
+		y <- do.call("rbind", xlist)
+		y$level <- rep(level, each = nrow(x))
+	} else {
+		y <- x
+		y$level <- NA
+	}
+
+	z <-
+		rbind(m, y) %>%
+		dplyr::arrange(name)
+	study$model_map <- z
+
+	# Return
+	invisible(study)
+
+}
+
+#' @rdname modify_study
+#' @keywords internal
 add_study_status <- function(study,
 														 hypothesis,
 														 name,
@@ -347,7 +385,6 @@ add_study_status <- function(study,
 
 #' @rdname modify_study
 #' @keywords internal
-#' @export
 update_study_status <- function(study, name, ...) {
 
 	# Match call

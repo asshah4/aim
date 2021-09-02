@@ -13,6 +13,24 @@
 #' objects, and several attributes that allow for information storage about the
 #' object itself.
 #'
+#' @details
+#'
+#' The two primary data structures for a `study` object are the __model_map__ table and the __path_map__ table, which are interrelated and allow for reformulation of hypotheses and graphical understanding of relationships. Additional attributes are stored in the study to help simplify analyses behind the scenes.
+#'
+#' ## Model Maps
+#'
+#' This is the primarily visualized system and creates the base for the `study` object.
+#'
+#' ## Path Maps
+#'
+#' Paths are proposed variable relationships when adding hypotheses. The relationship directions are theoretical, as the user proposes a hypothesis with the primary exposure and covariates being considered as potential confounders. By adding additional hypotheses, the amount of paths that are analyzed are increased.
+#'
+#' When mapping paths, they are analyzed by which paths can coexist. This is judged by:
+#'
+#'   * must come from the same __data__
+#'
+#'   * may use the same __test__
+#'
 #' @param ... For extensibility
 #'
 #' @return A `study` object
@@ -23,7 +41,7 @@ create_study <- function(...) {
 	# Base structure is that of a list of two tibbles
 	study <- list(
 		model_map = tibble::tribble(
-			~name, ~outcomes, ~exposures, ~number, ~formulae, ~fit, ~tidy
+			~name, ~outcomes, ~exposures, ~level, ~number, ~formulae, ~fit, ~tidy
 		),
 		path_map = tibble::tribble(
 			~name, ~outcomes, ~exposures, ~from, ~direction, ~to, ~formulae, ~type, ~related
@@ -86,11 +104,13 @@ print.study <- function(x, ...) {
 
 	# Printing
 	cat(glue::glue(
-		"
-		# A study with {length(h)} hypothesis and {n} unique paths
-		# \n
-		"
+		"# A study with {length(h)} ",
+		"{if (length(h) == 1) 'hypothesis' else 'hypotheses'}",
+		" and {n} unique path",
+		"{if (n > 1) 's' else ''}",
 	))
+	cat("\n")
+	cat("#\n")
 	print(m)
 
 }
