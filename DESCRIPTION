@@ -26,6 +26,8 @@ Suggests:
     rmarkdown,
     ggdag,
     glue,
+    ggraph,
+    ggplot2,
 Imports: 
     dplyr,
     magrittr,
@@ -36,7 +38,8 @@ Imports:
     tidyr,
     methods,
     rlang,
-    lifecycle
+    lifecycle,
+    tidygraph
 Remotes:
     asshah4/dagger
 VignetteBuilder: knitr

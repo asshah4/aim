@@ -7,6 +7,9 @@
     <loc>https://asshah4.github.io/dagger//reference/add_hypothesis.html</loc>
   </url>
   <url>
+    <loc>https://asshah4.github.io/dagger//reference/as_tbl_graph.html</loc>
+  </url>
+  <url>
     <loc>https://asshah4.github.io/dagger//reference/construct_map.html</loc>
   </url>
   <url>
@@ -46,9 +49,6 @@
     <loc>https://asshah4.github.io/dagger//reference/hypothesize.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/modify_hypothesis.html</loc>
-  </url>
-  <url>
     <loc>https://asshah4.github.io/dagger//reference/modify_study.html</loc>
   </url>
   <url>
@@ -61,7 +61,7 @@
     <loc>https://asshah4.github.io/dagger//reference/print.study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/reconstruct_map.html</loc>
+    <loc>https://asshah4.github.io/dagger//reference/reconstruct.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/tidy_tests.html</loc>

@@ -67,7 +67,7 @@ construct_map <- function(study, which_ones = NULL, ...) {
 			# Tidy all fits
 			y <-
 				y %>%
-				mutate(tidy = purrr::map(fit, ~ tidy(.x, conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE)))
+				mutate(tidy = purrr::map(fit, ~ broom::tidy(.x, conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE)))
 
 			# Return to original study object
 			m[m$name == name, ] <- y

@@ -125,13 +125,13 @@ Modify a hypothesis within a study with different approaches." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Reconstruct a Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/derive.R'><code>R/derive.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/confound.R'><code>R/confound.R</code></a></small>
     <div class="hidden name"><code>reconstruct.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a>
-Modify a <code>hypothesis</code> within a study with different approaches.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>Modify a <code>hypothesis</code> within a study with different approaches.</p>
     </div>
 
     <pre class="usage"><span class='fu'>reconstruct</span><span class='op'>(</span>
@@ -163,12 +163,14 @@ modification. Defaults to modifying the original <strong>name</strong> by append
       <th>approach</th>
       <td><p>String that informs <em>how</em> to reconstruct the
 hypothesis. Options include:</p><ul>
-<li><p><strong>confounding</strong> = Check for relevant terms based on [<code><a href='derive.html'>derive()</a></code>]</p></li>
+<li><p><strong>confounding</strong> = Check for relevant terms based on
+<code><a href='find_confounders.html'>find_confounders()</a></code>. This includes the <strong>delta</strong> parameter to
+set the threshold for changes in effect size that are considered relevant.</p></li>
 </ul></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>For extensibility</p></td>
+      <td><p>Additional, optional parameters based on approach being used</p></td>
     </tr>
     </table>
 

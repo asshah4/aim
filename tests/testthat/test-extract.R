@@ -30,12 +30,12 @@ test_that("models can be extract_modelsed if available", {
 
 	# extract_models tidy models
 	m <- extract_models(y)
-	expect_length(m, 11)
+	expect_length(m, 12)
 	expect_equal(nrow(m), 6)
 
 	# extract_models raw models
 	m <- extract_models(y, tidy = FALSE)
-	expect_named(m, expected = c("name", "outcomes", "exposures", "number", "fit"))
+	expect_named(m, expected = c("name", "outcomes", "exposures", "level", "number", "fit"))
 
 	# Message on pulling unfitted model by name
 	expect_message({

@@ -21,6 +21,6 @@ test_that("confounders can be found and manipulated", {
 		reconstruct("h1") %>%
 		extract_models("h2_cut")
 
-	expect_length(x, 11)
+	expect_length(x, 12)
 
 })
