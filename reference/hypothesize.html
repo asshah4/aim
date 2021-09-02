@@ -145,12 +145,24 @@ modeled, and allows for assessment of confounding variables.</p>
   <span class='va'>h</span>,
   <span class='va'>combination</span>,
   <span class='va'>test</span>,
-  test_opts <span class='op'>=</span> <span class='cn'>NULL</span>,
+  test_opts <span class='op'>=</span> <span class='cn'>NA</span>,
   <span class='va'>data</span>,
-  strata <span class='op'>=</span> <span class='cn'>NULL</span>,
+  strata <span class='op'>=</span> <span class='cn'>NA</span>,
   origin <span class='op'>=</span> <span class='st'>"independent"</span>,
   <span class='va'>...</span>
 <span class='op'>)</span>
+
+<span class='co'># S3 method for list</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for dagitty</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for tidy_dagitty</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='co'># S3 method for recipe</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -201,7 +213,8 @@ option currently supports only hypothesis tests, of class <code>htest</code>.</p
       <th>test_opts</th>
       <td><p>For optional or additional parameters to be given to the
 <em>test</em> argument. Should be in format of a list with name-pairs, such as
-<code><a href='https://rdrr.io/r/base/list.html'>list(name = argument)</a></code> pairs.</p></td>
+<code><a href='https://rdrr.io/r/base/list.html'>list(name = argument)</a></code> pairs. Default is NA, indicating there are no test
+options to pass along.</p></td>
     </tr>
     <tr>
       <th>data</th>
@@ -214,9 +227,9 @@ taken from the object itself.</p></td>
       <td><p>How the data should be split or stratified. References the
 name of the data given in that the models will be with fit against,
 splitting the data into subsets. This helps to perform hypothesis testing
-on subsets or strata of the data. It defaults to NULL (which means the full
-data will be used). This argument will only be incorporated if <code>data</code> is
-present.</p></td>
+on subsets or strata of the data. It defaults to <strong>NA</strong> (which means the
+full data will be used). This argument will only be incorporated if <code>data</code>
+is present.</p></td>
     </tr>
     <tr>
       <th>origin</th>
@@ -233,8 +246,22 @@ hypothesis evolution through the study.</p></td>
     
 
 
-<p>The formula object does not necessarily work for <code>htest</code> objects as it is
-still <strong>experimental</strong>.</p>
+<p>The <code>hypothesis</code> object does not yet fully work for function-based
+<strong>tests</strong>, such as:</p><ul>
+<li><p><code>htest</code> objects from functions like <code><a href='https://rdrr.io/r/stats/t.test.html'>stats::t.test()</a></code> and
+<code><a href='https://rdrr.io/r/stats/cor.test.html'>stats::cor.test()</a></code></p></li>
+<li><p><code>glm</code> and <code>lm</code> objects from functions like <code><a href='https://rdrr.io/r/stats/lm.html'>stats::lm()</a></code> and
+<code><a href='https://rdrr.io/r/stats/glm.html'>stats::glm()</a></code></p></li>
+</ul>
+
+<p>The <code>hypothesis</code> doesn't have full functionality for the follow objects
+yet:</p><ul>
+<li><p><code>dagitty</code> from <code><a href='https://rdrr.io/pkg/dagitty/man/dagitty.html'>dagitty::dagitty()</a></code> or <code><a href='https://rdrr.io/pkg/ggdag/man/dagify.html'>ggdag::dagify()</a></code></p></li>
+<li><p><code>tidy_dagitty</code> from <code><a href='https://rdrr.io/pkg/ggdag/man/tidy_dagitty.html'>ggdag::tidy_dagitty()</a></code></p></li>
+<li><p><code>recipe</code> from <code>recipes::recipe()</code></p></li>
+<li><p><code>list</code> objects</p></li>
+</ul>
+
     <h2 class="hasAnchor" id="formulae"><a class="anchor" href="#formulae"></a>Formulae</h2>
 
     

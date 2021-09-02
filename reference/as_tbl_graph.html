@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Mapping Many Hypotheses Together — create_study • dagger</title>
+<title>Convert paths to a tidygraph — as_tbl_graph.study • dagger</title>
 
 
 <!-- jquery -->
@@ -39,15 +39,8 @@
 
 
 
-<meta property="og:title" content="Mapping Many Hypotheses Together — create_study" />
-<meta property="og:description" content="
-Calling create_study() initializes a list object that stores hypothesis objects,
-which are used to explore a research project. It allows for delayed building
-of models, and is used to help study the relationship between variables.
-A study object is a essentially a modified list containing two
-complementary table structures, which are interrelated via the hypothesis
-objects, and several attributes that allow for information storage about the
-object itself." />
+<meta property="og:title" content="Convert paths to a tidygraph — as_tbl_graph.study" />
+<meta property="og:description" content="This is a wrapper function to convert a study to a tbl_graph object for use with ggraph and tidygraph." />
 
 
 
@@ -130,57 +123,42 @@ object itself." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Mapping Many Hypotheses Together</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/study.R'><code>R/study.R</code></a></small>
-    <div class="hidden name"><code>create_study.Rd</code></div>
+    <h1>Convert paths to a <code>tidygraph</code></h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/draw.R'><code>R/draw.R</code></a></small>
+    <div class="hidden name"><code>as_tbl_graph.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#stable'><img src='figures/lifecycle-stable.svg' alt='[Stable]' /></a></p>
-<p>Calling <code>create_study()</code> initializes a list object that stores <code>hypothesis</code> objects,
-which are used to explore a research project. It allows for delayed building
-of models, and is used to help study the relationship between variables.</p>
-<p>A <code>study</code> object is a essentially a modified list containing two
-complementary table structures, which are interrelated via the <code>hypothesis</code>
-objects, and several attributes that allow for information storage about the
-object itself.</p>
+    <p>This is a wrapper function to convert a <code>study</code> to a <code>tbl_graph</code> object for use with <a href='https://ggraph.data-imaginist.com/'>ggraph</a> and <a href='https://tidygraph.data-imaginist.com/reference/index.html'>tidygraph</a>.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_study</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='co'># S3 method for study</span>
+<span class='fu'>as_tbl_graph</span><span class='op'>(</span><span class='va'>x</span>, directed <span class='op'>=</span> <span class='cn'>TRUE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>x</th>
+      <td><p>An object convertible to a <code>tbl_graph</code></p></td>
+    </tr>
+    <tr>
+      <th>directed</th>
+      <td><p>Should the constructed graph be directed (defaults to <code>TRUE</code>)</p></td>
+    </tr>
+    <tr>
       <th>...</th>
       <td><p>For extensibility</p></td>
+    </tr>
+    <tr>
+      <th>study</th>
+      <td><p>A <code>study</code> object</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>study</code> object</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>The two primary data structures for a <code>study</code> object are the <strong>model_map</strong> table and the <strong>path_map</strong> table, which are interrelated and allow for reformulation of hypotheses and graphical understanding of relationships. Additional attributes are stored in the study to help simplify analyses behind the scenes.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Model Maps</h3>
-
-
-<p>This is the primarily visualized system and creates the base for the <code>study</code> object.</p>
-
-<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Path Maps</h3>
-
-
-<p>Paths are proposed variable relationships when adding hypotheses. The relationship directions are theoretical, as the user proposes a hypothesis with the primary exposure and covariates being considered as potential confounders. By adding additional hypotheses, the amount of paths that are analyzed are increased.</p>
-<p>When mapping paths, they are analyzed by which paths can coexist. This is judged by:</p><ul>
-<li><p>must come from the same <strong>data</strong></p></li>
-<li><p>may use the same <strong>test</strong></p></li>
-</ul>
-
-
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p>Other studies: 
-<code><a href='construct_map.html'>construct_map</a>()</code></p></div>
+    <p>a <code>tbl_graph</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
