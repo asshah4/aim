@@ -13,6 +13,10 @@
 #' @return The result of calling `rhs(lhs)`.
 NULL
 
+#' @importFrom rlang :=
+#' @export
+rlang::`:=`
+
 #' Create a "fail-safe" of tidying fits
 #' @noRd
 my_tidy <- function(x,

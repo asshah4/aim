@@ -28,8 +28,11 @@ construct_map <- function(study, which_ones = NULL, ...) {
 	validate_class(study, "study")
 	validate_stage(study, "hypothesis")
 
-	# Model map
+	# Model map, with appropriate types for fits and tidy
 	m <- study$model_map
+	m$fit <- as.list(m$fit)
+	m$tidy <- as.list(m$tidy)
+
 
 	# Select out models that have not yet been run
 	# If specified hypothesis are named, force them to be re-run

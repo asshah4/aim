@@ -39,7 +39,8 @@ Imports:
     methods,
     rlang,
     lifecycle,
-    tidygraph
+    tidygraph,
+    gt,
 Remotes:
     asshah4/dagger
 VignetteBuilder: knitr
