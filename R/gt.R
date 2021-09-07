@@ -32,13 +32,29 @@
 #'   modeling.
 #'
 #' @param ranks Vector containing which models to select (either numerically or
-#'   by a name), based on user preference. Serves as the row names in the `gt`
-#'   table.
+#'   by a name), based on user preference. Serves as the base for the row names
+#'   in the `gt` table. They are re-sequenced to be numerical integers if using
+#'   the __rank_lab__ parameter. For example, if the selections are `ranks =
+#'   c(1, 3, 5)`, then would become "`rank_lab` 1", "`rank_lab` 2", "`rank_lab`
+#'   3".
 #'
 #' @param rank_lab Defaults to NULL. Character string that would be prepended to
 #'   each individual rank to provide legibility to the rows. For example, if
-#'   `ranks = c(1, 2, 3)`, then `rank_lab = "Model"` would produce the labels
+#'   `ranks = c(1, 3, 5)`, then `rank_lab = "Model"` would produce the labels
 #'   "Model 1", "Model 2", "Model 3". If missing, will not modify the row names.
+#'
+#' @param rank_footnotes Defaults to NULL. This is an unnamed list of the
+#'   sequential labels to be added to help identify each model. The first
+#'   argument is the label for the outcome variable. There then must be a value
+#'   for each position selected by the __ranks__ argument. For example,
+#'   `rank_footnotes = list("outcome", "exposure", "x1", c("x2", "x3"))`. This
+#'   would generate a pattern:
+#'
+#'   \eqn{Model 1 = outcome ~ exposure}
+#'
+#'   \eqn{Model 2 = outcome ~ Model 1 + x1}
+#'
+#'   \eqn{Model 3 = outcome ~ Model 2 + x2 + x3}
 #'
 #' @param disp_col The numeric columns that contain the variables that should be
 #'   displayed, such as `disp_col = c("estimate", "conf.low", "conf.high")`,
@@ -78,6 +94,7 @@
 #' @import gt
 #' @importFrom dplyr filter mutate
 #' @importFrom rlang := .data
+#' @family visualizers
 #' @export
 tbl_sequential <- function(x,
 													 var_col = "term",
@@ -86,6 +103,7 @@ tbl_sequential <- function(x,
 													 rank_col = "number",
 													 ranks,
 													 rank_lab = NULL,
+													 rank_footnotes = NULL,
 													 disp_col = c("estimate", "conf.low", "conf.high"),
 													 disp_glue = "{1} ({2}, {3})",
 													 stat_col = NA,
@@ -108,10 +126,10 @@ tbl_sequential <- function(x,
 
 	# Ranks
 	if (!is.null(rank_lab)) {
-		rank_lab <- rep(paste(rank_lab, 1:length(ranks)), n)
+		rank_lab_mod <- rep(paste(rank_lab, 1:length(ranks)), n)
 		rank_col_sym <- rlang::sym(rank_col)
 	} else {
-		rank_lab <- as.character(ranks)
+		rank_lab_mod <- as.character(ranks)
 	}
 
 	# Create initial `gt` model
@@ -125,25 +143,25 @@ tbl_sequential <- function(x,
 			values_from = c({{ disp_col }}, {{ stat_col }}),
 			names_glue = paste0("{", var_col[[1]], "}_{.value}")
 		) %>%
-		dplyr::mutate(!!rank_col_sym := rank_lab) %>%
+		dplyr::mutate(!!rank_col_sym := rank_lab_mod) %>%
 		{
 			if (!is.null(group_var)) {
-				gt(., rowname_col = rank_col, groupname_col = group_var)
-			} else gt(., rowname_col = rank_col)
+				gt::gt(., rowname_col = rank_col, groupname_col = group_var)
+			} else gt::gt(., rowname_col = rank_col)
 		}
 
 	# Merge columns
 	for (i in vars) {
 		y <-
 			y %>%
-			cols_merge(columns = starts_with(i), pattern = disp_glue)
+			gt::cols_merge(columns = gt::starts_with(i), pattern = disp_glue)
 	}
 
 	# Column names
 	names(var_list) <- paste0(vars, "_estimate")
 	y <-
 		y %>%
-		cols_label(.list = var_list)
+		gt::cols_label(.list = var_list)
 
 	# Significant values and styling
 	if (!is.na(stat_col)) {
@@ -158,12 +176,12 @@ tbl_sequential <- function(x,
 		for (i in 1:length(vars)) {
 			y <-
 				y %>%
-				tab_style(
+				gt::tab_style(
 					style = switch(
 						stat_style,
-						fill = list(cell_fill(stat_opts))
+						fill = list(gt::cell_fill(stat_opts))
 					),
-					locations = cells_body(
+					locations = gt::cells_body(
 						columns = !!var_names[[i]],
 						rows = !!stat_names[[i]] < stat_val
 					)
@@ -171,11 +189,97 @@ tbl_sequential <- function(x,
 		}
 	}
 
+	# Add Footnotes
+	if (!is.null(rank_footnotes)) {
+		out <- rank_footnotes[[1]]
+
+		footnote_list <- list()
+
+		for (i in 1:length(ranks)) {
+
+			lhs <- paste(rank_lab_mod[[i]], "=", out, "~")
+
+			if (i == 1) {
+				footnote_list[[i]] <-
+					paste(rank_footnotes[[i + 1]], collapse = " + ") %>%
+					paste(lhs, .)
+			} else {
+				footnote_list[[i]] <-
+					paste(rank_footnotes[[i + 1]], collapse = " + ") %>%
+					paste(rank_lab_mod[[i - 1 ]], ., sep = " + ") %>%
+					paste(lhs, .)
+			}
+
+		}
+
+		# Add them to original structure
+		for (i in 1:length(ranks)) {
+			if (n == 1) {
+				y <-
+					y %>%
+					gt::tab_footnote(
+						footnote_list[[i]],
+						locations = gt::cells_stub(rows = i)
+					)
+			}
+			if (n > 1) {
+				for (j in 2:n) {
+					y <-
+						y %>%
+						gt::tab_footnote(
+							footnote_list[[i]],
+							locations = gt::cells_stub(rows = c(i, i + (j - 1)*length(ranks)))
+						)
+				}
+			}
+		}
+
+	}
+
 	# Final touchups
 	y <-
 		y %>%
-		fmt_number(columns = everything(), decimals = decimals)
+		gt::fmt_number(columns = gt::everything(), decimals = decimals)
 
 	y
+
+}
+
+#' Compact and minimal theme for `gt` tables
+#'
+#' This theme was used for placing somewhat larger tables into `xaringan` slides
+#' by making the spacing more compact and decreasing the font size. The exposed
+#' variables are to control font size and table width, but any option from the
+#' `gt` package is allowed.
+#'
+#' @param x A `gt` object
+#' @inheritParams gt::tab_options
+#' @param ... For passing additional arguments to the [gt::tab_options()]
+#'   function
+#' @importFrom gt px pct
+#' @family visualizers
+#' @export
+theme_gt_compact <- function(x,
+														 table.font.size = pct(80),
+														 table.width = pct(90),
+														 ...) {
+
+	validate_class(x, "gt_tbl")
+
+	x %>%
+		gt::tab_options(
+			# Preset
+			table.margin.left = px(1),
+			table.margin.right = px(1),
+			row_group.padding = px(1),
+			data_row.padding = px(1),
+			footnotes.padding = px(1),
+			source_notes.padding = px(1),
+			stub.border.width = px(1),
+			# User supplied
+			table.width = table.width,
+			table.font.size = table.font.size,
+			...
+		)
 
 }

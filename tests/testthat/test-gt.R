@@ -18,7 +18,8 @@ test_that("gt tables can be made ", {
 		construct_map() %>%
 		extract_models("h1")
 
-	gt_tbl <-
+	# Create a `gt` table successfully
+	y <-
 		tbl_sequential(
 			x,
 			var_list = list(wt = "Weight", hp = "Horsepower", qsec = "Second"),
@@ -28,6 +29,17 @@ test_that("gt tables can be made ", {
 			stat_col = "p.value"
 		)
 
-	expect_s3_class(gt_tbl, "gt_tbl")
+	expect_s3_class(y, "gt_tbl")
+
+	# Able to shrink the table
+	z <-
+		y %>%
+		theme_gt_compact(table.font.size = gt::px(12)) %>%
+		.[["_options"]] %>%
+		.[.$parameter == "table_font_size", ] %>%
+		.$value %>%
+		.[[1]]
+
+	expect_equal(z, "12px")
 
 })

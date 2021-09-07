@@ -12,6 +12,7 @@ tbl_sequential(
   rank_col = "number",
   ranks,
   rank_lab = NULL,
+  rank_footnotes = NULL,
   disp_col = c("estimate", "conf.low", "conf.high"),
   disp_glue = "{1} ({2}, {3})",
   stat_col = NA,
@@ -44,13 +45,28 @@ variable for the models, such as a sequence in the setting of sequential
 modeling.}
 
 \item{ranks}{Vector containing which models to select (either numerically or
-by a name), based on user preference. Serves as the row names in the \code{gt}
-table.}
+by a name), based on user preference. Serves as the base for the row names
+in the \code{gt} table. They are re-sequenced to be numerical integers if using
+the \strong{rank_lab} parameter. For example, if the selections are \code{ranks = c(1, 3, 5)}, then would become "\code{rank_lab} 1", "\code{rank_lab} 2", "\code{rank_lab}
+3".}
 
 \item{rank_lab}{Defaults to NULL. Character string that would be prepended to
 each individual rank to provide legibility to the rows. For example, if
-\code{ranks = c(1, 2, 3)}, then \code{rank_lab = "Model"} would produce the labels
+\code{ranks = c(1, 3, 5)}, then \code{rank_lab = "Model"} would produce the labels
 "Model 1", "Model 2", "Model 3". If missing, will not modify the row names.}
+
+\item{rank_footnotes}{Defaults to NULL. This is an unnamed list of the
+sequential labels to be added to help identify each model. The first
+argument is the label for the outcome variable. There then must be a value
+for each position selected by the \strong{ranks} argument. For example,
+\code{rank_footnotes = list("outcome", "exposure", "x1", c("x2", "x3"))}. This
+would generate a pattern:
+
+\eqn{Model 1 = outcome ~ exposure}
+
+\eqn{Model 2 = outcome ~ Model 1 + x1}
+
+\eqn{Model 3 = outcome ~ Model 2 + x2 + x3}}
 
 \item{disp_col}{The numeric columns that contain the variables that should be
 displayed, such as \code{disp_col = c("estimate", "conf.low", "conf.high")},
@@ -94,3 +110,8 @@ model tables. It is built for sequentially adjusted models that have been
 created from the \code{\link[=extract_models]{extract_models()}} function, which is primarily uses
 the \code{\link[broom:reexports]{broom::tidy()}} function to help describe model fits.
 }
+\seealso{
+Other visualizers: 
+\code{\link{theme_gt_compact}()}
+}
+\concept{visualizers}

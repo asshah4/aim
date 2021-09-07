@@ -6,20 +6,17 @@ test_that("confounders can be found and manipulated", {
 	h1 <-
 		hypothesize(
 			h,
-			combination = "parallel",
+			combination = "sequential",
 			test = test,
 			data = mtcars,
 		)
-	h2 <- update_hypothesis(h1, combination = "sequential")
 
 	x <-
 		create_study() %>%
 		add_hypothesis(h1) %>%
-		add_hypothesis(h2) %>%
 		construct_map() %>%
-		reconstruct("h2") %>%
 		reconstruct("h1") %>%
-		extract_models("h2_cut")
+		extract_models("h1_cut")
 
 	expect_length(x, 12)
 

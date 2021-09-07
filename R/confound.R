@@ -223,7 +223,6 @@ reconstruct <- function(study,
 														approach = "confounding",
 														...) {
 
-
 	switch(
 		approach,
 		confounding = {
