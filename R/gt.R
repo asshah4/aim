@@ -106,7 +106,7 @@ tbl_sequential <- function(x,
 													 rank_footnotes = NULL,
 													 disp_col = c("estimate", "conf.low", "conf.high"),
 													 disp_glue = "{1} ({2}, {3})",
-													 stat_col = NA,
+													 stat_col = NULL,
 													 stat_val = 0.05,
 													 stat_style = "fill",
 													 stat_opts = list(color = "lightgreen"),
@@ -125,9 +125,9 @@ tbl_sequential <- function(x,
 	}
 
 	# Ranks
+	rank_col_sym <- rlang::sym(rank_col)
 	if (!is.null(rank_lab)) {
 		rank_lab_mod <- rep(paste(rank_lab, 1:length(ranks)), n)
-		rank_col_sym <- rlang::sym(rank_col)
 	} else {
 		rank_lab_mod <- as.character(ranks)
 	}
@@ -135,7 +135,7 @@ tbl_sequential <- function(x,
 	# Create initial `gt` model
 	y <-
 		x %>%
-		dplyr::filter( .data[[var_col[[1]]]] %in% vars) %>%
+		dplyr::filter(.data[[var_col[[1]]]] %in% vars) %>%
 		dplyr::select(dplyr::any_of(c({{ group_var }}, {{ rank_col }}, {{ var_col }}, {{ disp_col }}, {{ stat_col }}))) %>%
 		dplyr::filter( .data[[rank_col[[1]]]] %in% ranks) %>%
 		tidyr::pivot_wider(
@@ -158,19 +158,20 @@ tbl_sequential <- function(x,
 	}
 
 	# Column names
-	names(var_list) <- paste0(vars, "_estimate")
+	var_list_mod <- var_list
+	names(var_list_mod) <- paste0(vars, "_estimate")
 	y <-
 		y %>%
-		gt::cols_label(.list = var_list)
+		gt::cols_label(.list = var_list_mod)
 
 	# Significant values and styling
-	if (!is.na(stat_col)) {
+	if (!is.null(stat_col)) {
 
 		stat_names <-
 			paste0(vars, "_", stat_col) %>%
 			lapply(., rlang::sym)
 		var_names <-
-			names(var_list) %>%
+			names(var_list_mod) %>%
 			lapply(., rlang::sym)
 
 		for (i in 1:length(vars)) {
@@ -179,7 +180,7 @@ tbl_sequential <- function(x,
 				gt::tab_style(
 					style = switch(
 						stat_style,
-						fill = list(gt::cell_fill(stat_opts))
+						fill = list(gt::cell_fill(unlist(stat_opts)))
 					),
 					locations = gt::cells_body(
 						columns = !!var_names[[i]],

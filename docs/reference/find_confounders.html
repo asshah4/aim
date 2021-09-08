@@ -156,7 +156,7 @@ confounder (or otherwise removed).</p></li>
 
     </div>
 
-    <pre class="usage"><span class='fu'>find_confounders</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, delta <span class='op'>=</span> <span class='fl'>0.1</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>find_confounders</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, delta <span class='op'>=</span> <span class='fl'>0.1</span>, return_study <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -174,6 +174,14 @@ confounder (or otherwise removed).</p></li>
       <td><p>Percent change to be used as cut-off for considering an
 important change in the outcome ~ exposure relationship. Defaults to
 <strong>0.10</strong> as supported by the epidemiology literature.</p></td>
+    </tr>
+    <tr>
+      <th>return_study</th>
+      <td><p>Logical value, defaults to FALSE, on if the original
+<code>study</code> should be returned when this function is called. This is a
+developer feature, mainly for internal use (as is the function itself). It
+returns the modified hypotheses as a list in position <code>[[1]]</code>, and the
+updated study in position <code>[[2]]</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>

@@ -148,6 +148,7 @@ the <code><a href='https://generics.r-lib.org/reference/tidy.html'>broom::tidy()
   rank_col <span class='op'>=</span> <span class='st'>"number"</span>,
   <span class='va'>ranks</span>,
   rank_lab <span class='op'>=</span> <span class='cn'>NULL</span>,
+  rank_footnotes <span class='op'>=</span> <span class='cn'>NULL</span>,
   disp_col <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"estimate"</span>, <span class='st'>"conf.low"</span>, <span class='st'>"conf.high"</span><span class='op'>)</span>,
   disp_glue <span class='op'>=</span> <span class='st'>"{1} ({2}, {3})"</span>,
   stat_col <span class='op'>=</span> <span class='cn'>NA</span>,
@@ -194,15 +195,29 @@ modeling.</p></td>
     <tr>
       <th>ranks</th>
       <td><p>Vector containing which models to select (either numerically or
-by a name), based on user preference. Serves as the row names in the <code>gt</code>
-table.</p></td>
+by a name), based on user preference. Serves as the base for the row names
+in the <code>gt</code> table. They are re-sequenced to be numerical integers if using
+the <strong>rank_lab</strong> parameter. For example, if the selections are <code>ranks = c(1, 3, 5)</code>, then would become "<code>rank_lab</code> 1", "<code>rank_lab</code> 2", "<code>rank_lab</code>
+3".</p></td>
     </tr>
     <tr>
       <th>rank_lab</th>
       <td><p>Defaults to NULL. Character string that would be prepended to
 each individual rank to provide legibility to the rows. For example, if
-<code>ranks = c(1, 2, 3)</code>, then <code>rank_lab = "Model"</code> would produce the labels
+<code>ranks = c(1, 3, 5)</code>, then <code>rank_lab = "Model"</code> would produce the labels
 "Model 1", "Model 2", "Model 3". If missing, will not modify the row names.</p></td>
+    </tr>
+    <tr>
+      <th>rank_footnotes</th>
+      <td><p>Defaults to NULL. This is an unnamed list of the
+sequential labels to be added to help identify each model. The first
+argument is the label for the outcome variable. There then must be a value
+for each position selected by the <strong>ranks</strong> argument. For example,
+<code>rank_footnotes = list("outcome", "exposure", "x1", c("x2", "x3"))</code>. This
+would generate a pattern:</p>
+<p>\(Model 1 = outcome ~ exposure\)</p>
+<p>\(Model 2 = outcome ~ Model 1 + x1\)</p>
+<p>\(Model 3 = outcome ~ Model 2 + x2 + x3\)</p></td>
     </tr>
     <tr>
       <th>disp_col</th>
@@ -256,6 +271,10 @@ Defaults to 2 decimal places.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Other visualizers: 
+<code><a href='theme_gt_compact.html'>theme_gt_compact</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

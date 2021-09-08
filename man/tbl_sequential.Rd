@@ -15,7 +15,7 @@ tbl_sequential(
   rank_footnotes = NULL,
   disp_col = c("estimate", "conf.low", "conf.high"),
   disp_glue = "{1} ({2}, {3})",
-  stat_col = NA,
+  stat_col = NULL,
   stat_val = 0.05,
   stat_style = "fill",
   stat_opts = list(color = "lightgreen"),

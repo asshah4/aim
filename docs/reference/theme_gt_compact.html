@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Extract a dagitty object — extract_dagitty • dagger</title>
+<title>Compact and minimal theme for gt tables — theme_gt_compact • dagger</title>
 
 
 <!-- jquery -->
@@ -39,11 +39,11 @@
 
 
 
-<meta property="og:title" content="Extract a dagitty object — extract_dagitty" />
-<meta property="og:description" content="
-This function converts a hypothesis into a dagitty object (or
-tidy_dagitty if requested). This can subsequently be passed onto the
-ggdag::ggdag() function for additional plotting." />
+<meta property="og:title" content="Compact and minimal theme for gt tables — theme_gt_compact" />
+<meta property="og:description" content="This theme was used for placing somewhat larger tables into xaringan slides
+by making the spacing more compact and decreasing the font size. The exposed
+variables are to control font size and table width, but any option from the
+gt package is allowed." />
 
 
 
@@ -126,41 +126,58 @@ ggdag::ggdag() function for additional plotting." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Extract a <code>dagitty</code> object</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/draw.R'><code>R/draw.R</code></a></small>
-    <div class="hidden name"><code>extract_dagitty.Rd</code></div>
+    <h1>Compact and minimal theme for <code>gt</code> tables</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/gt.R'><code>R/gt.R</code></a></small>
+    <div class="hidden name"><code>theme_gt_compact.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>This function converts a hypothesis into a <code>dagitty</code> object (or
-<code>tidy_dagitty</code> if requested). This can subsequently be passed onto the
-<code><a href='https://rdrr.io/pkg/ggdag/man/ggdag.html'>ggdag::ggdag()</a></code> function for additional plotting.</p>
+    <p>This theme was used for placing somewhat larger tables into <code>xaringan</code> slides
+by making the spacing more compact and decreasing the font size. The exposed
+variables are to control font size and table width, but any option from the
+<code>gt</code> package is allowed.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>extract_dagitty</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, tidy <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>theme_gt_compact</span><span class='op'>(</span><span class='va'>x</span>, table.font.size <span class='op'>=</span> <span class='fu'>pct</span><span class='op'>(</span><span class='fl'>80</span><span class='op'>)</span>, table.width <span class='op'>=</span> <span class='fu'>pct</span><span class='op'>(</span><span class='fl'>90</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>study</th>
-      <td><p>A <code>study</code> object</p></td>
+      <th>x</th>
+      <td><p>A <code>gt</code> object</p></td>
     </tr>
     <tr>
-      <th>name</th>
-      <td><p>The name of a hypothesis added to the study</p></td>
+      <th>table.font.size</th>
+      <td><p>The font sizes for the parent text element <code>table</code> and the following child
+elements: <code>heading.title</code>, <code>heading.subtitle</code>, <code>column_labels</code>,
+<code>row_group</code>, <code>footnotes</code>, and <code>source_notes</code>. Can be specified as a
+single-length character vector with units of pixels (e.g., <code>12px</code>) or as a
+percentage (e.g., <code>80\%</code>). If provided as a single-length numeric vector,
+it is assumed that the value is given in units of pixels. The <code><a href='https://gt.rstudio.com/reference/px.html'>px()</a></code> and
+<code><a href='https://gt.rstudio.com/reference/pct.html'>pct()</a></code> helper functions can also be used to pass in numeric values and
+obtain values as pixel or percentage units.</p></td>
     </tr>
     <tr>
-      <th>tidy</th>
-      <td><p>Defaults to FALSE, thus returning a <code>dagitty</code> object. If TRUE,
-then will return a <code>tidy_dagitty</code> object.</p></td>
+      <th>table.width</th>
+      <td><p>The width of the table. Can be specified as a
+single-length character with units of pixels or as a percentage. If
+provided as a single-length numeric vector, it is assumed that the value is
+given in units of pixels. The <code><a href='https://gt.rstudio.com/reference/px.html'>px()</a></code> and <code><a href='https://gt.rstudio.com/reference/pct.html'>pct()</a></code> helper functions can also
+be used to pass in numeric values and obtain values as pixel or percent
+units.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>For passing additional arguments to the <code><a href='https://gt.rstudio.com/reference/tab_options.html'>gt::tab_options()</a></code>
+function</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p><code>dagitty</code> or <code>tidy_dagitty</code> object</p>
+    <div class='dont-index'><p>Other visualizers: 
+<code><a href='tbl_sequential.html'>tbl_sequential</a>()</code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
