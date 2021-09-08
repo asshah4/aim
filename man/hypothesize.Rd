@@ -34,8 +34,8 @@ hypothesize(h, ...)
 \method{hypothesize}{default}(h, ...)
 }
 \arguments{
-\item{h}{General variable that can be cast into a hypothesis object. Currently
-this accepts the following object types:
+\item{h}{General variable that can be cast into a hypothesis object.
+Currently this accepts the following object types:
 \itemize{
 \item \code{formula} objects, which  be given additional modifiers as described.
 Please see \code{\link[=expand_formula]{expand_formula()}} or the formula section below for details.

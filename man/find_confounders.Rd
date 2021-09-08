@@ -4,7 +4,7 @@
 \alias{find_confounders}
 \title{Derive Formula With Confounders}
 \usage{
-find_confounders(study, name, delta = 0.1, ...)
+find_confounders(study, name, delta = 0.1, return_study = FALSE, ...)
 }
 \arguments{
 \item{study}{A \code{study} object that has been constructed}
@@ -14,6 +14,12 @@ find_confounders(study, name, delta = 0.1, ...)
 \item{delta}{Percent change to be used as cut-off for considering an
 important change in the outcome ~ exposure relationship. Defaults to
 \strong{0.10} as supported by the epidemiology literature.}
+
+\item{return_study}{Logical value, defaults to FALSE, on if the original
+\code{study} should be returned when this function is called. This is a
+developer feature, mainly for internal use (as is the function itself). It
+returns the modified hypotheses as a list in position \verb{[[1]]}, and the
+updated study in position \verb{[[2]]}.}
 
 \item{...}{For extensibility}
 }
@@ -36,3 +42,4 @@ for being of size \code{delta}. If so, the covariate is retained as a potential
 confounder (or otherwise removed).
 }
 }
+\concept{confounders finders}

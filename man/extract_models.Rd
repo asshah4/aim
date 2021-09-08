@@ -30,3 +30,4 @@ aggregate components from a \code{study} object. Its designed to have a simple
 call interface to allow for retrieval of model objects to be formatted and
 displayed.
 }
+\concept{extractors}

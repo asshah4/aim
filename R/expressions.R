@@ -80,7 +80,7 @@ expand_formula <- function(formula,
 	# Exposures should be cleaned from original modifiers if present, or nulled
 	if (length(exposures) > 0) {
 		exposures <-
-			gsub("\\)", "", gsub("X\\(", "", exposures)) %>%
+			gsub("\\)$", "", gsub("X\\(", "", exposures)) %>%
 			paste(outcomes, ., sep = " ~ ") %>%
 			lapply(., stats::formula) %>%
 			lapply(., stats::terms) %>%

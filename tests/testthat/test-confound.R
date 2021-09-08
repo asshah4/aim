@@ -14,10 +14,17 @@ test_that("confounders can be found and manipulated", {
 	x <-
 		create_study() %>%
 		add_hypothesis(h1) %>%
-		construct_map() %>%
-		reconstruct("h1") %>%
-		extract_models("h1_cut")
+		construct_map()
 
-	expect_length(x, 12)
+	var_before <- attributes(x)$var_table
+	hlist <- find_confounders(x, "h1")
+	var_after <- attributes(x)$var_table
+	expect_equal(var_before, var_after)
+
+	y <- reconstruct(x, "h1")
+	var_after <- attributes(y)$var_table
+	expect_length(y$model_map, 8)
+	expect_gt(nrow(var_after), nrow(var_before))
+	expect_type(var_after$confounders[[1]], "character")
 
 })

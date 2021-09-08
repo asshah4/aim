@@ -10,8 +10,8 @@
 #'
 #' @return An object of class `hypothesis`
 #'
-#' @param h General variable that can be cast into a hypothesis object. Currently
-#'   this accepts the following object types:
+#' @param h General variable that can be cast into a hypothesis object.
+#'   Currently this accepts the following object types:
 #'
 #'   * `formula` objects, which  be given additional modifiers as described.
 #'   Please see [expand_formula()] or the formula section below for details.

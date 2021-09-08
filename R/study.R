@@ -114,3 +114,46 @@ print.study <- function(x, ...) {
 	print(m)
 
 }
+
+#' Study Summary
+#' @param object a `study` object
+#' @param ... further arguments passed to or from other methods
+summary.study <- function(object, ...) {
+
+
+	# Retrieve variables
+	m <- object$model_map
+	p <- object$path_map
+	d <- attributes(object)$data_list
+	h <-
+		attributes(object)$test_table %>%
+		dplyr::inner_join(., attributes(object)$data_table, by = "name") %>%
+		dplyr::inner_join(., attributes(object)$status_table, by = "name")
+
+
+	# Metadata
+	study_name <- deparse(substitute(object))
+	cat(glue::glue(
+		"
+		------------------{paste0(rep('-', nchar(study_name)), collapse = '')}
+		Summary of Study: {study_name}
+		------------------{paste0(rep('-', nchar(study_name)), collapse = '')}
+
+
+		"
+	))
+
+	# Hypotheses
+	h %>%
+		glue::glue_data(
+			"
+			----------------------------------------------------
+			Hypothesis: {name} is {type} test using the {data_name} data set.
+			Formula: {call}
+			----------------------------------------------------
+
+			"
+		) %>%
+		print()
+
+}

@@ -1,3 +1,5 @@
+# nocov start
+
 #' Validate `hypothesis` object
 #' @noRd
 validate_hypothesis <- function(h) {
@@ -90,3 +92,5 @@ check_hypothesis <- function(x, name, run = TRUE) {
 	}
 
 }
+
+# nocov end

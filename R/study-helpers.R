@@ -41,6 +41,7 @@
 NULL
 
 #' @rdname fetch
+#' @family fetchers
 #' @export
 fetch_data <- function(x, name) {
 

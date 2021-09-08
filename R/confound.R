@@ -26,13 +26,21 @@
 #'   important change in the outcome ~ exposure relationship. Defaults to
 #'   **0.10** as supported by the epidemiology literature.
 #'
+#' @param return_study Logical value, defaults to FALSE, on if the original
+#'   `study` should be returned when this function is called. This is a
+#'   developer feature, mainly for internal use (as is the function itself). It
+#'   returns the modified hypotheses as a list in position `[[1]]`, and the
+#'   updated study in position `[[2]]`.
+#'
 #' @param ... For extensibility
 #'
+#' @family confounders finders
 #' @export
 find_confounders <- function(study,
-									 name,
-									 delta = 0.10,
-									 ...) {
+														 name,
+														 delta = 0.10,
+														 return_study = FALSE,
+														 ...) {
 
 	# Get variables
 	combination 	<- fetch_combination(study, name)
@@ -139,11 +147,10 @@ find_confounders <- function(study,
 
 				}
 			}
-
 		}
 	)
 
-	# Return to confounders to the study
+	# Update study (may not be returned unless requested)
 	attr(study, "var_table") <- vars
 
 	# Create and return a list of hypothesis objects
@@ -186,8 +193,22 @@ find_confounders <- function(study,
 
 	}
 
-	# Return
-	hlist
+	if (return_study) {
+		list(hlist, study)
+	} else {
+		hlist
+	}
+
+}
+
+#' Derive Formula with Significant Predictors
+#' @export
+find_significant <- function(study,
+														 name,
+														 statistic = "p.value",
+														 threshold = 0.05,
+														 return_study = FALSE,
+														 ...) {
 
 }
 
@@ -211,22 +232,30 @@ find_confounders <- function(study,
 #'   hypothesis. Options include:
 #'
 #'   * __confounding__ = Check for relevant terms based on
-#'   [dagger::find_confounders()]. This includes the __delta__ parameter to
+#'   [dagger::find_confounders()]. This includes the __delta__ argument to
 #'   set the threshold for changes in effect size that are considered relevant.
 #'
-#' @param ... Additional, optional parameters based on approach being used
+#'   * __significant__ = Check if relevant terms meet a certain threshold to be
+#'   retained in an additional model, based on [dagger::find_significant()].
+#'   This includes the __threshold__ argument that is used as a cut off value
+#'   for the __statistic__ that is chosen.
 #'
+#' @param ... Additional, optional parameters based on approach being used
+#' @family confounders studies
 #' @export
 reconstruct <- function(study,
-														name,
-														new_name = paste0(name, "_cut"),
-														approach = "confounding",
-														...) {
+												name,
+												new_name = paste0(name, "_cut"),
+												approach = "confounding",
+												...) {
+
 
 	switch(
 		approach,
 		confounding = {
-			hlist <- find_confounders(study, name)
+			x <- find_confounders(study, name, return_study = TRUE)
+			hlist <- x[[1]]
+			study <- x[[2]]
 
 			# Add back to study
 			for (i in 1:length(hlist)) {

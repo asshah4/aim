@@ -1,4 +1,4 @@
-test_that("hypothesis can be added to study", {
+test_that("basic functionality of creating a study works", {
 	library(parsnip)
 	h <-
 		hypothesize(
@@ -12,6 +12,10 @@ test_that("hypothesis can be added to study", {
 		add_hypothesis(h)
 
 	expect_s3_class(f, "study")
+
+	# Print (plurality will depend)
+	expect_output(print(f), "study|hypothes|path")
+
 })
 
 test_that("study can be fitted", {

@@ -4,20 +4,20 @@
 \alias{as_tbl_graph.study}
 \title{Convert paths to a \code{tidygraph}}
 \usage{
-\method{as_tbl_graph}{study}(x, directed = TRUE, ...)
+\method{as_tbl_graph}{study}(study, directed = TRUE, ...)
 }
 \arguments{
-\item{x}{An object convertible to a \code{tbl_graph}}
+\item{study}{A \code{study} object}
 
 \item{directed}{Should the constructed graph be directed (defaults to \code{TRUE})}
 
 \item{...}{For extensibility}
-
-\item{study}{A \code{study} object}
 }
 \value{
 a \code{tbl_graph} object
 }
 \description{
-This is a wrapper function to convert a \code{study} to a \code{tbl_graph} object for use with \href{https://ggraph.data-imaginist.com/}{{ggraph}} and \href{https://tidygraph.data-imaginist.com/reference/index.html}{{tidygraph}}.
+This is a wrapper function to convert a \code{study} to a \code{tbl_graph} object for
+use with \href{https://ggraph.data-imaginist.com/}{{ggraph}} and
+\href{https://tidygraph.data-imaginist.com/reference/index.html}{{tidygraph}}.
 }
