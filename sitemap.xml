@@ -19,9 +19,6 @@
     <loc>https://asshah4.github.io/dagger//reference/dagger-package.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/draw.html</loc>
-  </url>
-  <url>
     <loc>https://asshah4.github.io/dagger//reference/expand_formula.html</loc>
   </url>
   <url>
@@ -38,6 +35,9 @@
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/find_confounders.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/find_significant.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/fit_calls.html</loc>
@@ -65,6 +65,9 @@
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/reexports.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/dagger//reference/summary.study.html</loc>
   </url>
   <url>
     <loc>https://asshah4.github.io/dagger//reference/tbl_sequential.html</loc>
