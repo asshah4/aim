@@ -76,7 +76,7 @@ the broom::tidy() function to help describe model fits." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dagger</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -145,13 +145,13 @@ the <code><a href='https://generics.r-lib.org/reference/tidy.html'>broom::tidy()
   <span class='va'>terms</span>,
   <span class='va'>models</span>,
   model_label <span class='op'>=</span> <span class='cn'>NULL</span>,
+  model_notes <span class='op'>=</span> <span class='cn'>NULL</span>,
   by <span class='op'>=</span> <span class='cn'>NULL</span>,
   values <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"estimate"</span>, <span class='st'>"conf.low"</span>, <span class='st'>"conf.high"</span><span class='op'>)</span>,
   pattern <span class='op'>=</span> <span class='st'>"{1} ({2}, {3})"</span>,
   statistic <span class='op'>=</span> <span class='cn'>NULL</span>,
   style <span class='op'>=</span> <span class='va'>fill</span> <span class='op'>~</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>color <span class='op'>=</span> <span class='st'>"lightgreen"</span><span class='op'>)</span>,
   decimals <span class='op'>=</span> <span class='fl'>2</span>,
-  footnotes <span class='op'>=</span> <span class='cn'>NULL</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -198,18 +198,37 @@ sequence of variables. The default is NULL, which retains the original
 model identifiers instead.</p></td>
     </tr>
     <tr>
+      <th>model_notes</th>
+      <td><p>This is an unnamed <code>list</code> object that allows for simple
+labeling of the how the sequential models are built. This list should be
+<code>length(models) + 1</code>. The first term is required to be the outcome
+variable. Subsequent list positions represent the additional terms that
+were included for sequential adjustment. There should be an item for each
+position selected by the <strong>models</strong> argument.</p>
+<p>For example:</p>
+<p><code>model_notes = list("outcome", "exposure", "x1", c("x2", "x3"))</code></p>
+<p>\(Model 1 = outcome ~ exposure\)</p>
+<p>\(Model 2 = outcome ~ Model 1 + x1\)</p>
+<p>\(Model 3 = outcome ~ Model 2 + x2 + x3\)</p></td>
+    </tr>
+    <tr>
       <th>by</th>
-      <td><p>Defaults to NULL. If present, presumes a grouping variable
-or level of analyses were present. Each group is given the label that
-represents the value of the level. To be more informative, can relabel the
-values prior to passing to the function.</p></td>
+      <td><p>This can either be a <em>string</em> or a <em>formula ~ list</em> pattern.
+Defaults to NULL. If present, presumes a grouping variable or level of
+analyses were present. If a string is passed, then each group is given the
+label that represents the value of the level by default. If a <em>formula</em> is
+passed, then the left-hand side represents the column that is the grouping
+variable, and the right-hand side is a named list that indicates what
+should be relabeled.</p>
+<p>For example, <code>level ~ list("0" = "Empty", "1" = "Full")</code> would relabel the
+groups with "Empty" and "Full" for the corresponding levels.</p></td>
     </tr>
     <tr>
       <th>values</th>
       <td><p>The numeric columns that contain the variables that should be
 displayed, such as <code>values = c("estimate", "conf.low", "conf.high")</code>,
 which will be merged together in format chosen by the <strong>pattern</strong>
-argument.</p></td>
+argument. The first element is the primary variable to be displayed.</p></td>
     </tr>
     <tr>
       <th>pattern</th>
@@ -247,20 +266,6 @@ Defaults to 2 decimal places.</p></td>
     <tr>
       <th>...</th>
       <td><p>For passing additional arguments</p></td>
-    </tr>
-    <tr>
-      <th>model_notes</th>
-      <td><p>This is an unnamed <code>list</code> object that allows for simple
-labeling of the how the sequential models are built. This list should be
-<code>length(models) + 1</code>. The first term is required to be the outcome
-variable. Subsequent list positions represent the additional terms that
-were included for sequential adjustment. There should be an item for each
-position selected by the <strong>models</strong> argument.</p>
-<p>For example:</p>
-<p><code>model_notes = list("outcome", "exposure", "x1", c("x2", "x3"))</code></p>
-<p>\(Model 1 = outcome ~ exposure\)</p>
-<p>\(Model 2 = outcome ~ Model 1 + x1\)</p>
-<p>\(Model 3 = outcome ~ Model 2 + x2 + x3\)</p></td>
     </tr>
     </table>
 
