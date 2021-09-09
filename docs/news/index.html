@@ -71,7 +71,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">dagger</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -126,9 +126,9 @@
       <small>Source: <a href='https://github.com/asshah4/dagger/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div id="dagger-v0009000" class="section level1">
-<h1 class="page-header" data-toc-text="0.0.0.9000">
-<a href="#dagger-v0009000" class="anchor"></a>dagger v0.0.0.9000</h1>
+    <div id="dagger-v010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#dagger-v010" class="anchor"></a>dagger v0.1.0</h1>
 <p>This is current developmental version.</p>
 <div id="next-steps" class="section level2">
 <h2 class="hasAnchor">
@@ -143,17 +143,19 @@
 <div id="features" class="section level2">
 <h2 class="hasAnchor">
 <a href="#features" class="anchor"></a>Features</h2>
+<p>These functions are currently stable, and should continue to have similar inputs and outputs. Over time, there should be expansion in their use.</p>
 <ul>
 <li>
 <code><a href="../reference/hypothesize.html">hypothesize()</a></code> creates individual hypotheses to be tested</li>
 <li>
-<code>study()</code> initializes a data structure for mapping on <code>hypothesis</code> objects</li>
+<code><a href="../reference/create_study.html">create_study()</a></code> initializes a data structure for mapping on <code>hypothesis</code> objects</li>
 <li>
-<code>propose()</code> composes a hypothesis onto a <code>study</code> object</li>
+<code><a href="../reference/add_hypothesis.html">add_hypothesis()</a></code> adds to an existing <code>study</code> object</li>
 <li>
-<code>construct()</code> creates the corresponding component tables underlying the <code>study</code> object</li>
+<code><a href="../reference/construct_map.html">construct_map()</a></code> creates the corresponding component tables underlying the <code>study</code> object</li>
 <li>
-<code>extract()</code> returns the tidy and raw versions of the</li>
+<code><a href="../reference/extract_models.html">extract_models()</a></code> returns the tidy and raw versions of the analyzed <code>study</code>
+</li>
 </ul>
 </div>
 </div>

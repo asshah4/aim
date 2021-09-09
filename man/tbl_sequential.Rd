@@ -9,13 +9,13 @@ tbl_sequential(
   terms,
   models,
   model_label = NULL,
+  model_notes = NULL,
   by = NULL,
   values = c("estimate", "conf.low", "conf.high"),
   pattern = "{1} ({2}, {3})",
   statistic = NULL,
   style = fill ~ list(color = "lightgreen"),
   decimals = 2,
-  footnotes = NULL,
   ...
 )
 }
@@ -55,15 +55,38 @@ not labeled as above, then this optional argument can be used to prefix the
 sequence of variables. The default is NULL, which retains the original
 model identifiers instead.}
 
-\item{by}{Defaults to NULL. If present, presumes a grouping variable
-or level of analyses were present. Each group is given the label that
-represents the value of the level. To be more informative, can relabel the
-values prior to passing to the function.}
+\item{model_notes}{This is an unnamed \code{list} object that allows for simple
+labeling of the how the sequential models are built. This list should be
+\code{length(models) + 1}. The first term is required to be the outcome
+variable. Subsequent list positions represent the additional terms that
+were included for sequential adjustment. There should be an item for each
+position selected by the \strong{models} argument.
+
+For example:
+
+\code{model_notes = list("outcome", "exposure", "x1", c("x2", "x3"))}
+
+\eqn{Model 1 = outcome ~ exposure}
+
+\eqn{Model 2 = outcome ~ Model 1 + x1}
+
+\eqn{Model 3 = outcome ~ Model 2 + x2 + x3}}
+
+\item{by}{This can either be a \emph{string} or a \emph{formula ~ list} pattern.
+Defaults to NULL. If present, presumes a grouping variable or level of
+analyses were present. If a string is passed, then each group is given the
+label that represents the value of the level by default. If a \emph{formula} is
+passed, then the left-hand side represents the column that is the grouping
+variable, and the right-hand side is a named list that indicates what
+should be relabeled.
+
+For example, \code{level ~ list("0" = "Empty", "1" = "Full")} would relabel the
+groups with "Empty" and "Full" for the corresponding levels.}
 
 \item{values}{The numeric columns that contain the variables that should be
 displayed, such as \code{values = c("estimate", "conf.low", "conf.high")},
 which will be merged together in format chosen by the \strong{pattern}
-argument.}
+argument. The first element is the primary variable to be displayed.}
 
 \item{pattern}{A string that uses \code{\link[glue:glue]{glue::glue()}} to describe how the display
 columns should be arranged. With \code{pattern = "{1} ({2}, {3})"}, numbers
@@ -92,23 +115,6 @@ this time, so see documentation the \code{gt} package for details.}
 Defaults to 2 decimal places.}
 
 \item{...}{For passing additional arguments}
-
-\item{model_notes}{This is an unnamed \code{list} object that allows for simple
-labeling of the how the sequential models are built. This list should be
-\code{length(models) + 1}. The first term is required to be the outcome
-variable. Subsequent list positions represent the additional terms that
-were included for sequential adjustment. There should be an item for each
-position selected by the \strong{models} argument.
-
-For example:
-
-\code{model_notes = list("outcome", "exposure", "x1", c("x2", "x3"))}
-
-\eqn{Model 1 = outcome ~ exposure}
-
-\eqn{Model 2 = outcome ~ Model 1 + x1}
-
-\eqn{Model 3 = outcome ~ Model 2 + x2 + x3}}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

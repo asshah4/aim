@@ -201,16 +201,6 @@ find_confounders <- function(study,
 
 }
 
-#' Derive Formula with Significant Predictors
-#' @export
-find_significant <- function(study,
-														 name,
-														 statistic = "p.value",
-														 threshold = 0.05,
-														 return_study = FALSE,
-														 ...) {
-
-}
 
 #' Reconstruct a Hypothesis
 #'
@@ -234,11 +224,6 @@ find_significant <- function(study,
 #'   * __confounding__ = Check for relevant terms based on
 #'   [dagger::find_confounders()]. This includes the __delta__ argument to
 #'   set the threshold for changes in effect size that are considered relevant.
-#'
-#'   * __significant__ = Check if relevant terms meet a certain threshold to be
-#'   retained in an additional model, based on [dagger::find_significant()].
-#'   This includes the __threshold__ argument that is used as a cut off value
-#'   for the __statistic__ that is chosen.
 #'
 #' @param ... Additional, optional parameters based on approach being used
 #' @family confounders studies

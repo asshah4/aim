@@ -10,3 +10,4 @@
 ^codecov\.yml$
 ^sandbox.R$
 ^R/dev\.R$
+^cran-comments\.md$

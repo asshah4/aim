@@ -27,10 +27,6 @@ hypothesis. Options include:
 \item \strong{confounding} = Check for relevant terms based on
 \code{\link[=find_confounders]{find_confounders()}}. This includes the \strong{delta} argument to
 set the threshold for changes in effect size that are considered relevant.
-\item \strong{significant} = Check if relevant terms meet a certain threshold to be
-retained in an additional model, based on \code{\link[=find_significant]{find_significant()}}.
-This includes the \strong{threshold} argument that is used as a cut off value
-for the \strong{statistic} that is chosen.
 }}
 
 \item{...}{Additional, optional parameters based on approach being used}

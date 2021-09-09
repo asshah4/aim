@@ -13,6 +13,15 @@ frequency](https://img.shields.io/github/commit-activity/w/asshah4/dagger)](http
 
 <!-- badges: end -->
 
+## Installation
+
+This package has not yet been released on CRAN, but can be downloaded
+from Github.
+
+``` r
+remotes::install_github("asshah4/dagger")
+```
+
 ## Introduction
 
 The `dagger` package is intended to help build causal models with an
@@ -48,10 +57,10 @@ creates a empty data structure object.
 
 ``` r
 create_study()
-#> # A study with 0 hypothesis and 0 unique paths
-#> # 
-#> # A tibble: 0 × 7
-#> # … with 7 variables: name <???>, outcomes <???>, exposures <???>,
+#> # A study with 0 hypotheses and 0 unique path
+#> #
+#> # A tibble: 0 × 8
+#> # … with 8 variables: name <???>, outcomes <???>, exposures <???>, level <???>,
 #> #   number <???>, formulae <???>, fit <???>, tidy <???>
 ```
 
@@ -86,6 +95,7 @@ h1
 #> Combination      sequential
 #> Test         linear_reg, model_spec
 #> Data         mtcars
+#> Strata       none
 
 # Print h2
 h2
@@ -102,6 +112,7 @@ h2
 #> Combination      sequential
 #> Test         linear_reg, model_spec
 #> Data         mtcars
+#> Strata       none
 ```
 
 These hypotheses can then be *drawn* on to the *study map* as below.
@@ -114,17 +125,17 @@ m1 <-
 
 # Print study
 m1
-#> # A study with 2 hypothesis and 5 unique paths
-#> # 
-#> # A tibble: 6 × 7
-#>   name  outcomes exposures number formulae  fit   tidy 
-#>   <chr> <chr>    <chr>      <int> <list>    <lgl> <lgl>
-#> 1 h1    mpg      wt             1 <formula> NA    NA   
-#> 2 h1    mpg      wt             2 <formula> NA    NA   
-#> 3 h1    mpg      wt             3 <formula> NA    NA   
-#> 4 h2    mpg      wt             1 <formula> NA    NA   
-#> 5 h2    mpg      wt             2 <formula> NA    NA   
-#> 6 h2    mpg      wt             3 <formula> NA    NA
+#> # A study with 2 hypotheses and 5 unique paths
+#> #
+#> # A tibble: 6 × 8
+#>   name  outcomes exposures level number formulae  fit   tidy 
+#>   <chr> <chr>    <chr>     <lgl>  <int> <list>    <lgl> <lgl>
+#> 1 h1    mpg      wt        NA         1 <formula> NA    NA   
+#> 2 h1    mpg      wt        NA         2 <formula> NA    NA   
+#> 3 h1    mpg      wt        NA         3 <formula> NA    NA   
+#> 4 h2    mpg      wt        NA         1 <formula> NA    NA   
+#> 5 h2    mpg      wt        NA         2 <formula> NA    NA   
+#> 6 h2    mpg      wt        NA         3 <formula> NA    NA
 ```
 
 Subsequently, we can fit the models and add the paths that were
@@ -139,17 +150,17 @@ m2 <-
 
 # Print analyzed study
 m2
-#> # A study with 2 hypothesis and 5 unique paths
-#> # 
-#> # A tibble: 6 × 7
-#>   name  outcomes exposures number formulae  fit      tidy            
-#>   <chr> <chr>    <chr>      <int> <list>    <list>   <list>          
-#> 1 h1    mpg      wt             1 <formula> <fit[+]> <tibble [2 × 7]>
-#> 2 h1    mpg      wt             2 <formula> <fit[+]> <tibble [3 × 7]>
-#> 3 h1    mpg      wt             3 <formula> <fit[+]> <tibble [4 × 7]>
-#> 4 h2    mpg      wt             1 <formula> <fit[+]> <tibble [2 × 7]>
-#> 5 h2    mpg      wt             2 <formula> <fit[+]> <tibble [3 × 7]>
-#> 6 h2    mpg      wt             3 <formula> <fit[+]> <tibble [4 × 7]>
+#> # A study with 2 hypotheses and 5 unique paths
+#> #
+#> # A tibble: 6 × 8
+#>   name  outcomes exposures level number formulae  fit      tidy            
+#>   <chr> <chr>    <chr>     <lgl>  <int> <list>    <list>   <list>          
+#> 1 h1    mpg      wt        NA         1 <formula> <fit[+]> <tibble [2 × 7]>
+#> 2 h1    mpg      wt        NA         2 <formula> <fit[+]> <tibble [3 × 7]>
+#> 3 h1    mpg      wt        NA         3 <formula> <fit[+]> <tibble [4 × 7]>
+#> 4 h2    mpg      wt        NA         1 <formula> <fit[+]> <tibble [2 × 7]>
+#> 5 h2    mpg      wt        NA         2 <formula> <fit[+]> <tibble [3 × 7]>
+#> 6 h2    mpg      wt        NA         3 <formula> <fit[+]> <tibble [4 × 7]>
 
 # Plot analyzed study
 library(ggplot2)
@@ -158,7 +169,7 @@ m2 %>%
     ggdag::ggdag()
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
+<img src="man/figures/README-unnamed-chunk-7-1.png" width="100%" />
 
 Then, for analysis and display of results, the findings can easily be
 extracted.
@@ -166,17 +177,17 @@ extracted.
 ``` r
 m2 %>% 
     extract_models(which_ones = "h1", tidy = TRUE)
-#> # A tibble: 9 × 11
-#>   name  outcomes exposures number term        estimate std.error statistic  p.value
-#>   <chr> <chr>    <chr>      <int> <chr>          <dbl>     <dbl>     <dbl>    <dbl>
-#> 1 h1    mpg      wt             1 (Intercept)  3.73e+1   1.88      19.9    8.24e-19
-#> 2 h1    mpg      wt             1 wt          -5.34e+0   0.559     -9.56   1.29e-10
-#> 3 h1    mpg      wt             2 (Intercept)  3.72e+1   1.60      23.3    2.57e-20
-#> 4 h1    mpg      wt             2 wt          -3.88e+0   0.633     -6.13   1.12e- 6
-#> 5 h1    mpg      wt             2 hp          -3.18e-2   0.00903   -3.52   1.45e- 3
-#> 6 h1    mpg      wt             3 (Intercept)  3.71e+1   2.11      17.6    1.16e-16
-#> 7 h1    mpg      wt             3 wt          -3.80e+0   1.07      -3.56   1.33e- 3
-#> 8 h1    mpg      wt             3 hp          -3.12e-2   0.0114    -2.72   1.10e- 2
-#> 9 h1    mpg      wt             3 disp        -9.37e-4   0.0103    -0.0905 9.29e- 1
-#> # … with 2 more variables: conf.low <dbl>, conf.high <dbl>
+#> # A tibble: 9 × 12
+#>   name  outcomes exposures level number term         estimate std.error statistic
+#>   <chr> <chr>    <chr>     <lgl>  <int> <chr>           <dbl>     <dbl>     <dbl>
+#> 1 h1    mpg      wt        NA         1 (Intercept) 37.3        1.88      19.9   
+#> 2 h1    mpg      wt        NA         1 wt          -5.34       0.559     -9.56  
+#> 3 h1    mpg      wt        NA         2 (Intercept) 37.2        1.60      23.3   
+#> 4 h1    mpg      wt        NA         2 wt          -3.88       0.633     -6.13  
+#> 5 h1    mpg      wt        NA         2 hp          -0.0318     0.00903   -3.52  
+#> 6 h1    mpg      wt        NA         3 (Intercept) 37.1        2.11      17.6   
+#> 7 h1    mpg      wt        NA         3 wt          -3.80       1.07      -3.56  
+#> 8 h1    mpg      wt        NA         3 hp          -0.0312     0.0114    -2.72  
+#> 9 h1    mpg      wt        NA         3 disp        -0.000937   0.0103    -0.0905
+#> # … with 3 more variables: p.value <dbl>, conf.low <dbl>, conf.high <dbl>
 ```

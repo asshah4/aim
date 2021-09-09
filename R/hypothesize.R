@@ -113,9 +113,14 @@ hypothesize.formula <- function(h,
 	data_name <- deparse(substitute(data))
 
 	# Validate/ensure appropriate test object: TODO
+
+	# If strata are present, than need to remove from formula
 	if (!is.na(strata)) {
 		h <- stats::update(h, bquote(. ~ . - .(as.name(strata))))
 	}
+
+	# Validate terms are in data
+	check_terms(h, data)
 
 	# Construct
 	h <- new_hypothesis(

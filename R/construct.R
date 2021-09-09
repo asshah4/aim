@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge('stable')`
 #'
 #' This function allows for delayed building of multiple hypothesis. It uses the
 #' `hypothesis` objects with the corresponding __test__ arguments against the

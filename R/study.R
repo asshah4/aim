@@ -120,15 +120,18 @@ print.study <- function(x, ...) {
 #' @param ... further arguments passed to or from other methods
 summary.study <- function(object, ...) {
 
-
 	# Retrieve variables
 	m <- object$model_map
 	p <- object$path_map
 	d <- attributes(object)$data_list
+	d$rows <- nrow(d$data[[1]])
+	d$columns <- length(d$data[[1]])
+	d <- subset(d, select = -data)
 	h <-
 		attributes(object)$test_table %>%
 		dplyr::inner_join(., attributes(object)$data_table, by = "name") %>%
-		dplyr::inner_join(., attributes(object)$status_table, by = "name")
+		dplyr::inner_join(., attributes(object)$status_table, by = "name") %>%
+		dplyr::select("name", "type", "combination", "data_name", "strata", "run")
 
 
 	# Metadata
@@ -144,16 +147,12 @@ summary.study <- function(object, ...) {
 	))
 
 	# Hypotheses
-	h %>%
-		glue::glue_data(
-			"
-			----------------------------------------------------
-			Hypothesis: {name} is {type} test using the {data_name} data set.
-			Formula: {call}
-			----------------------------------------------------
+	cat("Hypothesis:\n\n")
+	glue::glue("{knitr::kable(h, format = 'simple')}") %>% print()
+	cat("\n")
 
-			"
-		) %>%
-		print()
+	# Data
+	cat("Data:\n\n")
+	glue::glue("{knitr::kable(d, format = 'simple')}") %>% print()
 
 }

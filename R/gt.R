@@ -1,4 +1,3 @@
-
 #' Make a table of sequentially fit models using `gt`
 #'
 #' @description
@@ -25,7 +24,6 @@
 #'
 #'   If instead, no name is given, such as `term ~ list("x")` it is presumed
 #'   that the variables will go by their original name from the table.
-#'
 #'
 #' @param models A _formula ~ list_ pattern where the left-hand side indicates
 #'   the column in __data__ that contains the model identifiers, and the
@@ -63,15 +61,21 @@
 #'
 #'   \eqn{Model 3 = outcome ~ Model 2 + x2 + x3}
 #'
-#' @param by Defaults to NULL. If present, presumes a grouping variable
-#'   or level of analyses were present. Each group is given the label that
-#'   represents the value of the level. To be more informative, can relabel the
-#'   values prior to passing to the function.
+#' @param by This can either be a _string_ or a _formula ~ list_ pattern.
+#'   Defaults to NULL. If present, presumes a grouping variable or level of
+#'   analyses were present. If a string is passed, then each group is given the
+#'   label that represents the value of the level by default. If a _formula_ is
+#'   passed, then the left-hand side represents the column that is the grouping
+#'   variable, and the right-hand side is a named list that indicates what
+#'   should be relabeled.
+#'
+#'   For example, `level ~ list("0" = "Empty", "1" = "Full")` would relabel the
+#'   groups with "Empty" and "Full" for the corresponding levels.
 #'
 #' @param values The numeric columns that contain the variables that should be
 #'   displayed, such as `values = c("estimate", "conf.low", "conf.high")`,
 #'   which will be merged together in format chosen by the __pattern__
-#'   argument.
+#'   argument. The first element is the primary variable to be displayed.
 #'
 #' @param pattern A string that uses [glue::glue()] to describe how the display
 #'   columns should be arranged. With `pattern = "{1} ({2}, {3})"`, numbers
@@ -110,26 +114,50 @@ tbl_sequential <- function(data,
 													 terms,
 													 models,
 													 model_label = NULL,
+													 model_notes = NULL,
 													 by = NULL,
 													 values = c("estimate", "conf.low", "conf.high"),
 													 pattern = "{1} ({2}, {3})",
 													 statistic = NULL,
 													 style = fill ~ list(color = "lightgreen"),
 													 decimals = 2,
-													 footnotes = NULL,
 													 ...) {
 
+	# Validation
+	validate_class(terms, "formula")
+	validate_class(models, "formula")
+	validate_class(values, "character")
+
+	# Columns to extract
+	var_col_sym <- terms[[2]]
+	var_col <- as.character(var_col_sym)
+	model_col_sym <- models[[2]]
+	model_col <- as.character(model_col_sym)
+	if (!is.null(statistic)) {
+		stat_col_sym <- statistic[[2]]
+		stat_col <- as.character(stat_col_sym)
+	}
+	disp_col <- values
+	if (!is.null(by)) {
+		if (is.character(by)) {
+			strata_col <- by
+		} else if (class(by) == "formula") {
+			strata_col_sym <- by[[2]]
+			strata_col <- as.character(strata_col_sym)
+		}
+	} else {
+		strata_col <- NULL
+	}
 
 
 	# Terms
-	validate_class(terms, "formula")
-	var_col_sym <- terms[[2]]
-	var_col <- as.character(var_col_sym)
 	var_list <- eval(terms[[3]])
 	var_names <- unname(unlist(var_list))
 	vars <-
 		lapply(seq_along(var_list), function(x) {
-			if (names(var_list[x]) == "") {
+			if (is.null(names(var_list[x]))) {
+				var_list[[x]]
+			} else if (names(var_list[x]) == "") {
 				var_list[[x]]
 			} else {
 				names(var_list[x])
@@ -137,12 +165,8 @@ tbl_sequential <- function(data,
 		}) %>%
 		unlist()
 
-
 	# Model selection
-	validate_class(models, "formula")
-	model_col_sym <- models[[2]]
-	model_col <- as.character(model_col_sym)
-	model_list <- eval(models[[3]])
+	model_list <- unlist(eval(models[[3]]))
 	model_names <-
 		if (is.null(names(model_list))) {
 			if (is.null(model_label)) {
@@ -158,18 +182,30 @@ tbl_sequential <- function(data,
 			}
 		}
 	mods <-
-		lapply(seq_along(model_list), function(x) {
-			if (names(model_list[x]) == "") {
-				model_list[[x]]
-			} else {
-				names(model_list[x])
-			}
-		}) %>%
-		unlist()
+		if (is.null(names(model_list))) {
+			model_list
+		} else if (is.vector(model_list)) {
+			lapply(seq_along(model_list), function(x) {
+				if (is.null(names(model_list[x]))) {
+					model_list[x]
+				} else if (names(model_list[x]) == "") {
+					model_list[[x]]
+				} else {
+					names(model_list[x])
+				}
+			}) %>%
+			unlist()
+		}
 
-	# If grouping variables are present
+	# If grouping variables are present, data can be modified
 	if (!is.null(by)) {
-		n <- length(unique(data[[by]]))
+		n <- length(unique(data[[strata_col]]))
+		if (class(by) == "formula") {
+			strata_val <- eval(by[[3]])
+			strata_vec <- unlist(strata_val)
+			data[[strata_col]] <-
+				unname(strata_vec)[match(data[[strata_col]], names(strata_vec))]
+		}
 	} else {
 		n <- 1
 	}
@@ -178,7 +214,7 @@ tbl_sequential <- function(data,
 	x <-
 		data %>%
 		dplyr::filter(.data[[var_col]] %in% vars) %>%
-		dplyr::select(dplyr::any_of(c({{ by }}, {{ model_col }}, {{ var_col }}, {{ disp_col }}, {{ stat_col }}))) %>%
+		dplyr::select(dplyr::any_of(c({{ strata_col }}, {{ model_col }}, {{ var_col }}, {{ disp_col }}, {{ stat_col }}))) %>%
 		dplyr::filter( .data[[model_col]] %in% mods) %>%
 		tidyr::pivot_wider(
 			names_from = .data[[var_col]],
@@ -188,7 +224,7 @@ tbl_sequential <- function(data,
 		dplyr::mutate(!!model_col_sym := rep(model_names, n)) %>%
 		{
 			if (!is.null(by)) {
-				gt::gt(., rowname_col = model_col, groupname_col = by)
+				gt::gt(., rowname_col = model_col, groupname_col = strata_col)
 			} else gt::gt(., rowname_col = model_col)
 		}
 
@@ -199,28 +235,28 @@ tbl_sequential <- function(data,
 			gt::cols_merge(columns = gt::starts_with(i), pattern = pattern)
 	}
 
-	# Column names
-	var_lab <- var_list
-	names(var_lab) <- paste0(vars, "_estimate")
+	# Column names should be relabeled
+	disp_val <- disp_col[1]
+	var_gt <- var_list
+	names(var_gt) <- paste0(vars, "_", disp_val)
 	x <-
 		x %>%
-		gt::cols_label(.list = var_lab)
+		gt::cols_label(.list = var_gt)
 
 	# Significant values and styling
 	if (!is.null(statistic)) {
 
-		stat_col <- statistic[[2]]
-		stat_val <- statistic[[3]]
+		stat_val <- eval(statistic[[3]])
 
 		stat_lab <-
 			paste0(vars, "_", stat_col) %>%
 			lapply(., rlang::sym)
-		var_lab <-
-			names(var_lab) %>%
+		var_gt <-
+			names(var_gt) %>%
 			lapply(., rlang::sym)
 
 		stat_style <- as.character(style[[2]])
-		stat_opts <- eval(style[[3]])
+		stat_opts <- unlist(eval(style[[3]]))
 
 		for (i in 1:length(vars)) {
 			x <-
@@ -228,10 +264,10 @@ tbl_sequential <- function(data,
 				gt::tab_style(
 					style = switch(
 						stat_style,
-						fill = list(gt::cell_fill(unlist(stat_opts)))
+						fill = list(gt::cell_fill(stat_opts))
 					),
 					locations = gt::cells_body(
-						columns = !!var_lab[[i]],
+						columns = !!var_gt[[i]],
 						rows = !!stat_lab[[i]] < stat_val
 					)
 				)
@@ -242,7 +278,7 @@ tbl_sequential <- function(data,
 	if (!is.null(model_notes)) {
 
 		validate_class(model_notes, "list")
-		if (length(model_notes) != (length(models) + 1)) {
+		if (length(model_notes) != (length(mods) + 1)) {
 			"The `model_notes` argument is not of the correct length."
 		}
 
@@ -250,7 +286,7 @@ tbl_sequential <- function(data,
 
 		footnote_list <- list()
 
-		for (i in 1:length(models)) {
+		for (i in 1:length(mods)) {
 
 			lhs <- paste(model_names[[i]], "=", out, "~")
 
@@ -268,7 +304,7 @@ tbl_sequential <- function(data,
 		}
 
 		# Add them to original structure
-		for (i in 1:length(models)) {
+		for (i in 1:length(mods)) {
 			if (n == 1) {
 				x <-
 					x %>%
@@ -283,7 +319,7 @@ tbl_sequential <- function(data,
 						x %>%
 						gt::tab_footnote(
 							footnote_list[[i]],
-							locations = gt::cells_stub(rows = c(i, i + (j - 1)*length(models)))
+							locations = gt::cells_stub(rows = c(i, i + (j - 1)*length(mods)))
 						)
 				}
 			}

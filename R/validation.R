@@ -93,4 +93,26 @@ check_hypothesis <- function(x, name, run = TRUE) {
 
 }
 
+#' Check if formula terms are in data set
+#' @noRd
+check_terms <- function(x, data) {
+
+	# Strip away unnecessary elements from formula to get pure terms
+	vars <- all.vars(x)
+	cols <- names(data)
+
+	if (!all(vars %in% cols)) {
+		y <- vars[which(!(vars %in% cols))]
+		stop(
+			"The terms c(",
+			paste0("'", y, "'", collapse = ", "),
+			") are not contained in the data set `",
+			deparse(substitute(data)),
+			"`."
+		)
+	}
+
+
+}
+
 # nocov end

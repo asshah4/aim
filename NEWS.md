@@ -1,4 +1,4 @@
-# dagger v0.0.0.9000
+# dagger v0.1.0
 
 This is current developmental version. 
 
@@ -11,9 +11,11 @@ This is current developmental version.
 
 ## Features
 
+These functions are currently stable, and should continue to have similar inputs and outputs. Over time, there should be expansion in their use.
+
 - `hypothesize()` creates individual hypotheses to be tested
-- `study()` initializes a data structure for mapping on `hypothesis` objects
-- `propose()` composes a hypothesis onto a `study` object
-- `construct()` creates the corresponding component tables underlying the `study` object
-- `extract()` returns the tidy and raw versions of the 
+- `create_study()` initializes a data structure for mapping on `hypothesis` objects
+- `add_hypothesis()` adds to an existing `study` object
+- `construct_map()` creates the corresponding component tables underlying the `study` object
+- `extract_models()` returns the tidy and raw versions of the analyzed `study`
 

@@ -21,6 +21,15 @@ knitr::opts_chunk$set(
 
 <!-- badges: end -->
 
+## Installation
+
+This package has not yet been released on CRAN, but can be downloaded from Github.
+
+```{r, eval = FALSE}
+remotes::install_github("asshah4/dagger")
+```
+
+
 ## Introduction
 
 The `dagger` package is intended to help build causal models with an underlying focus of **directed acylcic graphs**. However, instead of starting purely from a diagram, this package intends to allow modeling to occur simultaneously, and then leveraging the patterns within the data to help cut away *confounders* and other terms for a more parsimonious causal model. The premise is that there are two components in studying causality:

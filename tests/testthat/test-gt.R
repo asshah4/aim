@@ -22,14 +22,18 @@ test_that("gt tables can be made ", {
 	y <-
 		tbl_sequential(
 			x,
-			var_list = list(wt = "Weight", hp = "Horsepower", qsec = "Second"),
-			group_var = "level",
-			ranks = c(1:3),
-			rank_lab = "Model",
-			stat_col = "p.value"
+			terms = term ~ list("wt", "hp", "qsec"),
+			by = level ~ list("0" = "Manual", "1" = "Automatic"),
+			models = number ~ list(1:3),
+			model_label = "Model",
+			model_notes = list("Mileage", "Exposure", "Cylinders", "Gear"),
+			values = c("estimate", "conf.low", "conf.high"),
+			pattern = "{1} ({2}, {3})",
+			statistic = p.value ~ 0.05
 		)
 
 	expect_s3_class(y, "gt_tbl")
+	expect_named(y[["_styles"]]$styles[[1]]$cell_fill, "color")
 
 	# Able to shrink the table
 	z <-

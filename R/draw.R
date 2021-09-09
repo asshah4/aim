@@ -1,5 +1,3 @@
-
-
 #' Convert paths to a `tidygraph`
 #'
 #' This is a wrapper function to convert a `study` to a `tbl_graph` object for

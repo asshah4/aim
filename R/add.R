@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' `r lifecycle::badge('experimental')`
+#' `r lifecycle::badge('stable')`
 #'
 #' Takes a `hypothesis` object and adds it to a `study`, allowing multiple
 #' potential hypotheses to be put together for eventual analysis and comparison.

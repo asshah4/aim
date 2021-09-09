@@ -31,7 +31,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">dagger</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -107,10 +107,10 @@
 <p>The basic function of the package is the <code>study()</code> argument, which creates a empty data structure object.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/create_study.html">create_study</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # A study with 0 hypothesis and 0 unique paths</span>
-<span class="co">#&gt; # </span>
-<span class="co">#&gt; # A tibble: 0 × 7</span>
-<span class="co">#&gt; # … with 7 variables: name &lt;???&gt;, outcomes &lt;???&gt;, exposures &lt;???&gt;,</span>
+<span class="co">#&gt; # A study with 0 hypotheses and 0 unique path</span>
+<span class="co">#&gt; #</span>
+<span class="co">#&gt; # A tibble: 0 × 8</span>
+<span class="co">#&gt; # … with 8 variables: name &lt;???&gt;, outcomes &lt;???&gt;, exposures &lt;???&gt;, level &lt;???&gt;,</span>
 <span class="co">#&gt; #   number &lt;???&gt;, formulae &lt;???&gt;, fit &lt;???&gt;, tidy &lt;???&gt;</span></code></pre></div>
 <p>This is accompanied by <code>hypothesis</code> objects, which are essentially modified <code>formula</code> objects that allow for a better understanding of variable relationships. We create two objects below, which have not yet been analyzed yet.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -139,6 +139,7 @@
 <span class="co">#&gt; Combination      sequential</span>
 <span class="co">#&gt; Test         linear_reg, model_spec</span>
 <span class="co">#&gt; Data         mtcars</span>
+<span class="co">#&gt; Strata       none</span>
 
 <span class="co"># Print h2</span>
 <span class="va">h2</span>
@@ -154,7 +155,8 @@
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Combination      sequential</span>
 <span class="co">#&gt; Test         linear_reg, model_spec</span>
-<span class="co">#&gt; Data         mtcars</span></code></pre></div>
+<span class="co">#&gt; Data         mtcars</span>
+<span class="co">#&gt; Strata       none</span></code></pre></div>
 <p>These hypotheses can then be <em>drawn</em> on to the <em>study map</em> as below.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span>
@@ -164,17 +166,17 @@
 
 <span class="co"># Print study</span>
 <span class="va">m1</span>
-<span class="co">#&gt; # A study with 2 hypothesis and 5 unique paths</span>
-<span class="co">#&gt; # </span>
-<span class="co">#&gt; # A tibble: 6 × 7</span>
-<span class="co">#&gt;   name  outcomes exposures number formulae  fit   tidy </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;int&gt; &lt;list&gt;    &lt;lgl&gt; &lt;lgl&gt;</span>
-<span class="co">#&gt; 1 h1    mpg      wt             1 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 2 h1    mpg      wt             2 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 3 h1    mpg      wt             3 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 4 h2    mpg      wt             1 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 5 h2    mpg      wt             2 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 6 h2    mpg      wt             3 &lt;formula&gt; NA    NA</span></code></pre></div>
+<span class="co">#&gt; # A study with 2 hypotheses and 5 unique paths</span>
+<span class="co">#&gt; #</span>
+<span class="co">#&gt; # A tibble: 6 × 8</span>
+<span class="co">#&gt;   name  outcomes exposures level number formulae  fit   tidy </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;lgl&gt;  &lt;int&gt; &lt;list&gt;    &lt;lgl&gt; &lt;lgl&gt;</span>
+<span class="co">#&gt; 1 h1    mpg      wt        NA         1 &lt;formula&gt; NA    NA   </span>
+<span class="co">#&gt; 2 h1    mpg      wt        NA         2 &lt;formula&gt; NA    NA   </span>
+<span class="co">#&gt; 3 h1    mpg      wt        NA         3 &lt;formula&gt; NA    NA   </span>
+<span class="co">#&gt; 4 h2    mpg      wt        NA         1 &lt;formula&gt; NA    NA   </span>
+<span class="co">#&gt; 5 h2    mpg      wt        NA         2 &lt;formula&gt; NA    NA   </span>
+<span class="co">#&gt; 6 h2    mpg      wt        NA         3 &lt;formula&gt; NA    NA</span></code></pre></div>
 <p>Subsequently, we can fit the models and add the paths that were required. The <strong>paths</strong> can be utilized to help create the appropriate causal diagrams. The <code>construct_*()</code> functions can be used in any order or selectively.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span>
@@ -183,17 +185,17 @@
 
 <span class="co"># Print analyzed study</span>
 <span class="va">m2</span>
-<span class="co">#&gt; # A study with 2 hypothesis and 5 unique paths</span>
-<span class="co">#&gt; # </span>
-<span class="co">#&gt; # A tibble: 6 × 7</span>
-<span class="co">#&gt;   name  outcomes exposures number formulae  fit      tidy            </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;int&gt; &lt;list&gt;    &lt;list&gt;   &lt;list&gt;          </span>
-<span class="co">#&gt; 1 h1    mpg      wt             1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
-<span class="co">#&gt; 2 h1    mpg      wt             2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
-<span class="co">#&gt; 3 h1    mpg      wt             3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
-<span class="co">#&gt; 4 h2    mpg      wt             1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
-<span class="co">#&gt; 5 h2    mpg      wt             2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
-<span class="co">#&gt; 6 h2    mpg      wt             3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
+<span class="co">#&gt; # A study with 2 hypotheses and 5 unique paths</span>
+<span class="co">#&gt; #</span>
+<span class="co">#&gt; # A tibble: 6 × 8</span>
+<span class="co">#&gt;   name  outcomes exposures level number formulae  fit      tidy            </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;lgl&gt;  &lt;int&gt; &lt;list&gt;    &lt;list&gt;   &lt;list&gt;          </span>
+<span class="co">#&gt; 1 h1    mpg      wt        NA         1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
+<span class="co">#&gt; 2 h1    mpg      wt        NA         2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
+<span class="co">#&gt; 3 h1    mpg      wt        NA         3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
+<span class="co">#&gt; 4 h2    mpg      wt        NA         1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
+<span class="co">#&gt; 5 h2    mpg      wt        NA         2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
+<span class="co">#&gt; 6 h2    mpg      wt        NA         3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
 
 <span class="co"># Plot analyzed study</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
@@ -205,19 +207,19 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">%&gt;%</span> 
     <span class="fu"><a href="reference/extract_models.html">extract_models</a></span><span class="op">(</span>which_ones <span class="op">=</span> <span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 9 × 11</span>
-<span class="co">#&gt;   name  outcomes exposures number term        estimate std.error statistic  p.value</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;      &lt;int&gt; &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 h1    mpg      wt             1 (Intercept)  3.73e+1   1.88      19.9    8.24e-19</span>
-<span class="co">#&gt; 2 h1    mpg      wt             1 wt          -5.34e+0   0.559     -9.56   1.29e-10</span>
-<span class="co">#&gt; 3 h1    mpg      wt             2 (Intercept)  3.72e+1   1.60      23.3    2.57e-20</span>
-<span class="co">#&gt; 4 h1    mpg      wt             2 wt          -3.88e+0   0.633     -6.13   1.12e- 6</span>
-<span class="co">#&gt; 5 h1    mpg      wt             2 hp          -3.18e-2   0.00903   -3.52   1.45e- 3</span>
-<span class="co">#&gt; 6 h1    mpg      wt             3 (Intercept)  3.71e+1   2.11      17.6    1.16e-16</span>
-<span class="co">#&gt; 7 h1    mpg      wt             3 wt          -3.80e+0   1.07      -3.56   1.33e- 3</span>
-<span class="co">#&gt; 8 h1    mpg      wt             3 hp          -3.12e-2   0.0114    -2.72   1.10e- 2</span>
-<span class="co">#&gt; 9 h1    mpg      wt             3 disp        -9.37e-4   0.0103    -0.0905 9.29e- 1</span>
-<span class="co">#&gt; # … with 2 more variables: conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;</span></code></pre></div>
+<span class="co">#&gt; # A tibble: 9 × 12</span>
+<span class="co">#&gt;   name  outcomes exposures level number term         estimate std.error statistic</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;lgl&gt;  &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 h1    mpg      wt        NA         1 (Intercept) 37.3        1.88      19.9   </span>
+<span class="co">#&gt; 2 h1    mpg      wt        NA         1 wt          -5.34       0.559     -9.56  </span>
+<span class="co">#&gt; 3 h1    mpg      wt        NA         2 (Intercept) 37.2        1.60      23.3   </span>
+<span class="co">#&gt; 4 h1    mpg      wt        NA         2 wt          -3.88       0.633     -6.13  </span>
+<span class="co">#&gt; 5 h1    mpg      wt        NA         2 hp          -0.0318     0.00903   -3.52  </span>
+<span class="co">#&gt; 6 h1    mpg      wt        NA         3 (Intercept) 37.1        2.11      17.6   </span>
+<span class="co">#&gt; 7 h1    mpg      wt        NA         3 wt          -3.80       1.07      -3.56  </span>
+<span class="co">#&gt; 8 h1    mpg      wt        NA         3 hp          -0.0312     0.0114    -2.72  </span>
+<span class="co">#&gt; 9 h1    mpg      wt        NA         3 disp        -0.000937   0.0103    -0.0905</span>
+<span class="co">#&gt; # … with 3 more variables: p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;</span></code></pre></div>
 </div>
 </div>
   </div>

@@ -1,3 +1,5 @@
+# nocov start
+
 #' Strategize the Study Approach
 #'
 #' A hypothetical way to help create a project map.
@@ -50,3 +52,16 @@ draw <- function(study,
 		theme_graph()
 
 }
+
+#' Derive Formula with Significant Predictors
+#' @export
+find_significant <- function(study,
+														 name,
+														 statistic = "p.value",
+														 threshold = 0.05,
+														 return_study = FALSE,
+														 ...) {
+
+}
+
+# nocov end
