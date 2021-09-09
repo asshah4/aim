@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://asshah4.github.io/dagger//index.html</loc>
+    <loc>https://asshah4.github.io/path//index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/add_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/path//reference/add_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/as_tbl_graph.html</loc>
+    <loc>https://asshah4.github.io/path//reference/as_tbl_graph.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/construct_map.html</loc>
+    <loc>https://asshah4.github.io/path//reference/construct_map.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/create_study.html</loc>
+    <loc>https://asshah4.github.io/path//reference/create_study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/dagger-package.html</loc>
+    <loc>https://asshah4.github.io/path//reference/expand_formula.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/expand_formula.html</loc>
+    <loc>https://asshah4.github.io/path//reference/expand_paths.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/expand_paths.html</loc>
+    <loc>https://asshah4.github.io/path//reference/extract_dagitty.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/extract_dagitty.html</loc>
+    <loc>https://asshah4.github.io/path//reference/extract_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/extract_models.html</loc>
+    <loc>https://asshah4.github.io/path//reference/fetch.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/fetch.html</loc>
+    <loc>https://asshah4.github.io/path//reference/find_confounders.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/find_confounders.html</loc>
+    <loc>https://asshah4.github.io/path//reference/fit_calls.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/fit_calls.html</loc>
+    <loc>https://asshah4.github.io/path//reference/fit_parsnip_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/fit_parsnip_models.html</loc>
+    <loc>https://asshah4.github.io/path//reference/hypothesize.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/hypothesize.html</loc>
+    <loc>https://asshah4.github.io/path//reference/modify_study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/modify_study.html</loc>
+    <loc>https://asshah4.github.io/path//reference/path-package.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/pipe.html</loc>
+    <loc>https://asshah4.github.io/path//reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/print.hypothesis.html</loc>
+    <loc>https://asshah4.github.io/path//reference/print.hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/print.study.html</loc>
+    <loc>https://asshah4.github.io/path//reference/print.study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/reconstruct.html</loc>
+    <loc>https://asshah4.github.io/path//reference/reconstruct.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/reexports.html</loc>
+    <loc>https://asshah4.github.io/path//reference/reexports.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/summary.study.html</loc>
+    <loc>https://asshah4.github.io/path//reference/summary.study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/tbl_sequential.html</loc>
+    <loc>https://asshah4.github.io/path//reference/tbl_sequential.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/theme_gt_compact.html</loc>
+    <loc>https://asshah4.github.io/path//reference/theme_gt_compact.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/tidy_tests.html</loc>
+    <loc>https://asshah4.github.io/path//reference/tidy_tests.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/update_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/path//reference/update_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//articles/development.html</loc>
+    <loc>https://asshah4.github.io/path//articles/development.html</loc>
   </url>
 </urlset>
