@@ -1,4 +1,4 @@
 library(testthat)
-library(dagger)
+library(path)
 
-test_check("dagger")
+test_check("path")

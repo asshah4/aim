@@ -1,15 +1,15 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# dagger
+# path
 
 <!-- badges: start -->
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Github commit
-frequency](https://img.shields.io/github/commit-activity/w/asshah4/dagger)](https://github.com/asshah4/dagger/graphs/commit-activity)
-[![R-CMD-check](https://github.com/asshah4/dagger/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/dagger/actions)
+frequency](https://img.shields.io/github/commit-activity/w/asshah4/path)](https://github.com/asshah4/path/graphs/commit-activity)
+[![R-CMD-check](https://github.com/asshah4/path/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/path/actions)
 
 <!-- badges: end -->
 
@@ -19,12 +19,12 @@ This package has not yet been released on CRAN, but can be downloaded
 from Github.
 
 ``` r
-remotes::install_github("asshah4/dagger")
+remotes::install_github("asshah4/path")
 ```
 
 ## Introduction
 
-The `dagger` package is intended to help build causal models with an
+The `path` package is intended to help build causal models with an
 underlying focus of **directed acylcic graphs**. However, instead of
 starting purely from a diagram, this package intends to allow modeling
 to occur simultaneously, and then leveraging the patterns within the
@@ -48,7 +48,7 @@ The package is simple to use. First, lets load the basic packages. The
 regressions as the primary test.
 
 ``` r
-library(dagger)
+library(path)
 library(parsnip)
 ```
 
