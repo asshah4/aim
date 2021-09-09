@@ -5,102 +5,110 @@
 \title{Make a table of sequentially fit models using \code{gt}}
 \usage{
 tbl_sequential(
-  x,
-  var_col = "term",
-  var_list,
-  group_var = NULL,
-  rank_col = "number",
-  ranks,
-  rank_lab = NULL,
-  rank_footnotes = NULL,
-  disp_col = c("estimate", "conf.low", "conf.high"),
-  disp_glue = "{1} ({2}, {3})",
-  stat_col = NULL,
-  stat_val = 0.05,
-  stat_style = "fill",
-  stat_opts = list(color = "lightgreen"),
+  data,
+  terms,
+  models,
+  model_label = NULL,
+  by = NULL,
+  values = c("estimate", "conf.low", "conf.high"),
+  pattern = "{1} ({2}, {3})",
+  statistic = NULL,
+  style = fill ~ list(color = "lightgreen"),
   decimals = 2,
+  footnotes = NULL,
   ...
 )
 }
 \arguments{
-\item{x}{A data table with columns that are similar to that from
+\item{data}{A data table with columns that are similar to that from
 \code{\link[broom:reexports]{broom::tidy()}}, along with an naming variable that identifies which model
 the data is coming from. The default options presume that the data was
 generated from \code{\link[broom:reexports]{broom::tidy()}} with confidence intervals included.}
 
-\item{var_col}{Character name of the column containing the independent
-variable terms.}
+\item{terms}{A \emph{formula ~ list} where the left-hand side indicates the column
+in \strong{data} and right-hand side indicates which variables are of interest,
+along with their potential label (thus a named list).
 
-\item{var_list}{Named list of the primary exposure variables that were
-contained within each model, along with a text description (e.g. \code{list(x = "primary_variable")}).}
+For example, \code{term ~ list(x = "primary")} would select the column named
+"term" and it would label variable "x" with the description "primary" for
+display in the column headings.
 
-\item{group_var}{Defaults to NULL. If present, presumes a grouping variable
+If instead, no name is given, such as \code{term ~ list("x")} it is presumed
+that the variables will go by their original name from the table.}
+
+\item{models}{A \emph{formula ~ list} pattern where the left-hand side indicates
+the column in \strong{data} that contains the model identifiers, and the
+right-hand side indicates which models should be used. If it is given as a
+named list, then the models will be relabeled when displayed.
+
+For example, \code{model_id ~ list(1, 3, 5)} would select the models labelled as
+"1", "3", and "5". These would be re-sequenced as "1", "2", "3" for
+simplicity.
+
+If a named list is given, such as \code{model_id ~ list(m = "Unadjusted")}, they
+will not be re-sequenced. If the model identifier is numeric, then it must
+be treated as a character when placed in a named list if it is being
+labeled, such as \code{model_id ~ list("1" = "Unadjusted")}.}
+
+\item{model_label}{Character vector for naming the models. If the models are
+not labeled as above, then this optional argument can be used to prefix the
+sequence of variables. The default is NULL, which retains the original
+model identifiers instead.}
+
+\item{by}{Defaults to NULL. If present, presumes a grouping variable
 or level of analyses were present. Each group is given the label that
 represents the value of the level. To be more informative, can relabel the
 values prior to passing to the function.}
 
-\item{rank_col}{Character name of the column that serves as the ordering
-variable for the models, such as a sequence in the setting of sequential
-modeling.}
+\item{values}{The numeric columns that contain the variables that should be
+displayed, such as \code{values = c("estimate", "conf.low", "conf.high")},
+which will be merged together in format chosen by the \strong{pattern}
+argument.}
 
-\item{ranks}{Vector containing which models to select (either numerically or
-by a name), based on user preference. Serves as the base for the row names
-in the \code{gt} table. They are re-sequenced to be numerical integers if using
-the \strong{rank_lab} parameter. For example, if the selections are \code{ranks = c(1, 3, 5)}, then would become "\code{rank_lab} 1", "\code{rank_lab} 2", "\code{rank_lab}
-3".}
+\item{pattern}{A string that uses \code{\link[glue:glue]{glue::glue()}} to describe how the display
+columns should be arranged. With \code{pattern = "{1} ({2}, {3})"}, numbers
+represent the corresponding position in the vector given to the \strong{pattern}
+argument (e.g. "{1}" represents "estimate").}
 
-\item{rank_lab}{Defaults to NULL. Character string that would be prepended to
-each individual rank to provide legibility to the rows. For example, if
-\code{ranks = c(1, 3, 5)}, then \code{rank_lab = "Model"} would produce the labels
-"Model 1", "Model 2", "Model 3". If missing, will not modify the row names.}
+\item{statistic}{A \emph{formula} object where the left-hand side indicates the
+statistic column of interest, and the right-hand side is the cut-off value
+for that parameter. For example, \code{statistic = p.value ~ 0.05} would select
+the "p.value" column and identify which cells had value under 0.05.
+Defaults to NULL.}
 
-\item{rank_footnotes}{Defaults to NULL. This is an unnamed list of the
-sequential labels to be added to help identify each model. The first
-argument is the label for the outcome variable. There then must be a value
-for each position selected by the \strong{ranks} argument. For example,
-\code{rank_footnotes = list("outcome", "exposure", "x1", c("x2", "x3"))}. This
-would generate a pattern:
+\item{style}{If a \strong{statistic} was chosen, then specific options can be
+passed to help emphasize those particular cells. This is a \emph{formula ~ list}
+object where the left-hand side indicates the type of style to choose, and
+the right-hand side indicates the implementation. These are based on the
+[\code{\link[gt:tab_style]{gt::tab_style()}}] function.
+
+Left-hand side should be one of c(fill, text, borders), which correspond to
+to \code{cell_fill()}, \code{cell_text()}, and \code{cell_borders()}. The right-hand side
+is a named list such as \code{list(color = lightgreen)}, and accepts options
+described by the \code{gt} package. There is no validation for the options at
+this time, so see documentation the \code{gt} package for details.}
+
+\item{decimals}{The number of decimals to be used for displaying output.
+Defaults to 2 decimal places.}
+
+\item{...}{For passing additional arguments}
+
+\item{model_notes}{This is an unnamed \code{list} object that allows for simple
+labeling of the how the sequential models are built. This list should be
+\code{length(models) + 1}. The first term is required to be the outcome
+variable. Subsequent list positions represent the additional terms that
+were included for sequential adjustment. There should be an item for each
+position selected by the \strong{models} argument.
+
+For example:
+
+\code{model_notes = list("outcome", "exposure", "x1", c("x2", "x3"))}
 
 \eqn{Model 1 = outcome ~ exposure}
 
 \eqn{Model 2 = outcome ~ Model 1 + x1}
 
 \eqn{Model 3 = outcome ~ Model 2 + x2 + x3}}
-
-\item{disp_col}{The numeric columns that contain the variables that should be
-displayed, such as \code{disp_col = c("estimate", "conf.low", "conf.high")},
-which will be merged together in format chosen by the \strong{disp_glue}
-argument.}
-
-\item{disp_glue}{A character vector that use the \code{\link[glue:glue]{glue::glue()}} package to
-describe how the display columns should be arranged, such as \code{disp_glue = "{1} ({2}, {3})"}. The numbers represent the corresponding position in the
-vector given to the \strong{disp_col} argument (e.g. "{1}" represents
-"estimate").}
-
-\item{stat_col}{Occasionally the individual cells should be modified to show
-significance or importance of findings. This argument is a single character
-vector to name which column will help qualify that vector. For example,
-"p.value" may be used to help decide significance. Defaults to NA.}
-
-\item{stat_val}{If a statistic is chosen from the \strong{stat_col} argument, then
-it is compared with and expected to be lower than the \strong{stat_val} argument
-(\code{stat_col < stat_val}).}
-
-\item{stat_style}{If a statistic is chosen, then \code{gt} offers the
-\code{\link[gt:tab_style]{gt::tab_style()}} function, which allows for modification. The options are
-\code{c("fill", "text", "borders")}, which correspond to \code{cell_fill()},
-\code{cell_text()}, and \code{cell_borders()}.}
-
-\item{stat_opts}{If a statistic is chosen, then a named list, such as
-\code{list(color = "lightgreen")} can be given to be used for the \strong{stat_style}
-argument. There is not a validation method for this, so please read
-documentation from \code{gt} for this function.}
-
-\item{decimals}{The number of decimals to be used for displaying output.
-Defaults to 2 decimal places.}
-
-\item{...}{For passing additional arguments}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

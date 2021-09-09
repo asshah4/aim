@@ -4,10 +4,10 @@
 \alias{theme_gt_compact}
 \title{Compact and minimal theme for \code{gt} tables}
 \usage{
-theme_gt_compact(x, table.font.size = pct(80), table.width = pct(90), ...)
+theme_gt_compact(data, table.font.size = pct(80), table.width = pct(90), ...)
 }
 \arguments{
-\item{x}{A \code{gt} object}
+\item{data}{A table object that is created using the \code{\link[gt:gt]{gt()}} function.}
 
 \item{table.font.size}{The font sizes for the parent text element \code{table} and the following child
 elements: \code{heading.title}, \code{heading.subtitle}, \code{column_labels},

@@ -10,45 +10,52 @@
 #' created from the [dagger::extract_models()] function, which is primarily uses
 #' the [broom::tidy()] function to help describe model fits.
 #'
-#' @param x A data table with columns that are similar to that from
+#' @param data A data table with columns that are similar to that from
 #'   [broom::tidy()], along with an naming variable that identifies which model
 #'   the data is coming from. The default options presume that the data was
 #'   generated from [broom::tidy()] with confidence intervals included.
 #'
-#' @param var_col Character name of the column containing the independent
-#'   variable terms.
+#' @param terms A _formula ~ list_ where the left-hand side indicates the column
+#'   in __data__ and right-hand side indicates which variables are of interest,
+#'   along with their potential label (thus a named list).
 #'
-#' @param var_list Named list of the primary exposure variables that were
-#'   contained within each model, along with a text description (e.g. `list(x =
-#'   "primary_variable")`).
+#'   For example, `term ~ list(x = "primary")` would select the column named
+#'   "term" and it would label variable "x" with the description "primary" for
+#'   display in the column headings.
 #'
-#' @param group_var Defaults to NULL. If present, presumes a grouping variable
-#'   or level of analyses were present. Each group is given the label that
-#'   represents the value of the level. To be more informative, can relabel the
-#'   values prior to passing to the function.
+#'   If instead, no name is given, such as `term ~ list("x")` it is presumed
+#'   that the variables will go by their original name from the table.
 #'
-#' @param rank_col Character name of the column that serves as the ordering
-#'   variable for the models, such as a sequence in the setting of sequential
-#'   modeling.
 #'
-#' @param ranks Vector containing which models to select (either numerically or
-#'   by a name), based on user preference. Serves as the base for the row names
-#'   in the `gt` table. They are re-sequenced to be numerical integers if using
-#'   the __rank_lab__ parameter. For example, if the selections are `ranks =
-#'   c(1, 3, 5)`, then would become "`rank_lab` 1", "`rank_lab` 2", "`rank_lab`
-#'   3".
+#' @param models A _formula ~ list_ pattern where the left-hand side indicates
+#'   the column in __data__ that contains the model identifiers, and the
+#'   right-hand side indicates which models should be used. If it is given as a
+#'   named list, then the models will be relabeled when displayed.
 #'
-#' @param rank_lab Defaults to NULL. Character string that would be prepended to
-#'   each individual rank to provide legibility to the rows. For example, if
-#'   `ranks = c(1, 3, 5)`, then `rank_lab = "Model"` would produce the labels
-#'   "Model 1", "Model 2", "Model 3". If missing, will not modify the row names.
+#'   For example, `model_id ~ list(1, 3, 5)` would select the models labelled as
+#'   "1", "3", and "5". These would be re-sequenced as "1", "2", "3" for
+#'   simplicity.
 #'
-#' @param rank_footnotes Defaults to NULL. This is an unnamed list of the
-#'   sequential labels to be added to help identify each model. The first
-#'   argument is the label for the outcome variable. There then must be a value
-#'   for each position selected by the __ranks__ argument. For example,
-#'   `rank_footnotes = list("outcome", "exposure", "x1", c("x2", "x3"))`. This
-#'   would generate a pattern:
+#'   If a named list is given, such as `model_id ~ list(m = "Unadjusted")`, they
+#'   will not be re-sequenced. If the model identifier is numeric, then it must
+#'   be treated as a character when placed in a named list if it is being
+#'   labeled, such as `model_id ~ list("1" = "Unadjusted")`.
+#'
+#' @param model_label Character vector for naming the models. If the models are
+#'   not labeled as above, then this optional argument can be used to prefix the
+#'   sequence of variables. The default is NULL, which retains the original
+#'   model identifiers instead.
+#'
+#' @param model_notes This is an unnamed `list` object that allows for simple
+#'   labeling of the how the sequential models are built. This list should be
+#'   `length(models) + 1`. The first term is required to be the outcome
+#'   variable. Subsequent list positions represent the additional terms that
+#'   were included for sequential adjustment. There should be an item for each
+#'   position selected by the __models__ argument.
+#'
+#'   For example:
+#'
+#'   `model_notes = list("outcome", "exposure", "x1", c("x2", "x3"))`
 #'
 #'   \eqn{Model 1 = outcome ~ exposure}
 #'
@@ -56,35 +63,38 @@
 #'
 #'   \eqn{Model 3 = outcome ~ Model 2 + x2 + x3}
 #'
-#' @param disp_col The numeric columns that contain the variables that should be
-#'   displayed, such as `disp_col = c("estimate", "conf.low", "conf.high")`,
-#'   which will be merged together in format chosen by the __disp_glue__
+#' @param by Defaults to NULL. If present, presumes a grouping variable
+#'   or level of analyses were present. Each group is given the label that
+#'   represents the value of the level. To be more informative, can relabel the
+#'   values prior to passing to the function.
+#'
+#' @param values The numeric columns that contain the variables that should be
+#'   displayed, such as `values = c("estimate", "conf.low", "conf.high")`,
+#'   which will be merged together in format chosen by the __pattern__
 #'   argument.
 #'
-#' @param disp_glue A character vector that use the [glue::glue()] package to
-#'   describe how the display columns should be arranged, such as `disp_glue =
-#'   "{1} ({2}, {3})"`. The numbers represent the corresponding position in the
-#'   vector given to the __disp_col__ argument (e.g. "{1}" represents
-#'   "estimate").
+#' @param pattern A string that uses [glue::glue()] to describe how the display
+#'   columns should be arranged. With `pattern = "{1} ({2}, {3})"`, numbers
+#'   represent the corresponding position in the vector given to the __pattern__
+#'   argument (e.g. "{1}" represents "estimate").
 #'
-#' @param stat_col Occasionally the individual cells should be modified to show
-#'   significance or importance of findings. This argument is a single character
-#'   vector to name which column will help qualify that vector. For example,
-#'   "p.value" may be used to help decide significance. Defaults to NA.
+#' @param statistic A _formula_ object where the left-hand side indicates the
+#'   statistic column of interest, and the right-hand side is the cut-off value
+#'   for that parameter. For example, `statistic = p.value ~ 0.05` would select
+#'   the "p.value" column and identify which cells had value under 0.05.
+#'   Defaults to NULL.
 #'
-#' @param stat_val If a statistic is chosen from the __stat_col__ argument, then
-#'   it is compared with and expected to be lower than the __stat_val__ argument
-#'   (`stat_col < stat_val`).
+#' @param style If a __statistic__ was chosen, then specific options can be
+#'   passed to help emphasize those particular cells. This is a _formula ~ list_
+#'   object where the left-hand side indicates the type of style to choose, and
+#'   the right-hand side indicates the implementation. These are based on the
+#'   [[gt::tab_style()]] function.
 #'
-#' @param stat_style If a statistic is chosen, then `gt` offers the
-#'   [gt::tab_style()] function, which allows for modification. The options are
-#'   `c("fill", "text", "borders")`, which correspond to `cell_fill()`,
-#'   `cell_text()`, and `cell_borders()`.
-#'
-#' @param stat_opts If a statistic is chosen, then a named list, such as
-#'   `list(color = "lightgreen")` can be given to be used for the __stat_style__
-#'   argument. There is not a validation method for this, so please read
-#'   documentation from `gt` for this function.
+#'   Left-hand side should be one of c(fill, text, borders), which correspond to
+#'   to `cell_fill()`, `cell_text()`, and `cell_borders()`. The right-hand side
+#'   is a named list such as `list(color = lightgreen)`, and accepts options
+#'   described by the `gt` package. There is no validation for the options at
+#'   this time, so see documentation the `gt` package for details.
 #'
 #' @param decimals The number of decimals to be used for displaying output.
 #'   Defaults to 2 decimal places.
@@ -96,128 +106,172 @@
 #' @importFrom rlang := .data
 #' @family visualizers
 #' @export
-tbl_sequential <- function(x,
-													 var_col = "term",
-													 var_list,
-													 group_var = NULL,
-													 rank_col = "number",
-													 ranks,
-													 rank_lab = NULL,
-													 rank_footnotes = NULL,
-													 disp_col = c("estimate", "conf.low", "conf.high"),
-													 disp_glue = "{1} ({2}, {3})",
-													 stat_col = NULL,
-													 stat_val = 0.05,
-													 stat_style = "fill",
-													 stat_opts = list(color = "lightgreen"),
+tbl_sequential <- function(data,
+													 terms,
+													 models,
+													 model_label = NULL,
+													 by = NULL,
+													 values = c("estimate", "conf.low", "conf.high"),
+													 pattern = "{1} ({2}, {3})",
+													 statistic = NULL,
+													 style = fill ~ list(color = "lightgreen"),
 													 decimals = 2,
+													 footnotes = NULL,
 													 ...) {
 
-	# Data table of level, number, term, estimate, statistic, p.value, conf.low, conf.high
-	# Main variables
-	vars <- names(var_list)
+
+
+	# Terms
+	validate_class(terms, "formula")
+	var_col_sym <- terms[[2]]
+	var_col <- as.character(var_col_sym)
+	var_list <- eval(terms[[3]])
+	var_names <- unname(unlist(var_list))
+	vars <-
+		lapply(seq_along(var_list), function(x) {
+			if (names(var_list[x]) == "") {
+				var_list[[x]]
+			} else {
+				names(var_list[x])
+			}
+		}) %>%
+		unlist()
+
+
+	# Model selection
+	validate_class(models, "formula")
+	model_col_sym <- models[[2]]
+	model_col <- as.character(model_col_sym)
+	model_list <- eval(models[[3]])
+	model_names <-
+		if (is.null(names(model_list))) {
+			if (is.null(model_label)) {
+				1:length(model_list)
+			} else {
+				paste(model_label, 1:length(model_list))
+			}
+		} else {
+			if (is.null(model_label)) {
+				unlist(unname(model_list))
+			} else {
+				paste(model_label, unlist(unname(model_list)))
+			}
+		}
+	mods <-
+		lapply(seq_along(model_list), function(x) {
+			if (names(model_list[x]) == "") {
+				model_list[[x]]
+			} else {
+				names(model_list[x])
+			}
+		}) %>%
+		unlist()
 
 	# If grouping variables are present
-	if (!is.null(group_var)) {
-		n <- length(unique(x[[group_var]]))
+	if (!is.null(by)) {
+		n <- length(unique(data[[by]]))
 	} else {
 		n <- 1
 	}
 
-	# Ranks
-	rank_col_sym <- rlang::sym(rank_col)
-	if (!is.null(rank_lab)) {
-		rank_lab_mod <- rep(paste(rank_lab, 1:length(ranks)), n)
-	} else {
-		rank_lab_mod <- as.character(ranks)
-	}
-
 	# Create initial `gt` model
-	y <-
-		x %>%
-		dplyr::filter(.data[[var_col[[1]]]] %in% vars) %>%
-		dplyr::select(dplyr::any_of(c({{ group_var }}, {{ rank_col }}, {{ var_col }}, {{ disp_col }}, {{ stat_col }}))) %>%
-		dplyr::filter( .data[[rank_col[[1]]]] %in% ranks) %>%
+	x <-
+		data %>%
+		dplyr::filter(.data[[var_col]] %in% vars) %>%
+		dplyr::select(dplyr::any_of(c({{ by }}, {{ model_col }}, {{ var_col }}, {{ disp_col }}, {{ stat_col }}))) %>%
+		dplyr::filter( .data[[model_col]] %in% mods) %>%
 		tidyr::pivot_wider(
-			names_from = .data[[var_col[[1]]]],
+			names_from = .data[[var_col]],
 			values_from = c({{ disp_col }}, {{ stat_col }}),
-			names_glue = paste0("{", var_col[[1]], "}_{.value}")
+			names_glue = paste0("{", var_col, "}_{.value}")
 		) %>%
-		dplyr::mutate(!!rank_col_sym := rank_lab_mod) %>%
+		dplyr::mutate(!!model_col_sym := rep(model_names, n)) %>%
 		{
-			if (!is.null(group_var)) {
-				gt::gt(., rowname_col = rank_col, groupname_col = group_var)
-			} else gt::gt(., rowname_col = rank_col)
+			if (!is.null(by)) {
+				gt::gt(., rowname_col = model_col, groupname_col = by)
+			} else gt::gt(., rowname_col = model_col)
 		}
 
 	# Merge columns
 	for (i in vars) {
-		y <-
-			y %>%
-			gt::cols_merge(columns = gt::starts_with(i), pattern = disp_glue)
+		x <-
+			x %>%
+			gt::cols_merge(columns = gt::starts_with(i), pattern = pattern)
 	}
 
 	# Column names
-	var_list_mod <- var_list
-	names(var_list_mod) <- paste0(vars, "_estimate")
-	y <-
-		y %>%
-		gt::cols_label(.list = var_list_mod)
+	var_lab <- var_list
+	names(var_lab) <- paste0(vars, "_estimate")
+	x <-
+		x %>%
+		gt::cols_label(.list = var_lab)
 
 	# Significant values and styling
-	if (!is.null(stat_col)) {
+	if (!is.null(statistic)) {
 
-		stat_names <-
+		stat_col <- statistic[[2]]
+		stat_val <- statistic[[3]]
+
+		stat_lab <-
 			paste0(vars, "_", stat_col) %>%
 			lapply(., rlang::sym)
-		var_names <-
-			names(var_list_mod) %>%
+		var_lab <-
+			names(var_lab) %>%
 			lapply(., rlang::sym)
 
+		stat_style <- as.character(style[[2]])
+		stat_opts <- eval(style[[3]])
+
 		for (i in 1:length(vars)) {
-			y <-
-				y %>%
+			x <-
+				x %>%
 				gt::tab_style(
 					style = switch(
 						stat_style,
 						fill = list(gt::cell_fill(unlist(stat_opts)))
 					),
 					locations = gt::cells_body(
-						columns = !!var_names[[i]],
-						rows = !!stat_names[[i]] < stat_val
+						columns = !!var_lab[[i]],
+						rows = !!stat_lab[[i]] < stat_val
 					)
 				)
 		}
 	}
 
 	# Add Footnotes
-	if (!is.null(rank_footnotes)) {
-		out <- rank_footnotes[[1]]
+	if (!is.null(model_notes)) {
+
+		validate_class(model_notes, "list")
+		if (length(model_notes) != (length(models) + 1)) {
+			"The `model_notes` argument is not of the correct length."
+		}
+
+		out <- model_notes[[1]]
 
 		footnote_list <- list()
 
-		for (i in 1:length(ranks)) {
+		for (i in 1:length(models)) {
 
-			lhs <- paste(rank_lab_mod[[i]], "=", out, "~")
+			lhs <- paste(model_names[[i]], "=", out, "~")
 
 			if (i == 1) {
 				footnote_list[[i]] <-
-					paste(rank_footnotes[[i + 1]], collapse = " + ") %>%
+					paste(model_notes[[i + 1]], collapse = " + ") %>%
 					paste(lhs, .)
 			} else {
 				footnote_list[[i]] <-
-					paste(rank_footnotes[[i + 1]], collapse = " + ") %>%
-					paste(rank_lab_mod[[i - 1 ]], ., sep = " + ") %>%
+					paste(model_notes[[i + 1]], collapse = " + ") %>%
+					paste(model_names[[i - 1 ]], ., sep = " + ") %>%
 					paste(lhs, .)
 			}
 
 		}
 
 		# Add them to original structure
-		for (i in 1:length(ranks)) {
+		for (i in 1:length(models)) {
 			if (n == 1) {
-				y <-
-					y %>%
+				x <-
+					x %>%
 					gt::tab_footnote(
 						footnote_list[[i]],
 						locations = gt::cells_stub(rows = i)
@@ -225,11 +279,11 @@ tbl_sequential <- function(x,
 			}
 			if (n > 1) {
 				for (j in 2:n) {
-					y <-
-						y %>%
+					x <-
+						x %>%
 						gt::tab_footnote(
 							footnote_list[[i]],
-							locations = gt::cells_stub(rows = c(i, i + (j - 1)*length(ranks)))
+							locations = gt::cells_stub(rows = c(i, i + (j - 1)*length(models)))
 						)
 				}
 			}
@@ -238,11 +292,11 @@ tbl_sequential <- function(x,
 	}
 
 	# Final touchups
-	y <-
-		y %>%
+	x <-
+		x %>%
 		gt::fmt_number(columns = gt::everything(), decimals = decimals)
 
-	y
+	x
 
 }
 
@@ -253,21 +307,20 @@ tbl_sequential <- function(x,
 #' variables are to control font size and table width, but any option from the
 #' `gt` package is allowed.
 #'
-#' @param x A `gt` object
 #' @inheritParams gt::tab_options
 #' @param ... For passing additional arguments to the [gt::tab_options()]
 #'   function
 #' @importFrom gt px pct
 #' @family visualizers
 #' @export
-theme_gt_compact <- function(x,
+theme_gt_compact <- function(data,
 														 table.font.size = pct(80),
 														 table.width = pct(90),
 														 ...) {
 
-	validate_class(x, "gt_tbl")
+	validate_class(data, "gt_tbl")
 
-	x %>%
+	data %>%
 		gt::tab_options(
 			# Preset
 			table.margin.left = px(1),
