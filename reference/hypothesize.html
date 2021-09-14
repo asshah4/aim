@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Draw A Hypothesis — hypothesize • path</title>
+<title>Draw A Hypothesis — hypothesize • murmur</title>
 
 
 <!-- jquery -->
@@ -74,7 +74,7 @@ modeled, and allows for assessment of confounding variables." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">path</a>
+        <a class="navbar-link" href="../index.html">murmur</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
@@ -108,7 +108,7 @@ modeled, and allows for assessment of confounding variables." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/path/">
+  <a href="https://github.com/asshah4/murmur/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -127,7 +127,7 @@ modeled, and allows for assessment of confounding variables." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Draw A Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/murmur/blob/master/R/hypothesize.R'><code>R/hypothesize.R</code></a></small>
     <div class="hidden name"><code>hypothesize.Rd</code></div>
     </div>
 
@@ -265,6 +265,25 @@ yet:</p><ul>
     <h2 class="hasAnchor" id="formulae"><a class="anchor" href="#formulae"></a>Formulae</h2>
 
     
+
+
+<p>When supplying a <code>formula</code> object, each RHS term of the formula is
+considered an outcome variable, and is analyzed as a single outcome. Each
+LHS term is consider a predictor, and can be modified as below:</p><ul>
+<li><p><code>X()</code> is placed around a term to define as an independent exposure, which
+will be placed in separate formulae from any other term marked as an
+exposure</p></li>
+<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
+maintained/fixed in all models, which can include complex terms, such as
+mixed effects</p></li>
+<li><p><code><a href='https://rdrr.io/r/stats/zC.html'>C()</a></code> is placed around a term for any predictors that are a potential
+confounder, which does not yet change the relationship of how formulas are
+built, but is stored for future methods to be used with <code>hypothesize()</code></p></li>
+</ul>
+
+<p>For example, the equation below describes two independent exposures "x1"
+and "x2" that should be conditionally tested for every level of "z"</p>
+<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p>
 
 
 <p>When supplying a <code>formula</code> object, each RHS term of the formula is

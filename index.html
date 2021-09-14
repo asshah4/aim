@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Hypothesizing Paths • path</title>
+<title>Many Unknown Relationships Modelled Using R • murmur</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Hypothesizing Paths">
+<script src="pkgdown.js"></script><meta property="og:title" content="Many Unknown Relationships Modelled Using R">
 <meta property="og:description" content="A way to handle multiple models, with an emphasis on hypothesis testing">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -30,7 +30,7 @@
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="index.html">path</a>
+        <a class="navbar-link" href="index.html">murmur</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
@@ -64,7 +64,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/asshah4/path/">
+  <a href="https://github.com/asshah4/murmur/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -81,9 +81,9 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="path" class="section level1">
+<div id="murmur" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#path" class="anchor"></a>path</h1></div>
+<a href="#murmur" class="anchor"></a>murmur</h1></div>
 <!-- badges: start -->
 
 <!-- badges: end -->
@@ -92,33 +92,33 @@
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>This package has not yet been released on CRAN, but can be downloaded from Github.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"asshah4/path"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"asshah4/murmur"</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>The <code>path</code> package is intended to help build causal models with an underlying focus of <strong>directed acylcic graphs</strong>. However, instead of starting purely from a diagram, this package intends to allow modeling to occur simultaneously, and then leveraging the patterns within the data to help cut away <em>confounders</em> and other terms for a more parsimonious causal model. The premise is that there are two components in studying causality:</p>
+<p>The <code>murmur</code> package is intended to help build causal models with an underlying focus of <strong>directed acyclic graphs</strong>. However, instead of starting purely from a diagram, this package intends to allow modeling to occur simultaneously, and then leveraging the patterns within the data to help cut away <em>confounders</em> and other terms for a more parsimonious causal model. The premise is that there are two components in studying causality:</p>
 <ol>
 <li>Causal model diagrams</li>
 <li>Hypothesis testing and statistical analysis</li>
 </ol>
-<p>These two components are reflected within the primary functions of the package, and are built to help refine and modulate hypotheses as the study develops. The underlying data structure is the concept of a <strong>map</strong> that has multiple paths describing variable relationships, however they may exist in different <strong>layers</strong> on the map.</p>
+<p>These two components are reflected within the primary functions of the package, and are built to help refine and modulate hypotheses as the study develops. The underlying data structure is the concept of a <strong>map</strong> that has multiple murmurs describing variable relationships, however they may exist in different <strong>layers</strong> on the map.</p>
 </div>
 <div id="usage" class="section level2">
 <h2 class="hasAnchor">
 <a href="#usage" class="anchor"></a>Usage</h2>
 <p>The package is simple to use. First, lets load the basic packages. The <code>mtcars</code> dataset will serve as the example, and we will use linear regressions as the primary test.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/dagger">path</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/murmur">murmur</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://parsnip.tidymodels.org">parsnip</a></span><span class="op">)</span></code></pre></div>
 <p>The basic function of the package is the <code>study()</code> argument, which creates a empty data structure object.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/create_study.html">create_study</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # A study with 0 hypotheses and 0 unique path</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/create_map.html">create_map</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; # A map with 0 hypotheses</span>
 <span class="co">#&gt; #</span>
 <span class="co">#&gt; # A tibble: 0 × 8</span>
-<span class="co">#&gt; # … with 8 variables: name &lt;???&gt;, outcomes &lt;???&gt;, exposures &lt;???&gt;, level &lt;???&gt;,</span>
-<span class="co">#&gt; #   number &lt;???&gt;, formulae &lt;???&gt;, fit &lt;???&gt;, tidy &lt;???&gt;</span></code></pre></div>
+<span class="co">#&gt; # … with 8 variables: name &lt;chr&gt;, outcome &lt;chr&gt;, exposure &lt;chr&gt;, level &lt;chr&gt;,</span>
+<span class="co">#&gt; #   number &lt;int&gt;, formulae &lt;list&gt;, fit &lt;list&gt;, tidy &lt;list&gt;</span></code></pre></div>
 <p>This is accompanied by <code>hypothesis</code> objects, which are essentially modified <code>formula</code> objects that allow for a better understanding of variable relationships. We create two objects below, which have not yet been analyzed yet.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">h1</span> <span class="op">&lt;-</span>
@@ -167,66 +167,29 @@
 <p>These hypotheses can then be <em>drawn</em> on to the <em>study map</em> as below.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span>
-    <span class="fu"><a href="reference/create_study.html">create_study</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/create_map.html">create_map</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="reference/add_hypothesis.html">add_hypothesis</a></span><span class="op">(</span><span class="va">h1</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="reference/add_hypothesis.html">add_hypothesis</a></span><span class="op">(</span><span class="va">h2</span><span class="op">)</span> 
 
 <span class="co"># Print study</span>
 <span class="va">m1</span>
-<span class="co">#&gt; # A study with 2 hypotheses and 5 unique paths</span>
+<span class="co">#&gt; # A map with 2 hypotheses</span>
 <span class="co">#&gt; #</span>
 <span class="co">#&gt; # A tibble: 6 × 8</span>
-<span class="co">#&gt;   name  outcomes exposures level number formulae  fit   tidy </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;lgl&gt;  &lt;int&gt; &lt;list&gt;    &lt;lgl&gt; &lt;lgl&gt;</span>
-<span class="co">#&gt; 1 h1    mpg      wt        NA         1 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 2 h1    mpg      wt        NA         2 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 3 h1    mpg      wt        NA         3 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 4 h2    mpg      wt        NA         1 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 5 h2    mpg      wt        NA         2 &lt;formula&gt; NA    NA   </span>
-<span class="co">#&gt; 6 h2    mpg      wt        NA         3 &lt;formula&gt; NA    NA</span></code></pre></div>
-<p>Subsequently, we can fit the models and add the paths that were required. The <strong>paths</strong> can be utilized to help create the appropriate causal diagrams. The <code>construct_*()</code> functions can be used in any order or selectively.</p>
+<span class="co">#&gt;   name  outcome exposure level number formulae  fit    tidy  </span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;lgl&gt;  &lt;int&gt; &lt;list&gt;    &lt;list&gt; &lt;list&gt;</span>
+<span class="co">#&gt; 1 h1    mpg     wt       NA         1 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 2 h1    mpg     wt       NA         2 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 3 h1    mpg     wt       NA         3 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 4 h2    mpg     wt       NA         1 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 5 h2    mpg     wt       NA         2 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 6 h2    mpg     wt       NA         3 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span></code></pre></div>
+<p>Then, for analysis and display of results, the findings can easily be extracted.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span>
     <span class="va">m1</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/construct_map.html">construct_map</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Print analyzed study</span>
-<span class="va">m2</span>
-<span class="co">#&gt; # A study with 2 hypotheses and 5 unique paths</span>
-<span class="co">#&gt; #</span>
-<span class="co">#&gt; # A tibble: 6 × 8</span>
-<span class="co">#&gt;   name  outcomes exposures level number formulae  fit      tidy            </span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;lgl&gt;  &lt;int&gt; &lt;list&gt;    &lt;list&gt;   &lt;list&gt;          </span>
-<span class="co">#&gt; 1 h1    mpg      wt        NA         1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
-<span class="co">#&gt; 2 h1    mpg      wt        NA         2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
-<span class="co">#&gt; 3 h1    mpg      wt        NA         3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
-<span class="co">#&gt; 4 h2    mpg      wt        NA         1 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [2 × 7]&gt;</span>
-<span class="co">#&gt; 5 h2    mpg      wt        NA         2 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [3 × 7]&gt;</span>
-<span class="co">#&gt; 6 h2    mpg      wt        NA         3 &lt;formula&gt; &lt;fit[+]&gt; &lt;tibble [4 × 7]&gt;</span>
-
-<span class="co"># Plot analyzed study</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="va">m2</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/extract_dagitty.html">extract_dagitty</a></span><span class="op">(</span><span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu">ggdag</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/ggdag/man/ggdag.html">ggdag</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/README-unnamed-chunk-7-1.png" width="100%"></p>
-<p>Then, for analysis and display of results, the findings can easily be extracted.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">m2</span> <span class="op">%&gt;%</span> 
-    <span class="fu"><a href="reference/extract_models.html">extract_models</a></span><span class="op">(</span>which_ones <span class="op">=</span> <span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 9 × 12</span>
-<span class="co">#&gt;   name  outcomes exposures level number term         estimate std.error statistic</span>
-<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;     &lt;lgl&gt;  &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
-<span class="co">#&gt; 1 h1    mpg      wt        NA         1 (Intercept) 37.3        1.88      19.9   </span>
-<span class="co">#&gt; 2 h1    mpg      wt        NA         1 wt          -5.34       0.559     -9.56  </span>
-<span class="co">#&gt; 3 h1    mpg      wt        NA         2 (Intercept) 37.2        1.60      23.3   </span>
-<span class="co">#&gt; 4 h1    mpg      wt        NA         2 wt          -3.88       0.633     -6.13  </span>
-<span class="co">#&gt; 5 h1    mpg      wt        NA         2 hp          -0.0318     0.00903   -3.52  </span>
-<span class="co">#&gt; 6 h1    mpg      wt        NA         3 (Intercept) 37.1        2.11      17.6   </span>
-<span class="co">#&gt; 7 h1    mpg      wt        NA         3 wt          -3.80       1.07      -3.56  </span>
-<span class="co">#&gt; 8 h1    mpg      wt        NA         3 hp          -0.0312     0.0114    -2.72  </span>
-<span class="co">#&gt; 9 h1    mpg      wt        NA         3 disp        -0.000937   0.0103    -0.0905</span>
-<span class="co">#&gt; # … with 3 more variables: p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;</span></code></pre></div>
+    <span class="fu"><a href="reference/construct_models.html">construct_models</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/extract_models.html">extract_models</a></span><span class="op">(</span>which_ones <span class="op">=</span> <span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
   </div>
@@ -235,9 +198,9 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/asshah4/dagger/">https://​github.com/​asshah4/​dagger/​</a>
+<li>Browse source code at <br><a href="https://github.com/asshah4/murmur/">https://​github.com/​asshah4/​murmur/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/asshah4/dagger/issues">https://​github.com/​asshah4/​dagger/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/asshah4/murmur/issues">https://​github.com/​asshah4/​murmur/​issues</a>
 </li>
 </ul>
 </div>
@@ -259,8 +222,8 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
-<li><a href="https://github.com/asshah4/path/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/w/asshah4/path" alt="Github commit frequency"></a></li>
-<li><a href="https://github.com/asshah4/path/actions"><img src="https://github.com/asshah4/path/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/asshah4/murmur/graphs/commit-activity"><img src="https://img.shields.io/github/commit-activity/w/asshah4/murmur" alt="Github commit frequency"></a></li>
+<li><a href="https://github.com/asshah4/murmur/actions"><img src="https://github.com/asshah4/murmur/workflows/R-CMD-check/badge.svg" alt="R-CMD-check"></a></li>
 </ul>
 </div>
 </div>

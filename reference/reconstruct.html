@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Reconstruct a Hypothesis — reconstruct • path</title>
+<title>Reconstruct a Hypothesis — reconstruct • murmur</title>
 
 
 <!-- jquery -->
@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Reconstruct a Hypothesis — reconstruct" />
 <meta property="og:description" content="
-Modify a hypothesis within a study with different approaches." />
+Modify a hypothesis within a model_map with different approaches." />
 
 
 
@@ -72,7 +72,7 @@ Modify a hypothesis within a study with different approaches." />
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">path</a>
+        <a class="navbar-link" href="../index.html">murmur</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
@@ -106,7 +106,7 @@ Modify a hypothesis within a study with different approaches." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/path/">
+  <a href="https://github.com/asshah4/murmur/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -125,17 +125,17 @@ Modify a hypothesis within a study with different approaches." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Reconstruct a Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/confound.R'><code>R/confound.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/murmur/blob/master/R/confound.R'><code>R/confound.R</code></a></small>
     <div class="hidden name"><code>reconstruct.Rd</code></div>
     </div>
 
     <div class="ref-description">
     <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
-<p>Modify a <code>hypothesis</code> within a study with different approaches.</p>
+<p>Modify a <code>hypothesis</code> within a <code>model_map</code> with different approaches.</p>
     </div>
 
     <pre class="usage"><span class='fu'>reconstruct</span><span class='op'>(</span>
-  <span class='va'>study</span>,
+  <span class='va'>model_map</span>,
   <span class='va'>name</span>,
   new_name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>name</span>, <span class='st'>"_cut"</span><span class='op'>)</span>,
   approach <span class='op'>=</span> <span class='st'>"confounding"</span>,
@@ -146,8 +146,8 @@ Modify a hypothesis within a study with different approaches." />
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>study</th>
-      <td><p>A <code>study</code> object that has been constructed</p></td>
+      <th>model_map</th>
+      <td><p>A <code>model_map</code> object that has been constructed</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -176,7 +176,7 @@ set the threshold for changes in effect size that are considered relevant.</p></
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A <code>study</code> object</p>
+    <p>A <code>model_map</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

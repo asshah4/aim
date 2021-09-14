@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Derive Formula With Confounders — find_confounders • path</title>
+<title>Derive Formula With Confounders — find_confounders • murmur</title>
 
 
 <!-- jquery -->
@@ -83,7 +83,7 @@ confounder (or otherwise removed).
         <span class="icon-bar"></span>
       </button>
       <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">path</a>
+        <a class="navbar-link" href="../index.html">murmur</a>
         <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
@@ -117,7 +117,7 @@ confounder (or otherwise removed).
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/asshah4/path/">
+  <a href="https://github.com/asshah4/murmur/">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -136,7 +136,7 @@ confounder (or otherwise removed).
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Derive Formula With Confounders</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/dagger/blob/master/R/confound.R'><code>R/confound.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/murmur/blob/master/R/confound.R'><code>R/confound.R</code></a></small>
     <div class="hidden name"><code>find_confounders.Rd</code></div>
     </div>
 
@@ -156,14 +156,14 @@ confounder (or otherwise removed).</p></li>
 
     </div>
 
-    <pre class="usage"><span class='fu'>find_confounders</span><span class='op'>(</span><span class='va'>study</span>, <span class='va'>name</span>, delta <span class='op'>=</span> <span class='fl'>0.1</span>, return_study <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>find_confounders</span><span class='op'>(</span><span class='va'>model_map</span>, <span class='va'>name</span>, delta <span class='op'>=</span> <span class='fl'>0.1</span>, return_map <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>study</th>
-      <td><p>A <code>study</code> object that has been constructed</p></td>
+      <th>model_map</th>
+      <td><p>A <code>model_map</code> object that has been constructed</p></td>
     </tr>
     <tr>
       <th>name</th>
@@ -176,12 +176,12 @@ important change in the outcome ~ exposure relationship. Defaults to
 <strong>0.10</strong> as supported by the epidemiology literature.</p></td>
     </tr>
     <tr>
-      <th>return_study</th>
+      <th>return_map</th>
       <td><p>Logical value, defaults to FALSE, on if the original
-<code>study</code> should be returned when this function is called. This is a
+<code>model_map</code> should be returned when this function is called. This is a
 developer feature, mainly for internal use (as is the function itself). It
 returns the modified hypotheses as a list in position <code>[[1]]</code>, and the
-updated study in position <code>[[2]]</code>.</p></td>
+updated model_map in position <code>[[2]]</code>.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -191,7 +191,7 @@ updated study in position <code>[[2]]</code>.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of <code>hypothesis</code> objects that have been modified</p>
+    <p>A list of <code>hypothesis</code> objects that have been modified (and can optionally return original, updated <code>model_map</code> as well)</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
