@@ -3,7 +3,7 @@
 utils::globalVariables(c(
 	".",
 	"...",
-	"outcomes",
+	"outcome",
 	"formulae",
 	"fit",
 	"type",
@@ -13,6 +13,5 @@ utils::globalVariables(c(
 	"term",
 	"name",
 	"data",
-	"run",
-	"path"
+	"run"
 ))

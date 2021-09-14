@@ -1,5 +1,5 @@
-Package: path
-Title: Hypothesizing Paths
+Package: murmur
+Title: Many Unknown Relationships Modelled Using R
 Version: 0.1.0
 Authors@R: 
     person(given = "Anish",
@@ -42,8 +42,8 @@ Imports:
     tidygraph,
     gt,
 Remotes:
-    asshah4/dagger
+    asshah4/murmur
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/dagger
-BugReports: https://github.com/asshah4/dagger/issues
+URL: https://github.com/asshah4/murmur
+BugReports: https://github.com/asshah4/murmur/issues
 Config/testthat/edition: 3

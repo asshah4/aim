@@ -2,7 +2,7 @@
 #'
 #' @description
 #'
-#' `r lifecycle::badge('stable')`
+#' `r lifecycle::badge('experimental')`
 #'
 #' This function allows for delayed building of multiple hypothesis. It uses the
 #' `hypothesis` objects with the corresponding __test__ arguments against the
@@ -10,10 +10,10 @@
 #' forcibly re-run these, otherwise the default behavior is to only run models
 #' that have not yet been fitted.
 #'
-#' @return Invisibly returns a `study` object that has the hypotheses mapped to
+#' @return Invisibly returns a `model_map` object that has the hypotheses mapped to
 #'   it, including fits and paths
 #'
-#' @param study A `study` object that contains `hypothesis` objects
+#' @param model_map A `model_map` object that contains `hypothesis` objects
 #'
 #' @param which_ones Vector of which hypothesis should be constructed. It
 #'   defaults to NULL, which constructs all hypotheses that have not yet been
@@ -23,26 +23,25 @@
 #'
 #' @family studies
 #' @export
-construct_map <- function(study, which_ones = NULL, ...) {
+construct_models <- function(model_map, which_ones = NULL, ...) {
 
-	validate_class(study, "study")
-	validate_stage(study, "hypothesis")
+	validate_class(model_map, "model_map")
+	validate_stage(model_map, "hypothesis")
 
 	# Model map, with appropriate types for fits and tidy
-	m <- study$model_map
+	m <- model_map
 	m$fit <- as.list(m$fit)
 	m$tidy <- as.list(m$tidy)
-
 
 	# Select out models that have not yet been run
 	# If specified hypothesis are named, force them to be re-run
 	if (is.null(which_ones)) {
 		x <-
-			attributes(study)$status_table[c("name", "run")] %>%
+			attributes(model_map)$status_table[c("name", "run")] %>%
 			subset(., run == FALSE)
 	} else {
 		x <-
-			attributes(study)$status_table[c("name", "run")] %>%
+			attributes(model_map)$status_table[c("name", "run")] %>%
 			subset(., name %in% which_ones)
 	}
 
@@ -52,9 +51,9 @@ construct_map <- function(study, which_ones = NULL, ...) {
 			y <- m[m$name == name, ]
 
 			# Retrieve information
-			test <- fetch_test(study, name)
-			data <- fetch_data(study, name)
-			strata <- fetch_strata(study, name)
+			test <- fetch_test(model_map, name)
+			data <- fetch_data(model_map, name)
+			strata <- fetch_strata(model_map, name)
 
 			# Apply fitting and tidying functions
 			if (is.na(strata)) {
@@ -76,17 +75,16 @@ construct_map <- function(study, which_ones = NULL, ...) {
 			m[m$name == name, ] <- y
 
 			# Update status
-			study <-
-				update_study_status(study, name, run = TRUE)
+			m <- .revise_status(m, name, run = TRUE)
 		}
 	} else {
 		message("All tests are already built. To force build, set `which_ones` to desired hypotheses.")
 	}
 
 	# Replace model data
-	study$model_map <- m
+	model_map <- m
 
 	# Return
-	invisible(study)
+	invisible(model_map)
 
 }

@@ -5,7 +5,7 @@
 \title{Reconstruct a Hypothesis}
 \usage{
 reconstruct(
-  study,
+  model_map,
   name,
   new_name = paste0(name, "_cut"),
   approach = "confounding",
@@ -13,7 +13,7 @@ reconstruct(
 )
 }
 \arguments{
-\item{study}{A \code{study} object that has been constructed}
+\item{model_map}{A \code{model_map} object that has been constructed}
 
 \item{name}{Name of a an existing \code{hypothesis} object}
 
@@ -32,11 +32,11 @@ set the threshold for changes in effect size that are considered relevant.
 \item{...}{Additional, optional parameters based on approach being used}
 }
 \value{
-A \code{study} object
+A \code{model_map} object
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-Modify a \code{hypothesis} within a study with different approaches.
+Modify a \code{hypothesis} within a \code{model_map} with different approaches.
 }
 \concept{confounders studies}

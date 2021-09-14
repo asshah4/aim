@@ -1,6 +1,7 @@
 #' Derive Formula With Confounders
 #'
 #' @description
+#'
 #' `r lifecycle::badge('experimental')`
 #'
 #' Removes confounders from a hypothesis object based on different approaches.
@@ -16,9 +17,9 @@
 #'   for being of size `delta`. If so, the covariate is retained as a potential
 #'   confounder (or otherwise removed).
 #'
-#' @return A list of `hypothesis` objects that have been modified
+#' @return A list of `hypothesis` objects that have been modified (and can optionally return original, updated `model_map` as well)
 #'
-#' @param study A `study` object that has been constructed
+#' @param model_map A `model_map` object that has been constructed
 #'
 #' @param name Name of a an existing `hypothesis` object
 #'
@@ -26,34 +27,34 @@
 #'   important change in the outcome ~ exposure relationship. Defaults to
 #'   **0.10** as supported by the epidemiology literature.
 #'
-#' @param return_study Logical value, defaults to FALSE, on if the original
-#'   `study` should be returned when this function is called. This is a
+#' @param return_map Logical value, defaults to FALSE, on if the original
+#'   `model_map` should be returned when this function is called. This is a
 #'   developer feature, mainly for internal use (as is the function itself). It
 #'   returns the modified hypotheses as a list in position `[[1]]`, and the
-#'   updated study in position `[[2]]`.
+#'   updated model_map in position `[[2]]`.
 #'
 #' @param ... For extensibility
 #'
 #' @family confounders finders
 #' @export
-find_confounders <- function(study,
+find_confounders <- function(model_map,
 														 name,
 														 delta = 0.10,
-														 return_study = FALSE,
+														 return_map = FALSE,
 														 ...) {
 
 	# Get variables
-	combination 	<- fetch_combination(study, name)
-	test					<- fetch_test(study, name)
-	test_opts 		<- fetch_test_opts(study, name)
-	data					<- fetch_data(study, name)
-	data_name 		<- fetch_data_name(study, name)
-	strata				<- fetch_strata(study, name)
-	formulae			<- fetch_formulae(study, name)
-	vars					<- attributes(study)$var_table
+	combination 	<- fetch_combination(model_map, name)
+	test					<- fetch_test(model_map, name)
+	test_opts 		<- fetch_test_opts(model_map, name)
+	data					<- fetch_data(model_map, name)
+	data_name 		<- fetch_data_name(model_map, name)
+	strata				<- fetch_strata(model_map, name)
+	formulae			<- fetch_formulae(model_map, name)
+	vars					<- attributes(model_map)$relation_table
 
 	# The test needs to have been run already for analysis
-	check_hypothesis(study, name, run = TRUE)
+	check_hypothesis(model_map, name, run = TRUE)
 
 	switch(
 		combination,
@@ -62,22 +63,22 @@ find_confounders <- function(study,
 			# In sequential models, y ~ x relations is what matters
 			# Each covariate may change the y ~ x effect size
 			m <-
-				study$model_map %>%
+				model_map %>%
 				.[.$name == name,]
-			x <- extract_models(study, name)
+			x <- extract_models(m, name)
 
 			# Check for each unique outcome, and for each unique exposure combination
-			out <- unique(x$outcomes)
-			exp <- unique(x$exposures)
+			out <- unique(x$outcome)
+			exp <- unique(x$exposure)
 
 			for (i in out) {
 				for (j in exp) {
 					# Get table and variables of unique hypotheses
-					y <- x[x$outcomes == i & x$term == j, ]
+					y <- x[x$outcome == i & x$term == j, ]
 					n <- nrow(y)
 					f <-
 						m %>%
-						.[.$outcomes == i & .$exposures == j, ] %>%
+						.[.$outcome == i & .$exposure == j, ] %>%
 						.[.$number == max(.$number), ] %>%
 						.$formulae %>%
 						.[[1]]
@@ -99,9 +100,9 @@ find_confounders <- function(study,
 					confounders <- list(stats::na.omit(confounders))
 
 					# Update variable table to include confounders
-					vars$confounders[vars$name == name &
-													 	vars$outcomes == i &
-													 	vars$exposures == j] <- confounders
+					vars$confounder[vars$name == name &
+													 	vars$outcome == i &
+													 	vars$exposure == j] <- confounders
 
 				}
 			}
@@ -111,11 +112,11 @@ find_confounders <- function(study,
 
 			# Check for each unique outcome, and for each unique exposure combination
 			m <-
-				study$model_map %>%
+				model_map %>%
 				.[.$name == name,]
-			x <- extract_models(study, name)
-			out <- unique(x$outcomes)
-			exp <- unique(x$exposures)
+			x <- extract_models(model_map, name)
+			out <- unique(x$outcome)
+			exp <- unique(x$exposure)
 
 			for (i in out) {
 				for (j in exp) {
@@ -129,7 +130,7 @@ find_confounders <- function(study,
 					base_est <- effect$estimate[effect$term == j]
 
 					# Subset of models for comparison
-					y <- x[x$outcomes == i & x$exposures == j, ]
+					y <- x[x$outcome == i & x$exposure == j, ]
 					z <- subset(y, term == j)
 					z$delta <- abs((base_est - z$estimate) / base_est)
 					n <- z$number[z$delta > delta]
@@ -141,17 +142,17 @@ find_confounders <- function(study,
 						.$term
 
 					# Update variable table to include confounders
-					vars$confounders[vars$name == name &
-													 	vars$outcomes == i &
-													 	vars$exposures == j] <- list(confounders)
+					vars$confounder[vars$name == name &
+													 	vars$outcome == i &
+													 	vars$exposure == j] <- list(confounders)
 
 				}
 			}
 		}
 	)
 
-	# Update study (may not be returned unless requested)
-	attr(study, "var_table") <- vars
+	# Update map (may not be returned unless requested)
+	attr(model_map, "relation_table") <- vars
 
 	# Create and return a list of hypothesis objects
 	x <- vars[vars$name == name,]
@@ -161,16 +162,16 @@ find_confounders <- function(study,
 	for (i in 1:n) {
 
 		# Need to handle NA/missing objects
-		if (length(x$confounders[[i]]) > 0) {
+		if (length(x$confounder[[i]]) > 0) {
 			f <-
-				paste(x$confounders[[i]], collapse = " + ") %>%
-				paste(paste0("X(", x$exposures[[i]], ")"), ., sep = " + ") %>%
-				paste(x$outcomes[i], ., sep = " ~ ") %>%
+				paste(x$confounder[[i]], collapse = " + ") %>%
+				paste(paste0("X(", x$exposure[[i]], ")"), ., sep = " + ") %>%
+				paste(x$outcome[i], ., sep = " ~ ") %>%
 				stats::formula()
 		} else {
 			f <-
-				paste0("X(", x$exposures[[i]], ")") %>%
-				paste(x$outcomes[i], ., sep = " ~ ") %>%
+				paste0("X(", x$exposure[[i]], ")") %>%
+				paste(x$outcome[i], ., sep = " ~ ") %>%
 				stats::formula()
 		}
 
@@ -193,8 +194,8 @@ find_confounders <- function(study,
 
 	}
 
-	if (return_study) {
-		list(hlist, study)
+	if (return_map) {
+		list(hlist, model_map)
 	} else {
 		hlist
 	}
@@ -208,9 +209,9 @@ find_confounders <- function(study,
 #'
 #' `r lifecycle::badge('experimental')`
 #'
-#' Modify a `hypothesis` within a study with different approaches.
+#' Modify a `hypothesis` within a `model_map` with different approaches.
 #'
-#' @return A `study` object
+#' @return A `model_map` object
 #'
 #' @inheritParams find_confounders
 #'
@@ -228,7 +229,7 @@ find_confounders <- function(study,
 #' @param ... Additional, optional parameters based on approach being used
 #' @family confounders studies
 #' @export
-reconstruct <- function(study,
+reconstruct <- function(model_map,
 												name,
 												new_name = paste0(name, "_cut"),
 												approach = "confounding",
@@ -238,22 +239,22 @@ reconstruct <- function(study,
 	switch(
 		approach,
 		confounding = {
-			x <- find_confounders(study, name, return_study = TRUE)
+			x <- find_confounders(model_map, name, return_map = TRUE)
 			hlist <- x[[1]]
-			study <- x[[2]]
+			model_map <- x[[2]]
 
 			# Add back to study
 			for (i in 1:length(hlist)) {
-				study <-
-					study %>%
+				model_map <-
+					model_map %>%
 					add_hypothesis(hlist[[i]], name = new_name)
 			}
 		}
 	)
 
 	# Fit updated models
-	study <- construct_map(study)
+	model_map <- construct_models(model_map)
 
 	# Return
-	invisible(study)
+	invisible(model_map)
 }

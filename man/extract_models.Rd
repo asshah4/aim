@@ -4,10 +4,10 @@
 \alias{extract_models}
 \title{Extract models from a study}
 \usage{
-extract_models(study, which_ones = NULL, tidy = TRUE, ...)
+extract_models(model_map, which_ones = NULL, tidy = TRUE, ...)
 }
 \arguments{
-\item{study}{A \code{study} object that contains \code{hypothesis} objects that have
+\item{model_map}{A \code{model_map} object that contains \code{hypothesis} objects that have
 been run}
 
 \item{which_ones}{Vector of names of hypotheses that should be extracted and
@@ -26,7 +26,7 @@ A table that has either raw or tidy lists of model fits
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
 This function serves as a non-pipeable extraction function to obtain
-aggregate components from a \code{study} object. Its designed to have a simple
+aggregate components from a \code{model_map} object. Its designed to have a simple
 call interface to allow for retrieval of model objects to be formatted and
 displayed.
 }

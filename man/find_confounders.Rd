@@ -4,10 +4,10 @@
 \alias{find_confounders}
 \title{Derive Formula With Confounders}
 \usage{
-find_confounders(study, name, delta = 0.1, return_study = FALSE, ...)
+find_confounders(model_map, name, delta = 0.1, return_map = FALSE, ...)
 }
 \arguments{
-\item{study}{A \code{study} object that has been constructed}
+\item{model_map}{A \code{model_map} object that has been constructed}
 
 \item{name}{Name of a an existing \code{hypothesis} object}
 
@@ -15,16 +15,16 @@ find_confounders(study, name, delta = 0.1, return_study = FALSE, ...)
 important change in the outcome ~ exposure relationship. Defaults to
 \strong{0.10} as supported by the epidemiology literature.}
 
-\item{return_study}{Logical value, defaults to FALSE, on if the original
-\code{study} should be returned when this function is called. This is a
+\item{return_map}{Logical value, defaults to FALSE, on if the original
+\code{model_map} should be returned when this function is called. This is a
 developer feature, mainly for internal use (as is the function itself). It
 returns the modified hypotheses as a list in position \verb{[[1]]}, and the
-updated study in position \verb{[[2]]}.}
+updated model_map in position \verb{[[2]]}.}
 
 \item{...}{For extensibility}
 }
 \value{
-A list of \code{hypothesis} objects that have been modified
+A list of \code{hypothesis} objects that have been modified (and can optionally return original, updated \code{model_map} as well)
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

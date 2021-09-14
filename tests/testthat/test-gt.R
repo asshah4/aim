@@ -13,9 +13,9 @@ test_that("gt tables can be made ", {
 		)
 
 	x <-
-		create_study() %>%
+		create_map() %>%
 		add_hypothesis(h1) %>%
-		construct_map() %>%
+		construct_models() %>%
 		extract_models("h1")
 
 	# Create a `gt` table successfully

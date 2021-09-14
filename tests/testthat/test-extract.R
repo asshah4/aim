@@ -14,7 +14,7 @@ test_that("models can be extract_modelsed if available", {
 	h2 <- update_hypothesis(h1, combination = "sequential")
 
 	x <-
-		create_study() %>%
+		create_map() %>%
 		add_hypothesis(h1)
 
 	# extract_models unfitted should error
@@ -25,7 +25,7 @@ test_that("models can be extract_modelsed if available", {
 	# Fit some models
 	y <-
 		x %>%
-		construct_map() %>%
+		construct_models() %>%
 		add_hypothesis(h2)
 
 	# extract_models tidy models
@@ -35,7 +35,7 @@ test_that("models can be extract_modelsed if available", {
 
 	# extract_models raw models
 	m <- extract_models(y, tidy = FALSE)
-	expect_named(m, expected = c("name", "outcomes", "exposures", "level", "number", "fit"))
+	expect_named(m, expected = c("name", "outcome", "exposure", "level", "number", "fit"))
 
 	# Message on pulling unfitted model by name
 	expect_message({
