@@ -8,12 +8,15 @@
 \alias{hypothesize.dagitty}
 \alias{hypothesize.tidy_dagitty}
 \alias{hypothesize.recipe}
+\alias{hypothesize.rx}
 \title{Draw A Hypothesis}
 \usage{
-hypothesize(h, ...)
+hypothesize(x, ...)
 
 \method{hypothesize}{formula}(
-  h,
+  x,
+  exposures = NULL,
+  fixed = NULL,
   combination,
   test,
   test_opts = NA,
@@ -23,22 +26,39 @@ hypothesize(h, ...)
   ...
 )
 
-\method{hypothesize}{list}(h, ...)
+\method{hypothesize}{rx}(
+  x,
+  combination,
+  test,
+  test_opts = NA,
+  data,
+  strata = NA,
+  origin = "independent",
+  ...
+)
 
-\method{hypothesize}{dagitty}(h, ...)
+\method{hypothesize}{list}(x, ...)
 
-\method{hypothesize}{tidy_dagitty}(h, ...)
+\method{hypothesize}{dagitty}(x, ...)
+
+\method{hypothesize}{tidy_dagitty}(x, ...)
 
 \method{hypothesize}{recipe}(h, ...)
 
-\method{hypothesize}{default}(h, ...)
+\method{hypothesize}{default}(x, ...)
 }
 \arguments{
-\item{h}{General variable that can be cast into a hypothesis object.
+\item{x}{General variable that can be cast into a hypothesis object.
 Currently this accepts the following object types:
 \itemize{
-\item \code{formula} objects, which  be given additional modifiers as described.
-Please see \code{\link[=expand_formula]{expand_formula()}} or the formula section below for details.
+\item \code{formula} objects, which can be given additional modifying label. The key
+variables, as described in the \strong{formulae section} below, are \code{exposures}
+and \code{fixed}, as they allow for specific transformations of the formula.
+This behavior is also described in \code{\link[=expand_formula]{expand_formula()}}.
+\item \code{rx} objects, which are modified formulas created by \code{\link[rx:rx-package]{rx::rx()}} and have
+additional labels available. Can be set by \code{\link[rx:options]{rx::set_rx_theme()}} using the
+argument \code{set_rx_theme("epi")}. This behavior is described in
+\code{\link[=expand_formula]{expand_formula()}} or the formula section below with further details.
 \item \code{list} object, which describes the outcomes, exposures, covariates, fixed
 variables, and potential confounders in a named list, which allows for
 grouped covariates when modeling. Please see the details section for
@@ -46,6 +66,12 @@ further explanation.
 }}
 
 \item{...}{For additional variables based on the generic method invoked.}
+
+\item{exposures}{A character vector for individual exposures, which will
+always be placed in separate models.}
+
+\item{fixed}{A character vector naming variables that should be retained in
+all models.}
 
 \item{combination}{The building pattern for how to put together the overall
 plan. It defines variable relationships that will be used. The options for
@@ -122,47 +148,11 @@ yet:
 \section{Formulae}{
 
 
-When supplying a \code{formula} object, each RHS term of the formula is
-considered an outcome variable, and is analyzed as a single outcome. Each
-LHS term is consider a predictor, and can be modified as below:
+For each \code{formula}, the terms in the RHS and LHS can be labeled. Each individual LHS term is considered an individual outcome, and each RHS is a predictor which can be grouped in a variety of ways. If labels are provided, then the \code{formula} will be expanded in a certain pattern. The key labels are:
 \itemize{
-\item \code{X()} is placed around a term to define as an independent exposure, which
-will be placed in separate formulae from any other term marked as an
-exposure
-\item \code{F()} is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects
-\item \code{C()} is placed around a term for any predictors that are a potential
-confounder, which does not yet change the relationship of how formulas are
-built, but is stored for future methods to be used with \code{\link[=hypothesize]{hypothesize()}}
+\item \strong{exposures} = defines an independent exposure, which will be placed in a separate formulae from any other term marked as such
+\item \strong{fixed} = defines any predictor that should be maintained/fixed in all models, including complex terms such as mixed/random effects
 }
-
-For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally tested for every level of "z"
-
-\deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}
-
-
-
-When supplying a \code{formula} object, each RHS term of the formula is
-considered an outcome variable, and is analyzed as a single outcome. Each
-LHS term is consider a predictor, and can be modified as below:
-\itemize{
-\item \code{X()} is placed around a term to define as an independent exposure, which
-will be placed in separate formulae from any other term marked as an
-exposure
-\item \code{F()} is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects
-\item \code{C()} is placed around a term for any predictors that are a potential
-confounder, which does not yet change the relationship of how formulas are
-built, but is stored for future methods to be used with \code{\link[=hypothesize]{hypothesize()}}
-}
-
-For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally tested for every level of "z"
-
-\deqn{y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))}
 }
 
 \concept{hypotheses}

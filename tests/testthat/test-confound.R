@@ -1,20 +1,21 @@
 test_that("confounders can be found and manipulated", {
 	library(parsnip)
-	h = mpg + wt ~ X(hp) + X(qsec) + disp + drat + cyl
-	test = linear_reg() %>% set_engine("lm")
+	f <- mpg + wt ~ hp + qsec + disp + drat + cyl
+	test <- linear_reg() %>% set_engine("lm")
 
 	h1 <-
 		hypothesize(
-			h,
+			f,
+			exposures = c("hp", "qsec"),
 			combination = "sequential",
 			test = test,
 			data = mtcars,
 		)
 
 	x <-
-		create_map() %>%
+		create_models() %>%
 		add_hypothesis(h1) %>%
-		construct_models()
+		construct_tests()
 
 	var_before <- attributes(x)$relation_table
 	hlist <- find_confounders(x, "h1")
@@ -23,6 +24,6 @@ test_that("confounders can be found and manipulated", {
 	var_after <- attributes(y)$relation_table
 	expect_length(y, 8)
 	expect_gt(nrow(var_after), nrow(var_before))
-	expect_type(var_after$confounder[[1]], "character")
+	expect_type(var_after$confounders[[1]], "character")
 
 })

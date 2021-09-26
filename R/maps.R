@@ -4,7 +4,7 @@
 #'
 #' `r lifecycle::badge('experimental')`
 #'
-#' Calling `create_map()` initializes a list object that stores `hypothesis` objects,
+#' Calling `create_models()` initializes a list object that stores `hypothesis` objects,
 #' which are used to explore a research project. It allows for delayed building
 #' of models, and is used to help study the relationship between variables.
 #'
@@ -20,15 +20,15 @@
 #' @importFrom tibble tribble
 #' @importFrom dplyr mutate across
 #' @export
-create_map <- function(...) {
+create_models <- function(...) {
 
 	# Base structure is that of a list of two tibbles
 	model_map <-
 		tribble(
-			~name, ~outcome, ~exposure, ~level, ~number, ~formulae, ~fit, ~tidy
+			~name, ~outcomes, ~exposures, ~level, ~number, ~formulae, ~fit, ~tidy
 		) %>%
 		mutate(
-			across(c(name, outcome, exposure, level), as.character),
+			across(c(name, outcomes, exposures, level), as.character),
 			across(number, as.integer),
 			across(c(formulae, fit, tidy), as.list)
 		)
@@ -66,9 +66,9 @@ create_map <- function(...) {
 
 	# Variable table
 	attr(model_map, "relation_table") <-
-		tribble(~name, ~outcome, ~exposure, ~confounder, ~fixed) %>%
+		tribble(~name, ~outcomes, ~exposures, ~confounders, ~fixed) %>%
 		mutate(
-			across(c(name, outcome, exposure, confounder, fixed), as.character)
+			across(c(name, outcomes, exposures, confounders, fixed), as.character)
 		)
 
 	# Distribution table

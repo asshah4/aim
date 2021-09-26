@@ -19,15 +19,6 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-Suggests: 
-    testthat,
-    knitr,
-    markdown,
-    rmarkdown,
-    ggdag,
-    glue,
-    ggraph,
-    ggplot2,
 Imports: 
     dplyr,
     magrittr,
@@ -40,9 +31,20 @@ Imports:
     rlang,
     lifecycle,
     tidygraph,
+Suggests: 
+    testthat (>= 3.0.0),
+    covr,
+    knitr,
+    markdown,
+    rmarkdown,
+    ggdag,
+    glue,
+    ggraph,
+    ggplot2,
     gt,
 Remotes:
-    asshah4/murmur
+    asshah4/murmur,
+    asshah4/rx,
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/murmur
 BugReports: https://github.com/asshah4/murmur/issues

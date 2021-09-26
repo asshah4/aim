@@ -23,7 +23,7 @@
 #'
 #' @family studies
 #' @export
-construct_models <- function(model_map, which_ones = NULL, ...) {
+construct_tests <- function(model_map, which_ones = NULL, ...) {
 
 	validate_class(model_map, "model_map")
 	validate_stage(model_map, "hypothesis")

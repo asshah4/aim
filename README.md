@@ -25,12 +25,12 @@ remotes::install_github("asshah4/murmur")
 ## Introduction
 
 The `murmur` package is intended to help build causal models with an
-underlying focus of **directed acyclic graphs**. However, instead of
-starting purely from a diagram, this package intends to allow modeling
-to occur simultaneously, and then leveraging the patterns within the
-data to help cut away *confounders* and other terms for a more
-parsimonious causal model. The premise is that there are two components
-in studying causality:
+underlying focus on exploration. However, instead of starting purely
+from a **directed acyclic graph**, this package intends to allow
+modeling to occur simultaneously, and then leveraging the patterns
+within the data to help cut away *confounders* and other terms for a
+more parsimonious causal model. The premise is that there are two
+components in studying causality:
 
 1.  Causal model diagrams
 2.  Hypothesis testing and statistical analysis
@@ -52,11 +52,11 @@ library(murmur)
 library(parsnip)
 ```
 
-The basic function of the package is the `study()` argument, which
-creates a empty data structure object.
+The basic function of the package serves to help create a `model_map`
+object.
 
 ``` r
-create_map()
+create_models()
 #> # A map with 0 hypotheses
 #> #
 #> # A tibble: 0 × 8
@@ -72,7 +72,8 @@ been analyzed yet.
 ``` r
 h1 <-
     hypothesize(
-        mpg ~ X(wt) + hp + disp,
+        mpg ~ wt + hp + disp,
+        exposures = "wt",
         combination = "sequential",
         test = linear_reg() %>% set_engine("lm"),
         data = mtcars,
@@ -86,7 +87,7 @@ h1
 #> Hypothesis
 #> ----------
 #> 
-#> mpg ~ X(wt) + hp + disp
+#> mpg ~ wt + hp + disp
 #> 
 #> -----------
 #> Description
@@ -96,14 +97,13 @@ h1
 #> Test         linear_reg, model_spec
 #> Data         mtcars
 #> Strata       none
-
 # Print h2
 h2
 #> ----------
 #> Hypothesis
 #> ----------
 #> 
-#> mpg ~ X(wt) + hp + disp
+#> mpg ~ wt + hp + disp
 #> 
 #> -----------
 #> Description
@@ -119,7 +119,7 @@ These hypotheses can then be *drawn* on to the *study map* as below.
 
 ``` r
 m1 <-
-    create_map() %>%
+    create_models() %>%
     add_hypothesis(h1) %>%
     add_hypothesis(h2) 
 
@@ -130,12 +130,12 @@ m1
 #> # A tibble: 6 × 8
 #>   name  outcome exposure level number formulae  fit    tidy  
 #>   <chr> <chr>   <chr>    <lgl>  <int> <list>    <list> <list>
-#> 1 h1    mpg     wt       NA         1 <formula> <NULL> <NULL>
-#> 2 h1    mpg     wt       NA         2 <formula> <NULL> <NULL>
-#> 3 h1    mpg     wt       NA         3 <formula> <NULL> <NULL>
-#> 4 h2    mpg     wt       NA         1 <formula> <NULL> <NULL>
-#> 5 h2    mpg     wt       NA         2 <formula> <NULL> <NULL>
-#> 6 h2    mpg     wt       NA         3 <formula> <NULL> <NULL>
+#> 1 h1    mpg     NA       NA         1 <formula> <NULL> <NULL>
+#> 2 h1    mpg     NA       NA         2 <formula> <NULL> <NULL>
+#> 3 h1    mpg     NA       NA         3 <formula> <NULL> <NULL>
+#> 4 h2    mpg     NA       NA         1 <formula> <NULL> <NULL>
+#> 5 h2    mpg     NA       NA         2 <formula> <NULL> <NULL>
+#> 6 h2    mpg     NA       NA         3 <formula> <NULL> <NULL>
 ```
 
 Then, for analysis and display of results, the findings can easily be
@@ -144,6 +144,22 @@ extracted.
 ``` r
 m2 <-
     m1 %>%
-    construct_models() %>%
+    construct_tests() %>%
     extract_models(which_ones = "h1", tidy = TRUE)
+
+# Print findings
+m2
+#> # A tibble: 9 × 12
+#>   name  outcome exposure level number term         estimate std.error statistic
+#>   <chr> <chr>   <chr>    <lgl>  <int> <chr>           <dbl>     <dbl>     <dbl>
+#> 1 h1    mpg     NA       NA         1 (Intercept) 37.3        1.88      19.9   
+#> 2 h1    mpg     NA       NA         1 wt          -5.34       0.559     -9.56  
+#> 3 h1    mpg     NA       NA         2 (Intercept) 37.2        1.60      23.3   
+#> 4 h1    mpg     NA       NA         2 wt          -3.88       0.633     -6.13  
+#> 5 h1    mpg     NA       NA         2 hp          -0.0318     0.00903   -3.52  
+#> 6 h1    mpg     NA       NA         3 (Intercept) 37.1        2.11      17.6   
+#> 7 h1    mpg     NA       NA         3 wt          -3.80       1.07      -3.56  
+#> 8 h1    mpg     NA       NA         3 hp          -0.0312     0.0114    -2.72  
+#> 9 h1    mpg     NA       NA         3 disp        -0.000937   0.0103    -0.0905
+#> # … with 3 more variables: p.value <dbl>, conf.low <dbl>, conf.high <dbl>
 ```

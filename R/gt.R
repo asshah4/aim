@@ -6,7 +6,7 @@
 #'
 #' This function is a wrapper for the `gt` package for quickly and easily making
 #' model tables. It is built for sequentially adjusted models that have been
-#' created from the [dagger::extract_models()] function, which is primarily uses
+#' created from the [murmur::extract_models()] function, which is primarily uses
 #' the [broom::tidy()] function to help describe model fits.
 #'
 #' @param data A data table with columns that are similar to that from
@@ -105,7 +105,6 @@
 #'
 #' @param ... For passing additional arguments
 #'
-#' @import gt
 #' @importFrom dplyr filter mutate
 #' @importFrom rlang := .data
 #' @family visualizers
@@ -123,6 +122,13 @@ tbl_sequential <- function(data,
 													 decimals = 2,
 													 ...) {
 
+	if (!requireNamespace("gt", quietly = TRUE)) {
+		stop(
+			"Package \"gt\" needed for this function to work. Please install it.",
+			call. = FALSE
+		)
+	}
+
 	# Validation
 	validate_class(terms, "formula")
 	validate_class(models, "formula")
@@ -136,6 +142,8 @@ tbl_sequential <- function(data,
 	if (!is.null(statistic)) {
 		stat_col_sym <- statistic[[2]]
 		stat_col <- as.character(stat_col_sym)
+	} else {
+		stat_col <- NULL
 	}
 	disp_col <- values
 	if (!is.null(by)) {
@@ -215,7 +223,7 @@ tbl_sequential <- function(data,
 		data %>%
 		dplyr::filter(.data[[var_col]] %in% vars) %>%
 		dplyr::select(dplyr::any_of(c({{ strata_col }}, {{ model_col }}, {{ var_col }}, {{ disp_col }}, {{ stat_col }}))) %>%
-		dplyr::filter( .data[[model_col]] %in% mods) %>%
+		dplyr::filter(.data[[model_col]] %in% mods) %>%
 		tidyr::pivot_wider(
 			names_from = .data[[var_col]],
 			values_from = c({{ disp_col }}, {{ stat_col }}),
@@ -346,12 +354,11 @@ tbl_sequential <- function(data,
 #' @inheritParams gt::tab_options
 #' @param ... For passing additional arguments to the [gt::tab_options()]
 #'   function
-#' @importFrom gt px pct
 #' @family visualizers
 #' @export
 theme_gt_compact <- function(data,
-														 table.font.size = pct(80),
-														 table.width = pct(90),
+														 table.font.size = gt::pct(80),
+														 table.width = gt::pct(90),
 														 ...) {
 
 	validate_class(data, "gt_tbl")
@@ -359,13 +366,13 @@ theme_gt_compact <- function(data,
 	data %>%
 		gt::tab_options(
 			# Preset
-			table.margin.left = px(1),
-			table.margin.right = px(1),
-			row_group.padding = px(1),
-			data_row.padding = px(1),
-			footnotes.padding = px(1),
-			source_notes.padding = px(1),
-			stub.border.width = px(1),
+			table.margin.left = gt::px(1),
+			table.margin.right = gt::px(1),
+			row_group.padding = gt::px(1),
+			data_row.padding = gt::px(1),
+			footnotes.padding = gt::px(1),
+			source_notes.padding = gt::px(1),
+			stub.border.width = gt::px(1),
 			# User supplied
 			table.width = table.width,
 			table.font.size = table.font.size,

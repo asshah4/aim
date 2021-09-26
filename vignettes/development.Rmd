@@ -54,6 +54,7 @@ The project name has gone through many iterations. The reason why the name was i
 | {aims} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
 | {diagnose} | After iterating through the code, modeling causality and looking at clinically relevant variables was the more refined underlying objective. This allowed for simplification of the hypothesis generating method and opened the door to look at effect modification. | 
 | {dagger} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
+| {murmur} | Due to the complexity of how the project was coming together, I decided to split the major functions into separate packages. Path/relationships were a different primary concept than modeling, and the API didn't feel smooth. Thus, "Many Unexplained Relationships Modeled Using R" was created.
 
 # Defining the API
 
@@ -117,3 +118,7 @@ The major classes needed would be ...
 ### Confounding
 
 A purpose of having parallel and sequential model sets, built into a hypothesis, was to identify confounding variables and help remove them.
+
+## Fifth Draft
+
+Hopefully the final draft. I simplified the API to exclude the complexity of path analysis and focused just on the hypotheses and fitting models. I also removed the complexity of formula management, and placed that into a separate package. 

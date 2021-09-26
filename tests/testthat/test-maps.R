@@ -2,14 +2,14 @@ test_that("creation of a map is successful", {
 	library(parsnip)
 
 	# Basics
-	m <- create_map()
+	m <- create_models()
 	expect_length(attributes(m), 9)
 	expect_s3_class(m, "model_map")
 
 	# Adding hypothesis and fitting
 	h1 <-
 		hypothesize(
-			mpg ~ wt + hp + cyl,
+			x = mpg ~ wt + hp + cyl,
 			combination = "parallel",
 			test = linear_reg() %>% set_engine("lm"),
 			data = mtcars,
@@ -17,9 +17,9 @@ test_that("creation of a map is successful", {
 		)
 
 	m <-
-		create_map() %>%
+		create_models() %>%
 		add_hypothesis(h1) %>%
-		construct_models()
+		construct_tests()
 
 	expect_type(m$fit, "list")
 	expect_s3_class(m$tidy[[1]], "tbl_df")
@@ -30,7 +30,7 @@ test_that("creation of a map is successful", {
 	m <-
 		m %>%
 		add_hypothesis(h2) %>%
-		construct_models()
+		construct_tests()
 
 	# Should be a list of formulas with only a single data set saved
 	expect_equal(nrow(m), 12)

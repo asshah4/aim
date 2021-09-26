@@ -68,17 +68,17 @@ find_confounders <- function(model_map,
 			x <- extract_models(m, name)
 
 			# Check for each unique outcome, and for each unique exposure combination
-			out <- unique(x$outcome)
-			exp <- unique(x$exposure)
+			out <- unique(x$outcomes)
+			exp <- unique(x$exposures)
 
 			for (i in out) {
 				for (j in exp) {
 					# Get table and variables of unique hypotheses
-					y <- x[x$outcome == i & x$term == j, ]
+					y <- x[x$outcomes == i & x$term == j, ]
 					n <- nrow(y)
 					f <-
 						m %>%
-						.[.$outcome == i & .$exposure == j, ] %>%
+						.[.$outcomes == i & .$exposures == j, ] %>%
 						.[.$number == max(.$number), ] %>%
 						.$formulae %>%
 						.[[1]]
@@ -100,9 +100,9 @@ find_confounders <- function(model_map,
 					confounders <- list(stats::na.omit(confounders))
 
 					# Update variable table to include confounders
-					vars$confounder[vars$name == name &
-													 	vars$outcome == i &
-													 	vars$exposure == j] <- confounders
+					vars$confounders[vars$name == name &
+													 	vars$outcomes == i &
+													 	vars$exposures == j] <- confounders
 
 				}
 			}
@@ -115,8 +115,8 @@ find_confounders <- function(model_map,
 				model_map %>%
 				.[.$name == name,]
 			x <- extract_models(model_map, name)
-			out <- unique(x$outcome)
-			exp <- unique(x$exposure)
+			out <- unique(x$outcomes)
+			exp <- unique(x$exposures)
 
 			for (i in out) {
 				for (j in exp) {
@@ -142,9 +142,9 @@ find_confounders <- function(model_map,
 						.$term
 
 					# Update variable table to include confounders
-					vars$confounder[vars$name == name &
-													 	vars$outcome == i &
-													 	vars$exposure == j] <- list(confounders)
+					vars$confounders[vars$name == name &
+													 	vars$outcomes == i &
+													 	vars$exposures == j] <- list(confounders)
 
 				}
 			}
@@ -162,22 +162,31 @@ find_confounders <- function(model_map,
 	for (i in 1:n) {
 
 		# Need to handle NA/missing objects
-		if (length(x$confounder[[i]]) > 0) {
+		if (length(x$confounders[[i]]) > 0) {
 			f <-
-				paste(x$confounder[[i]], collapse = " + ") %>%
-				paste(paste0("X(", x$exposure[[i]], ")"), ., sep = " + ") %>%
-				paste(x$outcome[i], ., sep = " ~ ") %>%
+				paste(x$confounders[[i]], collapse = " + ") %>%
+				#paste(paste0("X(", x$exposures[[i]], ")"), ., sep = " + ") %>%
+				paste(x$exposures[[i]], ., sep = " + ") %>%
+				paste(x$outcomes[i], ., sep = " ~ ") %>%
 				stats::formula()
 		} else {
 			f <-
-				paste0("X(", x$exposure[[i]], ")") %>%
-				paste(x$outcome[i], ., sep = " ~ ") %>%
+				#paste0("X(", x$exposures[[i]], ")") %>%
+				paste0(x$exposures[[i]]) %>%
+				paste(x$outcomes[i], ., sep = " ~ ") %>%
 				stats::formula()
 		}
+
+		labels <- list(
+			outcomes = unique(unname(x$outcomes)),
+			exposures = unique(unname(x$exposures)),
+			fixed = unique(unname(x$fixed))
+		)
 
 		# Create new hypothesis object
 		h <- new_hypothesis(
 			hypothesis = f,
+			labels = labels,
 			combination = "direct",
 			test = test,
 			test_opts = test_opts,
@@ -223,7 +232,7 @@ find_confounders <- function(model_map,
 #'   hypothesis. Options include:
 #'
 #'   * __confounding__ = Check for relevant terms based on
-#'   [dagger::find_confounders()]. This includes the __delta__ argument to
+#'   [murmur::find_confounders()]. This includes the __delta__ argument to
 #'   set the threshold for changes in effect size that are considered relevant.
 #'
 #' @param ... Additional, optional parameters based on approach being used
@@ -253,7 +262,7 @@ reconstruct <- function(model_map,
 	)
 
 	# Fit updated models
-	model_map <- construct_models(model_map)
+	model_map <- construct_tests(model_map)
 
 	# Return
 	invisible(model_map)

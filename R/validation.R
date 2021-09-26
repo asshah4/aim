@@ -112,6 +112,33 @@ check_terms <- function(x, data) {
 		)
 	}
 
+	invisible(TRUE)
+
+}
+
+#' Check if labels are describing formula objects
+#' @noRd
+check_labels <- function(x, labels) {
+
+	if (!is.null(labels)) {
+		validate_class(labels, "list")
+	}
+
+	rx:::is.named(labels)
+	formula_vars <- all.vars(x)
+	label_vars <- unlist(unname(labels))
+	label_names <- names(labels)
+
+	if (!all(label_vars %in% formula_vars)) {
+		y <- label_vars[which(!(label_vars %in% formula_vars))]
+		stop(
+			"The terms c(",
+			paste0("'", y, "'", collapse = ", "),
+			") are not contained in the formula."
+		)
+	}
+
+	invisible(TRUE)
 
 }
 

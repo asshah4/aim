@@ -1,11 +1,13 @@
 test_that("gt tables can be made ", {
 	library(parsnip)
-	h = mpg ~ X(wt) + X(hp) + X(qsec) + cyl + vs + gear
-	test = linear_reg() %>% set_engine("lm")
+	f <- mpg ~ wt + hp + qsec + cyl + vs + gear
+	test <- linear_reg() %>% set_engine("lm")
+	exposures <- c("wt", "hp", "qsec")
 
 	h1 <-
 		hypothesize(
-			h,
+			f,
+			exposures,
 			combination = "sequential",
 			test = test,
 			data = mtcars,
@@ -13,9 +15,9 @@ test_that("gt tables can be made ", {
 		)
 
 	x <-
-		create_map() %>%
+		create_models() %>%
 		add_hypothesis(h1) %>%
-		construct_models() %>%
+		construct_tests() %>%
 		extract_models("h1")
 
 	# Create a `gt` table successfully

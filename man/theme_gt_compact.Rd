@@ -4,7 +4,12 @@
 \alias{theme_gt_compact}
 \title{Compact and minimal theme for \code{gt} tables}
 \usage{
-theme_gt_compact(data, table.font.size = pct(80), table.width = pct(90), ...)
+theme_gt_compact(
+  data,
+  table.font.size = gt::pct(80),
+  table.width = gt::pct(90),
+  ...
+)
 }
 \arguments{
 \item{data}{A table object that is created using the \code{\link[gt:gt]{gt()}} function.}

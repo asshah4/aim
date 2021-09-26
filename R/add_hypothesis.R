@@ -66,7 +66,8 @@ NULL
 
 	f <- stats::formula(stats::terms(hypothesis))
 	comb <- attr(hypothesis, "combination")
-	pars <- expand_formula(f, comb, table = TRUE)
+	labs <- attr(hypothesis, "labels")
+	pars <- expand_formula(f, labs, comb, table = TRUE)
 	n <- nrow(pars)
 
 	# Major parameters should be passed along
@@ -76,8 +77,8 @@ NULL
 			tibble::add_row(
 				name = name,
 				number = pars$number[i],
-				outcome = pars$outcomes[i],
-				exposure = pars$exposures[i],
+				outcomes = pars$outcomes[i],
+				exposures = pars$exposures[i],
 				formulae = pars$formulae[i]
 			) %>%
 			unique()
@@ -87,8 +88,8 @@ NULL
 			attributes(model_map)$relation_table %>%
 			tibble::add_row(
 				name = name,
-				outcome = pars$outcomes[i],
-				exposure = pars$exposures[i],
+				outcomes = pars$outcomes[i],
+				exposures = pars$exposures[i],
 			) %>%
 			unique()
 	}

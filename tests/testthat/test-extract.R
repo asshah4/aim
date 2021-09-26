@@ -1,12 +1,14 @@
-test_that("models can be extract_modelsed if available", {
+test_that("models can be extracted if available", {
 	library(parsnip)
-	h = mpg ~ X(wt) + hp + disp
-	combination = "sequential"
-	test = linear_reg() %>% set_engine("lm")
+	f <- mpg ~ wt + hp + disp
+	exposures <- "wt"
+	combination <- "sequential"
+	test <- linear_reg() %>% set_engine("lm")
 
 	h1 <-
 		hypothesize(
-			h,
+			f,
+			exposures = exposures,
 			combination = "parallel",
 			test = test,
 			data = mtcars,
@@ -14,7 +16,7 @@ test_that("models can be extract_modelsed if available", {
 	h2 <- update_hypothesis(h1, combination = "sequential")
 
 	x <-
-		create_map() %>%
+		create_models() %>%
 		add_hypothesis(h1)
 
 	# extract_models unfitted should error
@@ -25,7 +27,7 @@ test_that("models can be extract_modelsed if available", {
 	# Fit some models
 	y <-
 		x %>%
-		construct_models() %>%
+		construct_tests() %>%
 		add_hypothesis(h2)
 
 	# extract_models tidy models
@@ -35,7 +37,7 @@ test_that("models can be extract_modelsed if available", {
 
 	# extract_models raw models
 	m <- extract_models(y, tidy = FALSE)
-	expect_named(m, expected = c("name", "outcome", "exposure", "level", "number", "fit"))
+	expect_named(m, expected = c("name", "outcomes", "exposures", "level", "number", "fit"))
 
 	# Message on pulling unfitted model by name
 	expect_message({
