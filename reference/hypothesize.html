@@ -138,11 +138,25 @@ modeling framework. This framework allows for multiple hypotheses to be
 modeled, and allows for assessment of confounding variables.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+    <pre class="usage"><span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for formula</span>
 <span class='fu'>hypothesize</span><span class='op'>(</span>
-  <span class='va'>h</span>,
+  <span class='va'>x</span>,
+  exposures <span class='op'>=</span> <span class='cn'>NULL</span>,
+  fixed <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>combination</span>,
+  <span class='va'>test</span>,
+  test_opts <span class='op'>=</span> <span class='cn'>NA</span>,
+  <span class='va'>data</span>,
+  strata <span class='op'>=</span> <span class='cn'>NA</span>,
+  origin <span class='op'>=</span> <span class='st'>"independent"</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
+
+<span class='co'># S3 method for rx</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span>
+  <span class='va'>x</span>,
   <span class='va'>combination</span>,
   <span class='va'>test</span>,
   test_opts <span class='op'>=</span> <span class='cn'>NA</span>,
@@ -153,29 +167,35 @@ modeled, and allows for assessment of confounding variables.</p>
 <span class='op'>)</span>
 
 <span class='co'># S3 method for list</span>
-<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for dagitty</span>
-<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for tidy_dagitty</span>
-<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for recipe</span>
 <span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
-<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>h</th>
+      <th>x</th>
       <td><p>General variable that can be cast into a hypothesis object.
 Currently this accepts the following object types:</p><ul>
-<li><p><code>formula</code> objects, which  be given additional modifiers as described.
-Please see <code><a href='expand_formula.html'>expand_formula()</a></code> or the formula section below for details.</p></li>
+<li><p><code>formula</code> objects, which can be given additional modifying label. The key
+variables, as described in the <strong>formulae section</strong> below, are <code>exposures</code>
+and <code>fixed</code>, as they allow for specific transformations of the formula.
+This behavior is also described in <code><a href='expand_formula.html'>expand_formula()</a></code>.</p></li>
+<li><p><code>rx</code> objects, which are modified formulas created by <code>rx::rx()</code> and have
+additional labels available. Can be set by <code>rx::set_rx_theme()</code> using the
+argument <code>set_rx_theme("epi")</code>. This behavior is described in
+<code><a href='expand_formula.html'>expand_formula()</a></code> or the formula section below with further details.</p></li>
 <li><p><code>list</code> object, which describes the outcomes, exposures, covariates, fixed
 variables, and potential confounders in a named list, which allows for
 grouped covariates when modeling. Please see the details section for
@@ -185,6 +205,16 @@ further explanation.</p></li>
     <tr>
       <th>...</th>
       <td><p>For additional variables based on the generic method invoked.</p></td>
+    </tr>
+    <tr>
+      <th>exposures</th>
+      <td><p>A character vector for individual exposures, which will
+always be placed in separate models.</p></td>
+    </tr>
+    <tr>
+      <th>fixed</th>
+      <td><p>A character vector naming variables that should be retained in
+all models.</p></td>
     </tr>
     <tr>
       <th>combination</th>
@@ -267,42 +297,11 @@ yet:</p><ul>
     
 
 
-<p>When supplying a <code>formula</code> object, each RHS term of the formula is
-considered an outcome variable, and is analyzed as a single outcome. Each
-LHS term is consider a predictor, and can be modified as below:</p><ul>
-<li><p><code>X()</code> is placed around a term to define as an independent exposure, which
-will be placed in separate formulae from any other term marked as an
-exposure</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects</p></li>
-<li><p><code><a href='https://rdrr.io/r/stats/zC.html'>C()</a></code> is placed around a term for any predictors that are a potential
-confounder, which does not yet change the relationship of how formulas are
-built, but is stored for future methods to be used with <code>hypothesize()</code></p></li>
+<p>For each <code>formula</code>, the terms in the RHS and LHS can be labeled. Each individual LHS term is considered an individual outcome, and each RHS is a predictor which can be grouped in a variety of ways. If labels are provided, then the <code>formula</code> will be expanded in a certain pattern. The key labels are:</p><ul>
+<li><p><strong>exposures</strong> = defines an independent exposure, which will be placed in a separate formulae from any other term marked as such</p></li>
+<li><p><strong>fixed</strong> = defines any predictor that should be maintained/fixed in all models, including complex terms such as mixed/random effects</p></li>
 </ul>
 
-<p>For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally tested for every level of "z"</p>
-<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p>
-
-
-<p>When supplying a <code>formula</code> object, each RHS term of the formula is
-considered an outcome variable, and is analyzed as a single outcome. Each
-LHS term is consider a predictor, and can be modified as below:</p><ul>
-<li><p><code>X()</code> is placed around a term to define as an independent exposure, which
-will be placed in separate formulae from any other term marked as an
-exposure</p></li>
-<li><p><code><a href='https://rdrr.io/r/base/logical.html'>F()</a></code> is placed around a term for any predictors that should be
-maintained/fixed in all models, which can include complex terms, such as
-mixed effects</p></li>
-<li><p><code><a href='https://rdrr.io/r/stats/zC.html'>C()</a></code> is placed around a term for any predictors that are a potential
-confounder, which does not yet change the relationship of how formulas are
-built, but is stored for future methods to be used with <code>hypothesize()</code></p></li>
-</ul>
-
-<p>For example, the equation below describes two independent exposures "x1"
-and "x2" that should be conditionally tested for every level of "z"</p>
-<p>$$y ~ X(x1) + X(x2) + x3 + x4 + F((1 | z))$$</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

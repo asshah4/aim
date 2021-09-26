@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Expand Formulae for a Hypothesis — expand_formula • murmur</title>
+<title>Mapping Many Hypotheses Together — create_models • murmur</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,15 @@
 
 
 
-<meta property="og:title" content="Expand Formulae for a Hypothesis — expand_formula" />
-<meta property="og:description" content="This is an internal function that helps to create the appropriate formula
-combinations for adding hypotheses." />
+<meta property="og:title" content="Mapping Many Hypotheses Together — create_models" />
+<meta property="og:description" content="
+Calling create_models() initializes a list object that stores hypothesis objects,
+which are used to explore a research project. It allows for delayed building
+of models, and is used to help study the relationship between variables.
+A model_map object is a essentially a modified list containing two
+complementary table structures, which are interrelated via the hypothesis
+objects, and several attributes that allow for information storage about the
+object itself." />
 
 
 
@@ -124,77 +130,36 @@ combinations for adding hypotheses." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Expand Formulae for a Hypothesis</h1>
-    <small class="dont-index">Source: <a href='https://github.com/asshah4/murmur/blob/master/R/hypothesis-helpers.R'><code>R/hypothesis-helpers.R</code></a></small>
-    <div class="hidden name"><code>expand_formula.Rd</code></div>
+    <h1>Mapping Many Hypotheses Together</h1>
+    <small class="dont-index">Source: <a href='https://github.com/asshah4/murmur/blob/master/R/maps.R'><code>R/maps.R</code></a></small>
+    <div class="hidden name"><code>create_models.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>This is an internal function that helps to create the appropriate formula
-combinations for adding hypotheses.</p>
+    <p><a href='https://lifecycle.r-lib.org/articles/stages.html#experimental'><img src='figures/lifecycle-experimental.svg' alt='[Experimental]' /></a></p>
+<p>Calling <code>create_models()</code> initializes a list object that stores <code>hypothesis</code> objects,
+which are used to explore a research project. It allows for delayed building
+of models, and is used to help study the relationship between variables.</p>
+<p>A <code>model_map</code> object is a essentially a modified list containing two
+complementary table structures, which are interrelated via the <code>hypothesis</code>
+objects, and several attributes that allow for information storage about the
+object itself.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>expand_formula</span><span class='op'>(</span><span class='va'>formula</span>, labels <span class='op'>=</span> <span class='cn'>NULL</span>, <span class='va'>combination</span>, table <span class='op'>=</span> <span class='cn'>FALSE</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>create_models</span><span class='op'>(</span><span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>formula</th>
-      <td><p>Formula showing relationship of outcomes and predictors, and
-is essentially the hypothesis. It allows for complex formulae e.g. multiple
-predictors, multiple exposures, and multiple covariates, that can be
-organized into individual formulae based on additional modifiers. Please
-see the  for further documentation.</p></td>
-    </tr>
-    <tr>
-      <th>labels</th>
-      <td><p>A named list pair of term labels and a character vector of
-terms, such as as <code><a href='https://rdrr.io/r/base/list.html'>list(exposure = "x1", outcome = "y")</a></code></p></td>
-    </tr>
-    <tr>
-      <th>combination</th>
-      <td><p>The building pattern for how to put together the overall
-plan. It defines variable relationships that will be used. The options of
-<code>combination</code> will lead to the following patterns:</p><ul>
-<li><p><code>direct</code> will not modify the original equation pattern</p></li>
-</ul>
-
-<p>$$y ~ x1 + x2$$</p><ul>
-<li><p><code>sequential</code> will create a list of sequentially adjusted formula</p></li>
-</ul>
-
-<p>$$y ~ x1$$ $$y ~ x1 + x2$$</p><ul>
-<li><p><code>parallel</code> will create a list of formula with parallel predictors</p></li>
-</ul>
-
-<p>$$y ~ x1$$ $$y ~ x2$$</p></td>
-    </tr>
-    <tr>
-      <th>table</th>
-      <td><p>Determines if the returned value should be a list of formulas or
-a table. Defaults to FALSE, leading to a list generation.</p></td>
-    </tr>
-    <tr>
       <th>...</th>
-      <td><p>Not currently used</p></td>
+      <td><p>For extensibility</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>List or table of formulae and extracted terms (to be determined by
-the <strong>table</strong> argument).</p>
-    <h2 class="hasAnchor" id="formulae"><a class="anchor" href="#formulae"></a>Formulae</h2>
-
-    
-
-
-<p>For each <code>formula</code>, the terms in the RHS and LHS can be labeled. Each individual LHS term is considered an individual outcome, and each RHS is a predictor which can be grouped in a variety of ways. If labels are provided, then the <code>formula</code> will be expanded in a certain pattern. The key labels are:</p><ul>
-<li><p><strong>exposures</strong> = defines an independent exposure, which will be placed in a separate formulae from any other term marked as such</p></li>
-<li><p><strong>fixed</strong> = defines any predictor that should be maintained/fixed in all models, including complex terms such as mixed/random effects</p></li>
-</ul>
-
+    <p>A <code>model_map</code> object</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

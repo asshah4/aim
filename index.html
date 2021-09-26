@@ -97,7 +97,7 @@
 <div id="introduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h2>
-<p>The <code>murmur</code> package is intended to help build causal models with an underlying focus of <strong>directed acyclic graphs</strong>. However, instead of starting purely from a diagram, this package intends to allow modeling to occur simultaneously, and then leveraging the patterns within the data to help cut away <em>confounders</em> and other terms for a more parsimonious causal model. The premise is that there are two components in studying causality:</p>
+<p>The <code>murmur</code> package is intended to help build causal models with an underlying focus on exploration. However, instead of starting purely from a <strong>directed acyclic graph</strong>, this package intends to allow modeling to occur simultaneously, and then leveraging the patterns within the data to help cut away <em>confounders</em> and other terms for a more parsimonious causal model. The premise is that there are two components in studying causality:</p>
 <ol>
 <li>Causal model diagrams</li>
 <li>Hypothesis testing and statistical analysis</li>
@@ -111,9 +111,9 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/murmur">murmur</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://parsnip.tidymodels.org">parsnip</a></span><span class="op">)</span></code></pre></div>
-<p>The basic function of the package is the <code>study()</code> argument, which creates a empty data structure object.</p>
+<p>The basic function of the package serves to help create a <code>model_map</code> object.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/create_map.html">create_map</a></span><span class="op">(</span><span class="op">)</span>
+<code class="sourceCode R"><span class="fu"><a href="reference/create_models.html">create_models</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; # A map with 0 hypotheses</span>
 <span class="co">#&gt; #</span>
 <span class="co">#&gt; # A tibble: 0 × 8</span>
@@ -123,7 +123,8 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">h1</span> <span class="op">&lt;-</span>
     <span class="fu"><a href="reference/hypothesize.html">hypothesize</a></span><span class="op">(</span>
-        <span class="va">mpg</span> <span class="op">~</span> <span class="fu">X</span><span class="op">(</span><span class="va">wt</span><span class="op">)</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">disp</span>,
+        <span class="va">mpg</span> <span class="op">~</span> <span class="va">wt</span> <span class="op">+</span> <span class="va">hp</span> <span class="op">+</span> <span class="va">disp</span>,
+        exposures <span class="op">=</span> <span class="st">"wt"</span>,
         combination <span class="op">=</span> <span class="st">"sequential"</span>,
         test <span class="op">=</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/linear_reg.html">linear_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"lm"</span><span class="op">)</span>,
         data <span class="op">=</span> <span class="va">mtcars</span>,
@@ -137,7 +138,7 @@
 <span class="co">#&gt; Hypothesis</span>
 <span class="co">#&gt; ----------</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; mpg ~ X(wt) + hp + disp</span>
+<span class="co">#&gt; mpg ~ wt + hp + disp</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; -----------</span>
 <span class="co">#&gt; Description</span>
@@ -147,14 +148,13 @@
 <span class="co">#&gt; Test         linear_reg, model_spec</span>
 <span class="co">#&gt; Data         mtcars</span>
 <span class="co">#&gt; Strata       none</span>
-
 <span class="co"># Print h2</span>
 <span class="va">h2</span>
 <span class="co">#&gt; ----------</span>
 <span class="co">#&gt; Hypothesis</span>
 <span class="co">#&gt; ----------</span>
 <span class="co">#&gt; </span>
-<span class="co">#&gt; mpg ~ X(wt) + hp + disp</span>
+<span class="co">#&gt; mpg ~ wt + hp + disp</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; -----------</span>
 <span class="co">#&gt; Description</span>
@@ -167,7 +167,7 @@
 <p>These hypotheses can then be <em>drawn</em> on to the <em>study map</em> as below.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m1</span> <span class="op">&lt;-</span>
-    <span class="fu"><a href="reference/create_map.html">create_map</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/create_models.html">create_models</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="reference/add_hypothesis.html">add_hypothesis</a></span><span class="op">(</span><span class="va">h1</span><span class="op">)</span> <span class="op">%&gt;%</span>
     <span class="fu"><a href="reference/add_hypothesis.html">add_hypothesis</a></span><span class="op">(</span><span class="va">h2</span><span class="op">)</span> 
 
@@ -178,18 +178,34 @@
 <span class="co">#&gt; # A tibble: 6 × 8</span>
 <span class="co">#&gt;   name  outcome exposure level number formulae  fit    tidy  </span>
 <span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;lgl&gt;  &lt;int&gt; &lt;list&gt;    &lt;list&gt; &lt;list&gt;</span>
-<span class="co">#&gt; 1 h1    mpg     wt       NA         1 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
-<span class="co">#&gt; 2 h1    mpg     wt       NA         2 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
-<span class="co">#&gt; 3 h1    mpg     wt       NA         3 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
-<span class="co">#&gt; 4 h2    mpg     wt       NA         1 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
-<span class="co">#&gt; 5 h2    mpg     wt       NA         2 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
-<span class="co">#&gt; 6 h2    mpg     wt       NA         3 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span></code></pre></div>
+<span class="co">#&gt; 1 h1    mpg     NA       NA         1 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 2 h1    mpg     NA       NA         2 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 3 h1    mpg     NA       NA         3 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 4 h2    mpg     NA       NA         1 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 5 h2    mpg     NA       NA         2 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span>
+<span class="co">#&gt; 6 h2    mpg     NA       NA         3 &lt;formula&gt; &lt;NULL&gt; &lt;NULL&gt;</span></code></pre></div>
 <p>Then, for analysis and display of results, the findings can easily be extracted.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">m2</span> <span class="op">&lt;-</span>
     <span class="va">m1</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/construct_models.html">construct_models</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-    <span class="fu"><a href="reference/extract_models.html">extract_models</a></span><span class="op">(</span>which_ones <span class="op">=</span> <span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+    <span class="fu"><a href="reference/construct_tests.html">construct_tests</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+    <span class="fu"><a href="reference/extract_models.html">extract_models</a></span><span class="op">(</span>which_ones <span class="op">=</span> <span class="st">"h1"</span>, tidy <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+
+<span class="co"># Print findings</span>
+<span class="va">m2</span>
+<span class="co">#&gt; # A tibble: 9 × 12</span>
+<span class="co">#&gt;   name  outcome exposure level number term         estimate std.error statistic</span>
+<span class="co">#&gt;   &lt;chr&gt; &lt;chr&gt;   &lt;chr&gt;    &lt;lgl&gt;  &lt;int&gt; &lt;chr&gt;           &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;</span>
+<span class="co">#&gt; 1 h1    mpg     NA       NA         1 (Intercept) 37.3        1.88      19.9   </span>
+<span class="co">#&gt; 2 h1    mpg     NA       NA         1 wt          -5.34       0.559     -9.56  </span>
+<span class="co">#&gt; 3 h1    mpg     NA       NA         2 (Intercept) 37.2        1.60      23.3   </span>
+<span class="co">#&gt; 4 h1    mpg     NA       NA         2 wt          -3.88       0.633     -6.13  </span>
+<span class="co">#&gt; 5 h1    mpg     NA       NA         2 hp          -0.0318     0.00903   -3.52  </span>
+<span class="co">#&gt; 6 h1    mpg     NA       NA         3 (Intercept) 37.1        2.11      17.6   </span>
+<span class="co">#&gt; 7 h1    mpg     NA       NA         3 wt          -3.80       1.07      -3.56  </span>
+<span class="co">#&gt; 8 h1    mpg     NA       NA         3 hp          -0.0312     0.0114    -2.72  </span>
+<span class="co">#&gt; 9 h1    mpg     NA       NA         3 disp        -0.000937   0.0103    -0.0905</span>
+<span class="co">#&gt; # … with 3 more variables: p.value &lt;dbl&gt;, conf.low &lt;dbl&gt;, conf.high &lt;dbl&gt;</span></code></pre></div>
 </div>
 </div>
   </div>
