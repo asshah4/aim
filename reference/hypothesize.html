@@ -100,6 +100,9 @@ modeled, and allows for assessment of confounding variables." />
     <li>
       <a href="../articles/development.html">Development Thoughts</a>
     </li>
+    <li>
+      <a href="../articles/guide.html">A Guide to Murmurs</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -176,7 +179,7 @@ modeled, and allows for assessment of confounding variables.</p>
 <span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for recipe</span>
-<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>h</span>, <span class='va'>...</span><span class='op'>)</span>
+<span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span>
 
 <span class='co'># S3 method for default</span>
 <span class='fu'>hypothesize</span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>...</span><span class='op'>)</span></pre>
@@ -192,8 +195,8 @@ Currently this accepts the following object types:</p><ul>
 variables, as described in the <strong>formulae section</strong> below, are <code>exposures</code>
 and <code>fixed</code>, as they allow for specific transformations of the formula.
 This behavior is also described in <code><a href='expand_formula.html'>expand_formula()</a></code>.</p></li>
-<li><p><code>rx</code> objects, which are modified formulas created by <code>rx::rx()</code> and have
-additional labels available. Can be set by <code>rx::set_rx_theme()</code> using the
+<li><p><code>rx</code> objects, which are modified formulas created by <code><a href='https://rdrr.io/pkg/rx/man/rx-package.html'>rx::rx()</a></code> and have
+additional labels available. Can be set by <code><a href='https://rdrr.io/pkg/rx/man/options.html'>rx::set_rx_theme()</a></code> using the
 argument <code>set_rx_theme("epi")</code>. This behavior is described in
 <code><a href='expand_formula.html'>expand_formula()</a></code> or the formula section below with further details.</p></li>
 <li><p><code>list</code> object, which describes the outcomes, exposures, covariates, fixed
