@@ -43,7 +43,7 @@ hypothesize(x, ...)
 
 \method{hypothesize}{tidy_dagitty}(x, ...)
 
-\method{hypothesize}{recipe}(h, ...)
+\method{hypothesize}{recipe}(x, ...)
 
 \method{hypothesize}{default}(x, ...)
 }

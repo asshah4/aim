@@ -124,7 +124,7 @@ check_labels <- function(x, labels) {
 		validate_class(labels, "list")
 	}
 
-	rx:::is.named(labels)
+	rx::is.named(labels)
 	formula_vars <- all.vars(x)
 	label_vars <- unlist(unname(labels))
 	label_names <- names(labels)

@@ -252,7 +252,7 @@ hypothesize.tidy_dagitty <- function(x, ...) {
 
 #' @rdname hypothesize
 #' @export
-hypothesize.recipe <- function(h, ...) {
+hypothesize.recipe <- function(x, ...) {
 	stop(
 		"`hypothesize()` does not yet have full functionality for `recipe` objects."
 	)
