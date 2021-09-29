@@ -337,5 +337,3 @@ print.hypothesis <- function(x, ...) {
 
 }
 
-# Helper Functions ----
-
