@@ -21,6 +21,7 @@
   hypothesis,
   name,
   run = FALSE,
+  tidy = FALSE,
   error = FALSE,
   origin = NA
 )

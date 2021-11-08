@@ -125,9 +125,9 @@ fetch_call <- function(x, name) {
 
 #' @rdname fetch
 #' @export
-fetch_tidy <- function(x, name) {
+fetch_special <- function(x, name) {
 
-	res <- x$tidy[x$name == name]
+	res <- x$special[x$name == name]
 	res
 
 }

@@ -135,6 +135,6 @@ test_that("formula and rx classes work appropriately", {
 
 	expect_equal(h1, h2, ignore_attr = TRUE)
 
-	rx::reset_rx_labels()
+	rx::reset_rx_roles()
 
 })

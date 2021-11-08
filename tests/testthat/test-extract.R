@@ -19,9 +19,9 @@ test_that("models can be extracted if available", {
 		create_models() %>%
 		add_hypothesis(h1)
 
-	# extract_models unfitted should error
+	# extract_results unfitted should error
 	expect_error({
-		extract_models(x)
+		extract_results(x)
 	})
 
 	# Fit some models
@@ -30,18 +30,41 @@ test_that("models can be extracted if available", {
 		construct_tests() %>%
 		add_hypothesis(h2)
 
-	# extract_models tidy models
-	m <- extract_models(y)
+	# Message on pulling unfitted model by name
+	expect_message({
+		extract_results(y, which_ones = "h2")
+	})
+
+	# extract_results tidy models
+	m <- extract_results(y, how = "tidy", flat = TRUE, exponentiate = FALSE, conf.level = 0.95, conf.int = TRUE)
 	expect_length(m, 12)
 	expect_equal(nrow(m), 6)
 
-	# extract_models raw models
-	m <- extract_models(y, tidy = FALSE)
-	expect_named(m, expected = c("name", "outcomes", "exposures", "level", "number", "fit"))
+	# extract_results raw models
+	m <- extract_results(y)
+	expect_named(m, expected = c("name", "outcomes", "exposures", "level", "number", "formulae", "fit"))
 
-	# Message on pulling unfitted model by name
-	expect_message({
-		extract_models(y, which_ones = "h2")
-	})
+	# Testing glance feature
+	df <- mtcars
+	df$am <- as.factor(df$am)
+	h3 <- hypothesize(
+		am ~ mpg + wt,
+		combination = "sequential",
+		test = logistic_reg() %>% set_engine("glm"),
+		data = df
+	)
+
+	z <-
+		y %>%
+		add_hypothesis(h3) %>%
+		construct_tests()
+
+	# Extract glance
+	m <-
+		z %>%
+		extract_results(which_ones = "h3", how = "glance") %>%
+		extract_results(which_ones = "h3", how = "tidy")
+
+	flatten(m)
 
 })

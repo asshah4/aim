@@ -22,7 +22,7 @@ test_that("confounders can be found and manipulated", {
 
 	y <- reconstruct(x, "h1")
 	var_after <- attributes(y)$relation_table
-	expect_length(y, 8)
+	expect_length(y, 7)
 	expect_gt(nrow(var_after), nrow(var_before))
 	expect_type(var_after$confounders[[1]], "character")
 

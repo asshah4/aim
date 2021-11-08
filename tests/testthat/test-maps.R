@@ -22,8 +22,9 @@ test_that("creation of a map is successful", {
 		construct_tests()
 
 	expect_type(m$fit, "list")
-	expect_s3_class(m$tidy[[1]], "tbl_df")
-	expect_output(print(m), "map|hypothes")
+	expect_s3_class(m$fit[[1]], "model_fit")
+	expect_output(print.model_map(m), "map|hypothes")
+	expect_output(summary.model_map(m), "Summary|Hypothesis|Data")
 
 	h2 <- update_hypothesis(h1, combination = "parallel")
 
@@ -38,12 +39,12 @@ test_that("creation of a map is successful", {
 	expect_equal(nrow(attr(m, "data_table")), 2)
 
 	# Unadjusted h1 and h2 should be the same
-	t1 <- fetch_tidy(m, "h1")
-	t2 <- fetch_tidy(m, "h2")
-	expect_identical(t1[[1]], t2[[1]])
+	t <-
+		m %>%
+		extract_results(how = "tidy", flat = FALSE) %>%
+		.[.$level == 0 & .$number == 1, ]
+	expect_identical(t[1, ncol(t)], t[2, ncol(t)])
 
 	# Print and summary functions
-	expect_output(print.model_map(m), "map|hypothes")
-	expect_output(summary.model_map(m), "Summary|Hypothesis|Data")
 
 })

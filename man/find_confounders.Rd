@@ -24,7 +24,8 @@ updated model_map in position \verb{[[2]]}.}
 \item{...}{For extensibility}
 }
 \value{
-A list of \code{hypothesis} objects that have been modified (and can optionally return original, updated \code{model_map} as well)
+A list of \code{hypothesis} objects that have been modified (and can
+optionally return original, updated \code{model_map} as well)
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

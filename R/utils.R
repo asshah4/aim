@@ -1,3 +1,5 @@
+# EXTERNAL ----
+
 #' Pipe operator
 #'
 #' See \code{magrittr::\link[magrittr:pipe]{\%>\%}} for details.
@@ -98,4 +100,54 @@ tidy_tests <- function(.fits,
 }
 
 
+#' Flatten a Model Map
+#'
+#' Takes a model that has had results extracted in nested lists, such as
+#' __glance__ and __tidy__ and flattens the table into one level, such that the
+#' nested tables are expanded out. This is essentially a wrapper for
+#' [tidyr::unnest()].
+#'
+#' @return Returns a `tibble` object, without the attributes/features of a
+#'   `model_map` object
+#'
+#' @inheritParams extract_results
+#'
+#' @param check Internal usage to turn off validation for work inside other functions
+#'
+#' @family extractors
+#' @export
+flatten <- function(model_map, check = TRUE) {
 
+	validate_class(model_map, "model_map")
+
+	if (check) {
+		validate_stage(model_map, "extract")
+	}
+
+	# Return
+	model_map %>%
+		subset(., select = -c(formulae, fit)) %>%
+		tidyr::unnest(cols = dplyr::any_of(c("tidy", "glance")),
+									names_repair = ~ make.unique(., sep = "_"))
+}
+
+# INTERNAL ----
+
+#' Return type of test classification
+type_of_test <- function(x) {
+
+	if ("model_spec" %in% class(x)) {
+		y <- "parsnip"
+	}
+
+	if ("function" %in% class(x)) {
+		package <- environmentName(environment(x))
+		if (package %in% c("stats", "survival")) {
+			y <- "stats"
+		}
+	}
+
+	# Return if either from parsnip or from stats package
+	y
+
+}

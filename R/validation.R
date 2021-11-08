@@ -37,6 +37,7 @@ validate_class <- function(x, what) {
 
 	# Return
 	invisible(TRUE)
+
 }
 
 #' Validate that study is at the appropriate stage for subsequent pipe functions
@@ -53,7 +54,7 @@ validate_stage <- function(x, stage) {
 			if (nrow(y) == 0) {
 				stop(
 					deparse(substitute(x)),
-					" does not yet have `hypothesis` objects added. Please call `draw_hypothesis()` prior to construction.",
+					" does not yet have `hypothesis` objects added. Please call `add_hypothesis()` prior to construction.",
 					call. = FALSE
 				)
 			}
@@ -62,15 +63,26 @@ validate_stage <- function(x, stage) {
 			if (!any(y$run)) {
 				stop(
 					deparse(substitute(x)),
-					" does not have any `hypothesis` objects that have been run. Please call `construct_models()` first.",
+					" does not have any `hypothesis` objects that have been run. Please call `construct_tests()` first.",
 					call. = FALSE
 				)
 			}
+		},
+		extract = {
+			if (!any(y$tidy)) {
+				stop(
+					deparse(substitute(x)),
+					" does not have any `hypothesis` objects that have been tidied or summarized. Please call `extract_results()` first.",
+					call. = FALSE
+				)
+			}
+
 		}
 	)
 
 	# Return
 	invisible(TRUE)
+
 }
 
 #' Check if hypothesis in study has been run or not

@@ -25,12 +25,12 @@ create_models <- function(...) {
 	# Base structure is that of a list of two tibbles
 	model_map <-
 		tribble(
-			~name, ~outcomes, ~exposures, ~level, ~number, ~formulae, ~fit, ~tidy
+			~name, ~outcomes, ~exposures, ~level, ~number, ~formulae, ~fit
 		) %>%
 		mutate(
 			across(c(name, outcomes, exposures, level), as.character),
 			across(number, as.integer),
-			across(c(formulae, fit, tidy), as.list)
+			across(c(formulae, fit), as.list)
 		)
 
 	# Need to know how the data should be tested
@@ -58,10 +58,10 @@ create_models <- function(...) {
 
 	# Recording of status updates
 	attr(model_map, "status_table") <-
-		tribble(~name, ~run, ~error, ~origin) %>%
+		tribble(~name, ~run, ~tidy, ~error, ~origin) %>%
 		mutate(
 			across(c(name, origin), as.character),
-			across(c(run, error), as.logical)
+			across(c(run, tidy, error), as.logical)
 		)
 
 	# Variable table

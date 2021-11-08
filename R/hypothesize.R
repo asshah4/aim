@@ -125,8 +125,6 @@ hypothesize.formula <- function(x,
 	# Get data name
 	data_name <- deparse(substitute(data))
 
-	# TODO Validate/ensure appropriate test object
-
 	# If strata are present, than need to remove from formula
 	if (!is.na(strata)) {
 		x <- stats::update(x, bquote(. ~ . - .(as.name(strata))))
@@ -193,6 +191,7 @@ hypothesize.rx <- function(x,
 	data_name <- deparse(substitute(data))
 
 	# TODO Validate/ensure appropriate test object
+	test_type <- type_of_test(test)
 
 	# If strata are present, than need to remove from formula
 	if (!is.na(strata)) {
@@ -331,6 +330,7 @@ print.hypothesis <- function(x, ...) {
 		Strata		{if (is.na(strata)) 'none' else strata}
 		"
 	))
+	cat("\n")
 
 	# Return invisibly
 	invisible(x)

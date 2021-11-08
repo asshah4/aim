@@ -31,7 +31,6 @@ Imports:
     rlang,
     lifecycle,
     tidygraph,
-    rx,
 Suggests: 
     testthat (>= 3.0.0),
     covr,

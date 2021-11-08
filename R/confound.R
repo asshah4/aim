@@ -17,7 +17,8 @@
 #'   for being of size `delta`. If so, the covariate is retained as a potential
 #'   confounder (or otherwise removed).
 #'
-#' @return A list of `hypothesis` objects that have been modified (and can optionally return original, updated `model_map` as well)
+#' @return A list of `hypothesis` objects that have been modified (and can
+#'   optionally return original, updated `model_map` as well)
 #'
 #' @param model_map A `model_map` object that has been constructed
 #'
@@ -65,7 +66,7 @@ find_confounders <- function(model_map,
 			m <-
 				model_map %>%
 				.[.$name == name,]
-			x <- extract_models(m, name)
+			x <- extract_results(m, name, how = "tidy", flat = TRUE)
 
 			# Check for each unique outcome, and for each unique exposure combination
 			out <- unique(x$outcomes)
@@ -114,7 +115,7 @@ find_confounders <- function(model_map,
 			m <-
 				model_map %>%
 				.[.$name == name,]
-			x <- extract_models(model_map, name)
+			x <- extract_results(model_map, name, how = "tidy", flat = TRUE)
 			out <- unique(x$outcomes)
 			exp <- unique(x$exposures)
 
@@ -165,13 +166,11 @@ find_confounders <- function(model_map,
 		if (length(x$confounders[[i]]) > 0) {
 			f <-
 				paste(x$confounders[[i]], collapse = " + ") %>%
-				#paste(paste0("X(", x$exposures[[i]], ")"), ., sep = " + ") %>%
 				paste(x$exposures[[i]], ., sep = " + ") %>%
 				paste(x$outcomes[i], ., sep = " ~ ") %>%
 				stats::formula()
 		} else {
 			f <-
-				#paste0("X(", x$exposures[[i]], ")") %>%
 				paste0(x$exposures[[i]]) %>%
 				paste(x$outcomes[i], ., sep = " ~ ") %>%
 				stats::formula()

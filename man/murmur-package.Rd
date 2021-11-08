@@ -6,13 +6,7 @@
 \alias{murmur-package}
 \title{murmur: Many Unknown Relationships Modelled Using R}
 \description{
-Organize many models and hypotheses, generate directed acyclic 
-    graphs from these models, and cut out variables in a causality-based 
-    approach to analyses. The package consists of formulating hypothesis, 
-    testing the relationships, and analyzing the parameters. In causality-based 
-    studies, the focus is on understanding and contextualizing variables. This
-    package provides methods to understand the relationships between outcomes, 
-    exposures, and other covariates.
+Organize many models and hypotheses, generate directed acyclic graphs from these models, and cut out variables in a causality-based approach to analyses. The package consists of formulating hypothesis, testing the relationships, and analyzing the parameters. In causality-based studies, the focus is on understanding and contextualizing variables. This package provides methods to understand the relationships between outcomes, exposures, and other covariates.
 }
 \seealso{
 Useful links:

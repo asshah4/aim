@@ -1,7 +1,7 @@
-test_that("gt tables can be made ", {
-	library(parsnip)
+test_that("sequential gt tables can be made ", {
+
 	f <- mpg ~ wt + hp + qsec + cyl + vs + gear
-	test <- linear_reg() %>% set_engine("lm")
+	ptest <- stats::lm
 	exposures <- c("wt", "hp", "qsec")
 
 	h1 <-
@@ -9,7 +9,7 @@ test_that("gt tables can be made ", {
 			f,
 			exposures,
 			combination = "sequential",
-			test = test,
+			test = ptest,
 			data = mtcars,
 			strata = "am"
 		)
@@ -18,7 +18,9 @@ test_that("gt tables can be made ", {
 		create_models() %>%
 		add_hypothesis(h1) %>%
 		construct_tests() %>%
-		extract_models("h1")
+		extract_results(how = "tidy") %>%
+		extract_results(how = "glance") %>%
+		flatten()
 
 	# Create a `gt` table successfully
 	y <-
@@ -29,8 +31,8 @@ test_that("gt tables can be made ", {
 			models = number ~ list(1:3),
 			model_label = "Model",
 			model_notes = list("Mileage", "Exposure", "Cylinders", "Gear"),
-			values = c("estimate", "conf.low", "conf.high"),
-			pattern = "{1} ({2}, {3})",
+			values = c("estimate", "conf.low", "conf.high", "r.squared"),
+			pattern = "{1} ({2}, {3}); R^2 = {4}",
 			statistic = p.value ~ 0.05
 		)
 
@@ -47,5 +49,49 @@ test_that("gt tables can be made ", {
 		.[[1]]
 
 	expect_equal(z, "12px")
+
+})
+
+test_that("comparison gt tables can be made", {
+
+	h1 <- hypothesize(
+		x = mpg ~ hp + cyl,
+		exposures = "hp",
+		test = stats::lm,
+		combination = "direct",
+		data = mtcars
+	)
+
+	h2 <- hypothesize(
+		x = mpg ~ hp + am,
+		exposures = "hp",
+		test = stats::lm,
+		combination = "direct",
+		data = mtcars
+	)
+
+	expect_message({
+		x <-
+			create_models() %>%
+			add_hypothesis(h1) %>%
+			add_hypothesis(h2) %>%
+			construct_tests() %>%
+			extract_results(how = "tidy") %>%
+			flatten()
+	})
+
+	y <- tbl_compare(
+		data = x,
+		terms = term ~ list(hp = "Horsepower", cyl = "Cylinders", am = "Transmission"),
+		models = name ~ list(h1 = "First", h2 = "Second"),
+		statistic = p.value ~ 0.05,
+		values = c("estimate", "conf.low", "conf.high"),
+		pattern = "{1} ({2}, {3})",
+		style = fill ~ list(color = "lightgreen"),
+		decimals = 2,
+		missing_text = "-"
+	)
+
+	expect_s3_class(y, "gt_tbl")
 
 })

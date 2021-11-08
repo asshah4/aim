@@ -39,6 +39,7 @@ add_hypothesis <- function(model_map,
 			hypothesis,
 			name = name,
 			run = FALSE,
+			tidy = FALSE,
 			origin = attr(hypothesis, "origin")
 		)
 
@@ -151,6 +152,7 @@ NULL
 															hypothesis,
 															name,
 															run = FALSE,
+															tidy = FALSE,
 															error = FALSE,
 															origin = NA) {
 
@@ -160,6 +162,7 @@ NULL
 		tibble::add_row(
 			name = name,
 			run = run,
+			tidy = tidy,
 			error = error,
 			origin = origin
 		) %>%

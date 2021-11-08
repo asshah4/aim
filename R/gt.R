@@ -6,7 +6,7 @@
 #'
 #' This function is a wrapper for the `gt` package for quickly and easily making
 #' model tables. It is built for sequentially adjusted models that have been
-#' created from the [murmur::extract_models()] function, which is primarily uses
+#' created from the [murmur::extract_results()] function, which is primarily uses
 #' the [broom::tidy()] function to help describe model fits.
 #'
 #' @param data A data table with columns that are similar to that from
@@ -30,7 +30,7 @@
 #'   right-hand side indicates which models should be used. If it is given as a
 #'   named list, then the models will be relabeled when displayed.
 #'
-#'   For example, `model_id ~ list(1, 3, 5)` would select the models labelled as
+#'   For example, `model_id ~ list(1, 3, 5)` would select the models labeled as
 #'   "1", "3", and "5". These would be re-sequenced as "1", "2", "3" for
 #'   simplicity.
 #'
@@ -340,6 +340,231 @@ tbl_sequential <- function(data,
 		x %>%
 		gt::fmt_number(columns = gt::everything(), decimals = decimals)
 
+	x
+
+}
+
+#' Make a table of models that are to be compared using `gt`
+#'
+#' @description
+#'
+#' `r lifecycle::badge('experimental')`
+#'
+#' This function is a wrapper for the `gt` package for quickly and easily making
+#' model tables. It is built for fully adjusted models that have been created
+#' from the [murmur::extract_results()] function, which primarily uses the
+#' [broom::tidy()] function to help describe model fits. The models should have
+#' specific variables of interest that are different for comparison.
+#'
+#' @inheritParams tbl_sequential
+#'
+#' @param terms A _formula ~ list_ where the left-hand side indicates the column
+#'   in __data__ and right-hand side indicates which variables are of interest,
+#'   along with their potential label (thus a named list).
+#'
+#'   For example, `term ~ list(x = "primary")` would select the column named
+#'   "term" and it would label variable "x" with the description "primary" for
+#'   display in each row.
+#'
+#'   If instead, no name is given, such as `term ~ list("x")` it is presumed
+#'   that the variables will go by their original name from the table.
+#'
+#'   This is slightly different than in [murmur::tbl_sequential()] in that these
+#'   terms define which components to show in each row of the table. If there
+#'   are non-unique terms (e.g. "primary", "secondary"), it is assumed that they
+#'   should be grouped in the __by__ argument.
+#'
+#' @param by This can either be a _string_ or a _formula ~ list_ pattern.
+#'   Defaults to NULL. If present, presumes that there are non-unique __terms__
+#'   selected from above, and that they should be grouped as an individual
+#'   analysis.
+#'
+#'   If a _string_ is passed, then each group is given the label that represents
+#'   the value of the level by default.
+#'
+#'   If a _formula_ is passed, then the left-hand side represents the column
+#'   that is the grouping variable, and the right-hand side is a named list that
+#'   indicates what should be relabeled. This also allows to limit which
+#'   groups/analyses should be included, as unnamed/unlisted levels will be
+#'   ignored.
+#'
+#'   For example, `analysis ~ list("1" = "Before", "2" = "After")` would relabel
+#'   the groups with "Empty" and "Full" for the corresponding levels.
+#'
+#' @param missing_text A string used to fill in missing values, which may occur in
+#'   comparison of models that do not have all the same terms or could not be
+#'   analyzed.
+#'
+#' @importFrom dplyr filter mutate
+#' @importFrom rlang := .data
+#' @family visualizers
+#' @export
+tbl_compare <- function(data,
+												terms,
+												by = NULL,
+												models,
+												values = c("estimate", "conf.low", "conf.high"),
+												pattern = "{1} ({2}, {3})",
+												statistic = NULL,
+												style = fill ~ list(color = "lightgreen"),
+												decimals = 2,
+												missing_text = NA,
+												...) {
+
+	# Validation
+	if (!requireNamespace("gt", quietly = TRUE)) {
+		stop(
+			"Package \"gt\" needed for this function to work. Please install it.",
+			call. = FALSE
+		)
+	}
+
+	# Validation
+	validate_class(terms, "formula")
+	validate_class(models, "formula")
+	validate_class(values, "character")
+
+	# Columns to extract
+	var_col_sym <- terms[[2]]
+	var_col <- as.character(var_col_sym)
+	model_col_sym <- models[[2]]
+	model_col <- as.character(model_col_sym)
+	if (!is.null(statistic)) {
+		stat_col_sym <- statistic[[2]]
+		stat_col <- as.character(stat_col_sym)
+	} else {
+		stat_col <- NULL
+	}
+	disp_col <- values
+	if (!is.null(by)) {
+		if (is.character(by)) {
+			strata_col <- by
+		} else if (class(by) == "formula") {
+			strata_col_sym <- by[[2]]
+			strata_col <- as.character(strata_col_sym)
+			strata_vec <- unlist(eval(by[[3]]))
+		}
+	} else {
+		strata_col <- NULL
+	}
+
+	# Terms
+	var_list <- eval(terms[[3]])
+	var_names <- unname(unlist(var_list))
+	vars <-
+		lapply(seq_along(var_list), function(x) {
+			if (is.null(names(var_list[x]))) {
+				var_list[[x]]
+			} else if (names(var_list[x]) == "") {
+				var_list[[x]]
+			} else {
+				names(var_list[x])
+			}
+		}) %>%
+		unlist()
+
+	# Model selection
+	model_list <- unlist(eval(models[[3]]))
+	model_names <- unlist(unname(model_list))
+	mods <-
+		if (is.null(names(model_list))) {
+			model_list
+		} else if (is.vector(model_list)) {
+			lapply(seq_along(model_list), function(x) {
+				if (is.null(names(model_list[x]))) {
+					model_list[x]
+				} else if (names(model_list[x]) == "") {
+					model_list[[x]]
+				} else {
+					names(model_list[x])
+				}
+			}) %>%
+			unlist()
+		}
+
+	# Create initial `gt` model
+	x <-
+		data %>%
+		dplyr::filter(.data[[var_col]] %in% vars) %>%
+		dplyr::select(dplyr::any_of(c({{ strata_col }}, {{ model_col }}, {{ var_col }}, {{ disp_col }}, {{ stat_col }}))) %>%
+		dplyr::filter(.data[[model_col]] %in% mods) %>%
+		{
+			if (!is.null(strata_col))
+				dplyr::filter(., .data[[strata_col]] %in% names(strata_vec))
+			else .
+		} %>%
+		tidyr::pivot_wider(
+			names_from = .data[[model_col]],
+			values_from = c({{ disp_col }}, {{ stat_col }}),
+			names_glue = paste0("{", model_col, "}_{.value}")
+		) %>%
+		dplyr::mutate(!!var_col_sym := factor(!!var_col_sym, levels = names(var_list), labels = unlist(unname(var_list)))) %>%
+		{
+			if (!is.null(strata_col))
+				dplyr::mutate(., !!strata_col_sym := factor(!!strata_col_sym, levels = names(strata_vec), labels = unlist(unname(strata_vec))))
+			else .
+		} %>%
+		{
+			if (!is.null(by)) {
+				gt::gt(., rowname_col = var_col, groupname_col = strata_col)
+			} else gt::gt(., rowname_col = var_col)
+		}
+
+	# Merge columns
+	for (i in mods) {
+		x <-
+			x %>%
+			gt::cols_merge(columns = gt::starts_with(i), pattern = pattern)
+	}
+
+	# Column names should be relabeled
+	disp_val <- disp_col[1]
+	mods_gt <- model_list
+	names(mods_gt) <- paste0(mods, "_", disp_val)
+	x <-
+		x %>%
+		gt::cols_label(.list = mods_gt)
+
+	# Significant values and styling
+	if (!is.null(statistic)) {
+
+		stat_val <- eval(statistic[[3]])
+
+		stat_lab <-
+			paste0(mods, "_", stat_col) %>%
+			lapply(., rlang::sym)
+		mods_gt <-
+			names(mods_gt) %>%
+			lapply(., rlang::sym)
+
+		stat_style <- as.character(style[[2]])
+		stat_opts <- unlist(eval(style[[3]]))
+
+		for (i in 1:length(mods)) {
+			x <-
+				x %>%
+				gt::tab_style(
+					style = switch(
+						stat_style,
+						fill = list(gt::cell_fill(stat_opts))
+					),
+					locations = gt::cells_body(
+						columns = !!mods_gt[[i]],
+						rows = !!stat_lab[[i]] < stat_val
+					)
+				)
+		}
+	}
+
+	# TODO Add Footnotes
+
+	# Final touchups with missing values and decimals (opinionated)
+	x <-
+		x %>%
+		gt::fmt_number(columns = gt::everything(), decimals = decimals) %>%
+		gt::fmt_missing(columns = gt::everything(), missing_text = missing_text)
+
+	# Return
 	x
 
 }

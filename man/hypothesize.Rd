@@ -55,7 +55,7 @@ Currently this accepts the following object types:
 variables, as described in the \strong{formulae section} below, are \code{exposures}
 and \code{fixed}, as they allow for specific transformations of the formula.
 This behavior is also described in \code{\link[=expand_formula]{expand_formula()}}.
-\item \code{rx} objects, which are modified formulas created by \code{\link[rx:rx-package]{rx::rx()}} and have
+\item \code{rx} objects, which are modified formulas created by \code{\link[rx:rx]{rx::rx()}} and have
 additional labels available. Can be set by \code{\link[rx:options]{rx::set_rx_theme()}} using the
 argument \code{set_rx_theme("epi")}. This behavior is described in
 \code{\link[=expand_formula]{expand_formula()}} or the formula section below with further details.

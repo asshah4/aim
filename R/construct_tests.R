@@ -31,7 +31,6 @@ construct_tests <- function(model_map, which_ones = NULL, ...) {
 	# Model map, with appropriate types for fits and tidy
 	m <- model_map
 	m$fit <- as.list(m$fit)
-	m$tidy <- as.list(m$tidy)
 
 	# Select out models that have not yet been run
 	# If specified hypothesis are named, force them to be re-run
@@ -55,21 +54,39 @@ construct_tests <- function(model_map, which_ones = NULL, ...) {
 			data <- fetch_data(model_map, name)
 			strata <- fetch_strata(model_map, name)
 
+			# TODO Validate/ensure appropriate test object
+			test_type <- type_of_test(test)
+
 			# Apply fitting and tidying functions
 			if (is.na(strata)) {
-				y <-
-					y %>%
-					mutate(fit = purrr::map(formulae, ~ possible_parsnip_fit(test, .x, data)))
+				switch(
+					test_type,
+					parsnip = {
+						y <-
+							y %>%
+							mutate(fit = purrr::map(formulae, ~ possible_parsnip_fit(test, .x, data)))
+					},
+					stats = {
+						y <-
+							y %>%
+							mutate(fit = purrr::map(formulae, ~ test(.x, data)))
+					}
+				)
 			} else if (!is.na(strata)) {
-				y <-
-					y %>%
-					mutate(fit = purrr::map2(formulae, level, ~ possible_parsnip_fit(test, .x, data[data[[strata]] == .y, ])))
+				switch(
+					test_type,
+					parsnip = {
+						y <-
+							y %>%
+							mutate(fit = purrr::map2(formulae, level, ~ possible_parsnip_fit(test, .x, data[data[[strata]] == .y, ])))
+					},
+					stats = {
+						y <-
+							y %>%
+							mutate(fit = purrr::map2(formulae, level, ~ test(.x, data[data[[strata]] == .y, ])))
+					}
+				)
 			}
-
-			# Tidy all fits
-			y <-
-				y %>%
-				mutate(tidy = purrr::map(fit, ~ broom::tidy(.x, conf.int = TRUE, conf.level = 0.95, exponentiate = TRUE)))
 
 			# Return to original study object
 			m[m$name == name, ] <- y
