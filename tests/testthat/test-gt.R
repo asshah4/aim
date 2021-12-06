@@ -95,3 +95,40 @@ test_that("comparison gt tables can be made", {
 	expect_s3_class(y, "gt_tbl")
 
 })
+
+test_that("gt tables can easily be made to represent multiple models", {
+
+	# Create models
+	hseq <- hypothesize(
+		x = mpg + qsec ~ wt + cyl + drat + am,
+		exposures = c("wt", "cyl"),
+		combination = "sequential",
+		test = stats::lm,
+		data = mtcars
+	)
+	hpar <- update_hypothesis(hseq, combination = "parallel")
+	maps <-
+		create_models() %>%
+		add_hypothesis(hseq) %>%
+		add_hypothesis(hpar) %>%
+		construct_tests() %>%
+		extract_results(how = "tidy")
+
+	object <- flatten(maps) %>% subset(., name == "hseq")
+
+
+	x = "exposures"
+	y = outcomes ~ list(mpg = "Mileage", qsec = "Acceleration")
+	id = "number"
+	terms = term ~ list("wt", "drat", am = "Transmission")
+	values = c("estimate", "conf.low", "conf.high")
+	pattern = "{1} ({2}, {3})"
+	statistic = p.value ~ 0.05
+	style = fill ~ list(color = "lightgreen")
+	decimals = 2
+	missing_text = "-"
+
+
+
+
+})

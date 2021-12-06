@@ -119,6 +119,7 @@ specific variables of interest that are different for comparison.
 }
 \seealso{
 Other visualizers: 
+\code{\link{tbl_models}()},
 \code{\link{tbl_sequential}()},
 \code{\link{theme_gt_compact}()}
 }

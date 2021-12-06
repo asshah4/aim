@@ -151,3 +151,73 @@ type_of_test <- function(x) {
 	y
 
 }
+
+#' Return name of column from either _character_ or _formula ~ list_ pattern
+return_cols <- function(x) {
+
+	if ("character" %in% class(x)) {
+		x_col <- as.symbol(x)
+	}
+
+	if ("formula" %in% class(x)) {
+		x_col <- x[[2]]
+	}
+
+	x_col
+
+}
+
+#' Return important rows from either _character_ or _formula ~ list_ pattern
+return_rows <- function(x) {
+
+	if ("formula" %in% class(x)) {
+
+		x_list <- eval(x[[3]])
+
+		x_vars <-
+			lapply(seq_along(x_list), function(y) {
+				if (is.null(names(x_list[y]))) {
+					x_list[[y]]
+				} else if (names(x_list[y]) == "") {
+					x_list[[y]]
+				} else {
+					names(x_list[y])
+				}
+			}) |>
+			unlist()
+
+	}
+	else if ("character" %in% class(x)) {
+		x_vars <- lapply(seq_along(x), function(y) {
+			if (is.null(names(x[y]))) {
+				x[y]
+			} else if (names(x[y]) == "") {
+				x[y]
+			} else {
+				names(x[y])
+			}
+		}) %>%
+			unlist()
+	}
+
+	x_vars
+
+}
+
+#' Return the names from either _character_ or _formula ~ list_ pattern
+return_names <- function(x) {
+
+	if ("formula" %in% class(x)) {
+		x_names <-
+			x[[3]] |>
+			eval() |>
+			unlist() |>
+			unname()
+	}
+	else if ("character" %in% class(x)) {
+		x_names <- unname(x)
+	}
+
+	x_names
+
+}

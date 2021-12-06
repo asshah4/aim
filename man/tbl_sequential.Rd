@@ -127,6 +127,7 @@ the \code{\link[broom:reexports]{broom::tidy()}} function to help describe model
 \seealso{
 Other visualizers: 
 \code{\link{tbl_compare}()},
+\code{\link{tbl_models}()},
 \code{\link{theme_gt_compact}()}
 }
 \concept{visualizers}

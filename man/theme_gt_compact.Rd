@@ -42,6 +42,7 @@ variables are to control font size and table width, but any option from the
 \seealso{
 Other visualizers: 
 \code{\link{tbl_compare}()},
+\code{\link{tbl_models}()},
 \code{\link{tbl_sequential}()}
 }
 \concept{visualizers}

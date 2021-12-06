@@ -605,3 +605,229 @@ theme_gt_compact <- function(data,
 		)
 
 }
+
+#' Make a `gt` table for many models
+#'
+#' @param object An object that represents multiple models. These should be of the same type (e.g. linear, survival, logistic, etc) for interpretability. The accepted format for this argument is as below:
+#'
+#'   * `data.frame` An unnested/simple table that contains identifiers for multiple models that are thematically related (based on exposures, model types, etc)
+#'
+#'   * `model_map` An object created from [murmur::create_models()] that has been fitted using [murmur::construct_tests()]
+#'
+#'   * `list` A list of models that are related
+#'
+#' @param x A variable that indicates the primary exposure. This may or may not be shared amongst models. This can be either a _character vector_ or a _formula ~ list_ object. See the __details__ section below for further information.
+#'
+#' @param direction A character vector `c("horizontal", "vertical")`. If the
+#'   table should be oriented horizontally, with outcomes being columns, or if
+#'   the table should be oriented vertically, with outcomes being rows.
+
+#' @param style If a __statistic__ was chosen, then specific options can be
+#'   passed to help emphasize those particular cells. This is a _formula ~ list_
+#'   object where the left-hand side indicates the type of style to choose, and
+#'   the right-hand side indicates the implementation. These are based on the
+#'   [[gt::tab_style()]] function.
+#'
+#'   Left-hand side should be one of _fill_, _text_, or _borders_, which
+#'   correspond to to `cell_fill()`, `cell_text()`, and `cell_borders()`. The
+#'   right-hand side is a named list such as `list(color = lightgreen)`, and
+#'   accepts options described by the `gt` package. There is no validation for
+#'   the options at this time, so see documentation the `gt` package for
+#'   details.
+
+#' @param ... For passing additional arguments
+#'
+#' @details
+#'
+#' The `id`, `x`, `y`, and `cov` arguments can take several argument types. They
+#' are intended to be used to help select the variable (or column), subset that
+#' data, and re-label the data for display (if needed).
+#'
+#'   * A _character vector_ that names either the column or location containing
+#'   the variable, or the name of the variable itself (depending on the context
+#'   of method dispatch).
+#'
+#'   * A _formula ~ list_ where the LHS indicates the column or location of the
+#'   data, and the RHS indicates the variables themselves. If the RHS list is a
+#'   named list, it will use the name as the variable and the value for display.
+#'   For example, `term ~ list(x = "Exposure")` would represent a location
+#'   called _term_, with the major variable being _x_, and the displayed value
+#'   being _Exposure_. This also allows subsets, as it will only retain the
+#'   variables that are listed.
+#'
+#' @importFrom dplyr filter mutate
+#' @importFrom rlang := .data
+#' @family visualizers
+#' @export
+tbl_models <- function(object, ...) {
+	UseMethod("tbl_models", object = object)
+
+	# Key variables
+	#
+	# 	- Overall model identifier
+	# 	- Major outcome
+	# 	- Major exposure
+	# 	- Minor variables/covariates
+	#		- Statistics to be displayed
+
+	# The key variables have a rank/hierarchy to them
+	# Ordering variables:
+	#
+	# 	1. id = Model identifiers
+	# 	2. x = Exposures
+	# 	3. y = Outcomes
+	# 	4. cov = Covariates
+	# 	5. values = Value columns
+}
+
+#' @export
+tbl_models.data.frame <- function(object,
+																	id,
+																	x,
+																	y,
+																	terms,
+																	values,
+																	direction,
+																	...) {
+
+	if (!requireNamespace("gt", quietly = TRUE)) {
+		stop(
+			"Package \"gt\" needed for this function to work. Please install it.",
+			call. = FALSE
+		)
+	}
+
+	# Data and term preparation ----
+	validate_class(object, "data.frame")
+
+	# Model ID
+	if (class(id) == "character" & length(id == 1)) {
+		id_col <- return_cols(id)
+		id_lab <- id_var <- unique(object[[id_col]])
+	} else {
+		id_col <- return_cols(id)
+		id_var <- return_rows(id)
+		id_lab <- return_names(id)
+	}
+
+	# Independent variable
+	if (class(x) == "character" & length(x == 1)) {
+		x_col <- return_cols(x)
+		x_lab <- x_var <- unique(object[[x_col]])
+	} else {
+		x_col <- return_cols(x)
+		x_var <- return_rows(x)
+		x_lab <- return_names(x)
+	}
+
+	# Dependent variable
+	if (class(y) == "character" & length(y == 1)) {
+		y_col <- return_cols(y)
+		y_lab <- y_var <- unique(object[[y_col]])
+	} else {
+		y_col <- return_cols(y)
+		y_var <- return_rows(y)
+		y_lab <- return_names(y)
+	}
+
+	# Terms
+	if (class(terms) == "character" & length(terms == 1)) {
+		t_col <- as.symbol(terms)
+		t_lab <- t_var <- unique(object[[t_col]])
+	} else {
+		t_col <- return_cols(terms)
+		t_var <- return_rows(terms)
+		t_lab <- return_names(terms)
+	}
+
+	# Values
+	val_col <- sapply(values, FUN = as.symbol, USE.NAMES = FALSE)
+
+	# Statistic
+	if (!is.null(statistic)) {
+		validate_class(statistic, "formula")
+		stat_col <- return_cols(statistic)
+		stat_val <- eval(statistic[[3]])
+	}
+
+	# Data creation
+	data <-
+		object |>
+		dplyr::filter(.data[[id_col]] %in% id_var) |>
+		dplyr::filter(.data[[x_col]] %in% x_var) |>
+		dplyr::filter(.data[[y_col]] %in% y_var) |>
+		dplyr::filter(.data[[t_col]] %in% t_var) |>
+		dplyr::select(dplyr::any_of(c(
+			as.character(id_col),
+			as.character(x_col),
+			as.character(y_col),
+			as.character(t_col),
+			as.character(val_col),
+			as.character(stat_col)
+		))) |>
+		dplyr::mutate(!!t_col := factor(!!t_col, levels = t_var, labels = t_lab))
+
+	# Horizontal Table ----
+	if (direction == "horizontal") {
+
+		tab <-
+			data |>
+			tidyr::pivot_wider(
+				names_from = as.character(y_col),
+				values_from = as.character(c(val_col, stat_col)),
+				names_glue = paste0("{", y_col, "}_{.value}")
+			) |>
+			gt::gt(
+				rowname_col = as.character(t_col),
+				groupname_col = as.character(x_col)
+			)
+
+		# Merge columns
+		for (i in y_var) {
+			tab <-
+				tab |>
+				gt::cols_merge(columns = gt::starts_with(i), pattern = pattern)
+		}
+
+		# Rename columns
+		names(y_lab) <- paste0(y_var, "_", val_col[[1]])
+		tab <- gt::cols_label(tab, .list = y_lab)
+
+		# Significant values and styling
+		if (!is.null(statistic)) {
+			stat_lab <-
+				paste0(y_var, "_", stat_col) |>
+				lapply(rlang::sym)
+
+			stat_style <- as.character(style[[2]])
+			stat_opts <- unlist(eval(style[[3]]))
+
+			for (i in 1:length(y_var)) {
+				tab <-
+					tab |>
+					gt::tab_style(
+						style = switch(
+							stat_style,
+							fill = list(gt::cell_fill(stat_opts))
+						),
+						locations = gt::cells_body(
+							columns = !!names(y_lab)[[i]],
+							rows = !!stat_lab[[i]] < stat_val
+						)
+					)
+			}
+		}
+
+		# Missing values and decimals (opinionated)
+		tab <-
+			tab %>%
+			gt::fmt_number(columns = gt::contains(as.character(val_col[[1]])), decimals = decimals) %>%
+			gt::fmt_missing(columns = gt::everything(), missing_text = missing_text)
+
+	}
+
+
+	# Return
+	tab
+
+}
