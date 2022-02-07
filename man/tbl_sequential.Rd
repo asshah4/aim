@@ -121,7 +121,7 @@ Defaults to 2 decimal places.}
 
 This function is a wrapper for the \code{gt} package for quickly and easily making
 model tables. It is built for sequentially adjusted models that have been
-created from the \code{\link[=extract_results]{extract_results()}} function, which is primarily uses
+created from the \code{\link[murmur:extract_results]{murmur::extract_results()}} function, which is primarily uses
 the \code{\link[broom:reexports]{broom::tidy()}} function to help describe model fits.
 }
 \seealso{

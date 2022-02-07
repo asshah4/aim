@@ -10,13 +10,30 @@ tbl_models(object, ...)
 \item{object}{An object that represents multiple models. These should be of the same type (e.g. linear, survival, logistic, etc) for interpretability. The accepted format for this argument is as below:
 \itemize{
 \item \code{data.frame} An unnested/simple table that contains identifiers for multiple models that are thematically related (based on exposures, model types, etc)
-\item \code{model_map} An object created from \code{\link[=create_models]{create_models()}} that has been fitted using \code{\link[=construct_tests]{construct_tests()}}
+\item \code{model_map} An object created from \code{\link[murmur:create_models]{murmur::create_models()}} that has been fitted using \code{\link[murmur:construct_tests]{murmur::construct_tests()}}
 \item \code{list} A list of models that are related
 }}
 
 \item{...}{For passing additional arguments}
 
 \item{x}{A variable that indicates the primary exposure. This may or may not be shared amongst models. This can be either a \emph{character vector} or a \emph{formula ~ list} object. See the \strong{details} section below for further information.}
+
+\item{direction}{A character vector \code{c("horizontal", "vertical")}. If the
+table should be oriented horizontally, with outcomes being columns, or if
+the table should be oriented vertically, with outcomes being rows.}
+
+\item{style}{If a \strong{statistic} was chosen, then specific options can be
+passed to help emphasize those particular cells. This is a \emph{formula ~ list}
+object where the left-hand side indicates the type of style to choose, and
+the right-hand side indicates the implementation. These are based on the
+[\code{\link[gt:tab_style]{gt::tab_style()}}] function.
+
+Left-hand side should be one of \emph{fill}, \emph{text}, or \emph{borders}, which
+correspond to to \code{cell_fill()}, \code{cell_text()}, and \code{cell_borders()}. The
+right-hand side is a named list such as \code{list(color = lightgreen)}, and
+accepts options described by the \code{gt} package. There is no validation for
+the options at this time, so see documentation the \code{gt} package for
+details.}
 }
 \description{
 Make a \code{gt} table for many models

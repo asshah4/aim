@@ -54,7 +54,8 @@ The project name has gone through many iterations. The reason why the name was i
 | {aims} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
 | {diagnose} | After iterating through the code, modeling causality and looking at clinically relevant variables was the more refined underlying objective. This allowed for simplification of the hypothesis generating method and opened the door to look at effect modification. | 
 | {dagger} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
-| {murmur} | Due to the complexity of how the project was coming together, I decided to split the major functions into separate packages. Path/relationships were a different primary concept than modeling, and the API didn't feel smooth. Thus, "Many Unexplained Relationships Modeled Using R" was created.
+| {murmur} | Due to the complexity of how the project was coming together, I decided to split the major functions into separate packages. Path/relationships were a different primary concept than modeling, and the API didn't feel smooth. Thus, "Many Unexplained Relationships Modeled Using R" was created. |
+| {armour} | The key feature or class was the concept of the `model list`. This was the most recurrent challenge in that groups of models contain shared information. Visualizing how these relationships evolved in different modeling approaches should be informative in learning about underlying mechanisms. |
 
 # Defining the API
 

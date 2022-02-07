@@ -25,7 +25,7 @@ modification. Defaults to modifying the original \strong{name} by appending
 hypothesis. Options include:
 \itemize{
 \item \strong{confounding} = Check for relevant terms based on
-\code{\link[=find_confounders]{find_confounders()}}. This includes the \strong{delta} argument to
+\code{\link[murmur:find_confounders]{murmur::find_confounders()}}. This includes the \strong{delta} argument to
 set the threshold for changes in effect size that are considered relevant.
 }}
 

@@ -1,6 +1,6 @@
-Package: murmur
-Title: Many Unknown Relationships Modelled Using R
-Version: 0.1.0
+Package: armour
+Title: Approach to Regression Model Organization Using R
+Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
            family = "Shah",
@@ -19,7 +19,13 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Depends:
+    R (>= 4.0.0)
 Imports: 
+    lifecycle,
+    methods,
+    vctrs (>= 0.3.8.0),
+    forks,
     dplyr,
     magrittr,
     parsnip,
@@ -43,9 +49,9 @@ Suggests:
     ggplot2,
     gt,
 Remotes:
-    asshah4/murmur,
-    asshah4/rx,
+    asshah4/armour,
+    asshah4/forks,
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/murmur
-BugReports: https://github.com/asshah4/murmur/issues
+URL: https://github.com/asshah4/armour
+BugReports: https://github.com/asshah4/armour/issues
 Config/testthat/edition: 3

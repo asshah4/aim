@@ -35,7 +35,7 @@ display in each row.
 If instead, no name is given, such as \code{term ~ list("x")} it is presumed
 that the variables will go by their original name from the table.
 
-This is slightly different than in \code{\link[=tbl_sequential]{tbl_sequential()}} in that these
+This is slightly different than in \code{\link[murmur:tbl_sequential]{murmur::tbl_sequential()}} in that these
 terms define which components to show in each row of the table. If there
 are non-unique terms (e.g. "primary", "secondary"), it is assumed that they
 should be grouped in the \strong{by} argument.}
@@ -113,7 +113,7 @@ analyzed.}
 
 This function is a wrapper for the \code{gt} package for quickly and easily making
 model tables. It is built for fully adjusted models that have been created
-from the \code{\link[=extract_results]{extract_results()}} function, which primarily uses the
+from the \code{\link[murmur:extract_results]{murmur::extract_results()}} function, which primarily uses the
 \code{\link[broom:reexports]{broom::tidy()}} function to help describe model fits. The models should have
 specific variables of interest that are different for comparison.
 }
