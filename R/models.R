@@ -26,13 +26,23 @@ list_of_models.list <- function(x,
 #' @rdname list_of_models
 #' @export
 list_of_models.list_of_formulas <- function(x,
-																						...) {
+																						.f,
+																						...,
+																						data) {
+
+	# Validation will happen inside fitting function
+	ml <- fit.list_of_formulas(x, .f = .f, ..., data = data)
+
+	# Attributes
+	labs <- labels(x)
+	rls <- forks::roles(x)
+	grps <- forks::groups(x)
 
 	new_list_of_models(
 		model_list = ml,
 		labels = labs,
 		roles = rls,
-		groups = grps,
+		groups = grps
 	)
 
 }
@@ -53,13 +63,13 @@ fit.list_of_formulas <- function(object, .f, ..., data) {
 	validate_class(data, c("tbl_df", "data.frame"))
 	args$data <- quote(data)
 
-	.fn <- eval(cl[[3]])
-	if (!is.function(.fn)) {
+	if (!is.function(eval(cl[[3]]))) {
 		stop("The argument `.f = ",
 				 paste(cl[[3]]),
 				 "` is not yet an accepted function for model fitting.")
 	}
 
+	.fn <- as.character(cl[[3]])
 
 	y <- lapply(object, function(.x) {
 		f <- .x
@@ -114,7 +124,7 @@ new_list_of_models <- function(model_list = list(),
 #' @noRd
 methods::setOldClass(c("list_of_models", "vctrs_vctr"))
 
-# casting and coercion ----
+# Output ----
 
 #' @export
 format.list_of_models <- function(x, ...) {
@@ -152,7 +162,6 @@ vec_ptype_abbr.list_of_models <- function(x, ...) {
 	"mdls"
 }
 
-# Model Lists ----
 
 #' @export
 format.list_of_models <- function(x, ...) {
@@ -171,4 +180,21 @@ vec_ptype_full.list_of_models <- function(x, ...) {
 #' @export
 vec_ptype_abbr.list_of_models <- function(x, ...) {
 	"mdls"
+}
+
+# Utility Functions ----
+
+#' @export
+labels.list_of_models <- function(x, ...) {
+	attr(x, "labels")
+}
+
+#' @export
+roles.list_of_models <- function(x, ...) {
+	attr(x, "roles")
+}
+
+#' @export
+groups.list_of_models <- function(x, ...) {
+	attr(x, "groups")
 }

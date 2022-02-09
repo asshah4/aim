@@ -13,7 +13,7 @@ list_of_models(x, ...)
 
 \method{list_of_models}{list}(x, labels = list(), roles = list(), groups = list(), ...)
 
-\method{list_of_models}{list_of_formulas}(x, ...)
+\method{list_of_models}{list_of_formulas}(x, .f, ..., data)
 
 fit.list_of_formulas(object, .f, ..., data)
 
