@@ -4,29 +4,19 @@
 \alias{list_of_models}
 \alias{list_of_models.list}
 \alias{list_of_models.list_of_formulas}
-\alias{fit.list_of_formulas}
 \alias{list_of_models.default}
 \alias{mdls}
 \title{Model Lists}
 \usage{
 list_of_models(x, ...)
 
-\method{list_of_models}{list}(x, labels = list(), roles = list(), groups = list(), ...)
+\method{list_of_models}{list}(x, labels = list(), roles = list(), ...)
 
 \method{list_of_models}{list_of_formulas}(x, .f, ..., data)
-
-fit.list_of_formulas(object, .f, ..., data)
 
 \method{list_of_models}{default}(x, ...)
 
 mdls(x, ...)
-}
-\arguments{
-\item{object}{A \code{list_of_formulas} that can be fit by a modeling function,
-such as \code{\link[stats:lm]{stats::lm()}}}
-}
-\value{
-A list of model fits
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

@@ -8,7 +8,7 @@ test_that("formula lists can be fit internally to create model lists", {
 		forks::fmls(name = "temp")
 
 	# Fitting
-	out <- fit.list_of_formulas(object = object, .f = lm, data = mtcars)
+	out <- fit(object = object, .f = lm, data = mtcars)
 	expect_type(out, "list")
 	expect_length(out, 3)
 
