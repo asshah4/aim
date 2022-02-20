@@ -24,6 +24,7 @@ Depends:
     vctrs (>= 0.3.8.0),
     forks,
 Imports: 
+    generics,
     lifecycle,
     methods,
     forks,

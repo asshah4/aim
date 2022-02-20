@@ -12,7 +12,7 @@ list_of_models(x, ...)
 
 \method{list_of_models}{list}(x, labels = list(), roles = list(), ...)
 
-\method{list_of_models}{list_of_formulas}(x, .f, ..., data)
+\method{list_of_models}{list_of_formulas}(x, fn, ..., data)
 
 \method{list_of_models}{default}(x, ...)
 

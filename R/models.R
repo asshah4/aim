@@ -25,12 +25,28 @@ list_of_models.list <- function(x,
 #' @rdname list_of_models
 #' @export
 list_of_models.list_of_formulas <- function(x,
-																						.f,
+																						fn,
 																						...,
 																						data) {
 
-	# Validation will happen inside fitting function
-	ml <- fit(x, .f = .f, ..., data = data)
+	# Fitting functions and validation
+	cl <- match.call()
+	args <- list(...)
+	validate_class(data, c("tbl_df", "data.frame"))
+	args$data <- quote(data)
+
+	if (!is.function(eval(cl[[3]]))) {
+		stop("The argument `.f = ",
+				 paste(cl[[3]]),
+				 "` is not yet an accepted function for model fitting.")
+	}
+
+	.fn <- as.character(cl[[3]])
+
+	ml <- lapply(object, function(.x) {
+		f <- .x
+		do.call(.fn, args = c(formula = f, args))
+	})
 
 	# Attributes
 	labs <- labels(x)
@@ -40,8 +56,7 @@ list_of_models.list_of_formulas <- function(x,
 	new_list_of_models(
 		model_list = ml,
 		labels = labs,
-		roles = rls,
-		groups = grps
+		roles = rls
 	)
 
 }
@@ -72,16 +87,14 @@ mdls = list_of_models
 #' @noRd
 new_list_of_models <- function(model_list = list(),
 															 labels = list(),
-															 roles = list(),
-															 groups = list()) {
+															 roles = list()) {
 
 	new_list_of(
 		x = model_list,
 		ptype = list(),
 		class = "list_of_models",
 		labels = labels,
-		roles = roles,
-		groups = groups
+		roles = roles
 	)
 
 }
@@ -95,13 +108,17 @@ methods::setOldClass(c("list_of_models", "vctrs_vctr"))
 #' @export
 format.list_of_models <- function(x, ...) {
 
-	f <- lapply(vec_data(x), function(.x) {
-		attributes(.x) <- NULL
-		.x
-	})
-	f <- unname(f)
-	f <- as.character(f)
-	f
+	ml <-
+		x |>
+		vec_data() |>
+		lapply(function(.x) {
+		cl <- .x[["call"]]
+		cl
+	}) |>
+		unname() |>
+		as.character()
+
+	ml
 
 }
 
@@ -129,25 +146,6 @@ vec_ptype_abbr.list_of_models <- function(x, ...) {
 }
 
 
-#' @export
-format.list_of_models <- function(x, ...) {
-
-	lapply(x, FUN = function(.x) {
-		print(.x)
-	})
-
-}
-
-#' @export
-vec_ptype_full.list_of_models <- function(x, ...) {
-	"list_of_models"
-}
-
-#' @export
-vec_ptype_abbr.list_of_models <- function(x, ...) {
-	"mdls"
-}
-
 # Utility Functions ----
 
 #' @export
@@ -160,7 +158,3 @@ roles.list_of_models <- function(x, ...) {
 	attr(x, "roles")
 }
 
-#' @export
-groups.list_of_models <- function(x, ...) {
-	attr(x, "groups")
-}
