@@ -18,6 +18,7 @@ list_of_models <- function(x, ...) {
 list_of_models.list <- function(x,
 																labels = list(),
 																roles = list(),
+																name = deparse1(substitute(x)),
 																...) {
 
 }
@@ -135,6 +136,13 @@ obj_print_data.list_of_models <- function(x, ...) {
 	}
 }
 
+#' @importFrom pillar pillar_shaft
+#' @export
+pillar_shaft.list_of_models <- function(x, ...) {
+	out <- format(x)
+	pillar::new_pillar_shaft_simple(out, align = "left")
+}
+
 #' @export
 vec_ptype_full.list_of_models <- function(x, ...) {
 	"list_of_models"
@@ -143,18 +151,5 @@ vec_ptype_full.list_of_models <- function(x, ...) {
 #' @export
 vec_ptype_abbr.list_of_models <- function(x, ...) {
 	"mdls"
-}
-
-
-# Utility Functions ----
-
-#' @export
-labels.list_of_models <- function(x, ...) {
-	attr(x, "labels")
-}
-
-#' @export
-roles.list_of_models <- function(x, ...) {
-	attr(x, "roles")
 }
 

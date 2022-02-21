@@ -21,9 +21,9 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Depends:
     R (>= 4.0.0),
-    vctrs (>= 0.3.8.0),
-    forks,
+    vctrs (>= 0.3.8.0)
 Imports: 
+    forks,
     generics,
     lifecycle,
     methods,
@@ -39,6 +39,7 @@ Imports:
     rlang,
     lifecycle,
     tidygraph,
+    pillar
 Suggests: 
     testthat (>= 3.0.0),
     covr,

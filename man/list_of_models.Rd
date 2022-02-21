@@ -10,7 +10,13 @@
 \usage{
 list_of_models(x, ...)
 
-\method{list_of_models}{list}(x, labels = list(), roles = list(), ...)
+\method{list_of_models}{list}(
+  x,
+  labels = list(),
+  roles = list(),
+  name = deparse1(substitute(x)),
+  ...
+)
 
 \method{list_of_models}{list_of_formulas}(x, fn, ..., data)
 
