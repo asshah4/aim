@@ -27,11 +27,14 @@ model_map <- function(x = list(), ...) {
 
 	if (all(homogenous_list)) {
 		if (inherits(x, "list_of_models")) {
+			labs <- labels(x)
+			rls <- roles(x)
 			m <- cast.list_of_models(x)
 		} else {
-			m <-
-				list_of_models(x) |>
-				cast.list_of_models()
+			x <- list_of_models(x)
+			labs <- labels(x)
+			rls <- roles(x)
+			m <- cast.list_of_models(x)
 		}
 	}
 
@@ -63,7 +66,6 @@ cast.list_of_models <- function(x, ...) {
 
 	# Basic extraction
 	nm <- names(x)
-	labs <- labels(x)
 
 	# Roles
 	rls <- roles(x)
@@ -118,15 +120,6 @@ cast.list_of_models <- function(x, ...) {
 	nms$models <- x
 
 	# Cleans up final table after merging in formulas
-	tbl <-
-		subset(nms, select = c(name, number, outcome, exposure, models))
-
-	# Modify the class of this to be able to add and retrieve labels
-	tbl <- structure(tbl,
-									 class = c("mdls", class(tbl)),
-									 labels = labs)
-
-	# Return with labs attached
-	tbl
+	subset(nms, select = c(name, number, outcome, exposure, models))
 
 }
