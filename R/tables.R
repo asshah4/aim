@@ -1,5 +1,65 @@
+# Vctr-based model table ----
+
+#' Map of many models
+#'
+#' @name map
 #' @export
-explode.list_of_models <- function(x, ...) {
+model_map <- function(x = list(), ...) {
+
+	# Early break if needed
+	if (length(x) == 0) {
+		return(new_model_map())
+	}
+
+	# Requires a list of models as initial workspace for casting into a table
+	homogenous_list <-
+		vapply(
+			x,
+			FUN = function(.x) {
+				if (class(.x) %in% c("lm", "glm", "model_spec")) {
+					TRUE
+				} else {
+					FALSE
+				}
+			},
+			FUN.VALUE = TRUE
+		)
+
+	if (all(homogenous_list)) {
+		if (inherits(x, "list_of_models")) {
+			m <- cast.list_of_models(x)
+		} else {
+			m <-
+				list_of_models(x) |>
+				cast.list_of_models()
+		}
+	}
+
+}
+
+
+#' Model map
+#' @keywords internal
+#' @noRd
+new_model_map <- function(x = data.frame(),
+													models = list(),
+													labels = list(),
+													roles = list()) {
+
+	tibble::new_tibble(
+		x,
+		models = models,
+		labels = labels,
+		roles = roles,
+		class = "model_map",
+	)
+}
+
+
+# Casting to table method ----
+
+#' @export
+cast.list_of_models <- function(x, ...) {
 
 	# Basic extraction
 	nm <- names(x)

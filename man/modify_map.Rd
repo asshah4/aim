@@ -28,7 +28,7 @@
 
 .revise_strata(model_map, hypothesis, name)
 
-.revise_status(model_map, name, ...)
+.revise_status(model_table, name, ...)
 }
 \arguments{
 \item{model_map}{Object of \code{model_map} class}

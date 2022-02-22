@@ -10,7 +10,7 @@ create_models(...)
 \item{...}{For extensibility}
 }
 \value{
-A \code{model_map} object
+A \code{model_table} object
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
@@ -19,7 +19,7 @@ Calling \code{create_models()} initializes a list object that stores \code{hypot
 which are used to explore a research project. It allows for delayed building
 of models, and is used to help study the relationship between variables.
 
-A \code{model_map} object is a essentially a modified list containing two
+A \code{model_table} object is a essentially a modified list containing two
 complementary table structures, which are interrelated via the \code{hypothesis}
 objects, and several attributes that allow for information storage about the
 object itself.

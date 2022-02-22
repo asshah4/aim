@@ -8,14 +8,14 @@
 #' which are used to explore a research project. It allows for delayed building
 #' of models, and is used to help study the relationship between variables.
 #'
-#' A `model_map` object is a essentially a modified list containing two
+#' A `model_table` object is a essentially a modified list containing two
 #' complementary table structures, which are interrelated via the `hypothesis`
 #' objects, and several attributes that allow for information storage about the
 #' object itself.
 #'
 #' @param ... For extensibility
 #'
-#' @return A `model_map` object
+#' @return A `model_table` object
 #' @family maps
 #' @importFrom tibble tribble
 #' @importFrom dplyr mutate across
@@ -23,7 +23,7 @@
 create_models <- function(...) {
 
 	# Base structure is that of a list of two tibbles
-	model_map <-
+	model_table <-
 		tribble(
 			~name, ~outcomes, ~exposures, ~level, ~number, ~formulae, ~fit
 		) %>%
@@ -34,14 +34,14 @@ create_models <- function(...) {
 		)
 
 	# Need to know how the data should be tested
-	attr(model_map, "data_table") <-
+	attr(model_table, "data_table") <-
 		tribble(~name, ~data_name, ~strata) %>%
 		mutate(
 			across(c(name, data_name, strata), as.character)
 		)
 
 	# Storage of data should be simple
-	attr(model_map, "data_list") <-
+	attr(model_table, "data_list") <-
 		tribble(~data_name, ~data) %>%
 		mutate(
 			across(data_name, as.character),
@@ -49,7 +49,7 @@ create_models <- function(...) {
 		)
 
 	# Identify the tests, with origin of hypothesis being related for reformulation
-	attr(model_map, "test_table") <-
+	attr(model_table, "test_table") <-
 		tribble(~name, ~call, ~test, ~test_opts, ~combination, ~type) %>%
 		mutate(
 			across(c(name, combination, type), as.character),
@@ -57,7 +57,7 @@ create_models <- function(...) {
 		)
 
 	# Recording of status updates
-	attr(model_map, "status_table") <-
+	attr(model_table, "status_table") <-
 		tribble(~name, ~run, ~tidy, ~error, ~origin) %>%
 		mutate(
 			across(c(name, origin), as.character),
@@ -65,14 +65,14 @@ create_models <- function(...) {
 		)
 
 	# Variable table
-	attr(model_map, "relation_table") <-
+	attr(model_table, "relation_table") <-
 		tribble(~name, ~outcomes, ~exposures, ~confounders, ~fixed) %>%
 		mutate(
 			across(c(name, outcomes, exposures, confounders, fixed), as.character)
 		)
 
 	# Distribution table
-	attr(model_map, "variable_table") <-
+	attr(model_table, "variable_table") <-
 		tribble(~term, ~distribution, ~data_name) %>%
 		mutate(
 			across(c(term, distribution, data_name), as.character)
@@ -80,8 +80,8 @@ create_models <- function(...) {
 
 	# Return
 	structure(
-		model_map,
-		class = c("model_map", class(model_map))
+		model_table,
+		class = c("model_table", class(model_table))
 	)
 
 }
@@ -89,14 +89,14 @@ create_models <- function(...) {
 # Helper Functions ----
 
 #' @rdname modify_map
-.revise_status <- function(model_map, name, ...) {
+.revise_status <- function(model_table, name, ...) {
 
 	# Match call
 	mc <- match.call(expand.dots = TRUE)
 	changes <- list(...)
 
-	# Get named model_map status
-	x <- attr(model_map, "status_table")
+	# Get named model_table status
+	x <- attr(model_table, "status_table")
 	y <- x[x$name == name, ]
 
 	# Names
@@ -108,22 +108,22 @@ create_models <- function(...) {
 		y[[i]] <- changes[[i]]
 	}
 
-	# Replace in model_map
+	# Replace in model_table
 	x[x$name == name, ] <- y
-	attr(model_map, "status_table") <- x
+	attr(model_table, "status_table") <- x
 
 	# Return invisibly
-	invisible(model_map)
+	invisible(model_table)
 
 }
 
 # Generics ----
 
 #' Print a Model Map
-#' @param x A `model_map` object
+#' @param x A `model_table` object
 #' @param ... further arguments passed to or from other methods
 #' @export
-print.model_map <- function(x, ...) {
+print.model_table <- function(x, ...) {
 
 	# Retrieve variables
 	s <- deparse(substitute(x))
@@ -141,10 +141,10 @@ print.model_map <- function(x, ...) {
 
 }
 
-#' model_map Summary
-#' @param object a `model_map` object
+#' model_table Summary
+#' @param object a `model_table` object
 #' @param ... further arguments passed to or from other methods
-summary.model_map <- function(object, ...) {
+summary.model_table <- function(object, ...) {
 
 	# Retrieve variables
 	m <- object
