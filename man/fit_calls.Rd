@@ -26,6 +26,6 @@ a data set to analyze.
 \seealso{
 Other helpers: 
 \code{\link{fit_parsnip_models}()},
-\code{\link{tidy_tests}()}
+\code{\link{tidy_models}()}
 }
 \concept{helpers}

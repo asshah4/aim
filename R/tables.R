@@ -38,6 +38,21 @@ model_map <- function(x = list(), ...) {
 		}
 	}
 
+	# From a basic table, change to a tidier table
+	tidy_tbl <- m
+	tidy_tbl$models <- tidy_models(m$models)
+	tidy_tbl <-
+		tidy_tbl |>
+		tidyr::unnest(cols = models)
+
+	# Return
+	new_model_map(
+		x = tidy_tbl,
+		models = x,
+		labels = labs,
+		roles = rls
+	)
+
 }
 
 
@@ -56,6 +71,12 @@ new_model_map <- function(x = data.frame(),
 		roles = roles,
 		class = "model_map",
 	)
+}
+
+#' @export
+print.model_map <- function(x, ...) {
+	cat(sprintf("<%s: test>\n", class(x)[[1]]))
+	cli::cat_line(format(x)[-1])
 }
 
 

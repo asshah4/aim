@@ -26,6 +26,6 @@ data set to analyze.
 \seealso{
 Other helpers: 
 \code{\link{fit_calls}()},
-\code{\link{tidy_tests}()}
+\code{\link{tidy_models}()}
 }
 \concept{helpers}
