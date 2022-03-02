@@ -11,6 +11,13 @@ model_map <- function(x = list(), ...) {
 		return(new_model_map())
 	}
 
+	# TODO
+	# Potential input arguments are...
+		# 1. Individual list of separate models, named or not
+		# 2. Single <list_of_models> object, which may or may not be named
+		# 3. Several <list_of_models> objects, named or not, in form of a list
+		# 4. Mixed <list_of_models> and general models, named or not
+
 	# Requires a list of models as initial workspace for casting into a table
 	homogenous_list <-
 		vapply(
@@ -75,7 +82,8 @@ new_model_map <- function(x = data.frame(),
 
 #' @export
 print.model_map <- function(x, ...) {
-	cat(sprintf("<%s: test>\n", class(x)[[1]]))
+
+	cat(sprintf("<%s: %s models>\n", class(x)[[1]], length(attr(x, "models"))))
 	cli::cat_line(format(x)[-1])
 }
 

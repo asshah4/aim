@@ -9,8 +9,12 @@ test_that("formula lists can be fit internally to create model lists", {
 	out <- fit(object = object, .f = lm, data = mtcars)
 	lom <- list_of_models(object, lm, data = mtcars)
 	tbl <- cast.list_of_models(lom)
+	expect_s3_class(tbl, "data.frame")
 	expect_length(labels(tbl), 2)
 
+	# Model map
+	mm <- model_map(lom)
+	expect_output(print(mm), "3 models")
 
 })
 
