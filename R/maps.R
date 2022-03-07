@@ -1,183 +1,90 @@
-#' Mapping Many Hypotheses Together
+# Vctr-based model table ----
+
+#' Map of many models
 #'
-#' @description
-#'
-#' `r lifecycle::badge('experimental')`
-#'
-#' Calling `create_models()` initializes a list object that stores `hypothesis` objects,
-#' which are used to explore a research project. It allows for delayed building
-#' of models, and is used to help study the relationship between variables.
-#'
-#' A `model_table` object is a essentially a modified list containing two
-#' complementary table structures, which are interrelated via the `hypothesis`
-#' objects, and several attributes that allow for information storage about the
-#' object itself.
-#'
-#' @param ... For extensibility
-#'
-#' @return A `model_table` object
-#' @family maps
-#' @importFrom tibble tribble
-#' @importFrom dplyr mutate across
+#' @name map
 #' @export
-create_models <- function(...) {
+model_map <- function(x = list(), ...) {
 
-	# Base structure is that of a list of two tibbles
-	model_table <-
-		tribble(
-			~name, ~outcomes, ~exposures, ~level, ~number, ~formulae, ~fit
-		) %>%
-		mutate(
-			across(c(name, outcomes, exposures, level), as.character),
-			across(number, as.integer),
-			across(c(formulae, fit), as.list)
+	# Early break if needed
+	if (length(x) == 0) {
+		return(new_model_map())
+	}
+
+	# TODO
+	# Potential input arguments are...
+		# 1. Individual list of separate models, named or not
+		# 2. Single <list_of_models> object, which may or may not be named
+		# 3. Several <list_of_models> objects, named or not, in form of a list
+		# 4. Mixed <list_of_models> and general models, named or not
+
+	# Requires a list of models as initial workspace for casting into a table
+	homogenous_list <-
+		vapply(
+			x,
+			FUN = function(.x) {
+				if (class(.x) %in% c("lm", "glm", "model_spec")) {
+					TRUE
+				} else {
+					FALSE
+				}
+			},
+			FUN.VALUE = TRUE
 		)
 
-	# Need to know how the data should be tested
-	attr(model_table, "data_table") <-
-		tribble(~name, ~data_name, ~strata) %>%
-		mutate(
-			across(c(name, data_name, strata), as.character)
-		)
+	if (all(homogenous_list)) {
+		if (inherits(x, "list_of_models")) {
+			labs <- labels(x)
+			rls <- roles(x)
+			m <- cast.list_of_models(x)
+		} else {
+			x <- list_of_models(x)
+			labs <- labels(x)
+			rls <- roles(x)
+			m <- cast.list_of_models(x)
+		}
+	}
 
-	# Storage of data should be simple
-	attr(model_table, "data_list") <-
-		tribble(~data_name, ~data) %>%
-		mutate(
-			across(data_name, as.character),
-			across(data, as.list)
-		)
-
-	# Identify the tests, with origin of hypothesis being related for reformulation
-	attr(model_table, "test_table") <-
-		tribble(~name, ~call, ~test, ~test_opts, ~combination, ~type) %>%
-		mutate(
-			across(c(name, combination, type), as.character),
-			across(c(call, test, test_opts), as.list)
-		)
-
-	# Recording of status updates
-	attr(model_table, "status_table") <-
-		tribble(~name, ~run, ~tidy, ~error, ~origin) %>%
-		mutate(
-			across(c(name, origin), as.character),
-			across(c(run, tidy, error), as.logical)
-		)
-
-	# Variable table
-	attr(model_table, "relation_table") <-
-		tribble(~name, ~outcomes, ~exposures, ~confounders, ~fixed) %>%
-		mutate(
-			across(c(name, outcomes, exposures, confounders, fixed), as.character)
-		)
-
-	# Distribution table
-	attr(model_table, "variable_table") <-
-		tribble(~term, ~distribution, ~data_name) %>%
-		mutate(
-			across(c(term, distribution, data_name), as.character)
-		)
+	# From a basic table, change to a tidier table
+	tidy_tbl <- m
+	tidy_tbl$models <- tidy_models(m$models)
+	tidy_tbl <-
+		tidy_tbl |>
+		tidyr::unnest(cols = models)
 
 	# Return
-	structure(
-		model_table,
-		class = c("model_table", class(model_table))
+	new_model_map(
+		x = tidy_tbl,
+		models = x,
+		labels = labs,
+		roles = rls
 	)
 
 }
 
-# Helper Functions ----
 
-#' @rdname modify_map
-.revise_status <- function(model_table, name, ...) {
+#' Model map
+#' @keywords internal
+#' @noRd
+new_model_map <- function(x = data.frame(),
+													models = list(),
+													labels = list(),
+													roles = list()) {
 
-	# Match call
-	mc <- match.call(expand.dots = TRUE)
-	changes <- list(...)
-
-	# Get named model_table status
-	x <- attr(model_table, "status_table")
-	y <- x[x$name == name, ]
-
-	# Names
-	new_names <- names(changes)
-	old_names <- names(y)
-
-	# Update status
-	for (i in new_names) {
-		y[[i]] <- changes[[i]]
-	}
-
-	# Replace in model_table
-	x[x$name == name, ] <- y
-	attr(model_table, "status_table") <- x
-
-	# Return invisibly
-	invisible(model_table)
-
+	tibble::new_tibble(
+		x,
+		models = models,
+		labels = labels,
+		roles = roles,
+		class = "model_map",
+	)
 }
 
-# Generics ----
-
-#' Print a Model Map
-#' @param x A `model_table` object
-#' @param ... further arguments passed to or from other methods
 #' @export
-print.model_table <- function(x, ...) {
+print.model_map <- function(x, ...) {
 
-	# Retrieve variables
-	s <- deparse(substitute(x))
-	m <- x
-	h <- unique(m$name)
-
-	# Printing
-	cat(glue::glue(
-		"# A map with {length(h)} ",
-		"{if (length(h) == 1) 'hypothesis' else 'hypotheses'}",
-	))
-	cat("\n")
-	cat("#\n")
-	print(tibble::as_tibble(m))
-
+	cat(sprintf("<%s: %s models>\n", class(x)[[1]], length(attr(x, "models"))))
+	cli::cat_line(format(x)[-1])
 }
 
-#' model_table Summary
-#' @param object a `model_table` object
-#' @param ... further arguments passed to or from other methods
-summary.model_table <- function(object, ...) {
 
-	# Retrieve variables
-	m <- object
-	d <- attributes(object)$data_list
-	d$rows <- nrow(d$data[[1]])
-	d$columns <- length(d$data[[1]])
-	d <- subset(d, select = -data)
-	h <-
-		attributes(object)$test_table %>%
-		dplyr::inner_join(., attributes(object)$data_table, by = "name") %>%
-		dplyr::inner_join(., attributes(object)$status_table, by = "name") %>%
-		dplyr::select("name", "type", "combination", "data_name", "strata", "run")
-
-
-	# Metadata
-	model_name <- deparse(substitute(object))
-	cat(glue::glue(
-		"
-		----------------------{paste0(rep('-', nchar(model_name)), collapse = '')}
-		Summary of Model Map: {model_name}
-		----------------------{paste0(rep('-', nchar(model_name)), collapse = '')}
-
-
-		"
-	))
-
-	# Hypotheses
-	cat("Hypothesis:\n\n")
-	glue::glue("{knitr::kable(h, format = 'simple')}") %>% print()
-	cat("\n")
-
-	# Data
-	cat("Data:\n\n")
-	glue::glue("{knitr::kable(d, format = 'simple')}") %>% print()
-
-}
