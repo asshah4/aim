@@ -1,16 +1,12 @@
-test_that("formula lists can be fit internally to create model lists", {
+test_that("different models can be mapped together", {
 
-	# Create list of models
-	f <- mpg ~ X(wt) + hp + cyl
-	object <-
+	# Complex model list
+	f <- mpg ~ hp + gear + cyl
+	m1 <- lm(f, data = mtcars)
+	m2 <-
 		f |>
-		forks::frx(pattern = "sequential", labels = list(wt ~ "Weight", mpg ~ "Mileage")) |>
-		forks::fmls(name = "temp")
-	out <- fit(object = object, .f = lm, data = mtcars)
-	lom <- list_of_models(object, lm, data = mtcars)
-	tbl <- cast.list_of_models(lom)
-	expect_length(labels(tbl), 2)
-
-
+		forks::frx(pattern = "parallel", labels = list(mpg ~ "Mileage"))
+		forks::fmls(name = "list_ex")
+		list_of_models(lm, data = mtcars)
+	x <- list()
 })
-

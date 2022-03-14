@@ -141,23 +141,6 @@ return_names <- function(x) {
 
 }
 
-# List of Models ----
-
-#' @export
-labels.list_of_models <- function(x, ...) {
-	attr(x, "labels")
-}
-
-#' @export
-labels.mdls <- function(x, ...) {
-	attr(x, "labels")
-}
-
-#' @export
-roles.list_of_models <- function(x, ...) {
-	attr(x, "roles")
-}
-
 # Fitting and Fitting ----
 
 #' @importFrom generics tidy

@@ -16,38 +16,10 @@ list_of_models <- function(x, ...) {
 #' @rdname list_of_models
 #' @export
 list_of_models.list <- function(x,
-																labels = list(),
-																roles = list(),
-																name = deparse1(substitute(x)),
-																...) {
-
-}
-
-#' @rdname list_of_models
-#' @export
-list_of_models.list_of_formulas <- function(x,
-																						fn,
-																						...,
-																						data) {
-
-	# Fitting functions and validation
-	cl <- match.call()
-	args <- list(...)
-	validate_class(data, c("tbl_df", "data.frame"))
-	args$data <- quote(data)
-
-	if (!is.function(eval(cl[[3]]))) {
-		stop("The argument `.f = ",
-				 paste(cl[[3]]),
-				 "` is not yet an accepted function for model fitting.")
-	}
-
-	.fn <- as.character(cl[[3]])
-
-	ml <- lapply(object, function(.x) {
-		f <- .x
-		do.call(.fn, args = c(formula = f, args))
-	})
+								labels = list(),
+								roles = list(),
+								name = deparse1(substitute(x)),
+								...) {
 
 	# Attributes
 	labs <- labels(x)
@@ -87,8 +59,8 @@ mdls = list_of_models
 #' @keywords internal
 #' @noRd
 new_list_of_models <- function(model_list = list(),
-															 labels = list(),
-															 roles = list()) {
+							   labels = list(),
+							   roles = list()) {
 
 	new_list_of(
 		x = model_list,
@@ -113,9 +85,9 @@ format.list_of_models <- function(x, ...) {
 		x |>
 		vec_data() |>
 		lapply(function(.x) {
-		cl <- .x[["call"]]
-		cl
-	}) |>
+			cl <- .x[["call"]]
+			cl
+		}) |>
 		unname() |>
 		as.character()
 
