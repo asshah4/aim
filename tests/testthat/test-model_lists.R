@@ -1,3 +1,15 @@
+test_that("several models can be added together in a list", {
+
+	m1 <- lm(mpg ~ hp + cyl, mtcars)
+	m2 <- lm(mpg ~ hp + gear, mtcars)
+	m3 <- glm(am ~ hp + cyl, mtcars, family = "binomial")
+	m4 <- glm(am ~ hp + gear, mtcars, family = "binomial")
+	m5 <- lm(hp ~ wt, mtcars)
+
+	ml1 <- list(m3, m4)
+
+})
+
 test_that("formula lists can be fit internally to create model lists", {
 
 	# Using list of formulas

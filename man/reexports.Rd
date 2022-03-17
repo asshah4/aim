@@ -15,6 +15,6 @@ below to see their documentation.
 \describe{
   \item{generics}{\code{\link[generics]{fit}}, \code{\link[generics]{tidy}}}
 
-  \item{rlang}{\code{\link[rlang:nse-force]{:=}}}
+  \item{rlang}{\code{\link[rlang:dyn-dots]{:=}}}
 }}
 
