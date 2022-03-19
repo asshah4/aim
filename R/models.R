@@ -33,10 +33,9 @@ model_rx.lm <- function(x,
 	type <- class(x)[1]
 	subtype <- class(x)[2]
 
-
 	new_model(
 		model = m,
-		name = model_name,
+		tag = model_name,
 		terms = t,
 		type = type,
 		subtype = subtype,
@@ -71,7 +70,7 @@ mx = model_rx
 #' @keywords internal
 #' @noRd
 new_model <- function(model = list(),
-											name = character(),
+											tag = character(),
 											terms = term_rx(),
 											type = character(),
 											subtype = character(),
@@ -81,7 +80,7 @@ new_model <- function(model = list(),
 
 	# Validation
 	vec_assert(model, ptype = list())
-	vec_assert(name, ptype = character())
+	vec_assert(tag, ptype = character())
 	vec_assert(terms, ptype = term_rx())
 	vec_assert(type, ptype = character())
 	vec_assert(subtype, ptype = character())
@@ -91,7 +90,7 @@ new_model <- function(model = list(),
 	# Vector definition
 	new_vctr(
 		model,
-		name = name,
+		tag = tag,
 		terms = terms,
 		type = type,
 		subtype = subtype,
@@ -113,10 +112,9 @@ format.model_rx <- function(x, ...) {
 	x |>
 		vec_data() |>
 		lapply(function(.x) {
-			cl <- .x[["call"]]
+			cl <- .x$call
 			cl
 		}) |>
-		unname() |>
 		as.character()
 
 }
