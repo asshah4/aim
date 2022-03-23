@@ -3,11 +3,12 @@
 generics::fit
 
 #' @export
-fit.list_of_formulas <- function(object,
-								 fitting_function,
-								 ...,
-								 data,
-								 strata = NULL) {
+fit.formula_list <- function(object,
+														 fitting_function,
+														 ...,
+														 data,
+														 strata = NULL,
+														 name = deparse1(substitute(x))) {
 
 	cl <- match.call()
 	args <- list(...)
@@ -27,6 +28,9 @@ fit.list_of_formulas <- function(object,
 		do.call(.fn, args = c(formula = f, args))
 	})
 
+	names(y) <- paste0(name, sep = "_", 1:length(y))
+
+	# Return
 	y
 
 }

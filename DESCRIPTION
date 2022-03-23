@@ -22,12 +22,11 @@ RoxygenNote: 7.1.2
 Depends:
     R (>= 4.0.0),
     vctrs (>= 0.3.8.0),
-    forks
+    axe
 Imports: 
     generics,
     lifecycle,
     methods,
-    forks,
     dplyr,
     magrittr,
     parsnip,
@@ -53,7 +52,7 @@ Suggests:
     gt,
 Remotes:
     asshah4/armour,
-    asshah4/forks,
+    asshah4/axe,
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/armour
 BugReports: https://github.com/asshah4/armour/issues
