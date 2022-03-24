@@ -14,6 +14,8 @@ test_that("a formula list can be fit internally to create a model suit", {
 
 	# Create model suit
 	out <- model_suit(x, fitting_function = lm, data = mtcars)
+	expect_length(out, 3)
+	expect_output(print(out), "model_suit")
 
 })
 

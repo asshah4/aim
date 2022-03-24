@@ -1,4 +1,4 @@
 library(testthat)
-library(armour)
+library(volundr)
 
-test_check("armour")
+test_check("volundr")

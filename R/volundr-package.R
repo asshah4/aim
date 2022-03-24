@@ -1,7 +1,7 @@
-#' armour package
+#' volundr package
 #'
 #' @docType package
-#' @aliases armour-package
+#' @aliases volundr-package
 #' @keywords internal
 "_PACKAGE"
 
@@ -9,7 +9,7 @@
 #'
 #' @import vctrs
 #' @keywords internal
-#' @name armour-vctrs
+#' @name volundr-vctrs
 NULL
 
 

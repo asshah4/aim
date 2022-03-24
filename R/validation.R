@@ -154,4 +154,64 @@ check_labels <- function(x, labels) {
 
 }
 
+#' Check of models can be combined into a suit, returns a compatability table
+#' @noRd
+check_model_compatibility <- function(x) {
+
+	# Should be a list of model_cards
+	summary_tbls <- list()
+	for (i in seq_along(x)) {
+		t <-
+			attr(x[[i]], "terms") |>
+			vec_data() |>
+			subset(select = c(term, side, role))
+
+		m <-
+			vec_data(x[[i]]) |>
+			subset(select = c(tag, type, subtype))
+
+		# Combine into list of data.frames
+		# Suppress warning about dropping row names
+		summary_tbls[[i]] <-
+			cbind(m, t) |>
+			suppressWarnings()
+
+	}
+
+	# Make a unique table
+	tbl <-
+		do.call(rbind, summary_tbls) |>
+		unique()
+
+	# Validate model types
+	if ( (length(unique(tbl$type)) != 1) | (length(unique(tbl$subtype)) != 1)) {
+		stop(
+			"The models need to have the same type [",
+			paste(unique(tbl$type), collapse = ", "),
+			"] and subtype [",
+			paste(unique(tbl$subtype), collapse = ", "),
+			"]",
+			call. = FALSE
+		)
+	}
+
+	# Validate outcome and exposure
+	out <- unique(tbl$term[tbl$role == "outcome"])
+	exp <- unique(tbl$term[tbl$role == "exposure"])
+	cov <- unique(tbl$term[tbl$role == "covariate"])
+
+	if (length(out) > 1 & length(exp) > 1) {
+		stop(
+			"The models are not related enough, with both multiple outcomes [",
+			paste(out, collapse = ", "),
+			"] and multiple exposures [",
+			paste(exp, collapse = ", "),
+			"]",
+			call. = FALSE
+		)
+	}
+
+
+}
+
 # nocov end

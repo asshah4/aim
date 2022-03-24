@@ -1,4 +1,4 @@
-Package: armour
+Package: volundr
 Title: Approach to Regression Model Organization Using R
 Version: 0.0.0.9000
 Authors@R: 
@@ -51,9 +51,9 @@ Suggests:
     ggplot2,
     gt,
 Remotes:
-    asshah4/armour,
+    asshah4/volundr,
     asshah4/axe,
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/armour
-BugReports: https://github.com/asshah4/armour/issues
+URL: https://github.com/asshah4/volundr
+BugReports: https://github.com/asshah4/volundr/issues
 Config/testthat/edition: 3

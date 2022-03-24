@@ -58,7 +58,7 @@ model_card.lm <- function(x,
 		label = model_label,
 		description = model_description,
 		call = cl,
-		.formula = f
+		formulas = f
 	)
 }
 
@@ -116,7 +116,7 @@ model_card.model_fit <- function(x,
 		label = model_label,
 		description = model_description,
 		call = cl,
-		.formula = f
+		formulas = f
 	)
 }
 #' @rdname mx
@@ -146,15 +146,15 @@ mx = model_card
 #' @noRd
 new_card <- function(model = list(),
 										 tag = character(),
-										 terms = term(),
 										 type = character(),
 										 subtype = character(),
 										 label = character(),
 										 description = character(),
 										 call = character(),
-										 .formula = formula()) {
+										 terms = term(),
+										 formulas = formula()) {
 
-	# Validation of model card data
+	# Internal to each model are specific data points
 	vec_assert(model, ptype = list())
 	vec_assert(tag, ptype = character())
 	vec_assert(type, ptype = character())
@@ -165,7 +165,7 @@ new_card <- function(model = list(),
 
 	# Call and formula are not validated as vector attributes
 	vec_assert(terms, ptype = term())
-	validate_class(.formula, "formula")
+	validate_class(formulas, "formula")
 
 	# Vector definition
 	new_rcrd(
@@ -179,8 +179,8 @@ new_card <- function(model = list(),
 			"call" = call
 		),
 		terms = terms,
-		formula = .formula,
-		class = c("model_card", "list")
+		formulas = formulas,
+		class = "model_card"
 	)
 
 }

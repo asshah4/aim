@@ -1,3 +1,5 @@
+# Model Lists ------------------------------------------------------------------
+
 #' Model Lists
 #'
 #' @description
@@ -26,27 +28,26 @@ model_suit.formula_list <- function(x,
 	nms <- names(x)
 	out <- fit(x, fitting_function = fitting_function, data = data)
 
-	ml <- model_card()
-	for (i in 1:length(out)) {
-		m <- model_card(out[[i]])
-		ml <- append(ml, m)
-	}
+	# Create a list of fitted model cards
+	ml <- lapply(out, FUN = function(.x) {
+		model_card(.x)
+	})
 
-	# Obtain the terms from the models as well
-	tl <- term()
-	for (i in 1:length(out)) {
-		t <- term(out[[i]])
-		tl <- append(tl, t)
-	}
-	tm <- unique(tl)
-	f <- paste(paste0(lhs(tm), collapse = " + "),
-						 paste0(rhs(tm), collapse = " + "),
-						 sep = " ~ ")
+	# Obtain the terms from the models or from the original formula_list
+	tm <- term(x)
 
+	# Recreate a formula summary
+	f <-
+		paste(paste0(lhs(tm), collapse = " + "),
+					paste0(rhs(tm), collapse = " + "),
+					sep = " ~ ") |>
+		stats::as.formula()
 
+	# Return
 	new_suit(
 		model_suit = ml,
 		terms = tm,
+		formulas = f
 	)
 }
 
@@ -69,25 +70,24 @@ model_suit.default <- function(x, ...) {
 #' @export
 mdls = model_suit
 
-# vctrs ----
+# Vector List ------------------------------------------------------------------
 
 #' Formula list
 #' @keywords internal
 #' @noRd
-new_suit <- function(model_suit = model_card(),
-										 model_type = character(),
-										 terms = term()) {
+new_suit <- function(model_suit = list(),
+										 terms = term(),
+										 formulas = formula()) {
 
 	# Each model suit needs to have similar members for further evaluation
-	# Each group would need to have ...
-		# Type = modeling class (e.g. lm, glm, etc)
-		# Key variable = either same outcome or same major exposure
-		# Labels = common term labels
+	vec_assert(terms, ptype = term())
+	validate_class(formulas, "formula")
 
 	new_list_of(
 		x = model_suit,
 		ptype = model_card(),
 		terms = terms,
+		formulas = formulas,
 		class = "model_suit"
 	)
 
@@ -97,25 +97,28 @@ new_suit <- function(model_suit = model_card(),
 #' @noRd
 methods::setOldClass(c("model_suit", "vctrs_vctr"))
 
-# Output ----
+# Output -----------------------------------------------------------------------
 
 #' @export
 format.model_suit <- function(x, ...) {
 
-	ms <- vec_data(x)
-	fmt_ms <- character()
-
 	if (vec_size(x) == 0) {
 		fmt_ms <- new_suit()
-	} else if (has_cli() & vec_size(x) > 0) {
-		for (i in 1:nrow(ms)) {
-			fmt_ms <- append(fmt_ms, cli::col_br_white(ms$call[i]))
-		}
 	} else {
-		for (i in 1:nrow(ms)) {
-			fmt_ms <- append(fmt_ms, ms$call[i])
-		}
+		fmt_ms <-
+			sapply(vec_data(x), function(.x) {
+				cl <- vec_data(.x)$call
+
+				if (has_cli()) {
+					cli::col_br_white(cl)
+				} else {
+					cl
+				}
+			})
 	}
+
+	# Return
+	fmt_ms
 
 }
 
