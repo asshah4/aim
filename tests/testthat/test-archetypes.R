@@ -4,7 +4,7 @@ test_that("decorated models can be made from base regressions", {
 	tl <- list(mpg ~ "Mileage", hp ~ "Horsepower")
 	tr <- list(hp ~ "exposure")
 
-	m1 <- model_card(
+	m1 <- model_archetype(
 		lm(mpg ~ hp + cyl, mtcars),
 		term_labels = tl,
 		term_roles = tr,
@@ -13,7 +13,7 @@ test_that("decorated models can be made from base regressions", {
 	expect_length(m1, 1)
 	expect_output(print(m1), "lm")
 
-	m2 <- model_card(
+	m2 <- model_archetype(
 		glm(am ~ hp + cyl, mtcars, family = "binomial"),
 		term_labels = tl,
 		term_roles = tr,
@@ -24,13 +24,13 @@ test_that("decorated models can be made from base regressions", {
 
 	# Passing objects to the model cards
 	z <- lm(mpg ~ wt, data = mtcars)
-	m3 <- model_card(z)
+	m3 <- model_archetype(z)
 
 	# Multiple objects as a vector
 	x <- c(m1, m2, m3)
 
 	# Error for lack of models or incorrect inputs
-	expect_error(model_card("test"))
+	expect_error(model_archetype("test"))
 
 	# Basic output
 	if (isTRUE(requireNamespace("tibble", quietly = TRUE))) {
@@ -50,7 +50,7 @@ test_that("model specs can also be used to generate decorations", {
 			parsnip::set_engine("lm") |>
 			parsnip::fit(mpg ~ ., data = mtcars)
 
-		mp <- model_card(
+		mp <- model_archetype(
 			pm,
 			term_labels = list(mpg ~ "Mileage"),
 			model_label = "Parsnip"

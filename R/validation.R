@@ -1,5 +1,3 @@
-# nocov start
-
 #' Validate `hypothesis` object
 #' @noRd
 validate_hypothesis <- function(h) {
@@ -154,33 +152,41 @@ check_labels <- function(x, labels) {
 
 }
 
+# Model Constructs -------------------------------------------------------------
+
 #' Check of models can be combined into a suit, returns a compatability table
 #' @noRd
-check_model_compatibility <- function(x) {
+validate_model_compatability <- function(x) {
 
-	# Should be a list of model_cards
-	summary_tbls <- list()
+	# Should be a list of model_archetypes
+	model_list <- list()
+
 	for (i in seq_along(x)) {
+
+		# Validate
+		validate_class(x[[i]], "model_archetype")
+
+		# Terms
 		t <-
 			attr(x[[i]], "terms") |>
 			vec_data() |>
 			subset(select = c(term, side, role))
 
+		# Model information
 		m <-
 			vec_data(x[[i]]) |>
 			subset(select = c(tag, type, subtype))
 
 		# Combine into list of data.frames
 		# Suppress warning about dropping row names
-		summary_tbls[[i]] <-
+		model_list[[i]] <-
 			cbind(m, t) |>
 			suppressWarnings()
-
 	}
 
 	# Make a unique table
 	tbl <-
-		do.call(rbind, summary_tbls) |>
+		do.call(rbind, model_list) |>
 		unique()
 
 	# Validate model types
@@ -197,21 +203,24 @@ check_model_compatibility <- function(x) {
 
 	# Validate outcome and exposure
 	out <- unique(tbl$term[tbl$role == "outcome"])
+	prd <- unique(tbl$term[tbl$role == "predictor"])
 	exp <- unique(tbl$term[tbl$role == "exposure"])
 	cov <- unique(tbl$term[tbl$role == "covariate"])
+	med <- unique(tbl$term[tbl$role == "mediator"])
+	unk <- unique(tbl$term[tbl$role == "unknown"])
 
 	if (length(out) > 1 & length(exp) > 1) {
 		stop(
-			"The models are not related enough, with both multiple outcomes [",
+			"If there are multiple outcomes [",
 			paste(out, collapse = ", "),
 			"] and multiple exposures [",
 			paste(exp, collapse = ", "),
-			"]",
+			"], the models are not related enough to group together",
 			call. = FALSE
 		)
 	}
 
+	# Else return invisibly true
+	invisible(TRUE)
 
 }
-
-# nocov end

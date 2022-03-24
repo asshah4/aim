@@ -1,20 +1,20 @@
 # Models -----------------------------------------------------------------------
 
-#' Decorated Models
+#' Model archetype
 #'
 #' @description
 #'
 #' `r lifecycle::badge('experimental')`
 #'
-#' @name mx
+#' @name md
 #' @export
-model_card <- function(x = unspecified(), ...) {
-	UseMethod("model_card", object = x)
+model_archetype <- function(x = unspecified(), ...) {
+	UseMethod("model_archetype", object = x)
 }
 
-#' @rdname mx
+#' @rdname md
 #' @export
-model_card.lm <- function(x,
+model_archetype.lm <- function(x,
 													model_name = deparse(substitute(x)),
 													term_labels = list(),
 													term_roles = list(),
@@ -49,7 +49,7 @@ model_card.lm <- function(x,
 	if (length(model_description) == 0)
 		model_description <- NA_character_
 
-	new_card(
+	new_model_archetype(
 		model = m,
 		tag = model_name,
 		terms = tm,
@@ -62,13 +62,13 @@ model_card.lm <- function(x,
 	)
 }
 
-#' @rdname mx
+#' @rdname md
 #' @export
-model_card.glm = model_card.lm
+model_archetype.glm <- model_archetype.lm
 
-#' @rdname mx
+#' @rdname md
 #' @export
-model_card.model_fit <- function(x,
+model_archetype.model_fit <- function(x,
 																 model_name = deparse(substitute(x)),
 																 term_labels = list(),
 																 term_roles = list(),
@@ -107,7 +107,7 @@ model_card.model_fit <- function(x,
 	if (length(model_description) == 0)
 		model_description <- NA_character_
 
-	new_card(
+	new_model_archetype(
 		model = m,
 		tag = model_name,
 		terms = tm,
@@ -119,32 +119,32 @@ model_card.model_fit <- function(x,
 		formulas = f
 	)
 }
-#' @rdname mx
+#' @rdname md
 #' @export
-model_card.default <- function(x = unspecified(), ...) {
+model_archetype.default <- function(x = unspecified(), ...) {
 
 	# Early break if not viable method dispatch
 	if (length(x) == 0) {
-		return(new_card())
+		return(new_model_archetype())
 	} else {
 		stop(
-			"`model_card()` is not defined for a `", class(x)[1], "` object.",
+			"`model_archetype()` is not defined for a `", class(x)[1], "` object.",
 			call. = FALSE
 		)
 	}
 }
 
 
-#' @rdname mx
+#' @rdname md
 #' @export
-mx = model_card
+md = model_archetype
 
 # Vector Definition ------------------------------------------------------------
 
 #' Model vector definition
 #' @keywords internal
 #' @noRd
-new_card <- function(model = list(),
+new_model_archetype <- function(model = list(),
 										 tag = character(),
 										 type = character(),
 										 subtype = character(),
@@ -180,41 +180,29 @@ new_card <- function(model = list(),
 		),
 		terms = terms,
 		formulas = formulas,
-		class = "model_card"
+		class = "model_archetype"
 	)
 
 }
 
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("model_card", "vctrs_vctr"))
-
-# Casting and coercion ---------------------------------------------------------
-
-#' @export
-vec_ptype2.model_card.model_card <- function(x, y, ...) {
-	x
-}
-
-#' @export
-vec_cast.model_card.model_card <- function(x, to, ...) {
-	x
-}
+methods::setOldClass(c("model_archetype", "vctrs_vctr"))
 
 # Output -----------------------------------------------------------------------
 
 #' @export
-format.model_card <- function(x, ...) {
+format.model_archetype <- function(x, ...) {
 	cl <- vec_data(x)$call
 	cl
 
 }
 
 #' @export
-obj_print_data.model_card <- function(x, ...) {
+obj_print_data.model_archetype <- function(x, ...) {
 
 	if (vec_size(x) == 0) {
-		new_card()
+		new_model_archetype()
 	}
 
 	if (vec_size(x) >= 1) {
@@ -227,17 +215,29 @@ obj_print_data.model_card <- function(x, ...) {
 
 #' @importFrom pillar pillar_shaft
 #' @export
-pillar_shaft.model_card <- function(x, ...) {
+pillar_shaft.model_archetype <- function(x, ...) {
 	out <- format(x)
 	pillar::new_pillar_shaft_simple(out, align = "left")
 }
 
 #' @export
-vec_ptype_full.model_card <- function(x, ...) {
-	"model_cards"
+vec_ptype_full.model_archetype <- function(x, ...) {
+	"model_archetype"
 }
 
 #' @export
-vec_ptype_abbr.model_card <- function(x, ...) {
-	"mx"
+vec_ptype_abbr.model_archetype <- function(x, ...) {
+	"md"
+}
+
+# Casting and coercion ---------------------------------------------------------
+
+#' @export
+vec_ptype2.model_archetype.model_archetype <- function(x, y, ...) {
+	x
+}
+
+#' @export
+vec_cast.model_archetype.model_archetype <- function(x, to, ...) {
+	x
 }

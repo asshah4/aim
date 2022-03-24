@@ -9,29 +9,34 @@
 #' This function introduces a super class that combines both the `list` class
 #' (and its derivative `list_of`) and regression models and/or hypothesis tests.
 #' Models that are similar and share certain properties can be combined together
-#' into a `model_suit`.
+#' into a `model_construct`.
 #'
-#' @name model_suit
+#' @name model_construct
 #' @export
-model_suit <- function(x, ...) {
-	UseMethod("model_suit", object = x)
+model_construct <- function(x, ...) {
+	UseMethod("model_construct", object = x)
 }
 
-#' @rdname model_suit
+#' @rdname model_construct
 #' @export
-model_suit.formula_list <- function(x,
-																		name = deparse1(substitute(x)),
-																		fitting_function,
-																		...,
-																		data) {
+model_construct.formula_list <- function(x,
+																				 name = deparse1(substitute(x)),
+																				 fitting_function,
+																				 ...,
+																				 data) {
+
 	# Fit the models first
 	nms <- names(x)
-	out <- fit(x, fitting_function = fitting_function, data = data)
 
 	# Create a list of fitted model cards
+	out <- fit(x, fitting_function = fitting_function, data = data)
 	ml <- lapply(out, FUN = function(.x) {
-		model_card(.x)
+		model_archetype(.x)
 	})
+
+	# Check compatability
+	# Will stop/error if too dissimilar
+	validate_model_compatability(ml)
 
 	# Obtain the terms from the models or from the original formula_list
 	tm <- term(x)
@@ -44,68 +49,68 @@ model_suit.formula_list <- function(x,
 		stats::as.formula()
 
 	# Return
-	new_suit(
-		model_suit = ml,
+	new_model_construct(
+		model_construct = ml,
 		terms = tm,
 		formulas = f
 	)
 }
 
-#' @rdname model_suit
+#' @rdname model_construct
 #' @export
-model_suit.default <- function(x, ...) {
+model_construct.default <- function(x, ...) {
 
 	# Early break if not viable method dispatch
 	if (length(x) == 0) {
-		return(new_suit())
+		return(new_model_construct())
 	} else {
 		stop(
-			"`model_suit()` is not defined for a `", class(x)[1], "` object.",
+			"`model_construct()` is not defined for a `", class(x)[1], "` object.",
 			call. = FALSE
 		)
 	}
 }
 
-#' @rdname model_suit
+#' @rdname model_construct
 #' @export
-mdls = model_suit
+mdls = model_construct
 
 # Vector List ------------------------------------------------------------------
 
 #' Formula list
 #' @keywords internal
 #' @noRd
-new_suit <- function(model_suit = list(),
-										 terms = term(),
-										 formulas = formula()) {
+new_model_construct <- function(model_construct = list(),
+																terms = term(),
+																formulas = formula()) {
 
 	# Each model suit needs to have similar members for further evaluation
 	vec_assert(terms, ptype = term())
 	validate_class(formulas, "formula")
 
 	new_list_of(
-		x = model_suit,
-		ptype = model_card(),
+		x = model_construct,
+		ptype = model_archetype(),
 		terms = terms,
 		formulas = formulas,
-		class = "model_suit"
+		class = "model_construct"
 	)
 
 }
 
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("model_suit", "vctrs_vctr"))
+methods::setOldClass(c("model_construct", "vctrs_vctr"))
 
 # Output -----------------------------------------------------------------------
 
 #' @export
-format.model_suit <- function(x, ...) {
+format.model_construct <- function(x, ...) {
 
 	if (vec_size(x) == 0) {
-		fmt_ms <- new_suit()
+		fmt_mc <- new_model_construct()
 	} else {
-		fmt_ms <-
+		fmt_mc <-
 			sapply(vec_data(x), function(.x) {
 				cl <- vec_data(.x)$call
 
@@ -118,12 +123,12 @@ format.model_suit <- function(x, ...) {
 	}
 
 	# Return
-	fmt_ms
+	fmt_mc
 
 }
 
 #' @export
-obj_print_data.model_suit <- function(x, ...) {
+obj_print_data.model_construct <- function(x, ...) {
 	if (length(x) == 0) {
 		return()
 	}
@@ -137,18 +142,30 @@ obj_print_data.model_suit <- function(x, ...) {
 
 #' @importFrom pillar pillar_shaft
 #' @export
-pillar_shaft.model_suit <- function(x, ...) {
+pillar_shaft.model_construct <- function(x, ...) {
 	out <- format(x)
 	pillar::new_pillar_shaft_simple(out, align = "left")
 }
 
 #' @export
-vec_ptype_full.model_suit <- function(x, ...) {
-	"model_suit"
+vec_ptype_full.model_construct <- function(x, ...) {
+	"model_construct"
 }
 
 #' @export
-vec_ptype_abbr.model_suit <- function(x, ...) {
+vec_ptype_abbr.model_construct <- function(x, ...) {
 	"mdls"
 }
 
+
+# Casting and coercion ---------------------------------------------------------
+
+#' @export
+vec_ptype2.model_construct.model_construct <- function(x, y, ...) {
+	x
+}
+
+#' @export
+vec_cast.model_construct.model_construct <- function(x, to, ...) {
+	x
+}

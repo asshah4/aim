@@ -1,3 +1,111 @@
+# Model Forge ------------------------------------------------------------------
+
+#' Forge Models into a Table
+#'
+#' @description
+#'
+#' `r lifecycle::badge('experimental')`
+#'
+#' This function introduces a super class that combines both the `list` class
+#' (and its derivative `list_of`) and regression models and/or hypothesis tests.
+#' Models that are similar and share certain properties can be combined together
+#' into a `model_table`.
+#'
+#' @name model_table
+#' @export
+model_table <- function(x, ...) {
+
+	new_model_table(
+		x
+	)
+
+}
+
+#' @rdname model_table
+#' @export
+md_tbl = model_table
+
+# Vector List ------------------------------------------------------------------
+
+#' Formula list
+#' @keywords internal
+#' @noRd
+new_model_table <- function(x) {
+
+	stopifnot(is.data.frame(x))
+
+	tibble::new_tibble(
+		x,
+		class = "model_table",
+		nrow = nrow(x)
+	)
+
+
+
+}
+
+#' @keywords internal
+#' @noRd
+methods::setOldClass(c("model_table", "vctrs_vctr"))
+# Output -----------------------------------------------------------------------
+
+#' @export
+format.model_table <- function(x, ...) {
+
+	if (vec_size(x) == 0) {
+	} else {
+	}
+
+	# Return
+	x
+
+}
+
+#' @export
+obj_print_data.model_table <- function(x, ...) {
+	if (length(x) == 0) {
+		return()
+	}
+
+	if (length(x) >= 1) {
+		cat(format(x), sep = "\n")
+	} else {
+		cat(format(x))
+	}
+}
+
+#' @importFrom pillar pillar_shaft
+#' @export
+pillar_shaft.model_table <- function(x, ...) {
+	out <- format(x)
+	pillar::new_pillar_shaft_simple(out, align = "left")
+}
+
+#' @export
+vec_ptype_full.model_table <- function(x, ...) {
+	"model_table"
+}
+
+#' @export
+vec_ptype_abbr.model_table <- function(x, ...) {
+	"md_tbl"
+}
+
+
+# Casting and coercion ---------------------------------------------------------
+
+#' @export
+vec_ptype2.model_table.model_table <- function(x, y, ...) {
+	x
+}
+
+#' @export
+vec_cast.model_table.model_table <- function(x, to, ...) {
+	x
+}
+
+
+
 # Vctr-based model table ----
 
 #' Map of many models
