@@ -14,6 +14,16 @@
 #' @name model_table
 #' @export
 model_table <- function(x, ...) {
+	UseMethod("model_table", object = x)
+}
+
+#' @rdname model_table
+#' @export
+model_table.model_archetype <- function(x, ...) {
+
+	vec_data(x) |>
+		subset(select = c(tag, type, subtype, label, description))
+
 
 	new_model_table(
 		x
