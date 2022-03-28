@@ -9,44 +9,47 @@
 #' This function introduces a super class that combines both the `list` class
 #' (and its derivative `list_of`) and regression models and/or hypothesis tests.
 #' Models that are similar and share certain properties can be combined together
-#' into a `model_table`.
+#' into a `model_forge`.
 #'
-#' @name model_table
+#' @name model_forge
 #' @export
-model_table <- function(x, ...) {
-	UseMethod("model_table", object = x)
+model_forge <- function(x, ...) {
+	UseMethod("model_forge", object = x)
 }
 
-#' @rdname model_table
+#' @rdname model_forge
 #' @export
-model_table.model_archetype <- function(x, ...) {
+model_forge.model_archetype <- function(x, ...) {
 
-	vec_data(x) |>
-		subset(select = c(tag, type, subtype, label, description))
+	mad <-
+		vec_data(x) |>
+		subset(select = c(model, tag, type, call, label, description, script)) |>
+		tibble::tibble()
 
+	mad$model[[1]]
 
-	new_model_table(
+	new_model_forge(
 		x
 	)
 
 }
 
-#' @rdname model_table
+#' @rdname model_forge
 #' @export
-md_tbl = model_table
+md_tbl = model_forge
 
 # Vector List ------------------------------------------------------------------
 
 #' Formula list
 #' @keywords internal
 #' @noRd
-new_model_table <- function(x) {
+new_model_forge <- function(x) {
 
 	stopifnot(is.data.frame(x))
 
 	tibble::new_tibble(
 		x,
-		class = "model_table",
+		class = "model_forge",
 		nrow = nrow(x)
 	)
 
@@ -56,11 +59,11 @@ new_model_table <- function(x) {
 
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("model_table", "vctrs_vctr"))
+methods::setOldClass(c("model_forge", "vctrs_vctr"))
 # Output -----------------------------------------------------------------------
 
 #' @export
-format.model_table <- function(x, ...) {
+format.model_forge <- function(x, ...) {
 
 	if (vec_size(x) == 0) {
 	} else {
@@ -72,7 +75,7 @@ format.model_table <- function(x, ...) {
 }
 
 #' @export
-obj_print_data.model_table <- function(x, ...) {
+obj_print_data.model_forge <- function(x, ...) {
 	if (length(x) == 0) {
 		return()
 	}
@@ -86,31 +89,31 @@ obj_print_data.model_table <- function(x, ...) {
 
 #' @importFrom pillar pillar_shaft
 #' @export
-pillar_shaft.model_table <- function(x, ...) {
+pillar_shaft.model_forge <- function(x, ...) {
 	out <- format(x)
 	pillar::new_pillar_shaft_simple(out, align = "left")
 }
 
 #' @export
-vec_ptype_full.model_table <- function(x, ...) {
-	"model_table"
+vec_ptype_full.model_forge <- function(x, ...) {
+	"model_forge"
 }
 
 #' @export
-vec_ptype_abbr.model_table <- function(x, ...) {
-	"md_tbl"
+vec_ptype_abbr.model_forge <- function(x, ...) {
+	"md_fx"
 }
 
 
 # Casting and coercion ---------------------------------------------------------
 
 #' @export
-vec_ptype2.model_table.model_table <- function(x, y, ...) {
+vec_ptype2.model_forge.model_forge <- function(x, y, ...) {
 	x
 }
 
 #' @export
-vec_cast.model_table.model_table <- function(x, to, ...) {
+vec_cast.model_forge.model_forge <- function(x, to, ...) {
 	x
 }
 

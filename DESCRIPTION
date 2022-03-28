@@ -28,16 +28,11 @@ Imports:
     lifecycle,
     methods,
     dplyr,
-    magrittr,
-    parsnip,
     broom,
     purrr,
     tibble,
     tidyr,
-    methods,
     rlang,
-    lifecycle,
-    tidygraph,
     pillar
 Suggests: 
     testthat (>= 3.0.0),
@@ -45,11 +40,9 @@ Suggests:
     knitr,
     markdown,
     rmarkdown,
-    ggdag,
     glue,
-    ggraph,
-    ggplot2,
     gt,
+    parsnip
 Remotes:
     asshah4/volundr,
     asshah4/axe,

@@ -6,6 +6,7 @@
 \alias{model_archetype.lm}
 \alias{model_archetype.glm}
 \alias{model_archetype.model_fit}
+\alias{model_archetype.list}
 \alias{model_archetype.default}
 \title{Model archetype}
 \usage{
@@ -40,6 +41,8 @@ model_archetype(x = unspecified(), ...)
   model_description = character(),
   ...
 )
+
+\method{model_archetype}{list}(x, term_labels = list(), term_roles = list(), ...)
 
 \method{model_archetype}{default}(x = unspecified(), ...)
 
