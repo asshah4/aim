@@ -9,3 +9,4 @@ test_that("model archetypes can be forged into a table can be initialized", {
 		model_archetype()
 
 })
+

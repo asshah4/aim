@@ -22,7 +22,7 @@ RoxygenNote: 7.1.2
 Depends:
     R (>= 4.0.0),
     vctrs (>= 0.3.8.0),
-    axe
+    archetypes
 Imports: 
     generics,
     lifecycle,
@@ -45,7 +45,7 @@ Suggests:
     parsnip
 Remotes:
     asshah4/volundr,
-    asshah4/axe,
+    asshah4/archetypes,
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/volundr
 BugReports: https://github.com/asshah4/volundr/issues
