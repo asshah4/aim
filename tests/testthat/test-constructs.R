@@ -3,8 +3,7 @@ test_that("a formula list can be fit internally to create a model construct", {
 	# Using list of formulas
 	x <-
 		rx(mpg ~ X(wt) + hp + cyl,
-			 label = list(wt ~ "Weight", mpg ~ "Mileage")) |>
-		fmls(tag = "temp", pattern = "sequential")
+			 label = list(wt ~ "Weight", mpg ~ "Mileage"))
 
 	# Fitting
 	y <- fit(object = x, fitting_function = lm, data = mtcars, name = "test")
