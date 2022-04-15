@@ -25,7 +25,6 @@ a data set to analyze.
 }
 \seealso{
 Other helpers: 
-\code{\link{fit_parsnip_models}()},
-\code{\link{tidy_models}()}
+\code{\link{fit_parsnip_models}()}
 }
 \concept{helpers}

@@ -141,25 +141,7 @@ return_names <- function(x) {
 
 }
 
-# Fitting and Fitting ----
-
-#' @importFrom generics tidy
-#' @export
-generics::tidy
-
-#' Create a "fail-safe" of tidying fits
-#' @noRd
-my_tidy <- function(x,
-										conf.int = TRUE,
-										conf.level = 0.95,
-										exponentiate = TRUE,
-										...) {
-	broom::tidy(x,
-							conf.int = conf.int,
-							conf.level = conf.level,
-							exponentiate = exponentiate)
-}
-possible_tidy <- purrr::possibly(my_tidy, otherwise = NA, quiet = FALSE)
+# Fitting ----
 
 #' Create a "fail-safe" execution of fit to continue running models
 #' @noRd
@@ -167,6 +149,7 @@ my_parsnip_fit <- function(...) {
 	parsnip::fit.model_spec(...)
 }
 possible_parsnip_fit <- purrr::possibly(my_parsnip_fit, otherwise = NA, quiet = FALSE)
+
 
 #' Fit a list of {parsnip} models
 #'
@@ -209,31 +192,6 @@ fit_calls <- function(.formula, .test, .opts = NULL, .data) {
 		df <- model.frame(.x, .data)
 		possible_call(.test, c(list(df[[1]], df[[2]]), .opts))
 	})
-
-}
-
-#' Tidy a list of `htest` or model objects
-#'
-#' @description Accepts a list of objects that can be tidied via
-#'   [[broom::tidy()]]
-#' @return Returns a list of tidy objects in the form of tibbles of parameters
-#' @param .fits List of model or `htest` objects that have been fitted
-#' @inheritParams broom::tidy.glm
-#' @family helpers
-#' @export
-tidy_models <- function(.fits,
-												conf.int = TRUE,
-												conf.level = 0.95,
-												exponentiate = TRUE) {
-	purrr::map(
-		.fits,
-		~ possible_tidy(
-			.x,
-			conf.int = conf.int,
-			conf.level = conf.level,
-			exponentiate = exponentiate
-		)
-	)
 
 }
 

@@ -22,7 +22,8 @@ RoxygenNote: 7.1.2
 Depends:
     R (>= 4.0.0),
     vctrs (>= 0.3.8.0),
-    archetypes
+    archetypes,
+    tibble
 Imports: 
     generics,
     lifecycle,
@@ -30,7 +31,6 @@ Imports:
     dplyr,
     broom,
     purrr,
-    tibble,
     tidyr,
     rlang,
     pillar
