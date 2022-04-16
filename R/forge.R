@@ -12,92 +12,70 @@
 #' into a `model_forge`.
 #'
 #' @name model_forge
+#' @importFrom dplyr mutate
 #' @export
 model_forge <- function(x, ...) {
-
-	if (validate_empty(x)) {
-		return(new_model_forge())
-	}
+  if (validate_empty(x)) {
+    return(new_model_forge())
+  }
 
   validate_class(x, "model_archetype")
 
-	for (i in seq_along(s)) {
+  fl <- field(x, "fmls")
 
-		# First term and formula to understand the model
-		s <- field(x[i], "script")
-		t <- field(s, "terms")[[1]]
-		f <- fmls(t, order = 1:4)[1]
+  # Expand components into appropriate table
+  y <-
+  	x |>
+    vec_data() |>
+    tibble() |>
+    # Add in formula components and corresponding roles
+    dplyr::bind_cols(vec_data(fl)) |>
+    dplyr::rowwise() |>
+    mutate(across(
+      c(outcome, exposure, mediator, strata),
+      function(.x) {
+        t <- .x
+        if (length(t) == 0) {
+          t <- NA_character_
+        } else {
+          t <- as.character(t)
+        }
+        t
+      }
+    )) |>
+  	mutate(terms = list(get_terms(fmls))) |>
+    dplyr::ungroup() |>
+    mutate(tidy = possible_tidy(x)) |>
+    mutate(glance = possible_glance(x)) |>
+    mutate(nobs = sapply(glance, FUN = function(.x) {
+      .x$nobs
+    })) |>
+  	dplyr::select(-c(fmls, left, right, unknown, predictor))
 
-	}
 
-  # Scripts and formulas
-	s <- field(x, "script")
 
-	# Terms
-	tl <- term_archetype()
-	for (i in seq_along(s)) {
-		t <- field(s[i], "terms")[[1]]
-		tl <- append(tl, t)
-	}
-	tl <- unique(tl)
-
-  # Create table of model data
-  mad <-
-    vec_data(x) |>
-    tibble::tibble() |>
-		dplyr::bind_cols(formula = vec_data(field(s, "formula"))) |>
-  	dplyr::rowwise() |>
-  	dplyr::mutate(outcome = {
-			t <-
-				field(script, "terms")[[1]] |>
-  			vec_data() |>
-  			{\(.x) .x$terms[.x$role %in% c("outcome", "dependent")]}()
-  	}) |>
-  	dplyr::mutate(exposure = {
-			t <-
-				field(script, "terms")[[1]] |>
-  			vec_data() |>
-  			{\(.x) .x$terms[.x$role == "exposure"]}()
-
-			ifelse(length(t) == 0, NA, t)
-  	}) |>
-  	dplyr::mutate(mediator = {
-			t <-
-				field(script, "terms")[[1]] |>
-  			vec_data() |>
-  			{\(.x) .x$terms[.x$role == "mediator"]}()
-
-			ifelse(length(t) == 0, NA, t)
-  	}) |>
-  	#dplyr::mutate(predictors = length(predictor)) |>
-  	dplyr::ungroup() |>
-  	dplyr::mutate(tidy = possible_tidy(x)) |>
-  	dplyr::mutate(glance = possible_glance(x)) |>
-  	dplyr::mutate(nobs = sapply(glance, FUN = function(.x) {.x$nobs}))
-
-	new_model_forge(
-		model = model,
-		type = type,
-		subtype = subtype,
-		name = name,
-		description = description,
-		formula = formula,
-		outcome = outcome,
-		exposure = exposure,
-		mediator = mediator,
-		predictors = predictors,
-		observations = observations,
-		glance = glance,
-		tidy = tidy,
-		run = run,
-		status = status
-	)
-
+  new_model_forge(
+    model = model,
+    type = type,
+    subtype = subtype,
+    name = name,
+    description = description,
+    formula = formula,
+    outcome = outcome,
+    exposure = exposure,
+    mediator = mediator,
+    predictors = predictors,
+    observations = observations,
+    glance = glance,
+    tidy = tidy,
+    run = run,
+    status = status
+  )
 }
 
 #' @rdname model_forge
 #' @export
-mdls = model_forge
+mdls <- model_forge
 
 # Vector List ------------------------------------------------------------------
 
@@ -105,58 +83,58 @@ mdls = model_forge
 #' @keywords internal
 #' @noRd
 new_model_forge <- function(model = list(),
-														type = character(),
-														subtype = character(),
-														name = character(),
-														description = character(),
-														formula = character(),
-														outcome = character(),
-														exposure = character(),
-														mediator = character(),
-														predictors = numeric(),
-														observations = numeric(),
-														glance = tibble(),
-														tidy = tibble(),
-														run = logical(),
-														status = list()) {
+                            type = character(),
+                            subtype = character(),
+                            name = character(),
+                            description = character(),
+                            formula = character(),
+                            outcome = character(),
+                            exposure = character(),
+                            mediator = character(),
+                            predictors = numeric(),
+                            observations = numeric(),
+                            glance = tibble(),
+                            tidy = tibble(),
+                            run = logical(),
+                            status = list()) {
 
-	# Validation
-	vec_assert(model, ptype = list())
-	vec_assert(type, ptype = character())
-	vec_assert(subtype, ptype = character())
-	vec_assert(name, ptype = character())
-	vec_assert(description, ptype = character())
-	vec_assert(formula, ptype = character())
-	vec_assert(outcome, ptype = character())
-	vec_assert(exposure, ptype = character())
-	vec_assert(mediator, ptype = character())
-	vec_assert(predictors, ptype = numeric())
-	vec_assert(observations, ptype = numeric())
-	vec_assert(glance, ptype = tibble())
-	vec_assert(tidy, ptype = tibble())
-	vec_assert(run, ptype = logical())
-	vec_assert(status, ptype = list())
+  # Validation
+  vec_assert(model, ptype = list())
+  vec_assert(type, ptype = character())
+  vec_assert(subtype, ptype = character())
+  vec_assert(name, ptype = character())
+  vec_assert(description, ptype = character())
+  vec_assert(formula, ptype = character())
+  vec_assert(outcome, ptype = character())
+  vec_assert(exposure, ptype = character())
+  vec_assert(mediator, ptype = character())
+  vec_assert(predictors, ptype = numeric())
+  vec_assert(observations, ptype = numeric())
+  vec_assert(glance, ptype = tibble())
+  vec_assert(tidy, ptype = tibble())
+  vec_assert(run, ptype = logical())
+  vec_assert(status, ptype = list())
 
-	# Essentially each row is made or added here
-	x <- tibble::tibble(
-		model = model,
-		type = type,
-		subtype = subtype,
-		name = name,
-		description = description,
-		formula = formula,
-		outcome = outcome,
-		exposure = exposure,
-		mediator = mediator,
-		predictors = predictors,
-		observations = observations,
-		glance = glance,
-		tidy = tidy,
-		run = run,
-		status = status
-	)
+  # Essentially each row is made or added here
+  x <- tibble::tibble(
+    model = model,
+    type = type,
+    subtype = subtype,
+    name = name,
+    description = description,
+    formula = formula,
+    outcome = outcome,
+    exposure = exposure,
+    mediator = mediator,
+    predictors = predictors,
+    observations = observations,
+    glance = glance,
+    tidy = tidy,
+    run = run,
+    status = status
+  )
 
-	# Validation
+  # Validation
   stopifnot(is.data.frame(x))
 
   tibble::new_tibble(
@@ -174,8 +152,8 @@ methods::setOldClass(c("model_forge", "vctrs_vctr"))
 
 #' @export
 print.model_forge <- function(x, ...) {
-	cat(sprintf("<%s>\n", class(x)[[1]]))
-	cli::cat_line(format(x)[-1])
+  cat(sprintf("<%s>\n", class(x)[[1]]))
+  cli::cat_line(format(x)[-1])
 }
 
 #' @export
