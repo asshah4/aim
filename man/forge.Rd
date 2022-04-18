@@ -4,12 +4,15 @@
 \alias{forge}
 \alias{model_forge}
 \alias{model_forge.model_archetype}
+\alias{model_forge.formula_archetype}
 \alias{mdls}
 \title{Forge Models into a Table}
 \usage{
 model_forge(x, ...)
 
-\method{model_forge}{model_archetype}(x, ...)
+\method{model_forge}{model_archetype}(x, data = data.frame(), ...)
+
+\method{model_forge}{formula_archetype}(x, name = deparse1(substitute(x)), ...)
 
 mdls(x, ...)
 }

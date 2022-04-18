@@ -4,9 +4,8 @@ test_that("model archetypes can be forged into a table can be initialized", {
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- glm(am ~ hp + cyl, mtcars, family = "binomial")
 	m3 <- lm(mpg ~ wt + gear, mtcars)
-	x <-
-		list(first = m1, second = m2, m3) |>
-		model_archetype()
+	ml <- list(first = m1, second = m2, m3)
+	x <- md(ml)
 
 	mf <- model_forge(x)
 	expect_equal(nrow(mf), 3)
@@ -22,6 +21,20 @@ test_that("unfitted formula archetypes can be forged into a table", {
 
 	s <- rx(mpg + wt ~ hp + cyl)
 	x <- fmls(s, order = 2)
+	mf <- mdls(x)
+	expect_s3_class(mf, "model_forge")
 
+})
+
+test_that("conversion works between different table types", {
+
+	m1 <- lm(mpg ~ hp + cyl, mtcars)
+	m2 <- lm(mpg ~ wt + gear, mtcars)
+	ml <- list(first = m1, second = m2)
+	x <- md(ml)
+
+	s <- rx(mpg + wt ~ hp + cyl)
+	f <- fmls(s, order = 2)
+	to <- mdls(f)
 
 })

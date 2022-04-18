@@ -21,6 +21,7 @@ model_forge <- function(x, ...) {
 #' @rdname forge
 #' @export
 model_forge.model_archetype <- function(x,
+																				data = data.frame(),
 																				...) {
   if (length(x) == 0) {
     return(new_model_forge())
@@ -71,14 +72,15 @@ model_forge.model_archetype <- function(x,
     observations = y$observations,
     glance = y$glance,
     tidy = y$tidy,
-    run = y$run
+    run = y$run,
+    data = data
   )
 }
 
 #' @rdname forge
 #' @export
-
 model_forge.formula_archetype <- function(x,
+																					name = deparse1(substitute(x)),
 																					...) {
 
   if (length(x) == 0) {
@@ -94,6 +96,7 @@ model_forge.formula_archetype <- function(x,
 		vec_data() |>
     dplyr::bind_cols(fmls = f) |>
     tibble() |>
+		dplyr::mutate(name = name) |>
     dplyr::rowwise() |>
     mutate(across(
       c(outcome, exposure, mediator, strata),
@@ -114,7 +117,6 @@ model_forge.formula_archetype <- function(x,
 			model = list(NA),
 			type = NA_character_,
 			subtype = NA_character_,
-			name = NA_character_,
 			description = NA_character_,
 			tidy = list(NA),
 			glance = list(NA),
@@ -162,7 +164,9 @@ new_model_forge <- function(model = list(),
 														terms = list(),
                             tidy = list(),
                             glance = list(),
-                            run = logical()) {
+                            run = logical(),
+														data = data.frame(),
+														data_list = list()) {
 
   # Validation
   vec_assert(model, ptype = list())
@@ -179,6 +183,11 @@ new_model_forge <- function(model = list(),
   vec_assert(tidy, ptype = list())
   vec_assert(glance, ptype = list())
   vec_assert(run, ptype = logical())
+  vec_assert(data, ptype = data.frame())
+  vec_assert(data_list, ptype = list())
+
+  # Clean up data
+  data_list[[name]] <- data
 
   # Essentially each row is made or added here
   x <- tibble::tibble(
@@ -204,7 +213,7 @@ new_model_forge <- function(model = list(),
   tibble::new_tibble(
     x,
     class = "model_forge",
-    data = data,
+    data_list = data_list,
     nrow = nrow(x)
   )
 }
@@ -234,14 +243,36 @@ vec_ptype_abbr.model_forge <- function(x, ...) {
 
 # Casting and coercion ---------------------------------------------------------
 
+### MODEL FORGE
+
 #' @export
 mdls_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
-  tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
+  out <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
+
+  # Data from both components
+  data_x <- attr(x)$data_list
+  data_to <- attr(to)$data_list
+
+  # Combine new data
+  dl <- unique(c(data_x, data_to))
+
+  new_model_forge(out, data_list = dl)
+
 }
 
 #' @export
 mdls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
-  tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
+  out <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
+
+  # Data from both components
+  data_x <- attr(x)$data_list
+  data_to <- attr(to)$data_list
+
+  # Combine new data
+  dl <- unique(c(data_x, data_to))
+
+  new_model_forge(out, data_list = dl)
+
 }
 
 #' @export
@@ -253,3 +284,50 @@ vec_ptype2.model_forge.model_forge <- function(x, y, ...) {
 vec_cast.model_forge.model_forge <- function(x, to, ...) {
   mdls_cast(x, to, ...)
 }
+
+### TIBBLE
+
+#' @export
+vec_ptype2.model_forge.tbl_df <- function(x, y, ...) {
+	mdls_ptype2(x, y, ...)
+}
+
+#' @export
+vec_ptype2.tbl_df.model_forge <- function(x, y, ...) {
+	mdls_ptype2(x, y, ...)
+}
+
+#' @export
+vec_cast.model_forge.tbl_df <- function(x, to, ...) {
+	mdls_cast(x, to, ...)
+}
+
+#' @export
+vec_cast.tbl_df.model_forge <- function(x, to, ...) {
+	tib_cast(x, to, ...)
+}
+
+### DATA.FRAME
+
+#' @export
+vec_ptype2.model_forge.data.frame <- function(x, y, ...) {
+	mdls_ptype2(x, y, ...)
+}
+
+#' @export
+vec_ptype2.data.frame.model_forge <- function(x, y, ...) {
+	mdls_ptype2(x, y, ...)
+}
+
+#' @export
+vec_cast.model_forge.data.frame <- function(x, to, ...) {
+	mdls_cast(x, to, ...)
+}
+
+#' @export
+vec_cast.data.frame.model_forge <- function(x, to, ...) {
+	df_cast(x, to, ...)
+}
+
+# Data Addition ----------------------------------------------------------------
+
