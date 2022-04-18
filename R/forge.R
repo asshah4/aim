@@ -11,15 +11,20 @@
 #' Models that are similar and share certain properties can be combined together
 #' into a `model_forge`.
 #'
-#' @name model_forge
+#' @name forge
 #' @importFrom dplyr mutate
 #' @export
 model_forge <- function(x, ...) {
-  if (validate_empty(x)) {
+	UseMethod("model_forge", object = x)
+}
+
+#' @rdname forge
+#' @export
+model_forge.model_archetype <- function(x,
+																				...) {
+  if (length(x) == 0) {
     return(new_model_forge())
   }
-
-  validate_class(x, "model_archetype")
 
   fl <- field(x, "fmls")
 
@@ -47,33 +52,95 @@ model_forge <- function(x, ...) {
     dplyr::ungroup() |>
     mutate(tidy = possible_tidy(x)) |>
     mutate(glance = possible_glance(x)) |>
-    mutate(nobs = sapply(glance, FUN = function(.x) {
+    mutate(observations = sapply(glance, FUN = function(.x) {
       .x$nobs
     })) |>
-  	dplyr::select(-c(fmls, left, right, unknown, predictor))
-
-
+  	mutate(run = TRUE)
 
   new_model_forge(
-    model = model,
-    type = type,
-    subtype = subtype,
-    name = name,
-    description = description,
-    formula = formula,
-    outcome = outcome,
-    exposure = exposure,
-    mediator = mediator,
-    predictors = predictors,
-    observations = observations,
-    glance = glance,
-    tidy = tidy,
-    run = run,
-    status = status
+    model = y$model,
+    type = y$type,
+    subtype = y$subtype,
+    name = y$name,
+    description = y$description,
+    formula = y$formula,
+    outcome = y$outcome,
+    exposure = y$exposure,
+    mediator = y$mediator,
+    terms = y$terms,
+    observations = y$observations,
+    glance = y$glance,
+    tidy = y$tidy,
+    run = y$run
   )
 }
 
-#' @rdname model_forge
+#' @rdname forge
+#' @export
+
+model_forge.formula_archetype <- function(x,
+																					...) {
+
+  if (length(x) == 0) {
+    return(new_model_forge())
+  }
+
+	# Ensure appropriate formula can be modeled later if need be
+	f <- x[field(x, "order") == 2]
+
+  # Expand formula into appropriate table
+	y <-
+		f |>
+		vec_data() |>
+    dplyr::bind_cols(fmls = f) |>
+    tibble() |>
+    dplyr::rowwise() |>
+    mutate(across(
+      c(outcome, exposure, mediator, strata),
+      function(.x) {
+        t <- .x
+        if (length(t) == 0) {
+          t <- NA_character_
+        } else {
+          t <- as.character(t)
+        }
+        t
+      }
+    )) |>
+  	mutate(terms = list(get_terms(fmls))) |>
+    dplyr::ungroup() |>
+		# These items would need a model to be included
+		mutate(
+			model = list(NA),
+			type = NA_character_,
+			subtype = NA_character_,
+			name = NA_character_,
+			description = NA_character_,
+			tidy = list(NA),
+			glance = list(NA),
+			observations = NA_integer_,
+		) |>
+  	mutate(run = FALSE)
+
+  new_model_forge(
+    model = y$model,
+    type = y$type,
+    subtype = y$subtype,
+    name = y$name,
+    description = y$description,
+    formula = y$formula,
+    outcome = y$outcome,
+    exposure = y$exposure,
+    mediator = y$mediator,
+    terms = y$terms,
+    observations = y$observations,
+    glance = y$glance,
+    tidy = y$tidy,
+    run = y$run
+  )
+}
+
+#' @rdname forge
 #' @export
 mdls <- model_forge
 
@@ -91,12 +158,11 @@ new_model_forge <- function(model = list(),
                             outcome = character(),
                             exposure = character(),
                             mediator = character(),
-                            predictors = numeric(),
-                            observations = numeric(),
-                            glance = tibble(),
-                            tidy = tibble(),
-                            run = logical(),
-                            status = list()) {
+                            observations = integer(),
+														terms = list(),
+                            tidy = list(),
+                            glance = list(),
+                            run = logical()) {
 
   # Validation
   vec_assert(model, ptype = list())
@@ -108,12 +174,11 @@ new_model_forge <- function(model = list(),
   vec_assert(outcome, ptype = character())
   vec_assert(exposure, ptype = character())
   vec_assert(mediator, ptype = character())
-  vec_assert(predictors, ptype = numeric())
-  vec_assert(observations, ptype = numeric())
-  vec_assert(glance, ptype = tibble())
-  vec_assert(tidy, ptype = tibble())
+  vec_assert(observations, ptype = integer())
+  vec_assert(terms, ptype = list())
+  vec_assert(tidy, ptype = list())
+  vec_assert(glance, ptype = list())
   vec_assert(run, ptype = logical())
-  vec_assert(status, ptype = list())
 
   # Essentially each row is made or added here
   x <- tibble::tibble(
@@ -126,12 +191,11 @@ new_model_forge <- function(model = list(),
     outcome = outcome,
     exposure = exposure,
     mediator = mediator,
-    predictors = predictors,
     observations = observations,
-    glance = glance,
+    terms = terms,
     tidy = tidy,
-    run = run,
-    status = status
+    glance = glance,
+    run = run
   )
 
   # Validation
@@ -140,6 +204,7 @@ new_model_forge <- function(model = list(),
   tibble::new_tibble(
     x,
     class = "model_forge",
+    data = data,
     nrow = nrow(x)
   )
 }

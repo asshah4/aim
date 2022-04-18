@@ -9,10 +9,19 @@ test_that("model archetypes can be forged into a table can be initialized", {
 		model_archetype()
 
 	mf <- model_forge(x)
-	expect_length(attributes(mf), 7)
+	expect_equal(nrow(mf), 3)
+	expect_length(mf, 14) # Number of columns
 
 	# Basic output
 	expect_output(print(mf), "<model_forge>")
 	expect_s3_class(mf, "model_forge")
+
 })
 
+test_that("unfitted formula archetypes can be forged into a table", {
+
+	s <- rx(mpg + wt ~ hp + cyl)
+	x <- fmls(s, order = 2)
+
+
+})
