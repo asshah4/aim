@@ -58,6 +58,10 @@ model_forge.model_archetype <- function(x,
     })) |>
   	mutate(run = TRUE)
 
+	# Add in data into a list, likely empty here
+	dl <- list()
+	dl[[name]] <- data
+
   new_model_forge(
     model = y$model,
     type = y$type,
@@ -73,7 +77,7 @@ model_forge.model_archetype <- function(x,
     glance = y$glance,
     tidy = y$tidy,
     run = y$run,
-    data = data
+    data_list = dl
   )
 }
 
@@ -81,6 +85,7 @@ model_forge.model_archetype <- function(x,
 #' @export
 model_forge.formula_archetype <- function(x,
 																					name = deparse1(substitute(x)),
+																					data = data.frame(),
 																					...) {
 
   if (length(x) == 0) {
@@ -124,6 +129,8 @@ model_forge.formula_archetype <- function(x,
 		) |>
   	mutate(run = FALSE)
 
+
+
   new_model_forge(
     model = y$model,
     type = y$type,
@@ -138,7 +145,8 @@ model_forge.formula_archetype <- function(x,
     observations = y$observations,
     glance = y$glance,
     tidy = y$tidy,
-    run = y$run
+    run = y$run,
+    data_list = dl
   )
 }
 
@@ -165,7 +173,6 @@ new_model_forge <- function(model = list(),
                             tidy = list(),
                             glance = list(),
                             run = logical(),
-														data = data.frame(),
 														data_list = list()) {
 
   # Validation
@@ -183,11 +190,7 @@ new_model_forge <- function(model = list(),
   vec_assert(tidy, ptype = list())
   vec_assert(glance, ptype = list())
   vec_assert(run, ptype = logical())
-  vec_assert(data, ptype = data.frame())
   vec_assert(data_list, ptype = list())
-
-  # Clean up data
-  data_list[[name]] <- data
 
   # Essentially each row is made or added here
   x <- tibble::tibble(
@@ -212,8 +215,8 @@ new_model_forge <- function(model = list(),
 
   tibble::new_tibble(
     x,
-    class = "model_forge",
     data_list = data_list,
+    class = "model_forge",
     nrow = nrow(x)
   )
 }
@@ -250,13 +253,13 @@ mdls_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
   out <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
 
   # Data from both components
-  data_x <- attr(x)$data_list
-  data_to <- attr(to)$data_list
+  data_x <- attributes(x)$data_list
+  data_to <- attributes(to)$data_list
 
   # Combine new data
-  dl <- unique(c(data_x, data_to))
+  dl <- c(data_x, data_to)
 
-  new_model_forge(out, data_list = dl)
+  new_model_forge(as.list(out), data_list = dl)
 
 }
 
@@ -265,8 +268,8 @@ mdls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
   out <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
 
   # Data from both components
-  data_x <- attr(x)$data_list
-  data_to <- attr(to)$data_list
+  data_x <- attributes(x)$data_list
+  data_to <- attributes(to)$data_list
 
   # Combine new data
   dl <- unique(c(data_x, data_to))

@@ -28,13 +28,20 @@ test_that("unfitted formula archetypes can be forged into a table", {
 
 test_that("conversion works between different table types", {
 
+	# Typical models
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- lm(mpg ~ wt + gear, mtcars)
 	ml <- list(first = m1, second = m2)
-	x <- md(ml)
+	m <- md(ml)
+	a <- mdls(m)
 
+	# Additional models
 	s <- rx(mpg + wt ~ hp + cyl)
 	f <- fmls(s, order = 2)
-	to <- mdls(f)
+	b <- mdls(f)
+
+	# Combining...
+	# TODO
+	vec_rbind(a, b)
 
 })

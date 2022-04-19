@@ -12,7 +12,7 @@ model_forge(x, ...)
 
 \method{model_forge}{model_archetype}(x, data = data.frame(), ...)
 
-\method{model_forge}{formula_archetype}(x, name = deparse1(substitute(x)), ...)
+\method{model_forge}{formula_archetype}(x, name = deparse1(substitute(x)), data = data.frame(), ...)
 
 mdls(x, ...)
 }
