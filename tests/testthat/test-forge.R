@@ -7,13 +7,13 @@ test_that("model archetypes can be forged into a table can be initialized", {
 	ml <- list(first = m1, second = m2, m3)
 	x <- md(ml)
 
-	mf <- model_forge(x)
+	mf <- forge(x)
 	expect_equal(nrow(mf), 3)
 	expect_length(mf, 14) # Number of columns
 
 	# Basic output
-	expect_output(print(mf), "<model_forge>")
-	expect_s3_class(mf, "model_forge")
+	expect_output(print(mf), "<forge>")
+	expect_s3_class(mf, "forge")
 
 })
 
@@ -22,7 +22,7 @@ test_that("unfitted formula archetypes can be forged into a table", {
 	s <- rx(mpg + wt ~ hp + cyl)
 	x <- fmls(s, order = 2)
 	mf <- mdls(x)
-	expect_s3_class(mf, "model_forge")
+	expect_s3_class(mf, "forge")
 
 })
 
@@ -31,17 +31,18 @@ test_that("conversion works between different table types", {
 	# Typical models
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- lm(mpg ~ wt + gear, mtcars)
-	ml <- list(first = m1, second = m2)
+	ml <- list(first = m1, m2)
 	m <- md(ml)
-	a <- mdls(m)
+	x <- mdls(m)
 
 	# Additional models
 	s <- rx(mpg + wt ~ hp + cyl)
 	f <- fmls(s, order = 2)
-	b <- mdls(f)
+	y <- mdls(f, data = mtcars)
 
 	# Combining...
-	# TODO
-	vec_rbind(a, b)
+	z <- vec_rbind(x, y)
+	expect_s3_class(z, "forge")
+	expect_equal(nrow(z), 4)
 
 })

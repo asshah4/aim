@@ -2,17 +2,16 @@
 % Please edit documentation in R/forge.R
 \name{forge}
 \alias{forge}
-\alias{model_forge}
-\alias{model_forge.model_archetype}
-\alias{model_forge.formula_archetype}
+\alias{forge.model_archetype}
+\alias{forge.formula_archetype}
 \alias{mdls}
 \title{Forge Models into a Table}
 \usage{
-model_forge(x, ...)
+forge(x, ...)
 
-\method{model_forge}{model_archetype}(x, data = data.frame(), ...)
+\method{forge}{model_archetype}(x, name = deparse1(substitute(x)), data = data.frame(), ...)
 
-\method{model_forge}{formula_archetype}(x, name = deparse1(substitute(x)), data = data.frame(), ...)
+\method{forge}{formula_archetype}(x, name = deparse1(substitute(x)), data = data.frame(), ...)
 
 mdls(x, ...)
 }
@@ -22,5 +21,5 @@ mdls(x, ...)
 This function introduces a super class that combines both the \code{list} class
 (and its derivative \code{list_of}) and regression models and/or hypothesis tests.
 Models that are similar and share certain properties can be combined together
-into a \code{model_forge}.
+into a \code{forge}.
 }

@@ -5,10 +5,6 @@
 		possible_tidy <-
 			purrr::possibly(my_tidy, otherwise = NA, quiet = FALSE)
 	}
-	if (!exists("possible_parsnip_fit")) {
-		possible_parsnip_fit <-
-			purrr::possibly(my_parsnip_fit, otherwise = NA, quiet = FALSE)
-	}
 	if (!exists("possible_glance")) {
 		possible_glance <-
 			purrr::possibly(my_glance, otherwise = NA, quiet = FALSE)

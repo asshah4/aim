@@ -9,29 +9,30 @@
 #' This function introduces a super class that combines both the `list` class
 #' (and its derivative `list_of`) and regression models and/or hypothesis tests.
 #' Models that are similar and share certain properties can be combined together
-#' into a `model_forge`.
+#' into a `forge`.
 #'
 #' @name forge
 #' @importFrom dplyr mutate
 #' @export
-model_forge <- function(x, ...) {
-	UseMethod("model_forge", object = x)
+forge <- function(x, ...) {
+  UseMethod("forge", object = x)
 }
 
 #' @rdname forge
 #' @export
-model_forge.model_archetype <- function(x,
-																				data = data.frame(),
-																				...) {
+forge.model_archetype <- function(x,
+                                  name = deparse1(substitute(x)),
+                                  data = data.frame(),
+                                  ...) {
   if (length(x) == 0) {
-    return(new_model_forge())
+    return(new_forge())
   }
 
   fl <- field(x, "fmls")
 
   # Expand components into appropriate table
   y <-
-  	x |>
+    x |>
     vec_data() |>
     tibble() |>
     # Add in formula components and corresponding roles
@@ -49,20 +50,15 @@ model_forge.model_archetype <- function(x,
         t
       }
     )) |>
-  	mutate(terms = list(get_terms(fmls))) |>
+    mutate(terms = list(get_terms(fmls))) |>
     dplyr::ungroup() |>
-    mutate(tidy = possible_tidy(x)) |>
-    mutate(glance = possible_glance(x)) |>
-    mutate(observations = sapply(glance, FUN = function(.x) {
-      .x$nobs
-    })) |>
-  	mutate(run = TRUE)
+    mutate(run = TRUE) |>
+  	# Hash = name, type, subytype, formula
+    mutate(hash = make_hash(x))
 
-	# Add in data into a list, likely empty here
-	dl <- list()
-	dl[[name]] <- data
 
-  new_model_forge(
+  # Core table
+  tbl <- construct_model_table(
     model = y$model,
     type = y$type,
     subtype = y$subtype,
@@ -73,35 +69,48 @@ model_forge.model_archetype <- function(x,
     exposure = y$exposure,
     mediator = y$mediator,
     terms = y$terms,
-    observations = y$observations,
-    glance = y$glance,
-    tidy = y$tidy,
     run = y$run,
-    data_list = dl
+    hash = y$hash
+  )
+
+  # Additional attributes to be included in the forged object
+  dl <- list()
+  dl[[name]] <- data
+  dl <- data_list(dl)
+
+  pe <- parameter_estimates(x)
+  mi <- model_estimates(x)
+  names(pe) <- names(mi) <- tbl$hash
+
+  # Make forge
+  new_forge(
+    x = tbl,
+    data_list = dl,
+    parameters = pe,
+    model_info = mi
   )
 }
 
 #' @rdname forge
 #' @export
-model_forge.formula_archetype <- function(x,
-																					name = deparse1(substitute(x)),
-																					data = data.frame(),
-																					...) {
-
+forge.formula_archetype <- function(x,
+                                    name = deparse1(substitute(x)),
+                                    data = data.frame(),
+                                    ...) {
   if (length(x) == 0) {
-    return(new_model_forge())
+    return(new_forge())
   }
 
-	# Ensure appropriate formula can be modeled later if need be
-	f <- x[field(x, "order") == 2]
+  # Ensure appropriate formula can be modeled later if need be
+  f <- x[field(x, "order") == 2]
 
   # Expand formula into appropriate table
-	y <-
-		f |>
-		vec_data() |>
+  y <-
+    f |>
+    vec_data() |>
     dplyr::bind_cols(fmls = f) |>
     tibble() |>
-		dplyr::mutate(name = name) |>
+    dplyr::mutate(name = name) |>
     dplyr::rowwise() |>
     mutate(across(
       c(outcome, exposure, mediator, strata),
@@ -115,23 +124,20 @@ model_forge.formula_archetype <- function(x,
         t
       }
     )) |>
-  	mutate(terms = list(get_terms(fmls))) |>
+    mutate(terms = list(get_terms(fmls))) |>
     dplyr::ungroup() |>
-		# These items would need a model to be included
-		mutate(
-			model = list(NA),
-			type = NA_character_,
-			subtype = NA_character_,
-			description = NA_character_,
-			tidy = list(NA),
-			glance = list(NA),
-			observations = NA_integer_,
-		) |>
-  	mutate(run = FALSE)
+    # These items would need a model to be included
+    mutate(
+      model = list(NA),
+      type = NA_character_,
+      subtype = NA_character_,
+      description = NA_character_
+    ) |>
+    mutate(run = FALSE) |>
+  	# Hash = name, type, subytype, formul
+    mutate(hash = make_hash(x, name))
 
-
-
-  new_model_forge(
+  tbl <- construct_model_table(
     model = y$model,
     type = y$type,
     subtype = y$subtype,
@@ -142,38 +148,48 @@ model_forge.formula_archetype <- function(x,
     exposure = y$exposure,
     mediator = y$mediator,
     terms = y$terms,
-    observations = y$observations,
-    glance = y$glance,
-    tidy = y$tidy,
     run = y$run,
-    data_list = dl
+    hash = y$hash
+  )
+
+  # Additional attributes to be included in the forged object
+  dl <- list()
+  dl[[name]] <- data
+  dl <- data_list(dl)
+
+  pe <- parameter_estimates()
+  mi <- model_estimates()
+
+  # Make forge
+  new_forge(
+    x = tbl,
+    data_list = dl,
+    parameters = pe,
+    model_info = mi
   )
 }
 
 #' @rdname forge
 #' @export
-mdls <- model_forge
+mdls <- forge
 
-# Vector List ------------------------------------------------------------------
+# Model Forge Construction and Definition --------------------------------------
 
-#' Formula list
+#' Model forge construction
 #' @keywords internal
 #' @noRd
-new_model_forge <- function(model = list(),
-                            type = character(),
-                            subtype = character(),
-                            name = character(),
-                            description = character(),
-                            formula = character(),
-                            outcome = character(),
-                            exposure = character(),
-                            mediator = character(),
-                            observations = integer(),
-														terms = list(),
-                            tidy = list(),
-                            glance = list(),
-                            run = logical(),
-														data_list = list()) {
+construct_model_table <- function(model = list(),
+                                  type = character(),
+                                  subtype = character(),
+                                  name = character(),
+                                  description = character(),
+                                  formula = character(),
+                                  outcome = character(),
+                                  exposure = character(),
+                                  mediator = character(),
+                                  terms = list(),
+                                  run = logical(),
+                                  hash = character()) {
 
   # Validation
   vec_assert(model, ptype = list())
@@ -185,15 +201,12 @@ new_model_forge <- function(model = list(),
   vec_assert(outcome, ptype = character())
   vec_assert(exposure, ptype = character())
   vec_assert(mediator, ptype = character())
-  vec_assert(observations, ptype = integer())
   vec_assert(terms, ptype = list())
-  vec_assert(tidy, ptype = list())
-  vec_assert(glance, ptype = list())
   vec_assert(run, ptype = logical())
-  vec_assert(data_list, ptype = list())
+  vec_assert(hash, ptype = character())
 
   # Essentially each row is made or added here
-  x <- tibble::tibble(
+  tbl <- tibble::tibble(
     model = model,
     type = type,
     subtype = subtype,
@@ -203,43 +216,58 @@ new_model_forge <- function(model = list(),
     outcome = outcome,
     exposure = exposure,
     mediator = mediator,
-    observations = observations,
     terms = terms,
-    tidy = tidy,
-    glance = glance,
-    run = run
+    run = run,
+    hash = hash
   )
+
+  # Return tibble
+  tbl
+}
+
+#' Model forge initialization
+#' @keywords internal
+#' @noRd
+new_forge <- function(x = tibble(),
+                      data_list = data_list(),
+                      parameters = parameter_estimates(),
+                      model_info = model_estimates()) {
 
   # Validation
   stopifnot(is.data.frame(x))
+  vec_assert(data_list, ptype = data_list()) # Acutally a list_of class
+  vec_assert(parameters, ptype = parameter_estimates())
+  vec_assert(model_info, ptype = model_estimates())
 
   tibble::new_tibble(
     x,
     data_list = data_list,
-    class = "model_forge",
+    parameters = parameters,
+    model_info = model_info,
+    class = "forge",
     nrow = nrow(x)
   )
 }
 
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("model_forge", "vctrs_vctr"))
+methods::setOldClass(c("forge", "vctrs_vctr"))
 
 # Output -----------------------------------------------------------------------
 
 #' @export
-print.model_forge <- function(x, ...) {
+print.forge <- function(x, ...) {
   cat(sprintf("<%s>\n", class(x)[[1]]))
   cli::cat_line(format(x)[-1])
 }
 
 #' @export
-vec_ptype_full.model_forge <- function(x, ...) {
-  "model_forge"
+vec_ptype_full.forge <- function(x, ...) {
+  "forge"
 }
 
 #' @export
-vec_ptype_abbr.model_forge <- function(x, ...) {
+vec_ptype_abbr.forge <- function(x, ...) {
   "mdls"
 }
 
@@ -249,88 +277,79 @@ vec_ptype_abbr.model_forge <- function(x, ...) {
 ### MODEL FORGE
 
 #' @export
-mdls_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
+forge_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
   out <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
 
-  # Data from both components
-  data_x <- attributes(x)$data_list
-  data_to <- attributes(to)$data_list
-
   # Combine new data
-  dl <- c(data_x, data_to)
+  dl <- c(attributes(x)$data_list, attributes(y)$data_list)
+  pe <- c(attributes(x)$parameters, attributes(y)$parameters)
+  mi <- c(attributes(x)$model_info, attributes(y)$model_info)
 
-  new_model_forge(as.list(out), data_list = dl)
-
+  new_forge(out, data_list = dl, parameters = pe, model_info = mi)
 }
 
 #' @export
-mdls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
+forge_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
   out <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
 
-  # Data from both components
-  data_x <- attributes(x)$data_list
-  data_to <- attributes(to)$data_list
-
   # Combine new data
-  dl <- unique(c(data_x, data_to))
+  dl <- c(attributes(x)$data_list, attributes(to)$data_list)
+  pe <- c(attributes(x)$parameters, attributes(y)$parameters)
+  mi <- c(attributes(x)$model_info, attributes(to)$model_info)
 
-  new_model_forge(out, data_list = dl)
-
+  new_forge(out, data_list = dl, parameters = pe, model_info = mi)
 }
 
 #' @export
-vec_ptype2.model_forge.model_forge <- function(x, y, ...) {
-  mdls_ptype2(x, y, ...)
+vec_ptype2.forge.forge <- function(x, y, ...) {
+  forge_ptype2(x, y, ...)
 }
 
 #' @export
-vec_cast.model_forge.model_forge <- function(x, to, ...) {
-  mdls_cast(x, to, ...)
+vec_cast.forge.forge <- function(x, to, ...) {
+  forge_cast(x, to, ...)
 }
 
 ### TIBBLE
 
 #' @export
-vec_ptype2.model_forge.tbl_df <- function(x, y, ...) {
-	mdls_ptype2(x, y, ...)
+vec_ptype2.forge.tbl_df <- function(x, y, ...) {
+  forge_ptype2(x, y, ...)
 }
 
 #' @export
-vec_ptype2.tbl_df.model_forge <- function(x, y, ...) {
-	mdls_ptype2(x, y, ...)
+vec_ptype2.tbl_df.forge <- function(x, y, ...) {
+  forge_ptype2(x, y, ...)
 }
 
 #' @export
-vec_cast.model_forge.tbl_df <- function(x, to, ...) {
-	mdls_cast(x, to, ...)
+vec_cast.forge.tbl_df <- function(x, to, ...) {
+  forge_cast(x, to, ...)
 }
 
 #' @export
-vec_cast.tbl_df.model_forge <- function(x, to, ...) {
-	tib_cast(x, to, ...)
+vec_cast.tbl_df.forge <- function(x, to, ...) {
+  tib_cast(x, to, ...)
 }
 
 ### DATA.FRAME
 
 #' @export
-vec_ptype2.model_forge.data.frame <- function(x, y, ...) {
-	mdls_ptype2(x, y, ...)
+vec_ptype2.forge.data.frame <- function(x, y, ...) {
+  forge_ptype2(x, y, ...)
 }
 
 #' @export
-vec_ptype2.data.frame.model_forge <- function(x, y, ...) {
-	mdls_ptype2(x, y, ...)
+vec_ptype2.data.frame.forge <- function(x, y, ...) {
+  forge_ptype2(x, y, ...)
 }
 
 #' @export
-vec_cast.model_forge.data.frame <- function(x, to, ...) {
-	mdls_cast(x, to, ...)
+vec_cast.forge.data.frame <- function(x, to, ...) {
+  forge_cast(x, to, ...)
 }
 
 #' @export
-vec_cast.data.frame.model_forge <- function(x, to, ...) {
-	df_cast(x, to, ...)
+vec_cast.data.frame.forge <- function(x, to, ...) {
+  df_cast(x, to, ...)
 }
-
-# Data Addition ----------------------------------------------------------------
-
