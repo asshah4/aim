@@ -5,7 +5,7 @@ test_that("lists can be fit", {
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
 	t <- tm(f, label = labels, tier = tiers)
 	x <- rx(t, pattern = "sequential")
-	lof <- construct_script(x)
+	lof <- fmls(x)
 	expect_s3_class(lof, "formula_archetype")
 
 	lom <- fit(lof, lm, data = mtcars)
@@ -42,7 +42,7 @@ test_that("fitting can be done with strata", {
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
 	t <- tm(f, label = labels, tier = tiers)
 	x <- rx(t, pattern = "sequential")
-	lof <- construct_script(x)
+	lof <- fmls(x)
 	expect_s3_class(lof, "formula_archetype")
 
 	# Transform to model archetypes

@@ -7,7 +7,7 @@ fit.formula_archetype <- function(object,
                                   fitting_function,
                                   ...,
                                   data,
-																	tag = character(),
+																	name = deparse1(substitute(object)),
 																	archetype = FALSE) {
   cl <- match.call()
   args <- list(...)
@@ -23,41 +23,39 @@ fit.formula_archetype <- function(object,
   .fn <- as.character(cl[[3]])
 
   # Manage data
-  validate_class(data, c("tbl_df", "data.frame"))
+  stopifnot(is.data.frame(data))
 
   # Create models and tags for the models
   ml <- list()
   nms <- character()
-  if (length(tag) == 0) {
-  	tag = deparse1(substitute(object))
-  }
 
   for (i in seq_along(object)) {
 
-  	f <- formula(object[i])
-  	strata <- vec_data(object[i])$strata
+  	f <- stats::formula(field(object[i], "formula"))
+  	strata <-
+  		vec_data(object[i])$strata[[1]] |>
+  		as.character()
 
-  	if (is.na(strata)) {
+  	if (length(strata) == 0) {
   		args$data <- quote(data)
 	    m <- do.call(.fn, args = c(formula = f, args))
 	    ml <- append(ml, list(m))
-	    nms <- append(nms, paste0("S", 0))
-
+	    nms <- append(nms, paste0(name, "_FIT_", i, "_STRATA_0"))
   	} else {
   		strata_lvls <- unique(data[[strata]])
-  		for (i in seq_along(strata_lvls)) {
-  			.data <- data[data[[strata]] == strata_lvls[i], ]
+  		for (j in seq_along(strata_lvls)) {
+  			.data <- data[data[[strata]] == strata_lvls[j], ]
 	  		args$data <- quote(.data)
 		    m <- do.call(.fn, args = c(formula = f, args))
 		    ml <- append(ml, list(m))
-		    nms <- append(nms, paste0("S", i))
+		    nms <- append(nms, paste0(name, "_FIT_", i, "_STRATA_", j))
   		}
   	}
 
   }
 
-  # On names
-  names(ml) <- paste0(tag, "_N", 1:length(ml), "_", nms)
+  # Return names to list of models
+  names(ml) <- nms
 
   # Return
   if (archetype) {
