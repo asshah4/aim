@@ -79,14 +79,14 @@ forge.model_archetype <- function(x,
   dl <- data_list(dl)
 
   pe <- parameter_estimates(x)
-  mi <- model_estimates(x)
+  mi <- model_info(x)
   names(pe) <- names(mi) <- tbl$hash
 
   # Make forge
   new_forge(
     x = tbl,
     data_list = dl,
-    parameters = pe,
+    parameter_estimates = pe,
     model_info = mi
   )
 }
@@ -158,13 +158,13 @@ forge.formula_archetype <- function(x,
   dl <- data_list(dl)
 
   pe <- parameter_estimates()
-  mi <- model_estimates()
+  mi <- model_info()
 
   # Make forge
   new_forge(
     x = tbl,
     data_list = dl,
-    parameters = pe,
+    parameter_estimates = pe,
     model_info = mi
   )
 }
@@ -230,19 +230,19 @@ construct_model_table <- function(model = list(),
 #' @noRd
 new_forge <- function(x = tibble(),
                       data_list = data_list(),
-                      parameters = parameter_estimates(),
-                      model_info = model_estimates()) {
+                      parameter_estimates = parameter_estimates(),
+                      model_info = model_info()) {
 
   # Validation
   stopifnot(is.data.frame(x))
   vec_assert(data_list, ptype = data_list()) # Acutally a list_of class
-  vec_assert(parameters, ptype = parameter_estimates())
-  vec_assert(model_info, ptype = model_estimates())
+  vec_assert(parameter_estimates, ptype = parameter_estimates())
+  vec_assert(model_info, ptype = model_info())
 
   tibble::new_tibble(
     x,
     data_list = data_list,
-    parameters = parameters,
+    parameter_estimates = parameter_estimates,
     model_info = model_info,
     class = "forge",
     nrow = nrow(x)
@@ -282,10 +282,10 @@ forge_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
   # Combine new data
   dl <- c(attributes(x)$data_list, attributes(y)$data_list)
-  pe <- c(attributes(x)$parameters, attributes(y)$parameters)
+  pe <- c(attributes(x)$parameter_estimates, attributes(y)$parameter_estimates)
   mi <- c(attributes(x)$model_info, attributes(y)$model_info)
 
-  new_forge(out, data_list = dl, parameters = pe, model_info = mi)
+  new_forge(out, data_list = dl, parameter_estimates = pe, model_info = mi)
 }
 
 #' @export
@@ -294,10 +294,10 @@ forge_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 
   # Combine new data
   dl <- c(attributes(x)$data_list, attributes(to)$data_list)
-  pe <- c(attributes(x)$parameters, attributes(y)$parameters)
+  pe <- c(attributes(x)$parameter_estimates, attributes(y)$parameter_estimates)
   mi <- c(attributes(x)$model_info, attributes(to)$model_info)
 
-  new_forge(out, data_list = dl, parameters = pe, model_info = mi)
+  new_forge(out, data_list = dl, parameter_estimates = pe, model_info = mi)
 }
 
 #' @export

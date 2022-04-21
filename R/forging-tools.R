@@ -1,6 +1,6 @@
 # Parameter Level Estimates ----------------------------------------------------
 
-#' Holding a list of parameters
+#' Holding a list of parameter_estimates
 #' @keywords internal
 #' @noRd
 new_parameter_estimates <- function(x = list()) {
@@ -41,15 +41,15 @@ vec_ptype_abbr.parameter_estimates <- function(x, ...) "par_est"
 #' Holding a list of model level statistics
 #' @keywords internal
 #' @noRd
-new_model_estimates <- function(x = list()) {
-	new_list_of(x, ptype = tibble(), class = "model_estimates")
+new_model_info <- function(x = list()) {
+	new_list_of(x, ptype = tibble(), class = "model_info")
 }
 
 #' @export
-model_estimates <- function(x = unspecified(), ...) {
+model_info <- function(x = unspecified(), ...) {
 
 	if (length(x) == 0) {
-		return(new_model_estimates())
+		return(new_model_info())
 	}
 
 	if (class(x)[1] == "model_archetype") {
@@ -57,14 +57,14 @@ model_estimates <- function(x = unspecified(), ...) {
 	}
 
 	# Return list_of
-	new_model_estimates(me)
+	new_model_info(me)
 }
 
 #' @export
-vec_ptype_full.model_estimates <- function(x, ...) "model_estimates"
+vec_ptype_full.model_info <- function(x, ...) "model_info"
 
 #' @export
-vec_ptype_abbr.model_estimates <- function(x, ...) "mod_est"
+vec_ptype_abbr.model_info <- function(x, ...) "md_info"
 
 # Data Lists -------------------------------------------------------------------
 

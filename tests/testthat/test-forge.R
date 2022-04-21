@@ -9,7 +9,7 @@ test_that("model archetypes can be forged into a table can be initialized", {
 
 	mf <- forge(x)
 	expect_equal(nrow(mf), 3)
-	expect_length(mf, 14) # Number of columns
+	expect_length(mf, 12) # Number of columns
 
 	# Basic output
 	expect_output(print(mf), "<forge>")

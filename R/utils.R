@@ -3,9 +3,9 @@ make_hash <- function(x, name = NA) {
   if (class(x)[1] == "model_archetype") {
     y <- vec_data(x)[-1]
 
-    h <- paste0("NAME_", y$name, ".CLASS_md", ".TYPE_", y$type, ".SUB_", y$subtype, ".FORMULA_", field(y$fmls, "formula")) |>
+    h <- paste0("NAME_", y$name, "_CLASS_md", "_TYPE_", y$type, "_SUB_", y$subtype, "_FORMULA_", field(y$fmls, "formula")) |>
       {
-        \(.x) gsub(" ~ ", "__", .x)
+        \(.x) gsub(" ~ ", "_", .x)
       }() |>
       {
         \(.x) gsub(" \\+ ", "_", .x)
@@ -13,7 +13,7 @@ make_hash <- function(x, name = NA) {
   }
   if (class(x)[1] == "formula_archetype") {
     y <- vec_data(x)
-    h <- paste0("NAME_", name, ".CLASS_fmls", ".TYPE_", NA, ".SUB_", NA, ".FORMULA_", y$formula) |>
+    h <- paste0("NAME_", name, "_CLASS_fmls", "_TYPE_", NA, "_SUB_", NA, "_FORMULA_", y$formula) |>
       {
         \(.x) gsub(" ~ ", "__", .x)
       }() |>
