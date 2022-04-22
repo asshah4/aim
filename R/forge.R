@@ -14,8 +14,15 @@
 #' @name forge
 #' @importFrom dplyr mutate
 #' @export
-forge <- function(x, ...) {
-  UseMethod("forge", object = x)
+forge <- function(...) {
+
+  # Flatten arguments if possible to a simple list
+  args <- list(...)
+  flat <- list()
+  for (i in seq_along(args)) {
+
+  }
+
 }
 
 #' @rdname forge
