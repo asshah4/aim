@@ -5,7 +5,7 @@ test_that("lists can be fit", {
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
 	t <- tm(f, label = labels, tier = tiers)
 	x <- rx(t, pattern = "sequential")
-	lof <- fmls(x)
+	lof <- fmls(x, order = 2)
 	expect_s3_class(lof, "formula_archetype")
 
 	lom <- fit(lof, lm, data = mtcars)
@@ -14,8 +14,10 @@ test_that("lists can be fit", {
 	expect_s3_class(lom[[1]], "lm")
 
 	# Transform to model archetypes
-	m <- model_archetype(lom)
+	m1 <- model_archetype(lom)
 	expect_s3_class(m, "model_archetype")
+	m2 <- fit(lof, lm, data = mtcars, archetype = TRUE)
+	expect_equal(length(m1), length(m2))
 
 	# Tidy
 	tbl <- tidy(m)

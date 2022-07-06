@@ -4,7 +4,7 @@ generics::fit
 
 #' @export
 fit.formula_archetype <- function(object,
-                                  fitting_function,
+                                  .fit,
                                   ...,
                                   data,
 																	name = deparse1(substitute(object)),
@@ -15,7 +15,7 @@ fit.formula_archetype <- function(object,
   # Validate functions
   if (!is.function(eval(cl[[3]]))) {
     stop(
-      "The `fitting_function = ",
+      "The `.fit = ",
       paste(cl[[3]]),
       "` is not yet an accepted function for model fitting."
     )
@@ -40,7 +40,7 @@ fit.formula_archetype <- function(object,
   		args$data <- quote(data)
 	    m <- do.call(.fn, args = c(formula = f, args))
 	    ml <- append(ml, list(m))
-	    nms <- append(nms, paste0(name, "_FIT_", i, "_STRATA_0"))
+	    nms <- append(nms, paste0(name, "_", i, "_STRATA_0"))
   	} else {
   		strata_lvls <- unique(data[[strata]])
   		for (j in seq_along(strata_lvls)) {
@@ -51,7 +51,6 @@ fit.formula_archetype <- function(object,
 		    nms <- append(nms, paste0(name, "_FIT_", i, "_STRATA_", j))
   		}
   	}
-
   }
 
   # Return names to list of models
@@ -59,7 +58,7 @@ fit.formula_archetype <- function(object,
 
   # Return
   if (archetype) {
-  	model_archetype(ml)
+  	model_archetype(ml, fmls = object)
   } else {
   	ml
   }

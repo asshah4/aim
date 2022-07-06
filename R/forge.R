@@ -16,167 +16,117 @@
 #' @export
 forge <- function(...) {
 
-  # Flatten arguments if possible to a simple list
+  # Break early
+  if (missing(..1)) {
+    return(new_forge())
+  }
+
+  # Get arguments and hammer them flat (retaining the names if needed)
   args <- list(...)
-  flat <- list()
-  for (i in seq_along(args)) {
+  mc <- match.call()
+  arg_names <- as.character(mc)[-1]
+  nms <- names(mc)[-1]
+  nms[nms == ""] <- arg_names[nms == ""]
 
-  }
+  # Flatten arguments if possible to a simple list
+  mtl <- hammer(args, nms)
+  name <- names(mtl)
 
-}
+  # Now, everything should be either an archetype object
+  # Will need to "squish together" multiple tibbles for this
+  tbl <- tibble()
+  for (i in seq_along(mtl)) {
+    x <- mtl[[i]]
 
-#' @rdname forge
-#' @export
-forge.model_archetype <- function(x,
-                                  name = deparse1(substitute(x)),
-                                  data = data.frame(),
-                                  ...) {
-  if (length(x) == 0) {
-    return(new_forge())
-  }
+    # Models
+    if (class(x)[1] == "model_archetype") {
+      fl <- field(x, "fmls")
+      mi <- model_info(x)
+      pe <- parameter_estimates(x)
 
-  fl <- field(x, "fmls")
+      y <-
+        x |>
+        vec_data() |>
+        tibble() |>
+        # Add in formula components and corresponding roles
+        dplyr::bind_cols(vec_data(fl)) |>
+        mutate(run = TRUE)
+    }
 
-  # Expand components into appropriate table
-  y <-
-    x |>
-    vec_data() |>
-    tibble() |>
-    # Add in formula components and corresponding roles
-    dplyr::bind_cols(vec_data(fl)) |>
-    dplyr::rowwise() |>
-    mutate(across(
-      c(outcome, exposure, mediator, strata),
-      function(.x) {
-        t <- .x
-        if (length(t) == 0) {
-          t <- NA_character_
-        } else {
-          t <- as.character(t)
+    # Formulas
+    if (class(x)[1] == "formula_archetype") {
+      # Ensure appropriate formula can be modeled later if need be
+      f <- x[field(x, "order") %in% 2:3]
+
+      # Formula hasn't been fit, so empty parameters
+      pe <- parameter_estimates()
+      mi <- model_info()
+
+      # Expand formula into appropriate table
+      y <-
+        f |>
+        vec_data() |>
+        dplyr::bind_cols(fmls = f) |>
+        tibble() |>
+        # These items would need a model to be included
+        mutate(
+          model = list(NA),
+          type = NA_character_,
+          subtype = NA_character_,
+          description = NA_character_,
+          run = FALSE
+        ) |>
+        dplyr::mutate(name = name[i])
+    }
+
+    # Common elements
+    z <-
+      y |>
+      dplyr::rowwise() |>
+      mutate(across(
+        c(outcome, exposure, mediator, strata),
+        function(.x) {
+          t <- .x
+          if (length(t) == 0) {
+            t <- NA_character_
+          } else {
+            t <- as.character(t)
+          }
+          t
         }
-        t
-      }
-    )) |>
-    mutate(terms = list(get_terms(fmls))) |>
-    dplyr::ungroup() |>
-    mutate(terms = term_list(terms)) |>
-    mutate(run = TRUE) |>
-  	# Hash = name, type, subytype, formula
-    mutate(hash = make_hash(x))
+      )) |>
+      # Generate list of terms for each row
+      mutate(terms = list(get_terms(fmls))) |>
+      dplyr::ungroup() |>
+      mutate(terms = term_list(terms)) |>
+      # Hash = name, type, subytype, formula
+      mutate(hash = make_hash(x))
 
-  mi <- model_info(x)
-  pe <- parameter_estimates(x)
-  names(pe) <- names(mi) <- y$hash
+    # Make individual row for a table
+    tbl_row <- construct_model_table(
+      model = z$model,
+      type = z$type,
+      subtype = z$subtype,
+      name = z$name,
+      description = z$description,
+      formula = z$formula,
+      outcome = z$outcome,
+      exposure = z$exposure,
+      mediator = z$mediator,
+      terms = z$terms,
+      model_info = mi,
+      parameter_estimates = pe,
+      run = z$run,
+      hash = z$hash
+    )
 
-  # Core table
-  tbl <- construct_model_table(
-    model = y$model,
-    type = y$type,
-    subtype = y$subtype,
-    name = y$name,
-    description = y$description,
-    formula = y$formula,
-    outcome = y$outcome,
-    exposure = y$exposure,
-    mediator = y$mediator,
-    terms = y$terms,
-    model_info = mi,
-    parameter_estimates = pe,
-    run = y$run,
-    hash = y$hash
-  )
+    tbl <- dplyr::bind_rows(tbl, tbl_row)
+  }
 
-  # Additional attributes to be included in the forged object
-  dl <- list()
-  dl[[name]] <- data
-  dl <- data_list(dl)
-
-  # Make forge
+  # Into the model forge
   new_forge(
     x = tbl,
-    data_list = dl
-  )
-}
-
-#' @rdname forge
-#' @export
-forge.formula_archetype <- function(x,
-                                    name = deparse1(substitute(x)),
-                                    data = data.frame(),
-                                    ...) {
-  if (length(x) == 0) {
-    return(new_forge())
-  }
-
-  # Ensure appropriate formula can be modeled later if need be
-  f <- x[field(x, "order") == 2]
-
-  # Expand formula into appropriate table
-  y <-
-    f |>
-    vec_data() |>
-    dplyr::bind_cols(fmls = f) |>
-    tibble() |>
-    dplyr::mutate(name = name) |>
-    dplyr::rowwise() |>
-    mutate(across(
-      c(outcome, exposure, mediator, strata),
-      function(.x) {
-        t <- .x
-        if (length(t) == 0) {
-          t <- NA_character_
-        } else {
-          t <- as.character(t)
-        }
-        t
-      }
-    )) |>
-    # Generate list of terms for each row
-    mutate(terms = list(get_terms(fmls))) |>
-    dplyr::ungroup() |>
-    mutate(terms = term_list(terms)) |>
-    # These items would need a model to be included
-    mutate(
-      model = list(NA),
-      type = NA_character_,
-      subtype = NA_character_,
-      description = NA_character_
-    ) |>
-    mutate(run = FALSE) |>
-  	# Hash = name, type, subytype, formul
-    mutate(hash = make_hash(x, name))
-
-  # Formula hasn't been fit, so empty parameters
-  pe <- parameter_estimates()
-  mi <- model_info()
-
-  tbl <- construct_model_table(
-    model = y$model,
-    type = y$type,
-    subtype = y$subtype,
-    name = y$name,
-    description = y$description,
-    formula = y$formula,
-    outcome = y$outcome,
-    exposure = y$exposure,
-    mediator = y$mediator,
-    terms = y$terms,
-    model_info = mi,
-    parameter_estimates = pe,
-    run = y$run,
-    hash = y$hash
-  )
-
-  # Additional attributes to be included in the forged object
-  dl <- list()
-  dl[[name]] <- data
-  dl <- data_list(dl)
-
-
-  # Make forge
-  new_forge(
-    x = tbl,
-    data_list = dl
+    data_list = data_list()
   )
 }
 

@@ -2,18 +2,12 @@
 % Please edit documentation in R/forge.R
 \name{forge}
 \alias{forge}
-\alias{forge.model_archetype}
-\alias{forge.formula_archetype}
 \alias{mdls}
 \title{Forge Models into a Table}
 \usage{
-forge(x, ...)
+forge(...)
 
-\method{forge}{model_archetype}(x, name = deparse1(substitute(x)), data = data.frame(), ...)
-
-\method{forge}{formula_archetype}(x, name = deparse1(substitute(x)), data = data.frame(), ...)
-
-mdls(x, ...)
+mdls(...)
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

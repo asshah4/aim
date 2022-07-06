@@ -91,3 +91,67 @@ vec_ptype_full.data_list <- function(x, ...) "data_list"
 
 #' @export
 vec_ptype_abbr.data_list <- function(x, ...) "dl"
+
+
+# Flatten arguments down to a list ---------------------------------------------
+
+#' Hammers the ellipsis arguments into a flattened list
+#' @keywords internal
+#' @noRd
+hammer <- function(object, name) {
+
+	stopifnot(inherits(object, "list"))
+	contents <- sapply(object, function(.x) { class(.x)[1] })
+	if (!any(contents %in% c("formula",
+													 "formula_archetype",
+													 "model_archetype",
+													 "lm",
+													 "glm",
+													 "model_fit"))) {
+		stop("Every object entered is not appropriate for the `forge`.")
+	}
+
+	mtl <- list() # Empty list to append to
+
+	for (i in seq_along(object)) {
+		x <- object[[i]]
+		m <- list() # Temporary list to append to the master list above
+
+    # Formulas
+    if (class(x)[1] == "formula") {
+  		z <- fmls(x, order = 2:3)
+  		m <- append(m, as.list(z))
+    }
+
+    # This may be fmls, fmls "to be", or model archetype lists
+    if (class(x)[1] == "formula_archetype") {
+    	m <- append(m, as.list(x))
+    }
+
+    if (class(x)[1] %in% c("lm", "glm", "model_fit")) {
+    	z <- md(x)
+    	m <- append(m, as.list(z))
+    }
+
+    if (class(x)[1] == "model_archetype") {
+    	m <- append(m, as.list(x))
+    }
+
+    # Naming
+		n <- length(m)
+		nm <- paste0(name[i], "_", 1:n)
+
+		if (length(m) > 1) {
+			names(m) <- nm
+		} else {
+			names(m) <- name[i]
+		}
+
+		mtl <- append(mtl, m)
+	}
+
+	# Return completed/reshaped list
+	mtl
+
+}
+

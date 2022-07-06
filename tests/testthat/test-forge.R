@@ -1,25 +1,21 @@
-test_that("an amalgam of objects can be parsed into single objects", {
+test_that("multiple inputs will be returned appropriately", {
 
 	# Models
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- glm(am ~ hp + cyl, mtcars, family = "binomial")
-	m3 <- lm(mpg ~ wt + gear, mtcars)
-	m4 <- glm(am ~ wt + mpg, mtcars)
-	m5 <- md(m1)
+	m3 <- md(m2)
 
 	# Formulas
 	f1 <- mpg ~ wt + cyl
 	f2 <- fmls(f1)
 	f3 <- fmls(mpg + wt ~ hp + cyl, order = 2)
 
-	# Amalgamations
-	ml1 <- list(m1, second = m2)
-	ml2 <- list(arch = m5, m3)
+	# Dot arguments
+	x <- forge(m1, second = m3, f = f1, f3)
 
-	# TODO  mash up of formulas as well
-
-
-
+	# TODO
+	expect_equal(x$name[1], "m1")
+	expect_equal(x$name[2], "second")
 
 })
 
