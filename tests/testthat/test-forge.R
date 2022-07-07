@@ -11,11 +11,14 @@ test_that("multiple inputs will be returned appropriately", {
 	f3 <- fmls(mpg + wt ~ hp + cyl, order = 2)
 
 	# Dot arguments
+	args <- list(m1, second = m3, f = f1, f3)
+	mc <- as.call(str2lang("list(m1, second = m3, f = f1, f3)"))
 	x <- forge(m1, second = m3, f = f1, f3)
 
-	# TODO
+	# Names are fixed now
 	expect_equal(x$name[1], "m1")
 	expect_equal(x$name[2], "second")
+	expect_equal(x$name[5], "f3_2")
 
 })
 
@@ -32,7 +35,7 @@ test_that("model archetypes can be forged into a table can be initialized", {
 
 	mf <- forge(x)
 	expect_equal(nrow(mf), 3)
-	expect_length(mf, 14) # Number of columns
+	expect_length(mf, 13) # Number of columns
 
 	# Basic output
 	expect_output(print(mf), "<forge>")

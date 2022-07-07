@@ -24,15 +24,14 @@ forge <- function(...) {
   # Get arguments and hammer them flat (retaining the names if needed)
   args <- list(...)
   mc <- match.call()
-  arg_names <- as.character(mc)[-1]
-  nms <- names(mc)[-1]
-  nms[nms == ""] <- arg_names[nms == ""]
+  nms <- as.character(mc)[-1]
+  nms[names(args) != ""] <- names(args)[names(args) != ""]
 
   # Flatten arguments if possible to a simple list
   mtl <- hammer(args, nms)
-  name <- names(mtl)
+  nms <- names(mtl)
 
-  # Now, everything should be either an archetype object
+  # Now, everything should be an archetype object
   # Will need to "squish together" multiple tibbles for this
   tbl <- tibble()
   for (i in seq_along(mtl)) {
@@ -50,7 +49,8 @@ forge <- function(...) {
         tibble() |>
         # Add in formula components and corresponding roles
         dplyr::bind_cols(vec_data(fl)) |>
-        mutate(run = TRUE)
+        dplyr::mutate(run = TRUE) |>
+        dplyr::mutate(name = nms[i])
     }
 
     # Formulas
@@ -76,7 +76,7 @@ forge <- function(...) {
           description = NA_character_,
           run = FALSE
         ) |>
-        dplyr::mutate(name = name[i])
+        dplyr::mutate(name = nms[i])
     }
 
     # Common elements
@@ -98,9 +98,7 @@ forge <- function(...) {
       # Generate list of terms for each row
       mutate(terms = list(get_terms(fmls))) |>
       dplyr::ungroup() |>
-      mutate(terms = term_list(terms)) |>
-      # Hash = name, type, subytype, formula
-      mutate(hash = make_hash(x))
+      mutate(terms = term_list(terms))
 
     # Make individual row for a table
     tbl_row <- construct_model_table(
@@ -116,8 +114,7 @@ forge <- function(...) {
       terms = z$terms,
       model_info = mi,
       parameter_estimates = pe,
-      run = z$run,
-      hash = z$hash
+      run = z$run
     )
 
     tbl <- dplyr::bind_rows(tbl, tbl_row)
@@ -151,8 +148,7 @@ construct_model_table <- function(model = list(),
                                   terms = term_list(),
                                   model_info = model_info(),
                                   parameter_estimates = parameter_estimates(),
-                                  run = logical(),
-                                  hash = character()) {
+                                  run = logical()) {
 
   # Validation
   vec_assert(model, ptype = list())
@@ -168,7 +164,6 @@ construct_model_table <- function(model = list(),
   vec_assert(parameter_estimates, ptype = parameter_estimates())
   vec_assert(model_info, ptype = model_info())
   vec_assert(run, ptype = logical())
-  vec_assert(hash, ptype = character())
 
   # Handle emptiness
   if (length(parameter_estimates) == 0) {
@@ -192,8 +187,7 @@ construct_model_table <- function(model = list(),
     terms = terms,
     model_info = model_info,
     parameter_estimates = parameter_estimates,
-    run = run,
-    hash = hash
+    run = run
   )
 
   # Return tibble
