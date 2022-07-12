@@ -20,20 +20,16 @@ test_that("lists can be fit", {
 	expect_equal(length(m1), length(m2))
 
 	# Tidy
-	tbl <- tidy(m)
+	tbl <- tidy(m1)
 	expect_type(tbl, "list")
 	expect_s3_class(tbl[[1]], "tbl_df")
 	expect_length(tbl, 12)
 
 	# Glance
-	g <- glance(m)
+	g <- glance(m1)
 	expect_type(g, "list")
 	expect_s3_class(g[[1]], "tbl_df")
 	expect_length(g, 12)
-
-
-	# Errors
-
 
 })
 
@@ -69,7 +65,13 @@ test_that("fitting can be done with strata", {
 	expect_s3_class(g[[1]], "tbl_df")
 	expect_length(g, 9)
 
-	# Errors
-
+	# Testing more complex survival models
+	s <- rx(
+		Surv(death_timeto, death_any_yn) + Surv(death_timeto, death_cv_yn) ~
+			X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + blackrace +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(female_bl),
+		pattern = "sequential"
+	)
+	f <- fmls(s, order = 2)
+	stop("TODO")
 
 })

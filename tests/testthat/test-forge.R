@@ -45,10 +45,11 @@ test_that("model archetypes can be forged into a table can be initialized", {
 
 test_that("unfitted formula archetypes can be forged into a table", {
 
-	s <- rx(mpg + wt ~ hp + cyl)
+	s <- rx(mpg + wt ~ hp + cyl, pattern = "sequential")
 	x <- fmls(s, order = 2)
 	mf <- mdls(x)
 	expect_s3_class(mf, "forge")
+	expect_equal(nrow(mf), 4)
 
 })
 
@@ -62,9 +63,10 @@ test_that("conversion works between different table types", {
 	x <- mdls(m)
 
 	# Additional models
-	s <- rx(mpg + wt ~ hp + cyl)
-	f <- fmls(s, order = 2)
-	y <- mdls(f, data = mtcars)
+	y <-
+		rx(mpg + wt ~ hp + cyl) |>
+		fmls(order = 2) |>
+		mdls(data = mtcars)
 
 	# Combining...
 	z <- vec_rbind(x, y)

@@ -14,7 +14,7 @@
 #' @name forge
 #' @importFrom dplyr mutate
 #' @export
-forge <- function(...) {
+forge <- function(..., data = NULL) {
 
   # Break early
   if (missing(..1)) {
@@ -120,10 +120,17 @@ forge <- function(...) {
     tbl <- dplyr::bind_rows(tbl, tbl_row)
   }
 
+  # If data is given, then it should be tied to the object as well
+  dl <- list()
+  if (!is.null(data)) {
+    nm <- deparse1(substitute(data))
+    dl[[nm]] <- data
+  }
+
   # Into the model forge
   new_forge(
     x = tbl,
-    data_list = data_list()
+    data_list = data_list(dl)
   )
 }
 
@@ -312,3 +319,5 @@ vec_cast.forge.data.frame <- function(x, to, ...) {
 vec_cast.data.frame.forge <- function(x, to, ...) {
   df_cast(x, to, ...)
 }
+
+### Model Archetypes

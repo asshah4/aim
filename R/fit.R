@@ -58,7 +58,7 @@ fit.formula_archetype <- function(object,
 
   # Return
   if (archetype) {
-  	model_archetype(ml, fmls = object)
+  	x <- model_archetype(ml)
   } else {
   	ml
   }
