@@ -74,3 +74,14 @@ test_that("conversion works between different table types", {
 	expect_equal(nrow(z), 4)
 
 })
+
+test_that("strata and their levels are noted in the forged table", {
+
+	x <- rx(am ~ X(wt) + mpg + S(vs), pattern = "direct")
+	f <- fmls(x, order = 2)
+	fits <- fit(f, .fit = glm, family = "binomial", data = test_data, archetype = TRUE)
+	m <- mdls(fits)
+	expect_true("strata" %in% names(m))
+
+
+})
