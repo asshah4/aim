@@ -42,6 +42,7 @@ forge <- function(..., data = NULL) {
       fl <- field(x, "fmls")
       mi <- model_info(x)
       pe <- parameter_estimates(x)
+      si <- as.formula(field(x, "strata_info"))
 
       y <-
         x |>
@@ -50,7 +51,10 @@ forge <- function(..., data = NULL) {
         # Add in formula components and corresponding roles
         dplyr::bind_cols(vec_data(fl)) |>
         dplyr::mutate(run = TRUE) |>
-        dplyr::mutate(name = nms[i])
+        dplyr::mutate(name = nms[i]) |>
+        dplyr::mutate(strata = as.character(si[[2]])) |>
+        dplyr::mutate(level = as.character(si[[3]])) |>
+        dplyr::select(-strata_info)
     }
 
     # Formulas
@@ -74,6 +78,7 @@ forge <- function(..., data = NULL) {
           type = NA_character_,
           subtype = NA_character_,
           description = NA_character_,
+          level = NA,
           run = FALSE
         ) |>
         dplyr::mutate(name = nms[i])
@@ -111,6 +116,8 @@ forge <- function(..., data = NULL) {
       outcome = z$outcome,
       exposure = z$exposure,
       mediator = z$mediator,
+      strata = z$strata,
+      level = z$level,
       terms = z$terms,
       model_info = mi,
       parameter_estimates = pe,
@@ -152,6 +159,8 @@ construct_model_table <- function(model = list(),
                                   outcome = character(),
                                   exposure = character(),
                                   mediator = character(),
+                                  strata = character(),
+                                  level = numeric(),
                                   terms = term_list(),
                                   model_info = model_info(),
                                   parameter_estimates = parameter_estimates(),
@@ -167,6 +176,8 @@ construct_model_table <- function(model = list(),
   vec_assert(outcome, ptype = character())
   vec_assert(exposure, ptype = character())
   vec_assert(mediator, ptype = character())
+  vec_assert(strata, ptype = character())
+  vec_assert(level, size = 1)
   vec_assert(terms, ptype = term_list())
   vec_assert(parameter_estimates, ptype = parameter_estimates())
   vec_assert(model_info, ptype = model_info())
@@ -178,6 +189,12 @@ construct_model_table <- function(model = list(),
   }
   if (length(model_info) == 0) {
     model_info <- NA
+  }
+  if (length(strata) == 0) {
+    strata <- NA
+  }
+  if (length(level) == 0) {
+    level <- NA
   }
 
   # Essentially each row is made or added here
@@ -191,6 +208,8 @@ construct_model_table <- function(model = list(),
     outcome = outcome,
     exposure = exposure,
     mediator = mediator,
+    strata = strata,
+    level = level,
     terms = terms,
     model_info = model_info,
     parameter_estimates = parameter_estimates,

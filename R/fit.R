@@ -26,7 +26,7 @@ fit.formula_archetype <- function(object,
   stopifnot(is.data.frame(data))
 
   # Create models and tags for the models
-  ml <- list()
+  ma <- model_archetype()
   nms <- character()
 
   for (i in seq_along(object)) {
@@ -39,27 +39,34 @@ fit.formula_archetype <- function(object,
   	if (length(strata) == 0) {
   		args$data <- quote(data)
 	    m <- do.call(.fn, args = c(formula = f, args))
-	    ml <- append(ml, list(m))
-	    nms <- append(nms, paste0(name, "_", i, "_STRATA_0"))
+	    # Convert to archeytpe before moving on
+	    ma <- append(ma, md(m, name = paste0(name, "_", i)))
   	} else {
   		strata_lvls <- unique(data[[strata]])
   		for (j in seq_along(strata_lvls)) {
   			.data <- data[data[[strata]] == strata_lvls[j], ]
 	  		args$data <- quote(.data)
 		    m <- do.call(.fn, args = c(formula = f, args))
-		    ml <- append(ml, list(m))
-		    nms <- append(nms, paste0(name, "_FIT_", i, "_STRATA_", j))
+
+		    # Strata formula
+		    s <- as.formula(paste(strata, "~", strata_lvls[j]))
+		    ma <-
+		    	append(ma, md(
+		    		m,
+		    		name = paste0(name, "_", i, "_STRATA_", j),
+		    		strata_info = s
+		    	))
   		}
   	}
   }
 
-  # Return names to list of models
-  names(ml) <- nms
 
   # Return
   if (archetype) {
-  	x <- model_archetype(ml)
+  	ma
   } else {
+  	ml <- field(ma, "model")
+  	names(ml) <- field(ma, "name")
   	ml
   }
 }

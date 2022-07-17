@@ -40,18 +40,23 @@ test_that("fitting can be done with strata", {
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
 	t <- tm(f, label = labels, tier = tiers)
 	x <- rx(t, pattern = "sequential")
-	lof <- fmls(x)
+	lof <- fmls(x, order = 2)
 	expect_s3_class(lof, "formula_archetype")
 
 	# Transform to model archetypes
-	lom <- fit(lof, lm, data = mtcars)
-	ml <- fit(lof, lm, data = mtcars, archetype = TRUE)
-	expect_type(lom, "list")
-	expect_length(lom, 9)
-	expect_s3_class(lom[[1]], "lm")
-	m <- model_archetype(lom)
+	ml <- fit(lof, lm, data = mtcars)
+	ma <- fit(lof, lm, data = mtcars, archetype = TRUE)
+	expect_type(ml, "list")
+	expect_length(ml, 9)
+	expect_s3_class(ml[[1]], "lm")
+	m <- model_archetype(ml) # Expect to lose information here
 	expect_s3_class(m, "model_archetype")
-	expect_equal(ml, m, ignore_attr = TRUE)
+	# Because of how the model lists are made, the strata information will be lost
+	# Has to stay within the "archetype" world to maintain that extra information
+	# Thus, will not be the same metadata between generic mods and archetype mods
+	expect_equal(vec_data(ma)[1], vec_data(m)[1], ignore_attr = TRUE)
+	expect_equal(vec_data(ma)[7], vec_data(m)[7], ignore_attr = TRUE)
+	expect_equal(vec_data(m)[["strata_info"]][1], NA_character_)
 
 	# Tidy
 	tbl <- tidy(m)
@@ -65,13 +70,5 @@ test_that("fitting can be done with strata", {
 	expect_s3_class(g[[1]], "tbl_df")
 	expect_length(g, 9)
 
-	# Testing more complex survival models
-	s <- rx(
-		Surv(death_timeto, death_any_yn) + Surv(death_timeto, death_cv_yn) ~
-			X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + blackrace +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(female_bl),
-		pattern = "sequential"
-	)
-	f <- fmls(s, order = 2)
-	stop("TODO")
 
 })
