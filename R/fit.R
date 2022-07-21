@@ -40,7 +40,12 @@ fit.formula_archetype <- function(object,
   		args$data <- quote(data)
 	    m <- do.call(.fn, args = c(formula = f, args))
 	    # Convert to archeytpe before moving on
-	    ma <- append(ma, md(m, name = paste0(name, "_", i)))
+	    ma <- append(ma,
+	    						 model_archetype(
+	    						 	m,
+	    						 	name = paste0(name, "_", i),
+	    						 	fmls = object[i]
+	    						 ))
   	} else {
   		strata_lvls <- unique(data[[strata]])
   		for (j in seq_along(strata_lvls)) {
@@ -51,9 +56,10 @@ fit.formula_archetype <- function(object,
 		    # Strata formula
 		    s <- as.formula(paste(strata, "~", strata_lvls[j]))
 		    ma <-
-		    	append(ma, md(
+		    	append(ma, model_archetype(
 		    		m,
 		    		name = paste0(name, "_", i, "_STRATA_", j),
+		    		fmls = object[i],
 		    		strata_info = s
 		    	))
   		}

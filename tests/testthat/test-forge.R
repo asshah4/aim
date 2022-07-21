@@ -82,6 +82,7 @@ test_that("strata and their levels are noted in the forged table", {
 	fits <- fit(f, .fit = glm, family = "binomial", data = test_data, archetype = TRUE)
 	m <- mdls(fits)
 	expect_true("strata" %in% names(m))
+	expect_equal(m$exposure[1] == "wt") # Currently not transposing correctly
 
 
 })

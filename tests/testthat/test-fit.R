@@ -35,7 +35,7 @@ test_that("lists can be fit", {
 
 test_that("fitting can be done with strata", {
 
-	f <- mpg ~ X(wt) + hp + qsec + S(cyl)
+	f <- mpg ~ X(wt) + hp + qsec + S(cyl) + S(am)
 	labels <- list(mpg ~ "Mileage", hp ~  "Horsepower")
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
 	t <- tm(f, label = labels, tier = tiers)
