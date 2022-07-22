@@ -14,6 +14,15 @@ theme_gt_compact(
 \arguments{
 \item{data}{A table object that is created using the \code{\link[gt:gt]{gt()}} function.}
 
+\item{table.font.size}{The font sizes for the parent text element \code{table} and the following child
+elements: \code{heading.title}, \code{heading.subtitle}, \code{column_labels},
+\code{row_group}, \code{footnotes}, and \code{source_notes}. Can be specified as a
+single-length character vector with units of pixels (e.g., \verb{12px}) or as a
+percentage (e.g., \verb{80\\\%}). If provided as a single-length numeric vector,
+it is assumed that the value is given in units of pixels. The \code{\link[gt:px]{px()}} and
+\code{\link[gt:pct]{pct()}} helper functions can also be used to pass in numeric values and
+obtain values as pixel or percentage units.}
+
 \item{table.width}{The width of the table. Can be specified as a
 single-length character with units of pixels or as a percentage. If
 provided as a single-length numeric vector, it is assumed that the value is

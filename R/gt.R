@@ -844,17 +844,17 @@ tbl_forest <- function(object,
 											 levels,
 											 xlim,
 											 xbreak,
-											 xlab,
-											 ) {
+											 xlab) {
 
 	# Validate
-	validate_class(object, "forge")
+	if (!inherits(object, "forge")) {
+		stop("Object should be of type `forge`, not `", class(object)[1], "`")
+	}
 
 	# Create basic table
 	basic <-
 		object |>
 		dplyr::filter(strata %in% groups & level %in% levels) |>
-		dplyr::select(outcome, exposure, strata, level, parameter_estimates, model_info) |>
 		dplyr::filter(outcome == y & exposure == x) |>
 		dplyr::as_tibble()
 
@@ -878,7 +878,7 @@ tbl_forest <- function(object,
 	# Make appropriate plots
 	plots <-
 		tbl |>
-		group_by(strata, level) |>
+		dplyr::group_by(strata, level) |>
 		tidyr::nest() |>
 		dplyr::mutate(gg = purrr::map(data, ~ {
 			ggplot(.x, aes(x = estimate, y = 0)) +
@@ -901,119 +901,90 @@ tbl_forest <- function(object,
 													 oob = scales::oob_squish)
 				#coord_cartesian(xlim = c(-1, 6), ylim = c(-0.1, 0.1), clip = "off")
 		})) |>
-		unnest(data) |>
-		ungroup()
+		tidyr::unnest(data) |>
+		dplyr::ungroup()
 
-	# Table of forest plots
-	tar_load(subgroup_models)
-
-	tbl <-
-		subgroup_models |>
-		filter(outcomes == "Surv(death_timeto,death_cv_yn)") |>
-		filter(str_detect(term, "hf_stress_rest_delta_zn")) |>
-		filter(number == 9) |>
-		select(name, level, estimate, conf.low, conf.high) |>
-		mutate(across(c(estimate, conf.low, conf.high), ~ 1 / .x)) |>
-		rename(conf.low = conf.high,
-					 conf.high = conf.low) |>
-		dplyr::add_r
-
-	plots <-
-		tbl |>
-		add_row() |>
-		group_by(name, level) |>
-		nest() |>
-		mutate(gg = map(data,
-										~ ggplot(.x, aes(x = estimate, y = 0)) +
-											geom_point(size = 50) +
-											geom_linerange(aes(xmax = conf.high,
-																				 xmin = conf.low),
-																		 size = 5) +
-											geom_vline(xintercept = 1, linetype = 3, size = 5) +
-											theme_minimal() +
-											theme(
-												axis.text.y = element_blank(),
-												axis.title.y = element_blank(),
-												axis.text.x = element_blank(),
-												axis.title.x = element_blank(),
-												axis.line.x = element_blank(),
-												legend.position = "none",
-												panel.grid.major = element_blank(),
-												panel.grid.minor = element_blank()
-											) +
-											scale_x_continuous(breaks = c(0, 1, 2, 5),
-																				 limits = c(-1, 6),
-																				 oob = squish) +
-											coord_cartesian(xlim = c(-1, 6), ylim = c(-0.1, 0.1), clip = "off")
-		)) |>
-		unnest(data) |>
-		ungroup()
-
-	x <- plots$gg[[1]]
-	x$layers[[1]] <- NULL
-	x$layers[[1]] <- NULL
-
-	bottom_axis <-
-		x +
-		xlab("HR (95% CI)") +
+	tmp <- plots$gg[[1]]
+	tmp$layers[1:2] <- NULL
+	btm_axis <-
+		tmp +
+		xlab(xlab) +
 		theme(
 			axis.text.x = element_text(size = 100, margin = margin(10, 0 , 0 , 0)),
 			axis.ticks.x = element_line(size = 5),
 			axis.ticks.length.x = unit(30, "pt"),
 			axis.title.x = element_text(size = 150, margin = margin(10, 0, 0 , 0)),
-			axis.line.x = element_line(size = 5, arrow = arrow(length = unit(50, "pt"),
+			axis.line.x = element_line(size = 5, arrow = grid::arrow(length = grid::unit(50, "pt"),
 																												 ends = "both",
 																												 type = "closed"))
 		)
 
-	plots$gg[15] <- list(bottom_axis)
+	plots$gg[nrow(plots)] <- list(btm_axis)
 
-
+	# Create table
 	tbl |>
-		add_row() |>
-		mutate(name = case_when(
-			str_detect(name, "age") ~ "Increased Age (> median age)",
-			str_detect(name, "cabg") ~ "Prior CABG",
-			str_detect(name, "lvef") ~ "LVEF < 50%",
-			str_detect(name, "msimi") ~ "Mental Stress Induced Myocardial Ischemia",
-			str_detect(name, "psimi") ~ "Conventional Stress Induced Myocardial Ischemia",
-			str_detect(name, "race") ~ "African American Race",
-			str_detect(name, "sex") ~ "Female Sex"
-		)) |>
-		mutate(ggplots = NA) |>
-		gt(rowname_col = "level", groupname_col = "name") |>
-		cols_merge(columns = c(estimate, conf.low, conf.high),
+		dplyr::mutate(ggplots = NA) |>
+		gt::gt(rowname_col = "level", groupname_col = "strata") |>
+		gt::cols_merge(columns = c(estimate, conf.low, conf.high),
 							 pattern = "{1} ({2}, {3})") |>
-		fmt_number(
+		gt::cols_hide(columns = c(term, p.value)) |>
+		gt::fmt_number(
 			columns = where(is.numeric),
 			drop_trailing_zeros = TRUE,
 			n_sigfig = 2
 		) |>
-		cols_label(estimate = "Hazard Ratio (95% CI)",
-							 ggplots = "Increasing Mortality for Low HF HRV") |>
-		text_transform(locations = cells_body(columns = ggplots),
-									 fn = function(x) {
-									 	map(plots$gg, ggplot_image, height = px(50), aspect_ratio = 5)
-									 }) |>
-		cols_width(ggplots ~ px(300)) |>
-		cols_width(estimate ~ px(300)) |>
-		opt_vertical_padding(scale = 0) |>
-		opt_table_outline(style = "none") |>
-		tab_options(
-			data_row.padding = px(0),
-			table_body.border.bottom.width = px(0),
-			table_body.border.top.width = px(0),
-			column_labels.border.top.width = px(0)
+		gt::text_transform(
+			locations = gt::cells_body(columns = ggplots),
+			fn = function(x) {
+				purrr::map(plots$gg,
+									 gt::ggplot_image,
+									 height = gt::px(50),
+									 aspect_ratio = 5)
+			}
 		) |>
-		tab_style(style = list(cell_text(color = "white", size = px(0)),
-													 cell_borders(sides = "all", color = NULL)),
-							locations = list(cells_body(columns = ggplots),
-															 cells_row_groups(groups = "NA"),
-															 cells_stub(rows = is.na(level)))) |>
-		tab_style(style = list(cell_text(color = "white", size = px(0)),
-													 cell_borders(sides = "all", color = NULL)),
-							locations = list(cells_body(columns = estimate,
-																					rows = is.na(level))))
+		gt::cols_width(ggplots ~ gt::px(300)) |>
+		gt::cols_width(estimate ~ gt::px(300)) |>
+		gt::opt_vertical_padding(scale = 0) |>
+		gt::opt_table_outline(style = "none") |>
+		gt::tab_options(
+			data_row.padding = gt::px(0),
+			table_body.border.bottom.width = gt::px(0),
+			table_body.border.top.width = gt::px(0),
+			column_labels.border.top.width = gt::px(0)
+		) |>
+		gt::tab_style(
+			style = list(
+				gt::cell_text(color = "white", size = gt::px(0)),
+				gt::cell_borders(sides = "all", color = NULL)
+			),
+			locations = list(
+				gt::cells_body(columns = ggplots),
+				gt::cells_row_groups(groups = "NA"),
+				gt::cells_stub(rows = is.na(level))
+			)
+		) |>
+		gt::tab_style(
+			style = list(
+				gt::cell_text(color = "white", size = gt::px(0))
+			),
+			locations = list(
+				gt::cells_body(columns = estimate, rows = is.na(level))
+			)
+		) |>
+		gt::tab_style(
+			style = list(
+				gt::cell_borders(sides = "all", color = NULL)
+			),
+			locations = list(
+				gt::cells_body(columns = estimate)
+			)
+		) |>
+		gt::cols_label(
+			estimate = "Hazard Ratio (95% CI",
+			ggplots = "Decreasing Hazard",
+			nobs = "Number of Subjects"
+		)
+
 
 
 
