@@ -155,3 +155,14 @@ hammer <- function(object, name) {
 
 }
 
+
+# Draw out components from a forge ---------------------------------------------
+
+#' Draw out components from the forge
+#'
+#' @param x A model `forge` object
+#' @param f A formula or formula_archetype object
+#' @export
+draw <- function(x, f) {
+
+}

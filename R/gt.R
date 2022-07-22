@@ -835,26 +835,74 @@ tbl_models.data.frame <- function(object,
 #' Subgroup Forest Plot
 #'
 #' @param object Class `forge` object with models that have been fit
+#'
+#' @param columns Additional columns that help to describe the subgroup models.
+#'   At least one column should be selected from this list. The current options
+#'   are:
+#'
+#'   * beta = point estimate value, such as odds ratio or hazard ratio
+#'
+#'   * conf = inclusion of the confidence interval (presumed to be 95%-ile)
+#'
+#'   * n = number of observations in each model group
+#'
+#'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
+#'
+#' @param axis Argument to help modify the forest plot itself. This is a
+#'   list-formula of the following parameters. If they are not named, the
+#'   function will attempt to "guess" the optimal parameters. The options are:
+#'
+#'   * title = label or title for the column describing the forest plot
+#'
+#'   * lim = x-axis limits
+#'
+#'   * breaks = x-axis tick marks or break points that should be numbers
+#'
+#'   * int = x-axis intercept
+#'
+#'   * lab = label for the x-axis
+#'
+#'   For example: `list(title ~ "Decreasing Hazard", lab ~ "HR (95% CI))`
+#'
 #' @import ggplot2
 #' @export
-tbl_forest <- function(object,
-											 y,
-											 x,
-											 groups,
-											 levels,
-											 xlim,
-											 xbreak,
-											 xlab) {
+tbl_forest <- function(object, x) {
+	UseMethod("tbl_forest", object = x)
+}
+
+#' @export
+tbl_forest.character <- function(object,
+																 y,
+																 x,
+																 groups = character(),
+																 columns = list(beta ~ "Estimate",
+																 							 conf ~ "95% CI",
+																 							 n ~ "No."),
+																 axis = list()) {
 
 	# Validate
 	if (!inherits(object, "forge")) {
 		stop("Object should be of type `forge`, not `", class(object)[1], "`")
 	}
+	cols <- formula_to_named_list(columns)
+
+	# Rename selecting columns (for both parameter estimates and model info)
+	est_vars <- character()
+	mod_vars <- character()
+	if ("beta" %in% names(cols)) {
+		est_vars <- append(est_vars, "estimate")
+	}
+	if ("conf" %in% names(cols)) {
+		est_vars <- append(est_vars, c("conf.low", "conf.high"))
+	}
+	if ("n" %in% names(cols)) {
+		mod_vars <- append(mod_vars, "nobs")
+	}
 
 	# Create basic table
 	basic <-
 		object |>
-		dplyr::filter(strata %in% groups & level %in% levels) |>
+		dplyr::filter(strata %in% groups) |>
 		dplyr::filter(outcome == y & exposure == x) |>
 		dplyr::as_tibble()
 
@@ -862,29 +910,67 @@ tbl_forest <- function(object,
 		basic$parameter_estimates |>
 		dplyr::bind_rows(.id = "level") |>
 		dplyr::filter(term == x) |>
-		dplyr::select(-c(std.error, statistic))
+		dplyr::select(level, term, all_of(est_vars))
 
 	inf <-
 		basic$model_info |>
 		dplyr::bind_rows(.id = "level") |>
-		dplyr::select(level, nobs)
+		dplyr::select(level, all_of(mod_vars))
 
 	tbl <-
 		dplyr::full_join(est, inf, by = "level") |>
 		dplyr::mutate(level = basic$level) |>
 		dplyr::mutate(strata = basic$strata) |>
-		dplyr::add_row()
+		dplyr::mutate(terms = basic$terms)
+
+	# Setup plotting variables
+	x_vars <- formula_to_named_list(axis)
+
+	if ("lim" %in% names(x_vars)) {
+		lim_val <- eval(x_vars$lim)
+		xmin <- min(lim_val)
+		xmax <- max(lim_val)
+	} else {
+		xmin <- min(tbl$conf.low, na.rm = TRUE)
+		xmax <- min(tbl$conf.high, na.rm = TRUE)
+	}
+
+	if ("int" %in% names(x_vars)) {
+		xint <- eval(x_vars$int)
+	} else {
+		xint <- dplyr::case_when(
+			xmin > 0 & xmax < 1 ~ 0,
+			xmin > 0 & xmax > 1 ~ 1,
+			xmin < 0 & xmax > 0 ~ 0,
+			xmin < 0 & xmax < 0 ~ 0,
+			xmin < -1 & xmax < 0 ~ -1
+		)
+	}
+
+	if ("breaks" %in% names(x_vars)) {
+		breaks <- eval(x_vars$breaks)
+	} else {
+		breaks <- ggplot2::waiver()
+	}
+
+	if ("lab" %in% names(x_vars)) {
+		lab <- x_vars$lab
+	} else {
+		lab <- NULL
+	}
+
 
 	# Make appropriate plots
 	plots <-
 		tbl |>
+		dplyr::add_row() |>
 		dplyr::group_by(strata, level) |>
 		tidyr::nest() |>
 		dplyr::mutate(gg = purrr::map(data, ~ {
 			ggplot(.x, aes(x = estimate, y = 0)) +
 				geom_point(size = 50) +
 				geom_linerange(aes(xmax = conf.high, xmin = conf.low, size = 5)) +
-				geom_vline(xintercept = 1, linetype = 3, size = 5) +
+				geom_vline(xintercept = 0, linetype = 3, size = 5) +
 				theme_minimal() +
 				theme(
 					axis.text.y = element_blank(),
@@ -896,8 +982,8 @@ tbl_forest <- function(object,
 					panel.grid.major = element_blank(),
 					panel.grid.minor = element_blank()
 				) +
-				scale_x_continuous(breaks = xbreak,
-													 limits = xlim,
+				scale_x_continuous(breaks = breaks,
+													 limits = c(xmin, xmax),
 													 oob = scales::oob_squish)
 				#coord_cartesian(xlim = c(-1, 6), ylim = c(-0.1, 0.1), clip = "off")
 		})) |>
@@ -908,26 +994,37 @@ tbl_forest <- function(object,
 	tmp$layers[1:2] <- NULL
 	btm_axis <-
 		tmp +
-		xlab(xlab) +
+		xlab(lab) +
 		theme(
 			axis.text.x = element_text(size = 100, margin = margin(10, 0 , 0 , 0)),
 			axis.ticks.x = element_line(size = 5),
 			axis.ticks.length.x = unit(30, "pt"),
 			axis.title.x = element_text(size = 150, margin = margin(10, 0, 0 , 0)),
-			axis.line.x = element_line(size = 5, arrow = grid::arrow(length = grid::unit(50, "pt"),
-																												 ends = "both",
-																												 type = "closed"))
+			axis.line.x = element_line(
+				size = 5,
+				arrow = grid::arrow(
+					length = grid::unit(50, "pt"),
+					ends = "both",
+					type = "closed"
+				)
+			)
 		)
 
 	plots$gg[nrow(plots)] <- list(btm_axis)
 
 	# Create table
 	tbl |>
+		dplyr::rowwise() |>
+		dplyr::mutate(strata = dplyr::case_when(
+			strata %in% names(labels(terms)) ~ labels(terms)[[strata]]
+		)) |>
+		dplyr::ungroup() |>
 		dplyr::mutate(ggplots = NA) |>
+		dplyr::add_row() |>
+		dplyr::select(level, strata, all_of(mod_vars), all_of(est_vars), ggplots) |>
 		gt::gt(rowname_col = "level", groupname_col = "strata") |>
-		gt::cols_merge(columns = c(estimate, conf.low, conf.high),
-							 pattern = "{1} ({2}, {3})") |>
-		gt::cols_hide(columns = c(term, p.value)) |>
+		gt::cols_merge(columns = all_of(est_vars),
+									 pattern = "{1} ({2}, {3})") |>
 		gt::fmt_number(
 			columns = where(is.numeric),
 			drop_trailing_zeros = TRUE,
@@ -968,7 +1065,8 @@ tbl_forest <- function(object,
 				gt::cell_text(color = "white", size = gt::px(0))
 			),
 			locations = list(
-				gt::cells_body(columns = estimate, rows = is.na(level))
+				gt::cells_body(columns = c(all_of(mod_vars), all_of(est_vars)),
+											 rows = is.na(level))
 			)
 		) |>
 		gt::tab_style(
@@ -976,16 +1074,14 @@ tbl_forest <- function(object,
 				gt::cell_borders(sides = "all", color = NULL)
 			),
 			locations = list(
-				gt::cells_body(columns = estimate)
+				gt::cells_body(columns = c(all_of(mod_vars), all_of(est_vars))),
+				gt::cells_stub(rows = gt::everything())
 			)
 		) |>
 		gt::cols_label(
-			estimate = "Hazard Ratio (95% CI",
-			ggplots = "Decreasing Hazard",
-			nobs = "Number of Subjects"
+			estimate = cols$beta,
+			ggplots = x_vars$title,
+			nobs = cols$n
 		)
-
-
-
 
 }

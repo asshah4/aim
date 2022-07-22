@@ -144,9 +144,14 @@ test_that("subgroup models can be made, with a forest plot", {
 		dplyr::mutate(heavyweight = dplyr::if_else(wt < median(wt), 0, 1))
 
 	x <- rx(mpg ~ X(wt) + S(vs) + S(am), pattern = "direct")
-	f <- fmls(x, order = 2)
+	f <- fmls(
+		x,
+		label = list(mpg ~ "Mileage", vs ~ "Vroom Sounds", am ~ "Automatic Transmission"),
+		order = 2
+	)
 	fits <- fit(f, .fit = lm, data = test_data, archetype = TRUE)
 	m <- mdls(fits)
+
 
 	tbl <- tbl_forest(object = m, y = "mpg", x = "wt", groups = c("vs", "am"), levels = c("0", "1"), xlab = "HR (95% CI)", xlim = c(-10, 0), xbreak = c(0, -1, -2, -5, -10))
 

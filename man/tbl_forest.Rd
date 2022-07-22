@@ -4,10 +4,34 @@
 \alias{tbl_forest}
 \title{Subgroup Forest Plot}
 \usage{
-tbl_forest(object, y, x, groups, levels, xlim, xbreak, xlab)
+tbl_forest(object, x)
 }
 \arguments{
 \item{object}{Class \code{forge} object with models that have been fit}
+
+\item{columns}{Additional columns that help to describe the subgroup models.
+At least one column should be selected from this list. The current options
+are:
+\itemize{
+\item beta = point estimate value, such as odds ratio or hazard ratio
+\item conf = inclusion of the confidence interval (presumed to be 95\%-ile)
+\item n = number of observations in each model group
+}
+
+For example: \verb{list(beta ~ "Hazard", conf ~ "95\% CI" n ~ "No.")"}}
+
+\item{axis}{Argument to help modify the forest plot itself. This is a
+list-formula of the following parameters. If they are not named, the
+function will attempt to "guess" the optimal parameters. The options are:
+\itemize{
+\item title = label or title for the column describing the forest plot
+\item lim = x-axis limits
+\item breaks = x-axis tick marks or break points that should be numbers
+\item int = x-axis intercept
+\item lab = label for the x-axis
+}
+
+For example: \verb{list(title ~ "Decreasing Hazard", lab ~ "HR (95\% CI))}}
 }
 \description{
 Subgroup Forest Plot
