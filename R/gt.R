@@ -866,19 +866,19 @@ tbl_models.data.frame <- function(object,
 #'
 #' @import ggplot2
 #' @export
-tbl_forest <- function(object, x) {
-	UseMethod("tbl_forest", object = x)
-}
+tbl_forest <- function(object,
+											 y,
+											 x,
+											 groups = character(),
+											 columns = list(beta ~ "Estimate",
+											 							 conf ~ "95% CI",
+											 							 n ~ "No."),
+											 axis = list()) {
 
-#' @export
-tbl_forest.character <- function(object,
-																 y,
-																 x,
-																 groups = character(),
-																 columns = list(beta ~ "Estimate",
-																 							 conf ~ "95% CI",
-																 							 n ~ "No."),
-																 axis = list()) {
+
+	# TODO revise how this function works for forge objects versus standard data tables
+	# TODO add ability to extract or filter by formulas from forge objects
+	# TODO how to decide which LEVEL or number to pick in terms of adjusted models
 
 	# Validate
 	if (!inherits(object, "forge")) {
@@ -904,6 +904,7 @@ tbl_forest.character <- function(object,
 		object |>
 		dplyr::filter(strata %in% groups) |>
 		dplyr::filter(outcome == y & exposure == x) |>
+		dplyr::filter(number == max(number)) |>
 		dplyr::as_tibble()
 
 	est <-
@@ -939,10 +940,10 @@ tbl_forest.character <- function(object,
 		xint <- eval(x_vars$int)
 	} else {
 		xint <- dplyr::case_when(
-			xmin > 0 & xmax < 1 ~ 0,
-			xmin > 0 & xmax > 1 ~ 1,
-			xmin < 0 & xmax > 0 ~ 0,
-			xmin < 0 & xmax < 0 ~ 0,
+			xmin >= 0 & xmax < 1 ~ 0,
+			xmin >= 0 & xmax >= 1 ~ 1,
+			xmin < 0 & xmax >= 0 ~ 0,
+			xmin < 0 & xmax <= 0 ~ 0,
 			xmin < -1 & xmax < 0 ~ -1
 		)
 	}
@@ -1016,7 +1017,8 @@ tbl_forest.character <- function(object,
 	tbl |>
 		dplyr::rowwise() |>
 		dplyr::mutate(strata = dplyr::case_when(
-			strata %in% names(labels(terms)) ~ labels(terms)[[strata]]
+			strata %in% names(labels(terms)) ~ vec_data(get_terms(terms, field = "terms", value = strata))$label,
+			!(strata %in% names(labels(terms))) ~ strata
 		)) |>
 		dplyr::ungroup() |>
 		dplyr::mutate(ggplots = NA) |>

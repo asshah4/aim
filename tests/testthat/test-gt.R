@@ -156,7 +156,24 @@ test_that("subgroup models can be made, with a forest plot", {
 	tbl <- tbl_forest(object = m, y = "mpg", x = "wt", groups = c("vs", "am"), levels = c("0", "1"), xlab = "HR (95% CI)", xlim = c(-10, 0), xbreak = c(0, -1, -2, -5, -10))
 
 	expect_s3_class(tbl, "gt_tbl")
-	expect_s3_class
+
+	# TODO modify how axes are made
+	# TODO Ability to relabel the levels of stratified groups
+	# TODO Passing axis information for a logarithm scale instead of linear
+
+})
+
+# Skipping on running tests
+test_that("survival models can be made into forest plots", {
+	skip("Manual build of test only")
+
+	# External data set in forge format
+	object <- readRDS("../mims/_targets/objects/subgroup_models")
+	x <- "hf_stress_rest_delta_zn"
+	y <- "Surv(death_timeto, death_cv_yn)"
+	groups <- c("age_median")
+	columns <- list(beta ~ "Hazard Ratio", conf ~ "95% CI", n ~ "No.")
+	axis <- list(lim ~ c(0,5), lab ~ "HR (95% CI)")
 
 })
 

@@ -3,7 +3,6 @@
 S3method(fit,formula_archetype)
 S3method(glance,model_archetype)
 S3method(print,forge)
-S3method(tbl_forest,character)
 S3method(tbl_models,data.frame)
 S3method(tidy,model_archetype)
 S3method(vec_cast,data.frame.forge)

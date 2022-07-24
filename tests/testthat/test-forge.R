@@ -20,6 +20,8 @@ test_that("multiple inputs will be returned appropriately", {
 	expect_equal(x$name[2], "second")
 	expect_equal(x$name[5], "f3_2")
 
+	# TODO extract names appropriately after fitting archetype models
+
 })
 
 test_that("model archetypes can be forged into a table can be initialized", {
@@ -79,10 +81,9 @@ test_that("strata and their levels are noted in the forged table", {
 
 	x <- rx(am ~ X(wt) + mpg + S(vs), pattern = "direct")
 	f <- fmls(x, order = 2)
-	fits <- fit(f, .fit = glm, family = "binomial", data = test_data, archetype = TRUE)
-	m <- mdls(fits)
+	fits <- fit(f, .fit = glm, family = "binomial", data = mtcars, archetype = TRUE)
+	m <- suppressWarnings(mdls(fits))
 	expect_true("strata" %in% names(m))
-	expect_equal(m$exposure[1] == "wt") # Currently not transposing correctly
-
+	expect_equal(unique(m$exposure), "wt") # Currently not transposing correctly
 
 })

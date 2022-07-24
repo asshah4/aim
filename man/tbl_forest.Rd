@@ -4,7 +4,14 @@
 \alias{tbl_forest}
 \title{Subgroup Forest Plot}
 \usage{
-tbl_forest(object, x)
+tbl_forest(
+  object,
+  y,
+  x,
+  groups = character(),
+  columns = list(beta ~ "Estimate", conf ~ "95\% CI", n ~ "No."),
+  axis = list()
+)
 }
 \arguments{
 \item{object}{Class \code{forge} object with models that have been fit}

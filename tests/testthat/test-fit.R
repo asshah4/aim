@@ -72,3 +72,36 @@ test_that("fitting can be done with strata", {
 
 
 })
+
+# Will skip this test
+test_that("fit a survival model", {
+	skip("Manual build of test only")
+
+	# External data set
+	df <- readRDS("../mims/_targets/objects/clinical")
+
+	# Stratified analysis for survival model
+	sex <-
+		rx(
+			Surv(death_timeto, death_cv_yn) ~ X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + blackrace +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(female_bl),
+			pattern = "sequential"
+		) |>
+		fmls(order = 2)
+
+	# Fitting them
+	mods <- fit(sex, .fit = coxph, data = df, archetype = TRUE)
+	m <- mdls(mods)
+	expect_equal(length(sex) * 2, nrow(m))
+
+	# Stratified model with NA values mixed in
+	heart_dz <-
+		rx(
+			Surv(death_timeto, death_cv_yn) ~ X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + blackrace +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(emory_msimi),
+			pattern = "sequential"
+		) |>
+		fmls(order = 2)
+	mods <- fit(heart_dz, .fit = coxph, data = df, archetype = TRUE)
+	m <- mdls(mods)
+	expect_equal(length(heart_dz) * 2, nrow(m))
+
+})

@@ -47,7 +47,8 @@ fit.formula_archetype <- function(object,
 	    						 	fmls = object[i]
 	    						 ))
   	} else {
-  		strata_lvls <- unique(data[[strata]])
+  		# Should NA values be reported as being missing?
+  		strata_lvls <- unique(stats::na.omit(data[[strata]]))
   		for (j in seq_along(strata_lvls)) {
   			.data <- data[data[[strata]] == strata_lvls[j], ]
 	  		args$data <- quote(.data)
