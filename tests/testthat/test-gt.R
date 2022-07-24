@@ -171,9 +171,9 @@ test_that("survival models can be made into forest plots", {
 	object <- readRDS("../mims/_targets/objects/subgroup_models")
 	x <- "hf_stress_rest_delta_zn"
 	y <- "Surv(death_timeto, death_cv_yn)"
-	groups <- c("age_median")
+	groups <- c("age_median", "female_bl", "blackrace", "hx_cabg_bl", "simi", "lvef_reduced")
 	columns <- list(beta ~ "Hazard Ratio", conf ~ "95% CI", n ~ "No.")
-	axis <- list(lim ~ c(0,5), lab ~ "HR (95% CI)")
+	axis <- list(lim ~ c(0,5), lab ~ "HR (95% CI)", title ~ "Increasing Hazard", breaks = c(0, 1, 2, 5))
 
 })
 

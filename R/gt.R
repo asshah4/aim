@@ -904,7 +904,9 @@ tbl_forest <- function(object,
 		object |>
 		dplyr::filter(strata %in% groups) |>
 		dplyr::filter(outcome == y & exposure == x) |>
+		dplyr::group_by(strata) |>
 		dplyr::filter(number == max(number)) |>
+		dplyr::ungroup() |>
 		dplyr::as_tibble()
 
 	est <-
