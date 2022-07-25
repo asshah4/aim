@@ -879,6 +879,7 @@ tbl_forest <- function(object,
 	# TODO revise how this function works for forge objects versus standard data tables
 	# TODO add ability to extract or filter by formulas from forge objects
 	# TODO how to decide which LEVEL or number to pick in terms of adjusted models
+	# TODO add widths of each column
 
 	# Validate
 	if (!inherits(object, "forge")) {
