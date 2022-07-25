@@ -42,7 +42,11 @@ forge <- function(..., data = NULL) {
       fl <- field(x, "fmls")
       mi <- model_info(x)
       pe <- parameter_estimates(x)
-      si <- as.formula(field(x, "strata_info"))
+      if (is.na(field(x, "strata_info"))) {
+        si <- list(NA, NA, NA)
+      } else {
+        si <- as.formula(field(x, "strata_info"))
+      }
 
       y <-
         x |>

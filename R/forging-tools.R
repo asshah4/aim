@@ -128,7 +128,7 @@ hammer <- function(object, name) {
     	m <- append(m, as.list(x))
     }
 
-    if (class(x)[1] %in% c("lm", "glm", "model_fit")) {
+    if (class(x)[1] %in% c("lm", "glm", "model_fit", "coxph")) {
     	z <- md(x)
     	m <- append(m, as.list(z))
     }
