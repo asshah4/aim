@@ -88,39 +88,27 @@ tbl_forest.forge <- function(object,
 	}
 
 	# Create basic table
-	basic <-
+	tbl <-
 		object |>
+		temper() |>
 		dplyr::filter(strata %in% groups) |>
 		dplyr::filter(outcome == y & exposure == x) |>
-		dplyr::group_by(strata) |>
+		dplyr::group_by(strata, level) |>
 		dplyr::filter(number == max(number)) |>
-		dplyr::ungroup() |>
-		dplyr::as_tibble()
-
-	est <-
-		basic$parameter_estimates |>
-		dplyr::bind_rows(.id = "level") |>
 		dplyr::filter(term == x) |>
-		dplyr::select(level, term, all_of(est_vars))
+		dplyr::ungroup() |>
+		dplyr::select(strata, level, term, terms,
+									all_of(est_vars), all_of(mod_vars))
 
-	inf <-
-		basic$model_info |>
-		dplyr::bind_rows(.id = "level") |>
-		dplyr::select(level, all_of(mod_vars))
 
-	tbl <-
-		dplyr::full_join(est, inf, by = "level") |>
-		dplyr::mutate(level = basic$level) |>
-		dplyr::mutate(strata = basic$strata) |>
-		dplyr::mutate(terms = basic$terms)
-
+	# Reciprocal odds or hazard if needed
 	if (flip) {
 		tbl <- dplyr::mutate(tbl, across(all_of(est_vars), ~ 1 / .x))
-	}
 
-	if ("conf.low" %in% est_vars) {
-		tbl <-
-			dplyr::rename(tbl, conf.high = conf.low, conf.low = conf.high)
+		if ("conf.low" %in% est_vars) {
+			tbl <-
+				dplyr::rename(tbl, conf.high = conf.low, conf.low = conf.high)
+		}
 
 	}
 

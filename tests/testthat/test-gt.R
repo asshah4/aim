@@ -1,4 +1,3 @@
-
 test_that("subgroup models can be made, with a forest plot", {
 
 	# Outcome = am
@@ -18,12 +17,18 @@ test_that("subgroup models can be made, with a forest plot", {
 	fits <- fit(f, .fit = lm, data = test_data, archetype = TRUE)
 	m <- mdls(fits)
 
+	object = m
+	formula = mpg ~ wt
+	groups = c("vs", "am")
+	columns = list(beta ~ "Estimates", conf ~ "95% CI", n ~ "Number")
+	axis = list(lab ~ "B (95% CI)", lim ~ c(0, 0.1), breaks ~ c(0, .02, .05, .1), scale ~ "continuous")
+
 	tbl <- tbl_forest.forge(
-		object = m,
-		formula = mpg ~ wt,
-		groups = c("vs", "am"),
-		columns = list(beta ~ "Estimates", conf ~ "95% CI", n ~ "Number"),
-		axis = list(lab ~ "B (95% CI)", lim ~ c(0, 0.1), breaks ~ c(0, .02, .05, .1), scale ~ "continuous")
+		object = object,
+		formula = formula,
+		groups = groups,
+		columns = columns,
+		axis = axis
 	)
 
 	expect_s3_class(tbl, "gt_tbl")

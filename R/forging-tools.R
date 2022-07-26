@@ -93,7 +93,7 @@ vec_ptype_full.data_list <- function(x, ...) "data_list"
 vec_ptype_abbr.data_list <- function(x, ...) "dl"
 
 
-# Flatten arguments down to a list ---------------------------------------------
+# Modify Forge Inputs and Outputs ----------------------------------------------
 
 #' Hammers the ellipsis arguments into a flattened list
 #' @keywords internal
@@ -160,14 +160,28 @@ hammer <- function(object, name) {
 
 }
 
-
-# Draw out components from a forge ---------------------------------------------
-
-#' Draw out components from the forge
+#' Temper objects from the forge
 #'
-#' @param x A model `forge` object
+#' @param object A model `forge` object
 #' @param f A formula or formula_archetype object
 #' @export
-draw <- function(x, f) {
+temper <- function(object, ...) {
+
+	# Validate
+	stopifnot(inherits(object, "forge"))
+
+	# Trim away unnecessary variables
+	# Unnest the parameter estimates and model information
+	object |>
+		subset(run == TRUE) |>
+		subset(select = c(type, subtype, name, number, formula, outcome, exposure, mediator, strata, level, parameter_estimates, model_info, terms)) |>
+		dplyr::mutate(model_info = purrr::map(model_info, tibble::as_tibble)) |>
+		tidyr::unnest(model_info) |>
+		dplyr::rename(
+			global.statistic = statistic,
+			global.p.value = p.value
+		) |>
+		dplyr::mutate(parameter_estimates = purrr::map(parameter_estimates, tibble::as_tibble)) |>
+		tidyr::unnest(parameter_estimates)
 
 }
