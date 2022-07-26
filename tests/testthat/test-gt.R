@@ -153,7 +153,13 @@ test_that("subgroup models can be made, with a forest plot", {
 	m <- mdls(fits)
 
 
-	tbl <- tbl_forest(object = m, y = "mpg", x = "wt", groups = c("vs", "am"), levels = c("0", "1"), xlab = "HR (95% CI)", xlim = c(-10, 0), xbreak = c(0, -1, -2, -5, -10))
+	tbl <- tbl_forest(
+		object = m,
+		formula = mpg ~ wt,
+		groups = c("vs", "am"),
+		columns = list(beta ~ "Estimates", conf ~ "95% CI", n ~ "Number"),
+		axis = list(lab ~ "B (95% CI)", lim ~ c(0, 0.2), breaks ~ c(0, .01, .02, .05, .1), scale ~ "continuous")
+	)
 
 	expect_s3_class(tbl, "gt_tbl")
 
@@ -169,11 +175,10 @@ test_that("survival models can be made into forest plots", {
 
 	# External data set in forge format
 	object <- readRDS("../mims/_targets/objects/subgroup_models")
-	x <- "hf_stress_rest_delta_zn"
-	y <- "Surv(death_timeto, death_cv_yn)"
+	formula <- Surv(death_timeto, death_cv_yn) ~ hf_stress_rest_delta_zn
 	groups <- c("age_median", "female_bl", "blackrace", "hx_cabg_bl", "simi", "lvef_reduced")
 	columns <- list(beta ~ "Hazard Ratio", conf ~ "95% CI", n ~ "No.")
-	axis <- list(lim ~ c(0,5), lab ~ "HR (95% CI)", title ~ "Increasing Hazard", breaks = c(0, 1, 2, 5))
+	axis <- list(lim ~ c(0,5), lab ~ "HR (95% CI)", title ~ "Increasing Hazard", breaks ~ c(0, 1, 2, 5), int ~ 1)
 
 })
 

@@ -837,8 +837,8 @@ tbl_models.data.frame <- function(object,
 #' @param object Class `forge` object with models that have been fit
 #'
 #' @param columns Additional columns that help to describe the subgroup models.
-#'   At least one column should be selected from this list. The current options
-#'   are:
+#'   At least one column should be selected from this list. The sequence listed
+#'   will reflect the sequence shown in the table. The current options are:
 #'
 #'   * beta = point estimate value, such as odds ratio or hazard ratio
 #'
@@ -847,6 +847,10 @@ tbl_models.data.frame <- function(object,
 #'   * n = number of observations in each model group
 #'
 #'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
+#'
+#' @param flip Determine if the odds or hazard ratio should be shown as the
+#'   reciprocal values. Instead of a decreasing hazard for every unit increase,
+#'   it describes an increasing hazard for every unit decrease.
 #'
 #' @param axis Argument to help modify the forest plot itself. This is a
 #'   list-formula of the following parameters. If they are not named, the
@@ -862,32 +866,49 @@ tbl_models.data.frame <- function(object,
 #'
 #'   * lab = label for the x-axis
 #'
+#'   * scale = defaults to continuous, but may also use a log transformation as
+#'   well `c("continuous", "log")`
+#'
 #'   For example: `list(title ~ "Decreasing Hazard", lab ~ "HR (95% CI))`
+#'
+#' @param width Describes the width of each column in a list of two-sided
+#'   formulas. The RHS is a decimal reflecting the percent each column should
+#'   take of the entire table. The forest plot is usually given 30% of the
+#'   width.
+#'
+#' For example: `list(n ~ .1, forest ~ 0.3)`
 #'
 #' @import ggplot2
 #' @export
-tbl_forest <- function(object,
-											 y,
-											 x,
-											 groups = character(),
-											 columns = list(beta ~ "Estimate",
-											 							 conf ~ "95% CI",
-											 							 n ~ "No."),
-											 axis = list()) {
+tbl_forest <- function(object) {
+	UseMethod("tbl_forest", object = object)
+}
 
+#' @export
+tbl_forest.forge <- function(object,
+														 formula = formula(),
+														 groups = character(),
+														 columns = list(beta ~ "Estimate",
+														 							 conf ~ "95% CI",
+														 							 n ~ "No."),
+														 flip = FALSE,
+														 axis = list(scale ~ "continuous"),
+														 width = list()) {
 
 	# TODO revise how this function works for forge objects versus standard data tables
 	# TODO add ability to extract or filter by formulas from forge objects
 	# TODO how to decide which LEVEL or number to pick in terms of adjusted models
 	# TODO add widths of each column
 
-	# Validate
-	if (!inherits(object, "forge")) {
-		stop("Object should be of type `forge`, not `", class(object)[1], "`")
+	# Validate formula
+	if (!inherits(formula, "formula")) {
+		stop("Object should be of type `formula`, not `", class(formula)[1], "`")
 	}
-	cols <- formula_to_named_list(columns)
+	y <- lhs(formula)
+	x <- rhs(formula)
 
 	# Rename selecting columns (for both parameter estimates and model info)
+	cols <- formula_to_named_list(columns)
 	est_vars <- character()
 	mod_vars <- character()
 	if ("beta" %in% names(cols)) {
@@ -927,7 +948,17 @@ tbl_forest <- function(object,
 		dplyr::mutate(strata = basic$strata) |>
 		dplyr::mutate(terms = basic$terms)
 
-	# Setup plotting variables
+	if (flip) {
+		tbl <- dplyr::mutate(tbl, across(all_of(est_vars), ~ 1 / .x))
+	}
+
+	if ("conf.low" %in% est_vars) {
+		tbl <-
+			dplyr::rename(tbl, conf.high = conf.low, conf.low = conf.high)
+
+	}
+
+	# Setup plotting variables from the axis argument
 	x_vars <- formula_to_named_list(axis)
 
 	if ("lim" %in% names(x_vars)) {
@@ -943,11 +974,11 @@ tbl_forest <- function(object,
 		xint <- eval(x_vars$int)
 	} else {
 		xint <- dplyr::case_when(
-			xmin >= 0 & xmax < 1 ~ 0,
-			xmin >= 0 & xmax >= 1 ~ 1,
-			xmin < 0 & xmax >= 0 ~ 0,
-			xmin < 0 & xmax <= 0 ~ 0,
-			xmin < -1 & xmax < 0 ~ -1
+			xmin < -1 & xmax <= 0 ~ -1,
+			xmin > -1 & xmax <= 0 ~ 0,
+			xmin < 0 & xmax > 0 ~ 0,
+			xmin >= 0 & xmax <= 1 ~ 0,
+			xmin >= 0 & xmax > 1 ~ 1
 		)
 	}
 
@@ -963,18 +994,22 @@ tbl_forest <- function(object,
 		lab <- NULL
 	}
 
+	if ("scale" %in% names(x_vars)) {
+		scale <- x_vars$scale
+	} else {
+		scale <- "continuous"
+	}
 
 	# Make appropriate plots
 	plots <-
 		tbl |>
-		dplyr::add_row() |>
 		dplyr::group_by(strata, level) |>
 		tidyr::nest() |>
 		dplyr::mutate(gg = purrr::map(data, ~ {
 			ggplot(.x, aes(x = estimate, y = 0)) +
 				geom_point(size = 50) +
 				geom_linerange(aes(xmax = conf.high, xmin = conf.low, size = 5)) +
-				geom_vline(xintercept = 0, linetype = 3, size = 5) +
+				geom_vline(xintercept = xint, linetype = 3, size = 5) +
 				theme_minimal() +
 				theme(
 					axis.text.y = element_blank(),
@@ -986,13 +1021,26 @@ tbl_forest <- function(object,
 					panel.grid.major = element_blank(),
 					panel.grid.minor = element_blank()
 				) +
-				scale_x_continuous(breaks = breaks,
-													 limits = c(xmin, xmax),
-													 oob = scales::oob_squish)
-				#coord_cartesian(xlim = c(-1, 6), ylim = c(-0.1, 0.1), clip = "off")
+				{
+					if(scale == "log") {
+						scale_x_continuous(
+							trans = "pseudo_log",
+							breaks = breaks,
+							limits = c(xmin, xmax),
+							oob = scales::oob_squish
+						)
+					} else {
+						scale_x_continuous(
+							breaks = breaks,
+							limits = c(xmin, xmax),
+							oob = scales::oob_squish
+						)
+					}
+				}
 		})) |>
 		tidyr::unnest(data) |>
-		dplyr::ungroup()
+		dplyr::ungroup() |>
+		dplyr::add_row()
 
 	tmp <- plots$gg[[1]]
 	tmp$layers[1:2] <- NULL
@@ -1044,8 +1092,9 @@ tbl_forest <- function(object,
 									 aspect_ratio = 5)
 			}
 		) |>
-		gt::cols_width(ggplots ~ gt::px(300)) |>
-		gt::cols_width(estimate ~ gt::px(300)) |>
+		gt::cols_width(ggplots ~ gt::pct(50)) |>
+		gt::cols_width(estimate ~ gt::pct(40)) |>
+		gt::cols_width(nobs ~ gt::pct(10)) |>
 		gt::opt_vertical_padding(scale = 0) |>
 		gt::opt_table_outline(style = "none") |>
 		gt::tab_options(
