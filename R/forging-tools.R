@@ -107,7 +107,7 @@ hammer <- function(object, name) {
 			"formula",
 			"formula_archetype",
 			"model_archetype",
-			supported_models
+			arcane:::supported_models
 		)
 	)) {
 		message("Every object entered is not appropriate for the `forge`.")
@@ -127,7 +127,7 @@ hammer <- function(object, name) {
     } else if (class(x)[1] == "formula_archetype") {
     	# Fmls archetypes
     	m <- append(m, as.list(x))
-    } else if (class(x)[1] %in% supported_models) {
+    } else if (class(x)[1] %in% arcane:::supported_models) {
     	# Standard modeling objects
     	z <- md(x)
     	m <- append(m, as.list(z))
