@@ -64,7 +64,7 @@ forge <- function(..., data = NULL) {
     # Formulas
     if (class(x)[1] == "formula_archetype") {
       # Ensure appropriate formula can be modeled later if need be
-      f <- x[field(x, "order") %in% 2:3]
+      f <- x[field(x, "order") %in% 1:3]
 
       # Formula hasn't been fit, so empty parameters
       pe <- parameter_estimates()

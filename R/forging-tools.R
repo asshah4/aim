@@ -102,13 +102,15 @@ hammer <- function(object, name) {
 
 	stopifnot(inherits(object, "list"))
 	contents <- sapply(object, function(.x) { class(.x)[1] })
-	if (!any(contents %in% c("formula",
-													 "formula_archetype",
-													 "model_archetype",
-													 "lm",
-													 "glm",
-													 "model_fit"))) {
-		stop("Every object entered is not appropriate for the `forge`.")
+	if (!any(
+		contents %in% c(
+			"formula",
+			"formula_archetype",
+			"model_archetype",
+			supported_models
+		)
+	)) {
+		message("Every object entered is not appropriate for the `forge`.")
 	}
 
 	mtl <- list() # Empty list to append to
@@ -116,30 +118,33 @@ hammer <- function(object, name) {
 	for (i in seq_along(object)) {
 		x <- object[[i]]
 		m <- list() # Temporary list to append to the master list above
+		nm <- character() # Temporary character name holder
 
-    # Formulas
     if (class(x)[1] == "formula") {
+	    # Formulas
   		z <- fmls(x, order = 2:3)
   		m <- append(m, as.list(z))
-    }
-
-    # This may be fmls, fmls "to be", or model archetype lists
-    if (class(x)[1] == "formula_archetype") {
+    } else if (class(x)[1] == "formula_archetype") {
+    	# Fmls archetypes
     	m <- append(m, as.list(x))
-    }
-
-    if (class(x)[1] %in% c("lm", "glm", "model_fit", "coxph")) {
+    } else if (class(x)[1] %in% supported_models) {
+    	# Standard modeling objects
     	z <- md(x)
     	m <- append(m, as.list(z))
-    }
-
-    if (class(x)[1] == "model_archetype") {
+    } else if (class(x)[1] == "model_archetype") {
+    	# Model archetypes
+    	m <- append(m, as.list(x))
+    	nm <- vec_data(x)$name
+    } else {
+    	# For unknown objects (would include a warning)
     	m <- append(m, as.list(x))
     }
 
-    # Naming
+    # Creating new names for everything but model archetypes
 		n <- length(m)
-		nm <- paste0(name[i], "_", 1:n)
+		if (length(nm) == 0) {
+			nm <- paste0(name[i], "_", 1:n)
+		}
 
 		if (length(m) > 1) {
 			names(m) <- nm

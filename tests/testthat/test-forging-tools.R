@@ -19,6 +19,9 @@ test_that("ellipses can be hammered down to a single hierarchy list", {
   nms <- names(mc)[-1]
   nms[nms == ""] <- arg_names[nms == ""]
   name <- nms
+  mtl <- hammer(object, name)
+  expect_length(mtl, 5)
+  expect_named(mtl[5], "f3_2")
 
 
 

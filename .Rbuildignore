@@ -11,3 +11,4 @@
 ^sandbox.R$
 ^R/dev\.R$
 ^cran-comments\.md$
+^data-raw$

@@ -29,14 +29,24 @@ test_that("model archetypes can be forged into a table and initialized", {
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- glm(am ~ hp + cyl, mtcars, family = "binomial")
 	m3 <- lm(mpg ~ wt + gear, mtcars)
-	m_named <- list(first = m1, second = m2, third = m3)
+	m_named <- md(list(first = m1, second = m2, third = m3))
 	m_mixed <- list(m1, second = m2, third = m3)
 	m_none <- list(m1, m2, m3)
 	x <- md(m_mixed)
-
 	mf <- forge(x)
 	expect_equal(nrow(mf), 3)
-	expect_length(mf, 13) # Number of columns
+	expect_length(mf, 16) # Number of columns
+
+	# Names should be appropriately taken from model archetypes if available
+	# List added as arguments in function are taken as a list
+	y <- md(m_none)
+	object <- list(m_named, x, y)
+	mc <- as.call(str2lang("list(m_named, x, y)"))
+	mf <- forge(m_named, x, y)
+	expect_equal(mf$name[1], "first")
+	expect_equal(mf$name[4], "m_mixed_1")
+	expect_equal(mf$name[9], "m_none_3")
+
 
 	# Basic output
 	expect_output(print(mf), "<forge>")
@@ -47,10 +57,10 @@ test_that("model archetypes can be forged into a table and initialized", {
 test_that("unfitted formula archetypes can be forged into a table", {
 
 	s <- rx(mpg + wt ~ hp + cyl, pattern = "sequential")
-	x <- fmls(s, order = 2)
+	x <- fmls(s, order = 1:2)
 	mf <- mdls(x)
 	expect_s3_class(mf, "forge")
-	expect_equal(nrow(mf), 4)
+	expect_equal(nrow(mf), 6)
 
 })
 
@@ -87,3 +97,4 @@ test_that("strata and their levels are noted in the forged table", {
 
 
 })
+

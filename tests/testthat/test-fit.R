@@ -15,7 +15,7 @@ test_that("lists can be fit", {
 
 	# Transform to model archetypes
 	m1 <- model_archetype(lom)
-	expect_s3_class(m, "model_archetype")
+	expect_s3_class(m1, "model_archetype")
 	m2 <- fit(lof, lm, data = mtcars, archetype = TRUE)
 	expect_equal(length(m1), length(m2))
 
@@ -47,7 +47,7 @@ test_that("fitting can be done with strata", {
 	ml <- fit(lof, lm, data = mtcars)
 	ma <- fit(lof, lm, data = mtcars, archetype = TRUE)
 	expect_type(ml, "list")
-	expect_length(ml, 9)
+	expect_length(ml, 15)
 	expect_s3_class(ml[[1]], "lm")
 	m <- model_archetype(ml) # Expect to lose information here
 	expect_s3_class(m, "model_archetype")
@@ -55,20 +55,20 @@ test_that("fitting can be done with strata", {
 	# Has to stay within the "archetype" world to maintain that extra information
 	# Thus, will not be the same metadata between generic mods and archetype mods
 	expect_equal(vec_data(ma)[1], vec_data(m)[1], ignore_attr = TRUE)
-	expect_equal(vec_data(ma)[7], vec_data(m)[7], ignore_attr = TRUE)
+	expect_equal(format(vec_data(ma)[[7]]), format(vec_data(m)[[7]]))
 	expect_equal(vec_data(m)[["strata_info"]][1], NA_character_)
 
 	# Tidy
 	tbl <- tidy(m)
 	expect_type(tbl, "list")
 	expect_s3_class(tbl[[1]], "tbl_df")
-	expect_length(tbl, 9)
+	expect_length(tbl, 15)
 
 	# Glance
 	g <- glance(m)
 	expect_type(g, "list")
 	expect_s3_class(g[[1]], "tbl_df")
-	expect_length(g, 9)
+	expect_length(g, 15)
 
 
 })
@@ -81,27 +81,28 @@ test_that("fit a survival model", {
 	df <- readRDS("../mims/_targets/objects/clinical")
 
 	# Stratified analysis for survival model
-	sex <-
+	f1 <-
 		rx(
 			Surv(death_timeto, death_cv_yn) ~ X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + blackrace +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(female_bl),
 			pattern = "sequential"
 		) |>
 		fmls(order = 2)
 
-	# Fitting them
-	mods <- fit(sex, .fit = coxph, data = df, archetype = TRUE)
-	m <- mdls(mods)
-	expect_equal(length(sex) * 2, nrow(m))
-
-	# Stratified model with NA values mixed in
-	heart_dz <-
+	f2 <-
 		rx(
-			Surv(death_timeto, death_cv_yn) ~ X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + blackrace +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(emory_msimi),
+			Surv(death_timeto, death_cv_yn) ~ X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + female_bl +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(blackrace),
 			pattern = "sequential"
 		) |>
 		fmls(order = 2)
-	mods <- fit(heart_dz, .fit = coxph, data = df, archetype = TRUE)
-	m <- mdls(mods)
-	expect_equal(length(heart_dz) * 2, nrow(m))
+
+	# Fitting them
+	if (require(survival)) {
+		sex <- fit(f1, .fit = coxph, data = df, archetype = TRUE)
+		race <- fit(f2, .fit = coxph, data = df, archetype = TRUE)
+	}
+	# This setup allows it to keep the appropriate names
+	m <- mdls(sex, race)
+	expect_equal(length(sex), nrow(subset(m, grepl("sex", name))))
+	expect_equal(length(race), nrow(subset(m, grepl("race", name))))
 
 })
