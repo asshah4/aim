@@ -1139,3 +1139,4 @@ tbl_forest.forge <- function(object,
 		)
 
 }
+

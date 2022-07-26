@@ -4,21 +4,14 @@
 \alias{tbl_forest}
 \title{Subgroup Forest Plot}
 \usage{
-tbl_forest(
-  object,
-  y,
-  x,
-  groups = character(),
-  columns = list(beta ~ "Estimate", conf ~ "95\% CI", n ~ "No."),
-  axis = list()
-)
+tbl_forest(object)
 }
 \arguments{
 \item{object}{Class \code{forge} object with models that have been fit}
 
 \item{columns}{Additional columns that help to describe the subgroup models.
-At least one column should be selected from this list. The current options
-are:
+At least one column should be selected from this list. The sequence listed
+will reflect the sequence shown in the table. The current options are:
 \itemize{
 \item beta = point estimate value, such as odds ratio or hazard ratio
 \item conf = inclusion of the confidence interval (presumed to be 95\%-ile)
@@ -26,6 +19,10 @@ are:
 }
 
 For example: \verb{list(beta ~ "Hazard", conf ~ "95\% CI" n ~ "No.")"}}
+
+\item{flip}{Determine if the odds or hazard ratio should be shown as the
+reciprocal values. Instead of a decreasing hazard for every unit increase,
+it describes an increasing hazard for every unit decrease.}
 
 \item{axis}{Argument to help modify the forest plot itself. This is a
 list-formula of the following parameters. If they are not named, the
@@ -36,9 +33,18 @@ function will attempt to "guess" the optimal parameters. The options are:
 \item breaks = x-axis tick marks or break points that should be numbers
 \item int = x-axis intercept
 \item lab = label for the x-axis
+\item scale = defaults to continuous, but may also use a log transformation as
+well \code{c("continuous", "log")}
 }
 
 For example: \verb{list(title ~ "Decreasing Hazard", lab ~ "HR (95\% CI))}}
+
+\item{width}{Describes the width of each column in a list of two-sided
+formulas. The RHS is a decimal reflecting the percent each column should
+take of the entire table. The forest plot is usually given 30\% of the
+width.
+
+For example: \code{list(n ~ .1, forest ~ 0.3)}}
 }
 \description{
 Subgroup Forest Plot
