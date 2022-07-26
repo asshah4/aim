@@ -30,10 +30,4 @@ by making the spacing more compact and decreasing the font size. The exposed
 variables are to control font size and table width, but any option from the
 \code{gt} package is allowed.
 }
-\seealso{
-Other visualizers: 
-\code{\link{tbl_compare}()},
-\code{\link{tbl_models}()},
-\code{\link{tbl_sequential}()}
-}
 \concept{visualizers}
