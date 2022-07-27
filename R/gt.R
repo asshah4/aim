@@ -1,6 +1,6 @@
 #' Subgroup Forest Plot
 #'
-#' @param object Class `forge` object with models that have been fit
+#' @param x Class `forge` object with models that have been fit
 #'
 #' @param columns Additional columns that help to describe the subgroup models.
 #'   At least one column should be selected from this list. The sequence listed
@@ -46,7 +46,7 @@
 #'
 #' @import ggplot2
 #' @export
-tbl_forest <- function(object) {
+tbl_forest <- function(object, ...) {
 	UseMethod("tbl_forest", object = object)
 }
 

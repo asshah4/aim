@@ -4,10 +4,10 @@
 \alias{tbl_forest}
 \title{Subgroup Forest Plot}
 \usage{
-tbl_forest(object)
+tbl_forest(object, ...)
 }
 \arguments{
-\item{object}{Class \code{forge} object with models that have been fit}
+\item{x}{Class \code{forge} object with models that have been fit}
 
 \item{columns}{Additional columns that help to describe the subgroup models.
 At least one column should be selected from this list. The sequence listed

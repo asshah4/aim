@@ -127,14 +127,13 @@ hammer <- function(object, name) {
     } else if (class(x)[1] == "formula_archetype") {
     	# Fmls archetypes
     	m <- append(m, as.list(x))
+    } else if (class(x)[1] == "model_archetype") {
+    	# Model archetypes
+    	m <- append(m, as.list(x))
     } else if (class(x)[1] %in% arcane:::supported_models) {
     	# Standard modeling objects
     	z <- md(x)
     	m <- append(m, as.list(z))
-    } else if (class(x)[1] == "model_archetype") {
-    	# Model archetypes
-    	m <- append(m, as.list(x))
-    	nm <- vec_data(x)$name
     } else {
     	# For unknown objects (would include a warning)
     	m <- append(m, as.list(x))
@@ -142,9 +141,7 @@ hammer <- function(object, name) {
 
     # Creating new names for everything but model archetypes
 		n <- length(m)
-		if (length(nm) == 0) {
-			nm <- paste0(name[i], "_", 1:n)
-		}
+		nm <- paste0(name[i], "_", 1:n)
 
 		if (length(m) > 1) {
 			names(m) <- nm
@@ -172,16 +169,20 @@ temper <- function(object, ...) {
 
 	# Trim away unnecessary variables
 	# Unnest the parameter estimates and model information
-	object |>
+	raw <-
+		object |>
 		subset(run == TRUE) |>
 		subset(select = c(type, subtype, name, number, formula, outcome, exposure, mediator, strata, level, parameter_estimates, model_info, terms)) |>
-		dplyr::mutate(model_info = purrr::map(model_info, tibble::as_tibble)) |>
-		tidyr::unnest(model_info) |>
-		dplyr::rename(
-			global.statistic = statistic,
-			global.p.value = p.value
-		) |>
 		dplyr::mutate(parameter_estimates = purrr::map(parameter_estimates, tibble::as_tibble)) |>
-		tidyr::unnest(parameter_estimates)
+		tidyr::unnest(parameter_estimates) |>
+		dplyr::mutate(model_info = purrr::map(model_info, tibble::as_tibble)) |>
+		tidyr::unnest(model_info, names_repair = "minimal")
+
+	nms <- colnames(raw)
+	nms[duplicated(nms)] <- paste0("global.", nms[duplicated(nms)])
+	colnames(raw) <- nms
+
+	# Return renamed raw data
+	raw
 
 }

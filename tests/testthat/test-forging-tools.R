@@ -13,8 +13,8 @@ test_that("ellipses can be hammered down to a single hierarchy list", {
 	f3 <- fmls(mpg + wt ~ hp + cyl, order = 2)
 
 	# Dot arguments
-	object <- list(m1, second = m5, f = f1, f3)
-	mc <- as.call(str2lang("list(m1, second = m5, f = f1, f3)"))
+	object <- list(m5, second = m2, f = f1, f3)
+	mc <- as.call(str2lang("list(m5, second = m2, f = f1, f3)"))
   arg_names <- as.character(mc)[-1]
   nms <- names(mc)[-1]
   nms[nms == ""] <- arg_names[nms == ""]
@@ -42,6 +42,6 @@ test_that("forged objects can be shaped into a informative table", {
 	x <- temper(object)
 	expect_s3_class(x, "tbl_df")
 	expect_named(x)
-	expect_length(x, 31) # Number of currently columns
+	expect_length(x, 32) # Number of currently columns
 
 })

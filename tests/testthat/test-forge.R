@@ -35,7 +35,7 @@ test_that("model archetypes can be forged into a table and initialized", {
 	x <- md(m_mixed)
 	mf <- forge(x)
 	expect_equal(nrow(mf), 3)
-	expect_length(mf, 16) # Number of columns
+	expect_length(mf, 17) # Number of columns
 
 	# Names should be appropriately taken from model archetypes if available
 	# List added as arguments in function are taken as a list
@@ -43,9 +43,12 @@ test_that("model archetypes can be forged into a table and initialized", {
 	object <- list(m_named, x, y)
 	mc <- as.call(str2lang("list(m_named, x, y)"))
 	mf <- forge(m_named, x, y)
-	expect_equal(mf$name[1], "first")
-	expect_equal(mf$name[4], "m_mixed_1")
-	expect_equal(mf$name[9], "m_none_3")
+	expect_equal(mf$subname[1], "first")
+	expect_equal(mf$subname[4], "m_mixed_1")
+	expect_equal(mf$subname[7], "m_none_1")
+	expect_equal(mf$name[1], "m_named_1")
+	expect_equal(mf$name[4], "x_1")
+	expect_equal(mf$name[7], "y_1")
 
 
 	# Basic output
