@@ -65,7 +65,7 @@ forge <- function(..., data = NULL) {
     }
 
     # Formulas
-    if (class(x)[1] == "formula_archetype") {
+    if (class(x)[1] == "fmls") {
       # Ensure appropriate formula can be modeled later if need be
       f <- x[field(x, "order") %in% 1:3]
 
@@ -108,10 +108,10 @@ forge <- function(..., data = NULL) {
           t
         }
       )) |>
-      # Generate list of terms for each row
-      mutate(terms = list(get_terms(fmls))) |>
+      # Generate list of runes for each row
+      mutate(terms = list(get_runes(fmls))) |>
       dplyr::ungroup() |>
-      mutate(terms = term_list(terms))
+      mutate(terms = rune_list(terms))
 
     # Make individual row for a table
     tbl_row <- construct_model_table(
@@ -122,7 +122,7 @@ forge <- function(..., data = NULL) {
       subname = z$subname,
       number = z$number,
       description = z$description,
-      formula = z$formula,
+      formula = z$formulas,
       outcome = z$outcome,
       exposure = z$exposure,
       mediator = z$mediator,
@@ -173,7 +173,7 @@ construct_model_table <- function(model = list(),
                                   mediator = character(),
                                   strata = character(),
                                   level = numeric(),
-                                  terms = term_list(),
+                                  terms = rune_list(),
                                   model_info = model_info(),
                                   parameter_estimates = parameter_estimates(),
                                   run = logical()) {
@@ -192,7 +192,7 @@ construct_model_table <- function(model = list(),
   vec_assert(mediator, ptype = character())
   vec_assert(strata, ptype = character())
   vec_assert(level, size = 1)
-  vec_assert(terms, ptype = term_list())
+  vec_assert(terms, ptype = rune_list())
   vec_assert(parameter_estimates, ptype = parameter_estimates())
   vec_assert(model_info, ptype = model_info())
   vec_assert(run, ptype = logical())

@@ -3,12 +3,13 @@
 generics::fit
 
 #' @export
-fit.formula_archetype <- function(object,
-                                  .fit,
-                                  ...,
-                                  data,
-																	name = deparse1(substitute(object)),
-																	archetype = FALSE) {
+fit.fmls <- function(object,
+										 .fit,
+										 ...,
+										 data,
+										 name = deparse1(substitute(object)),
+										 archetype = FALSE) {
+
   cl <- match.call()
   args <- list(...)
 
@@ -31,7 +32,7 @@ fit.formula_archetype <- function(object,
 
   for (i in seq_along(object)) {
 
-  	f <- stats::formula(field(object[i], "formula"))
+  	f <- stats::formula(field(object[i], "formulas"))
   	strata <-
   		vec_data(object[i])$strata[[1]] |>
   		as.character()

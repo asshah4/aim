@@ -8,7 +8,7 @@ test_that("subgroup models can be made, with a forest plot", {
 		mtcars |>
 		dplyr::mutate(heavyweight = dplyr::if_else(wt < median(wt), 0, 1))
 
-	x <- rx(mpg ~ X(wt) + S(vs) + S(am), pattern = "direct")
+	x <- sx(mpg ~ X(wt) + S(vs) + S(am), pattern = "direct")
 	f <- fmls(
 		x,
 		label = list(mpg ~ "Mileage", vs ~ "Vroom Sounds", am ~ "Automatic Transmission"),

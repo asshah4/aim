@@ -222,7 +222,7 @@ tbl_forest.forge <- function(object,
 	tbl |>
 		dplyr::rowwise() |>
 		dplyr::mutate(strata = dplyr::case_when(
-			strata %in% names(labels(terms)) ~ vec_data(get_terms(terms, field = "terms", value = strata))$label,
+			strata %in% names(labels(terms)) ~ vec_data(get_runes(terms, field = "runes", value = strata))$label,
 			!(strata %in% names(labels(terms))) ~ strata
 		)) |>
 		dplyr::ungroup() |>

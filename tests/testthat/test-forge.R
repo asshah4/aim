@@ -20,7 +20,6 @@ test_that("multiple inputs will be returned appropriately", {
 	expect_equal(x$name[2], "second")
 	expect_equal(x$name[5], "f3_2")
 
-
 })
 
 test_that("model archetypes can be forged into a table and initialized", {
@@ -59,7 +58,7 @@ test_that("model archetypes can be forged into a table and initialized", {
 
 test_that("unfitted formula archetypes can be forged into a table", {
 
-	s <- rx(mpg + wt ~ hp + cyl, pattern = "sequential")
+	s <- sx(mpg + wt ~ hp + cyl, pattern = "sequential")
 	x <- fmls(s, order = 1:2)
 	mf <- mdls(x)
 	expect_s3_class(mf, "forge")
@@ -91,7 +90,7 @@ test_that("conversion works between different table types", {
 
 test_that("strata and their levels are noted in the forged table", {
 
-	x <- rx(am ~ X(wt) + mpg + S(vs), pattern = "direct")
+	x <- sx(am ~ X(wt) + mpg + S(vs), pattern = "direct")
 	f <- fmls(x, order = 2)
 	fits <- fit(f, .fit = glm, family = "binomial", data = mtcars, archetype = TRUE)
 	m <- suppressWarnings(mdls(fits))

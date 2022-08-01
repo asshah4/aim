@@ -20,7 +20,7 @@ parameter_estimates <- function(x = unspecified(), ...) {
 			vec_data(x)[-1] |>
 			{
 				\(.x) {
-					.y <- field(.x$fmls, "formula")
+					.y <- field(.x$fmls, "formulas")
 					.z <- paste0()
 				}
 			}()
@@ -105,9 +105,9 @@ hammer <- function(object, name) {
 	if (!any(
 		contents %in% c(
 			"formula",
-			"formula_archetype",
+			"fmls",
 			"model_archetype",
-			arcane:::supported_models
+			arcane:::template_models
 		)
 	)) {
 		message("Every object entered is not appropriate for the `forge`.")
@@ -124,13 +124,13 @@ hammer <- function(object, name) {
 	    # Formulas
   		z <- fmls(x, order = 2:3)
   		m <- append(m, as.list(z))
-    } else if (class(x)[1] == "formula_archetype") {
+    } else if (class(x)[1] == "fmls") {
     	# Fmls archetypes
     	m <- append(m, as.list(x))
     } else if (class(x)[1] == "model_archetype") {
     	# Model archetypes
     	m <- append(m, as.list(x))
-    } else if (class(x)[1] %in% arcane:::supported_models) {
+    } else if (class(x)[1] %in% arcane:::template_models) {
     	# Standard modeling objects
     	z <- md(x)
     	m <- append(m, as.list(z))

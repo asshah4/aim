@@ -3,10 +3,10 @@ test_that("lists can be fit", {
 	f <- mpg + wt ~ X(hp) + X(cyl) + gear + drat + qsec
 	labels <- list(mpg ~ "Mileage", hp ~  "Horsepower")
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
-	t <- tm(f, label = labels, tier = tiers)
-	x <- rx(t, pattern = "sequential")
+	t <- rx(f, label = labels, tier = tiers)
+	x <- sx(t, pattern = "sequential")
 	lof <- fmls(x, order = 2)
-	expect_s3_class(lof, "formula_archetype")
+	expect_s3_class(lof, "fmls")
 
 	lom <- fit(lof, lm, data = mtcars)
 	expect_type(lom, "list")
@@ -38,10 +38,10 @@ test_that("fitting can be done with strata", {
 	f <- mpg ~ X(wt) + hp + qsec + S(cyl) + S(am)
 	labels <- list(mpg ~ "Mileage", hp ~  "Horsepower")
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
-	t <- tm(f, label = labels, tier = tiers)
-	x <- rx(t, pattern = "sequential")
+	t <- rx(f, label = labels, tier = tiers)
+	x <- sx(t, pattern = "sequential")
 	lof <- fmls(x, order = 2)
-	expect_s3_class(lof, "formula_archetype")
+	expect_s3_class(lof, "fmls")
 
 	# Transform to model archetypes
 	ml <- fit(lof, lm, data = mtcars)
@@ -82,14 +82,14 @@ test_that("fit a survival model", {
 
 	# Stratified analysis for survival model
 	f1 <-
-		rx(
+		sx(
 			Surv(death_timeto, death_cv_yn) ~ X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + blackrace +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(female_bl),
 			pattern = "sequential"
 		) |>
 		fmls(order = 2)
 
 	f2 <-
-		rx(
+		sx(
 			Surv(death_timeto, death_cv_yn) ~ X(hf_stress_rest_delta_zn) + hf_rest_ln_zn + age_bl + female_bl +  hx_hypertension_bl + hx_diabetes_bl + hx_hbchol_bl + cath_gensini_bl + ejection_fraction + S(blackrace),
 			pattern = "sequential"
 		) |>
