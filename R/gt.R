@@ -2,6 +2,9 @@
 #'
 #' @param x Class `forge` object with models that have been fit
 #'
+#' @param formula Identifies the relationships of interest, with LHS
+#'   representing the outcome, and RHS representing the exposure.
+#'
 #' @param columns Additional columns that help to describe the subgroup models.
 #'   At least one column should be selected from this list. The sequence listed
 #'   will reflect the sequence shown in the table. The current options are:
