@@ -42,6 +42,6 @@ test_that("forged objects can be shaped into a informative table", {
 	x <- temper(object)
 	expect_s3_class(x, "tbl_df")
 	expect_named(x)
-	expect_length(x, 32) # Number of currently columns
+	expect_length(x, 33) # Number of currently columns
 
 })

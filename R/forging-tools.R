@@ -172,7 +172,24 @@ temper <- function(object, ...) {
 	raw <-
 		object |>
 		subset(run == TRUE) |>
-		subset(select = c(type, subtype, name, number, formula, outcome, exposure, mediator, strata, level, parameter_estimates, model_info, terms)) |>
+		subset(
+			select = c(
+				type,
+				subtype,
+				name,
+				number,
+				formula,
+				outcome,
+				exposure,
+				mediator,
+				interaction,
+				strata,
+				level,
+				parameter_estimates,
+				model_info,
+				terms
+			)
+		) |>
 		dplyr::mutate(parameter_estimates = purrr::map(parameter_estimates, tibble::as_tibble)) |>
 		tidyr::unnest(parameter_estimates) |>
 		dplyr::mutate(model_info = purrr::map(model_info, tibble::as_tibble)) |>

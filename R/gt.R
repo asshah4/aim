@@ -6,8 +6,7 @@
 #'   representing the outcome, and RHS representing the exposure.
 #'
 #' @param columns Additional columns that help to describe the subgroup models.
-#'   At least one column should be selected from this list. The sequence listed
-#'   will reflect the sequence shown in the table. The current options are:
+#'   At least one column should be selected from this list. The sequence listed #'   will reflect the sequence shown in the table. The current options are:
 #'
 #'   * beta = point estimate value, such as odds ratio or hazard ratio
 #'
@@ -61,6 +60,7 @@ tbl_forest.forge <- function(object,
 														 							 conf ~ "95% CI",
 														 							 n ~ "No."),
 														 flip = FALSE,
+														 interaction = FALSE,
 														 axis = list(scale ~ "continuous"),
 														 width = list()) {
 

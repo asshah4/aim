@@ -59,6 +59,7 @@ forge <- function(..., data = NULL) {
                                         gsub(" ", "", substr(name, 0, 7)),
                                         name)) |>
         dplyr::mutate(name = nms[i]) |>
+        #dplyr::mutate(interaction = sapply(interaction, FUN = as.character)) |>
         dplyr::mutate(strata = as.character(si[[2]])) |>
         dplyr::mutate(level = as.character(si[[3]])) |>
         dplyr::select(-strata_info)
@@ -97,7 +98,7 @@ forge <- function(..., data = NULL) {
       y |>
       dplyr::rowwise() |>
       mutate(across(
-        c(outcome, exposure, mediator, strata),
+        c(outcome, exposure, mediator, strata, interaction),
         function(.x) {
           t <- .x
           if (length(t) == 0) {
@@ -126,6 +127,7 @@ forge <- function(..., data = NULL) {
       outcome = z$outcome,
       exposure = z$exposure,
       mediator = z$mediator,
+      interaction = z$interaction,
       strata = z$strata,
       level = z$level,
       terms = z$terms,
@@ -171,6 +173,7 @@ construct_model_table <- function(model = list(),
                                   outcome = character(),
                                   exposure = character(),
                                   mediator = character(),
+                                  interaction = character(),
                                   strata = character(),
                                   level = numeric(),
                                   terms = rune_list(),
@@ -190,6 +193,7 @@ construct_model_table <- function(model = list(),
   vec_assert(outcome, ptype = character())
   vec_assert(exposure, ptype = character())
   vec_assert(mediator, ptype = character())
+  vec_assert(interaction, ptype = character())
   vec_assert(strata, ptype = character())
   vec_assert(level, size = 1)
   vec_assert(terms, ptype = rune_list())
@@ -206,6 +210,9 @@ construct_model_table <- function(model = list(),
   }
   if (length(strata) == 0) {
     strata <- NA
+  }
+  if (length(interaction) == 0) {
+    interaction <- NA
   }
   if (length(level) == 0) {
     level <- NA
@@ -224,6 +231,7 @@ construct_model_table <- function(model = list(),
     outcome = outcome,
     exposure = exposure,
     mediator = mediator,
+    interaction = interaction,
     strata = strata,
     level = level,
     terms = terms,

@@ -9,9 +9,11 @@ tbl_forest(object, ...)
 \arguments{
 \item{x}{Class \code{forge} object with models that have been fit}
 
+\item{formula}{Identifies the relationships of interest, with LHS
+representing the outcome, and RHS representing the exposure.}
+
 \item{columns}{Additional columns that help to describe the subgroup models.
-At least one column should be selected from this list. The sequence listed
-will reflect the sequence shown in the table. The current options are:
+At least one column should be selected from this list. The sequence listed #'   will reflect the sequence shown in the table. The current options are:
 \itemize{
 \item beta = point estimate value, such as odds ratio or hazard ratio
 \item conf = inclusion of the confidence interval (presumed to be 95\%-ile)

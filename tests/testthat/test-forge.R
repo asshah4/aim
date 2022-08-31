@@ -8,7 +8,7 @@ test_that("multiple inputs will be returned appropriately", {
 	# Formulas
 	f1 <- mpg ~ wt + cyl
 	f2 <- fmls(f1)
-	f3 <- fmls(mpg + wt ~ hp + cyl, order = 2)
+	f3 <- fmls(mpg + wt ~ hp + cyl:am, order = 2)
 
 	# Dot arguments
 	args <- list(m1, second = m3, f = f1, f3)
@@ -34,7 +34,7 @@ test_that("model archetypes can be forged into a table and initialized", {
 	x <- md(m_mixed)
 	mf <- forge(x)
 	expect_equal(nrow(mf), 3)
-	expect_length(mf, 17) # Number of columns
+	expect_length(mf, 18) # Number of columns
 
 	# Names should be appropriately taken from model archetypes if available
 	# List added as arguments in function are taken as a list
