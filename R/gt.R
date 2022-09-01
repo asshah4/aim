@@ -5,6 +5,15 @@
 #' @param formula Identifies the relationships of interest, with LHS
 #'   representing the outcome, and RHS representing the exposure.
 #'
+#' @param vars Character vector of the variables of interest. They can either be
+#'   grouping variables, or can be performed as interaction terms (based on the
+#'   models included originally). If the parameter __interaction__ is changed to
+#'   `TRUE`, then will create joint confidence intervals for the presence or
+#'   absence of the interaction term.
+#'
+#' @param interaction Logical value to identify if the model should attempt to
+#'   use interaction terms or not. Currently only accepts binary/dichotomous
+#'   variables as the interaction term.
 #' @param columns Additional columns that help to describe the subgroup models.
 #'   At least one column should be selected from this list. The sequence listed #'   will reflect the sequence shown in the table. The current options are:
 #'
@@ -55,7 +64,7 @@ tbl_forest <- function(object, ...) {
 #' @export
 tbl_forest.forge <- function(object,
 														 formula = formula(),
-														 groups = character(),
+														 vars = character(),
 														 columns = list(beta ~ "Estimate",
 														 							 conf ~ "95% CI",
 														 							 n ~ "No."),
@@ -86,33 +95,76 @@ tbl_forest.forge <- function(object,
 	if ("conf" %in% names(cols)) {
 		est_vars <- append(est_vars, c("conf.low", "conf.high"))
 	}
+	if ("p" %in% names(cols)) {
+		est_vars <- append(est_vars, "p.value")
+	}
 	if ("n" %in% names(cols)) {
 		mod_vars <- append(mod_vars, "nobs")
 	}
 
-	# Create basic table
-	tbl <-
-		object |>
-		temper() |>
-		dplyr::filter(strata %in% groups) |>
-		dplyr::filter(outcome == y & exposure == x) |>
-		dplyr::group_by(strata, level) |>
-		dplyr::filter(number == max(number)) |>
-		dplyr::filter(term == x) |>
-		dplyr::ungroup() |>
-		dplyr::select(strata, level, term, terms,
-									all_of(est_vars), all_of(mod_vars))
+	if (interaction) {
+		# Basic table by interaction
+		tbl_present <-
+			object |>
+			dplyr::filter(interaction %in% vars) |>
+			dplyr::filter(outcome == y & exposure == x) |>
+			dplyr::mutate(joint_term = paste0(exposure, ":", interaction)) |>
+			dplyr::rowwise() |>
+			dplyr::mutate(p.value = parameter_estimates$p.value[parameter_estimates$term == joint_term]) |>
+			dplyr::mutate(pars = list(interaction_estimates(model, exposure, interaction, present = TRUE)))
+
+		tbl_absent <-
+			object |>
+			dplyr::filter(interaction %in% vars) |>
+			dplyr::filter(outcome == y & exposure == x) |>
+			dplyr::mutate(joint_term = paste0(exposure, ":", interaction)) |>
+			dplyr::rowwise() |>
+			dplyr::mutate(p.value = parameter_estimates$p.value[parameter_estimates$term == joint_term]) |>
+			dplyr::mutate(pars = list(interaction_estimates(model, exposure, interaction, present = FALSE)))
+
+		tbl <-
+			dplyr::bind_rows(tbl_present, tbl_absent) |>
+			dplyr::mutate(
+				estimate = pars[["estimate"]],
+				conf.low = pars[["conf.low"]],
+				conf.high = pars[["conf.high"]],
+				nobs = pars[["nobs"]],
+				level = pars[["level"]]
+			) |>
+			dplyr::select(exposure, interaction, level, exposure, terms, all_of(est_vars), all_of(mod_vars)) |>
+			dplyr::rename(strata = interaction,
+										term = exposure) |>
+			dplyr::ungroup()
+
+	} else {
+		# Basic table by strata
+		tbl <-
+			object |>
+			temper() |>
+			dplyr::filter(strata %in% vars) |>
+			dplyr::filter(outcome == y & exposure == x) |>
+			dplyr::group_by(strata, level) |>
+			dplyr::filter(number == max(number)) |>
+			dplyr::filter(term == x) |>
+			dplyr::ungroup() |>
+			dplyr::select(strata, level, term, terms,
+										all_of(est_vars), all_of(mod_vars))
+
+	}
 
 
 	# Reciprocal odds or hazard if needed
 	if (flip) {
-		tbl <- dplyr::mutate(tbl, across(all_of(est_vars), ~ 1 / .x))
+		tbl <-
+			dplyr::mutate(tbl, across(
+				c(all_of(est_vars), -p.value),
+				~ 1 / .x
+			))
 
 		if ("conf.low" %in% est_vars) {
 			tbl <-
 				dplyr::rename(tbl, conf.high = conf.low, conf.low = conf.high)
 		}
-
 	}
 
 	# Setup plotting variables from the axis argument
@@ -181,7 +233,7 @@ tbl_forest.forge <- function(object,
 				{
 					if(scale == "log") {
 						scale_x_continuous(
-							trans = "pseudo_log",
+							trans = scales::pseudo_log_trans(sigma = 0.1, base = exp(1)),
 							breaks = breaks,
 							limits = c(xmin, xmax),
 							oob = scales::oob_squish
@@ -233,25 +285,79 @@ tbl_forest.forge <- function(object,
 		dplyr::add_row() |>
 		dplyr::select(level, strata, all_of(mod_vars), all_of(est_vars), ggplots) |>
 		gt::gt(rowname_col = "level", groupname_col = "strata") |>
-		gt::cols_merge(columns = all_of(est_vars),
-									 pattern = "{1} ({2}, {3})") |>
+		# Estimates and confidence intervals
+		{\(.) {
+			if (all(c("estimate", "conf.low", "conf.high") %in% est_vars)) {
+				. |>
+				gt::cols_merge(columns = est_vars[1:3],
+											 pattern = "{1} ({2}, {3})") |>
+			gt::cols_width(estimate ~ gt::pct(40))
+			} else {
+				.
+			}
+		}}() |>
+		# Number of observations
+		{\(.) {
+			if (all(c("nobs") %in% mod_vars)) {
+				. |>
+				gt::cols_width(nobs ~ gt::pct(10))
+			} else {
+				.
+			}
+		}}() |>
+		# P.value is included for interactions
+		{\(.) {
+			if (all(c("p.value") %in% est_vars & isTRUE(interaction))) {
+				. |>
+				gt::cols_move_to_end(p.value) |>
+				gt::tab_style(
+					style = gt::cell_text(color = "white", size = gt::px(0)),
+					locations = gt::cells_body(columns = p.value,
+																		 rows = level == 0)
+				) |>
+				gt::tab_style(
+					style = gt::cell_text(v_align = "bottom"),
+					locations = gt::cells_body(columns = p.value,
+																		 rows = level == 1)
+				) |>
+				gt::tab_style(
+					style = gt::cell_text(weight = "bold"),
+					locations = gt::cells_body(columns = p.value,
+																		 rows = p.value < 0.05)
+				)
+			} else {
+				.
+			}
+		}}() |>
+		# P value included for general groups
+		{\(.) {
+			if (all(c("p.value") %in% est_vars)) {
+				. |>
+				gt::cols_move_to_end(p.value) |>
+				gt::tab_style(
+					style = gt::cell_text(weight = "bold"),
+					locations = gt::cells_body(columns = p.value,
+																		 rows = p.value < 0.05)
+				)
+			} else {
+				.
+			}
+		}}() |>
+		gt::tab_style(
+			style = list(
+				gt::cell_borders(sides = "all", color = NULL)
+			),
+			locations = list(
+				gt::cells_body(columns = c(all_of(mod_vars), all_of(est_vars))),
+				gt::cells_stub(rows = gt::everything())
+			)
+		) |>
 		gt::fmt_number(
 			columns = where(is.numeric),
 			drop_trailing_zeros = TRUE,
 			n_sigfig = 2
 		) |>
-		gt::text_transform(
-			locations = gt::cells_body(columns = ggplots),
-			fn = function(x) {
-				purrr::map(plots$gg,
-									 gt::ggplot_image,
-									 height = gt::px(50),
-									 aspect_ratio = 5)
-			}
-		) |>
 		gt::cols_width(ggplots ~ gt::pct(50)) |>
-		gt::cols_width(estimate ~ gt::pct(40)) |>
-		gt::cols_width(nobs ~ gt::pct(10)) |>
 		gt::opt_vertical_padding(scale = 0) |>
 		gt::opt_table_outline(style = "none") |>
 		gt::tab_options(
@@ -280,19 +386,19 @@ tbl_forest.forge <- function(object,
 											 rows = is.na(level))
 			)
 		) |>
-		gt::tab_style(
-			style = list(
-				gt::cell_borders(sides = "all", color = NULL)
-			),
-			locations = list(
-				gt::cells_body(columns = c(all_of(mod_vars), all_of(est_vars))),
-				gt::cells_stub(rows = gt::everything())
-			)
-		) |>
 		gt::cols_label(
 			estimate = cols$beta,
 			ggplots = x_vars$title,
 			nobs = cols$n
+		) |>
+		gt::text_transform(
+			locations = gt::cells_body(columns = ggplots),
+			fn = function(x) {
+				purrr::map(plots$gg,
+									 gt::ggplot_image,
+									 height = gt::px(50),
+									 aspect_ratio = 5)
+			}
 		)
 
 }

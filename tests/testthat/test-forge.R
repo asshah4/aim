@@ -3,7 +3,7 @@ test_that("multiple inputs will be returned appropriately", {
 	# Models
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- glm(am ~ hp + cyl, mtcars, family = "binomial")
-	m3 <- md(m2)
+	m3 <- mx(m2)
 
 	# Formulas
 	f1 <- mpg ~ wt + cyl
@@ -28,17 +28,17 @@ test_that("model archetypes can be forged into a table and initialized", {
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- glm(am ~ hp + cyl, mtcars, family = "binomial")
 	m3 <- lm(mpg ~ wt + gear, mtcars)
-	m_named <- md(list(first = m1, second = m2, third = m3))
+	m_named <- mx(list(first = m1, second = m2, third = m3))
 	m_mixed <- list(m1, second = m2, third = m3)
 	m_none <- list(m1, m2, m3)
-	x <- md(m_mixed)
+	x <- mx(m_mixed)
 	mf <- forge(x)
 	expect_equal(nrow(mf), 3)
 	expect_length(mf, 18) # Number of columns
 
 	# Names should be appropriately taken from model archetypes if available
 	# List added as arguments in function are taken as a list
-	y <- md(m_none)
+	y <- mx(m_none)
 	object <- list(m_named, x, y)
 	mc <- as.call(str2lang("list(m_named, x, y)"))
 	mf <- forge(m_named, x, y)
@@ -72,7 +72,7 @@ test_that("conversion works between different table types", {
 	m1 <- lm(mpg ~ hp + cyl, mtcars)
 	m2 <- lm(mpg ~ wt + gear, mtcars)
 	ml <- list(first = m1, m2)
-	m <- md(ml)
+	m <- mx(ml)
 	x <- mdls(m)
 
 	# Additional models

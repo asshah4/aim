@@ -12,6 +12,16 @@ tbl_forest(object, ...)
 \item{formula}{Identifies the relationships of interest, with LHS
 representing the outcome, and RHS representing the exposure.}
 
+\item{vars}{Character vector of the variables of interest. They can either be
+grouping variables, or can be performed as interaction terms (based on the
+models included originally). If the parameter \strong{interaction} is changed to
+\code{TRUE}, then will create joint confidence intervals for the presence or
+absence of the interaction term.}
+
+\item{interaction}{Logical value to identify if the model should attempt to
+use interaction terms or not. Currently only accepts binary/dichotomous
+variables as the interaction term.}
+
 \item{columns}{Additional columns that help to describe the subgroup models.
 At least one column should be selected from this list. The sequence listed #'   will reflect the sequence shown in the table. The current options are:
 \itemize{

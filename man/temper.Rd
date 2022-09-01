@@ -8,8 +8,6 @@ temper(object, ...)
 }
 \arguments{
 \item{object}{A model \code{forge} object}
-
-\item{f}{A formula or formula_archetype object}
 }
 \description{
 Temper objects from the forge

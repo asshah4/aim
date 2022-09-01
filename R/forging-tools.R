@@ -132,7 +132,7 @@ hammer <- function(object, name) {
     	m <- append(m, as.list(x))
     } else if (class(x)[1] %in% arcane:::template_models) {
     	# Standard modeling objects
-    	z <- md(x)
+    	z <- mx(x)
     	m <- append(m, as.list(z))
     } else {
     	# For unknown objects (would include a warning)
@@ -160,7 +160,6 @@ hammer <- function(object, name) {
 #' Temper objects from the forge
 #'
 #' @param object A model `forge` object
-#' @param f A formula or formula_archetype object
 #' @export
 temper <- function(object, ...) {
 
@@ -203,3 +202,4 @@ temper <- function(object, ...) {
 	raw
 
 }
+

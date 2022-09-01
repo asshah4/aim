@@ -5,7 +5,7 @@ test_that("ellipses can be hammered down to a single hierarchy list", {
 	m2 <- glm(am ~ hp + cyl, mtcars, family = "binomial")
 	m3 <- lm(mpg ~ wt + gear, mtcars)
 	m4 <- glm(am ~ wt + mpg, mtcars, family = "binomial")
-	m5 <- md(m1)
+	m5 <- mx(m1)
 
 	# Formulas
 	f1 <- mpg ~ wt + cyl
@@ -35,7 +35,7 @@ test_that("forged objects can be shaped into a informative table", {
 	m4 <- glm(am ~ wt + mpg, mtcars, family = "binomial")
 	m <- list(m1, m2, m3, m4)
 	object <-
-		md(m) |>
+		mx(m) |>
 		forge()
 
 	# Tempering it to remove nested data frames (par_est and mod_inf)
@@ -45,3 +45,4 @@ test_that("forged objects can be shaped into a informative table", {
 	expect_length(x, 33) # Number of currently columns
 
 })
+
