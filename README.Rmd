@@ -32,12 +32,7 @@ remotes::install_github("asshah4/volundr")
 
 ## Introduction
 
-The `volundr` package is intended to help build causal models with an underlying focus on exploration. However, instead of starting purely from a __directed acyclic graph__, this package intends to allow modeling to occur simultaneously, and then leveraging the patterns within the data to help cut away _confounders_ and other terms for a more parsimonious causal model. The premise is that there are two components in studying causality:
-
-1. Causal model diagrams
-1. Hypothesis testing and statistical analysis
-
-These two components are reflected within the primary functions of the package, and are built to help refine and modulate hypotheses as the study develops. The underlying data structure is the concept of a __map__ that has multiple volundrs describing variable relationships, however they may exist in different __layers__ on the map.  
+The package `volundr` is intended to help forge together multiple models to better understand complex relationships in the causal space. 
 
 ## Usage
 
@@ -48,53 +43,3 @@ library(volundr)
 library(parsnip)
 ```
 
-The basic function of the package serves to help create a `model_map` object.
-
-```{r}
-create_models()
-```
-
-This is accompanied by `hypothesis` objects, which are essentially modified `formula` objects that allow for a better understanding of variable relationships. We create two objects below, which have not yet been analyzed yet.
-
-```{r}
-h1 <-
-	hypothesize(
-		mpg ~ wt + hp + disp,
-		exposures = "wt",
-		combination = "sequential",
-		test = linear_reg() %>% set_engine("lm"),
-		data = mtcars,
-	)
-
-h2 <- update_hypothesis(h1, combination = "sequential")
-
-# Print h1
-h1
-
-# Print h2
-h2
-```
-
-These hypotheses can then be *drawn* on to the *study map* as below.
-
-```{r}
-m1 <-
-	create_models() %>%
-	add_hypothesis(h1) %>%
-	add_hypothesis(h2) 
-
-# Print study
-m1
-```
-
-Then, for analysis and display of results, the findings can easily be extracted.
-
-```{r}
-m2 <-
-	m1 %>%
-	construct_tests() %>%
-	extract_models(which_ones = "h1", tidy = TRUE)
-
-# Print findings
-m2
-```
