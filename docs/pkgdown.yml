@@ -1,10 +1,10 @@
-pandoc: 2.11.2
-pkgdown: 1.6.1
+pandoc: '2.18'
+pkgdown: 2.0.6
 pkgdown_sha: ~
 articles:
   development: development.html
-last_built: 2021-09-09T15:12Z
+last_built: 2022-09-07T03:42Z
 urls:
-  reference: https://asshah4.github.io/dagger//reference
-  article: https://asshah4.github.io/dagger//articles
+  reference: https://asshah4.github.io/volundr/reference
+  article: https://asshah4.github.io/volundr/articles
 

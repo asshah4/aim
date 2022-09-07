@@ -1,84 +1,231 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://asshah4.github.io/dagger//index.html</loc>
+    <loc>https://asshah4.github.io/volundr/404.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/add_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/volundr/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/as_tbl_graph.html</loc>
+    <loc>https://asshah4.github.io/volundr/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/construct_map.html</loc>
+    <loc>https://asshah4.github.io/volundr/articles/development.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/create_study.html</loc>
+    <loc>https://asshah4.github.io/volundr/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/dagger-package.html</loc>
+    <loc>https://asshah4.github.io/volundr/articles/octobeast.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/expand_formula.html</loc>
+    <loc>https://asshah4.github.io/volundr/articles/octomod.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/expand_paths.html</loc>
+    <loc>https://asshah4.github.io/volundr/articles/overview.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/extract_dagitty.html</loc>
+    <loc>https://asshah4.github.io/volundr/authors.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/extract_models.html</loc>
+    <loc>https://asshah4.github.io/volundr/index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/fetch.html</loc>
+    <loc>https://asshah4.github.io/volundr/news/index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/find_confounders.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/add_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/fit_calls.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/aim.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/fit_parsnip_models.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/arm.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/hypothesize.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/as_tbl_graph.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/modify_study.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/ballistics.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/pipe.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/bullet.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/print.hypothesis.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/construct.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/print.study.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/construct_dag.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/reconstruct.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/construct_map.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/reexports.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/construct_maps.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/summary.study.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/construct_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/tbl_sequential.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/construct_paths.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/theme_gt_compact.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/core.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/tidy_tests.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/create_study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//reference/update_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/dagger-package.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/dagger//articles/development.html</loc>
+    <loc>https://asshah4.github.io/volundr/reference/derive.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/draw.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/draw_hypothesis.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/equip.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/expand_formula.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/expand_paths.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/extract.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/extract_dag.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/extract_dagitty.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/extract_models.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/fetch.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/find_confounders.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/find_significant.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/fire.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/fit_calls.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/fit_parsnip_models.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/forge.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/hypothesize.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/interaction_estimates.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/is_dichotomous.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/make_hash.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/map_dag.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/modify_hypothesis.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/modify_study.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/number_of_missing.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/octomod.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/outfit.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/print.hypothesis.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/print.study.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/propose.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/reconstruct.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/reconstruct_map.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/reexports.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/reload.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/retrieval.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/sharpen.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/specific_aims.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/strategize.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/study.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/summary.study.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/tbl_forest.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/tbl_sequential.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/temper.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/theme_gt_compact.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/tidy_tests.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/update_hypothesis.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/volundr-package.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/volundr/reference/volundr-vctrs.html</loc>
   </url>
 </urlset>
