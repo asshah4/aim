@@ -1,5 +1,5 @@
 Package: volundr
-Title: Approach to Regression Model Organization Using R
+Title: Many Model Management
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
@@ -45,7 +45,7 @@ Suggests:
     parsnip
 Remotes:
     asshah4/volundr,
-    asshah4/arcana,
+    asshah4/arcana
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/volundr
 BugReports: https://github.com/asshah4/volundr/issues

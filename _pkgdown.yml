@@ -15,7 +15,7 @@ home:
 
 navbar:
   structure:
-    left:  [intro, reference, articles, tutorials, news]
+    left:  [home, reference, articles, tutorials, news]
     right: [github]
   components:
     home:
