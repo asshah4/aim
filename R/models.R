@@ -11,7 +11,7 @@ interaction_estimates <- function(object,
 																	conf.level = 0.95,
 																	present = TRUE) {
 
-	if (!class(object) %in% arcane:::template_models) {
+	if (!class(object) %in% arcana:::template_models) {
 		stop("Class of `object` is not supported for extracting interaction estimates.")
 	}
 
