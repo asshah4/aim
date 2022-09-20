@@ -11,7 +11,7 @@ test_that("multiple inputs will be returned appropriately", {
 	f3 <- fmls(mpg + wt ~ hp + cyl:am, order = 2)
 
 	# Dot arguments
-	args <- list(m1, second = m3, f = f1, f3)
+	#args <- list(m1, second = m3, f = f1, f3)
 	mc <- as.call(str2lang("list(m1, second = m3, f = f1, f3)"))
 	x <- forge(m1, second = m3, f = f1, f3)
 

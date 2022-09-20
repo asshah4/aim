@@ -22,13 +22,8 @@ forge <- function(..., data = NULL) {
   }
 
   # Get arguments and hammer them flat (retaining the names if needed)
-  args <- list(...)
-  mc <- match.call()
-  nms <- as.character(mc)[-1]
-  nms[names(args) != ""] <- names(args)[names(args) != ""]
-
   # Flatten arguments if possible to a simple list
-  mtl <- hammer(args, nms)
+  mtl <- hammer(...)
   nms <- names(mtl)
 
   # Now, everything should be an archetype object

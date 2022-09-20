@@ -98,7 +98,11 @@ vec_ptype_abbr.data_list <- function(x, ...) "dl"
 #' Hammers the ellipsis arguments into a flattened list
 #' @keywords internal
 #' @noRd
-hammer <- function(object, name) {
+hammer <- function(...) {
+
+  object <- list(...)
+  nms <- sapply(substitute(list(...))[-1], deparse)
+  nms[names(object) != ""] <- names(object)[names(object) != ""]
 
 	stopifnot(inherits(object, "list"))
 	contents <- sapply(object, function(.x) { class(.x)[1] })
@@ -141,12 +145,12 @@ hammer <- function(object, name) {
 
     # Creating new names for everything but model archetypes
 		n <- length(m)
-		nm <- paste0(name[i], "_", 1:n)
+		nm <- paste0(nms[i], "_", 1:n)
 
 		if (length(m) > 1) {
 			names(m) <- nm
 		} else {
-			names(m) <- name[i]
+			names(m) <- nms[i]
 		}
 
 		mtl <- append(mtl, m)

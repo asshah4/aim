@@ -13,17 +13,15 @@ test_that("ellipses can be hammered down to a single hierarchy list", {
 	f3 <- fmls(mpg + wt ~ hp + cyl, order = 2)
 
 	# Dot arguments
-	object <- list(m5, second = m2, f = f1, f3)
+	args <- list(m5, second = m2, f = f1, f3)
 	mc <- as.call(str2lang("list(m5, second = m2, f = f1, f3)"))
   arg_names <- as.character(mc)[-1]
   nms <- names(mc)[-1]
   nms[nms == ""] <- arg_names[nms == ""]
   name <- nms
-  mtl <- hammer(object, name)
+	mtl <- hammer(m5, second = m2, f = f1, f3)
   expect_length(mtl, 5)
   expect_named(mtl[5], "f3_2")
-
-
 
 })
 
