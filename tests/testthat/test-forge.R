@@ -93,7 +93,7 @@ test_that("strata and their levels are noted in the forged table", {
 	x <- sx(am ~ X(wt) + mpg + S(vs), pattern = "direct")
 	f <- fmls(x, order = 2)
 	fits <- fit(f, .fit = glm, family = "binomial", data = mtcars, archetype = TRUE)
-	m <- suppressWarnings(mdls(fits))
+	m <- suppressWarnings(mdls(auto = fits))
 	expect_true("strata" %in% names(m))
 	expect_equal(unique(m$exposure), "wt") # Currently not transposing correctly
 
