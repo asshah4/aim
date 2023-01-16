@@ -18,12 +18,11 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Depends:
     R (>= 4.0.0),
     vctrs (>= 0.3.8.0),
-    arcana,
-    tibble
+    tibble,
 Imports: 
     generics,
     lifecycle,
@@ -42,10 +41,10 @@ Suggests:
     rmarkdown,
     glue,
     gt,
-    parsnip
+    parsnip,
+    durandal,
 Remotes:
-    asshah4/volundr,
-    asshah4/arcana
+    asshah4/durandal
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/volundr
 BugReports: https://github.com/asshah4/volundr/issues
