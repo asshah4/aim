@@ -11,11 +11,11 @@
 #'
 #' @name list_of_formulas
 #' @export
-list_of_formulas <- function(...) {
+lst_fmls <- function(...) {
 
 	# Early break
 	if (missing(..1) | length(..1) == 0) {
-		return(new_list_of_formulas())
+		return(new_lst_fmls())
 	}
 
 	if (inherits(..1, "list") & ...length() == 1) {
@@ -34,31 +34,35 @@ list_of_formulas <- function(...) {
 		}
 	)
 
-	new_list_of_formulas(lof)
+	new_lst_fmls(lof)
 
 }
 
+#' @rdname list_of_formulas
+list_of_formulas = lst_fmls
+
 #' @keywords internal
 #' @noRd
-new_list_of_formulas <- function(...) {
+new_lst_fmls <- function(...) {
 
 	new_list_of(
 		x = list(...),
 		ptype = character(),
-		class = "list_of_formulas"
+		class = "lst_fmls"
 	)
 
 }
 
+
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("list_of_formulas", "vctrs_list_of"))
+methods::setOldClass(c("lst_fmls", "vctrs_list_of"))
 
 
 #' @export
-obj_print_data.list_of_formulas <- function(x, ...) {
+obj_print_data.lst_fmls <- function(x, ...) {
 	if (vec_size(x) == 0) {
-		new_list_of_formulas()
+		new_lst_fmls()
 	}
 
 	if (vec_size(x) >= 1) {
@@ -69,7 +73,7 @@ obj_print_data.list_of_formulas <- function(x, ...) {
 }
 
 #' @export
-format.list_of_formulas <- function(x, ...) {
+format.lst_fmls <- function(x, ...) {
 
 	fmt <- character()
 
@@ -85,29 +89,29 @@ format.list_of_formulas <- function(x, ...) {
 }
 
 #' @export
-vec_ptype_full.list_of_formulas <- function(x, ...) {
+vec_ptype_full.lst_fmls <- function(x, ...) {
 	"list_of_formulas"
 }
 
 #' @export
-vec_ptype_full.list_of_formulas <- function(x, ...) {
+vec_ptype_abbr.lst_fmls <- function(x, ...) {
 	"lst_fmls"
 }
 
 #' @export
-vec_ptype2.list_of_formulas.list_of_forulas <- function(x, y, ...) {
-	new_list_of_formulas()
+vec_ptype2.lst_fmls.list_of_forulas <- function(x, y, ...) {
+	new_lst_fmls()
 }
 
 #' @export
-vec_cast.list_of_formulas.list_of_formulas <- function(x, to, ...) {
+vec_cast.lst_fmls.lst_fmls <- function(x, to, ...) {
 	x
 }
 
 ### List Helpers --------------------------------------------------------------
 
 #' @export
-formula.list_of_formulas <- function(x, ...) {
+formula.lst_fmls <- function(x, ...) {
 
 	y <- list()
 	for (i in seq_along(x)) {
