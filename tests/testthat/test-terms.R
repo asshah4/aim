@@ -66,6 +66,7 @@ test_that("new `tm` can be made from character/atomic components", {
 
 	expect_length(t, 7)
 	expect_true(is_tm(t))
+	expect_length(tm(character()), 0)
 
 })
 
@@ -95,5 +96,14 @@ test_that("terms can be generated from a formula", {
 	expect_s3_class(tms, "tm")
 	expect_length(tms, 5)
 	expect_equal(vec_data(tms)$label[1], "The Final Outcome")
+	expect_length(tm(formula()), 0)
+
+})
+
+test_that("mediation terms will be assessed correctly", {
+
+	x <- .o(output) ~ .x(input) + .m(mediator) + random
+	t <- tm(x)
+	expect_equal(field(t[3], "role"), "mediator")
 
 })

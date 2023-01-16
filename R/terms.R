@@ -191,15 +191,16 @@ tm.formula <- function(x,
 	# Check to see if the RHS has any shortcut variables attached
 	left <- lhs(x)
 	right <- rhs(x)
+	both <- c(left, right)
 
 	# Roles/operations and need to be identified (on which terms they apply)
 	# Output is named list (names = variable, list item = role|op)
-	rightRoles <-
+	allRoles <-
 		x |>
 		all.names() |>
 		{
 			\(.x) {
-				# These will be named roles
+				# These will be all roles
 				var_names <- character()
 				var_roles <- character()
 				for (i in seq_along(.x)) {
@@ -216,12 +217,12 @@ tm.formula <- function(x,
 		}()
 
 	# Supported transformations
-	rightOps <-
+	allOps <-
 		x |>
 		all.names() |>
 		{
 			\(.x) {
-				# These will be named roles
+				# These will be all roles
 				var_names <- character()
 				var_roles <- character()
 				for (i in seq_along(.x)) {
@@ -237,68 +238,55 @@ tm.formula <- function(x,
 			}
 		}()
 
-	# Combine to make supported right side
-	rightSide <- c(rightRoles, rightOps)
+	# Combine to make supported variable names
+	allNamed <- c(allRoles, allOps)
 
 	# Remove role/op shortcut from terms (e.g. function in front of term)
-	for (i in seq_along(rightSide)) {
-		right[grepl(names(rightSide)[i], right)] <- names(rightSide)[i]
+	for (i in seq_along(allNamed)) {
+		both[grepl(names(allNamed)[i], both)] <- names(allNamed)[i]
 	}
 
-	# Find remaining right hand side variables that do not have a role
-	# Give them the role of a general predictor
-	for (i in seq_along(right)) {
-		if (!(right[i] %in% names(rightRoles))) {
-			rightRoles[right[i]] <- ".p"
+	# Update left and rights
+	for (i in both) {
+		for (j in seq_along(left)) {
+			if (grepl(i, left[j])) {
+				left[j] <- i
+			}
+		}
+		for (j in seq_along(right)) {
+			if (grepl(i, right[j])) {
+				right[j] <- i
+			}
+		}
+	}
+
+	# Find remaining terms that do not have a role
+	# Right = Give them the role of a general predictor
+	# Left = Make sure is an "outcome"
+	for (j in left) {
+		if (!(j %in% names(allRoles))) {
+			allRoles[[j]] <- ".o"
+		}
+	}
+	for (j in right) {
+		if (!(j %in% names(allRoles))) {
+			allRoles[[j]] <- ".p"
 		}
 	}
 
 	# Warn and validate for interaction (as needs exposure variable)
-	if (".i" %in% rightSide & !(".x" %in% rightSide)) {
+	if (".i" %in% allNamed & !(".x" %in% allNamed)) {
 		warning(
 			"In interaction term was specified but was not attached to a specific exposure. The result will treat the interaction term as a regular predictor/covariate."
 		)
 	}
 
-	# Add roles for left hand side and combine into a list of all roles
-	leftRoles <- rep(".o", length(left))
-	names(leftRoles) <- left
-	leftRoles <- as.list(leftRoles)
-	roleList <- c(leftRoles, rightRoles) # All roles for all terms
-
-
-	# Interaction term is already included by name
-	for (i in seq_along(roleList)) {
-		if (roleList[[i]] == ".o") {
-			roleList[[i]] <- "outcome"
-		}
-		if (roleList[[i]] == ".x") {
-			roleList[[i]] <- "exposure"
-		}
-
-		if (roleList[[i]] == ".m") {
-			roleList[[i]] <- "mediator"
-		}
-
-		if (roleList[[i]] == ".c") {
-			roleList[[i]] <- "confounder"
-		}
-
-		if (roleList[[i]] == ".p") {
-			roleList[[i]] <- "predictor"
-		}
-
-		if (roleList[[i]] == ".s") {
-			roleList[[i]] <- "strata"
-		}
-
-		if (roleList[[i]] == ".i") {
-			roleList[[i]] <- "interaction"
-		}
+	# Re-name into full name
+	for (i in seq_along(allRoles)) {
+		allRoles[[i]] <- names(.roles[which(.roles %in% allRoles[[i]])])
 	}
 
 	# Setup to create new terms using all elements of original formula
-	both <- c(left, right)
 	tm_vector <- new_tm()
 
 	for (i in 1:length(both)) {
@@ -306,7 +294,7 @@ tm.formula <- function(x,
 		t <- both[i]
 
 		# Sides
-		sd <- if (t %in% names(roleList[roleList == "strata"])) {
+		sd <- if (t %in% names(allRoles[allRoles == "strata"])) {
 			"meta"
 		} else if (t %in% left) {
 			"left"
@@ -315,14 +303,14 @@ tm.formula <- function(x,
 		}
 
 		# Data transforms
-		op <- if (t %in% names(rightOps)) {
-			rightOps[[t]]
+		op <- if (t %in% names(allOps)) {
+			allOps[[t]]
 		} else {
 			NA
 		}
 
 		# Roles (every term has a role)
-		rl <- roleList[[t]]
+		rl <- allRoles[[t]]
 
 		# groups
 		grp <-
@@ -538,5 +526,20 @@ vec_cast.character.tm <- function(x, to, ...) {
 	# order is flipped, such that `x` is tm
 	attributes(x) <- NULL
 	x[[1]]
+}
+
+### Term Helpers ---------------------------------------------------------------
+
+#' @export
+formula.tm <- function(x, ...) {
+
+	# Lose information when converting to just character
+	y <- vec_data(x)
+	left <- paste0(y$term[y$side == "left"], collapse = " + ")
+	right <- paste0(y$term[y$side == "right"], collapse = " + ")
+
+	# Return formula
+	stats::formula(paste0(left, " ~ ", right))
+
 }
 

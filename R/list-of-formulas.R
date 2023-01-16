@@ -116,31 +116,31 @@ formula.list_of_formulas <- function(x, ...) {
 
 	# Each element of y will be a character
 	lapply(y, FUN = function(.x) {
-
-		.l <-
-			.x |>
-			strsplit("~") |>
-			unlist() |>
-			head(1) |>
-			trimws() |>
-			{
-				\(.y) gsub('"', "", .y)
-			}()
-
-		.r <-
-			.x |>
-			strsplit("~") |>
-			unlist() |>
-			tail(-1) |>
-			trimws()
-
-		for (i in seq_along(.r)) {
-			if (grepl(' ', .r[i])) {
-				.r[i] <- shQuote(.r)
-			}
-		}
-
-		stats::reformulate(.r, .l)
+		as.formula(.x)
+		# .l <-
+		# 	.x |>
+		# 	strsplit("~") |>
+		# 	unlist() |>
+		# 	head(1) |>
+		# 	trimws() |>
+		# 	{
+		# 		\(.y) gsub('"', "", .y)
+		# 	}()
+		#
+		# .r <-
+		# 	.x |>
+		# 	strsplit("~") |>
+		# 	unlist() |>
+		# 	tail(-1) |>
+		# 	trimws()
+		#
+		# for (i in seq_along(.r)) {
+		# 	if (grepl(' ', .r[i])) {
+		# 		.r[i] <- shQuote(.r)
+		# 	}
+		# }
+		#
+		# stats::reformulate(.r, .l)
 	})
 
 }
