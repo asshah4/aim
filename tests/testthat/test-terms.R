@@ -1,4 +1,15 @@
+test_that("`tm` objects can be generated and printed", {
+	# Basic generation
+	expect_length(new_tm(), 0)
+	expect_s3_class(new_tm(), "tm")
+	expect_output(print(new_tm()), "<term\\[0\\]>")
+	expect_length(tm(), 0)
+	expect_s3_class(tm(), "tm")
+	expect_output(print(tm()), "<term\\[0\\]>")
+})
+
 test_that("new `tm` can be made from character/atomic components", {
+
 	ty <- tm(
 		x = "Y",
 		role = "outcome",
@@ -105,5 +116,28 @@ test_that("mediation terms will be assessed correctly", {
 	x <- .o(output) ~ .x(input) + .m(mediator) + random
 	t <- tm(x)
 	expect_equal(field(t[3], "role"), "mediator")
+
+})
+
+test_that("term list wrappers can be generated", {
+
+	expect_s3_class(new_tmls(), "tmls")
+	expect_s3_class(tmls(), "tmls")
+	expect_output(print(tmls()), "<term_list\\[0\\]>")
+	expect_length(tmls(), 0)
+
+	t1 <-
+		tm(.o(good) ~ .x(bad) + ugly) |>
+		tmls()
+	expect_s3_class(t1, "tmls")
+	expect_output(print(t1), "<term_list\\[1\\]>")
+
+	x <- tm(.o(good) ~ .x(bad) + ugly)
+	y <- tm(.o(wicked) ~ .x(witch) + west)
+	t2 <- tmls(x, y)
+	expect_s3_class(t2, "tmls")
+	expect_length(t2, 2)
+	expect_output(print(t2), "\\|")
+
 
 })

@@ -4,7 +4,7 @@
 #'
 #' @description
 #'
-#' `r lifecycle::badge('stable')`
+#' `r lifecycle::badge('experimental')`
 #'
 #' This function defines a modified `formula` class that has been
 #' vectorized. The `fmls` serves as a set of instructions or a _script_ for the
@@ -12,13 +12,47 @@
 #' allowing for additional descriptions and relationships to exist between the
 #' tm.
 #'
+#' @details
+#'
+#' This is not meant to supersede a [stats::formula()] object, but provide a
+#' series of relationships that can be helpful in causal modeling. All `fmls`
+#' can be converted to a traditional `formula` with ease. The base for this
+#' object is built on the [tmls()] object.
+#'
+#' # Patterns
+#'
+#' The expansion pattern allows for instructions on how the covariates should be
+#' included in different formulas. Below, assuming that _x1_, _x2_, and _x3_ are
+#' covariates...
+#'
+#' \deqn{y = x1 + x2 + x3}
+#'
+#' __Direct__:
+#'
+#' \deqn{y = x1 + x2 + x3}
+#'
+#' __Seqential__:
+#'
+#' \deqn{y = x1}
+#' \deqn{y = x1 + x2}
+#' \deqn{y = x1 + x2 + x3}
+#'
+#' __Parallel__:
+#'
+#' \deqn{y = x1}
+#' \deqn{y = x2}
+#' \deqn{y = x3}
+#'
+#' @inheritSection tm Roles
+#' @inheritSection tm Pluralized Arguments
+#'
+#' @inheritParams tm
+#'
 #' @param x Objects of the following types can be used as inputs
 #'
 #'   * `tm`
 #'
 #'   * `formula`
-#'
-#' @inheritParams tm
 #'
 #' @param pattern This is the expansion pattern used to decide how the
 #'   covariates will incorporated into the formulas. The options are
@@ -35,47 +69,21 @@
 #'
 #' @param ... Arguments to be passed to or from other methods
 #'
-#' @inheritSection tm Roles
-#'
-#' @inheritSection tm Pluralized Arguments
-#'
-#' # Patterns
-#'
-#' The expansion pattern allows for instructions on how the covariates should be
-#' included in different formulas. Below, assuming that _x1_, _x2_, and _x3_ are
-#' covariates...
-#'
-#' \deqn{y ~ x1 + x2 + x3}
-#'
-#' __Direct__:
-#'
-#' \deqn{y ~ x1 + x2 + x3}
-#'
-#' __Seqential__:
-#'
-#' \deqn{y ~ x1}
-#' \deqn{y ~ x1 + x2}
-#' \deqn{y ~ x1 + x2 + x3}
-#'
-#' __Parallel__:
-#'
-#' \deqn{y ~ x1}
-#' \deqn{y ~ x2}
-#' \deqn{y ~ x3}
 #'
 #' @return An object of class `fmls`
-#' @name formulas
+#' @name fmls
 #' @export
-sx <- function(x = unspecified(),
-							 role = list(),
-							 group = list(),
-							 label = list(),
-							 pattern = character(),
-							 ...) {
+fmls <- function(x = unspecified(),
+								 role = list(),
+								 group = list(),
+								 label = list(),
+								 pattern = character(),
+								 ...) {
+
 
 	# Break early if nothing is given
 	# If appropriate class, but empty, then also break early but warn/message
-	if (class(x)[1] == "vctrs_unspecified") {
+	if (length(x) == 0) {
 		return(new_fmls())
 	}
 	validate_class(x, c("tm", "formula"))
@@ -111,43 +119,29 @@ sx <- function(x = unspecified(),
 
 	# Return
 	new_fmls(
-		formula = f,
-		tm = t,
+		terms = t,
 		pattern = pattern,
 		order = order
 	)
 }
 
-#' @rdname formulas
-#' @export
-formulas = fmls
-
 #' Formula vector
 #' @keywords internal
 #' @noRd
-new_fmls <- function(tm = tm(),
-											formula = character(),
-											pattern = character(),
-											order = integer()) {
+new_fmls <- function(terms = tmls(),
+										 pattern = character(),
+										 order = integer()) {
 
-	# Validation of types
-	vec_assert(tm, ptype = tm())
-	vec_assert(formula, ptype = character())
+	# Validation
+	vec_assert(terms, ptype = tmls())
 	vec_assert(pattern, ptype = character())
 	vec_assert(order, ptype = integer())
 
-	# Bend tm into a list
-	if (vec_size(tm) == 0) {
-		tm <- tm()
-	} else {
-		tm <- list(tm)
-	}
-
 	# Everything needs to be the same length
+	# This builds an atomic/vectorized object on top of `list_of` constructor
 	new_rcrd(
 		fields = list(
-			"formula" = formula,
-			"tm" = tm,
+			"formula" = terms,
 			"pattern" = pattern,
 			"order" = order
 		),
@@ -253,8 +247,6 @@ vec_ptype2.character.fmls <- function(x, y, ...) {
 vec_cast.character.fmls <- function(x, to, ...) {
 	format(x) # Returns a character class by default
 }
-
-### sx
 
 #' @export
 vec_ptype2.fmls.tm <- function(x, y, ...) {

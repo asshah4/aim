@@ -58,20 +58,6 @@ new_lst_fmls <- function(...) {
 #' @noRd
 methods::setOldClass(c("lst_fmls", "vctrs_list_of"))
 
-
-#' @export
-obj_print_data.lst_fmls <- function(x, ...) {
-	if (vec_size(x) == 0) {
-		new_lst_fmls()
-	}
-
-	if (vec_size(x) >= 1) {
-		cat(format(x), sep = "\n")
-	} else {
-		cat(format(x))
-	}
-}
-
 #' @export
 format.lst_fmls <- function(x, ...) {
 
@@ -87,6 +73,20 @@ format.lst_fmls <- function(x, ...) {
 	# Return
 	fmt
 }
+
+#' @export
+obj_print_data.lst_fmls <- function(x, ...) {
+	if (vec_size(x) == 0) {
+		new_lst_fmls()
+	}
+
+	if (vec_size(x) >= 1) {
+		cat(format(x), sep = "\n")
+	} else {
+		cat(format(x))
+	}
+}
+
 
 #' @export
 vec_ptype_full.lst_fmls <- function(x, ...) {
