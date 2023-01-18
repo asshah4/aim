@@ -80,7 +80,6 @@ fmls <- function(x = unspecified(),
 								 pattern = character(),
 								 ...) {
 
-
 	# Break early if nothing is given
 	# If appropriate class, but empty, then also break early but warn/message
 	if (length(x) == 0) {
@@ -95,7 +94,7 @@ fmls <- function(x = unspecified(),
 	if (length(pattern) == 0) {
 		pattern <- "direct"
 	}
-	if (!pattern %in% template_patterns) {
+	if (!pattern %in% .patterns) {
 		stop("The pattern ",
 				 deparse(pattern),
 				 " is not yet supported.",
