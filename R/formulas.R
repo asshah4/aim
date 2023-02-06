@@ -150,7 +150,7 @@ new_fmls <- function(terms = tmls(),
 
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("fmls", "vctrs_vctr"))
+methods::setOldClass(c("fmls", "vctrs_rcrd"))
 
 #' @export
 format.fmls <- function(x, ...) {
