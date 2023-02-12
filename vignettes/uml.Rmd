@@ -1,0 +1,24 @@
+---
+title: "Architecture of the program"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Architecture of the program}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(nomnoml)
+```
+
+```{nomnoml}
+[Hello]-[World]
+
+```
