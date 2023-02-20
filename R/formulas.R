@@ -85,7 +85,6 @@
 #' \deqn{y ~ x3}
 #'
 #' @return An object of class `fmls`
-#' @name fmlss
 #' @export
 sx <- function(x = unspecified(),
 							 role = list(),

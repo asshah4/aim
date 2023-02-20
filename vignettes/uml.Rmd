@@ -19,6 +19,26 @@ library(nomnoml)
 ```
 
 ```{nomnoml}
-[Hello]-[World]
+// Terms
+[tm |
+  role: char; 
+  side: char; 
+  label: char; 
+  group: char; 
+  type: char; 
+  distribution: char; 
+  description: char; 
+  transformation: char |
+    +tm()
+]
+
+// Formulas (updated)
+[fmls |
+  role: list;
+  group: list;
+  label: list;
+  pattern: char |
+    +fmls()
+]
 
 ```
