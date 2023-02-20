@@ -1,10 +1,10 @@
-# Class definition -------------------------------------------------------------
+### Class definition -----------------------------------------------------------
 
 #' Vectorized formulas
 #'
 #' @description
 #'
-#' `r lifecycle::badge('stable')`
+#' `r lifecycle::badge('experimental')`
 #'
 #' This function defines a modified `formula` class that has been
 #' vectorized. The `fmls` serves as a set of instructions or a _script_ for the
@@ -12,13 +12,47 @@
 #' allowing for additional descriptions and relationships to exist between the
 #' tm.
 #'
+#' @details
+#'
+#' This is not meant to supersede a [stats::formula()] object, but provide a
+#' series of relationships that can be helpful in causal modeling. All `fmls`
+#' can be converted to a traditional `formula` with ease. The base for this
+#' object is built on the [tmls()] object.
+#'
+#' # Patterns
+#'
+#' The expansion pattern allows for instructions on how the covariates should be
+#' included in different formulas. Below, assuming that _x1_, _x2_, and _x3_ are
+#' covariates...
+#'
+#' \deqn{y = x1 + x2 + x3}
+#'
+#' __Direct__:
+#'
+#' \deqn{y = x1 + x2 + x3}
+#'
+#' __Seqential__:
+#'
+#' \deqn{y = x1}
+#' \deqn{y = x1 + x2}
+#' \deqn{y = x1 + x2 + x3}
+#'
+#' __Parallel__:
+#'
+#' \deqn{y = x1}
+#' \deqn{y = x2}
+#' \deqn{y = x3}
+#'
+#' @inheritSection tm Roles
+#' @inheritSection tm Pluralized Arguments
+#'
+#' @inheritParams tm
+#'
 #' @param x Objects of the following types can be used as inputs
 #'
 #'   * `tm`
 #'
 #'   * `formula`
-#'
-#' @inheritParams tm
 #'
 #' @param pattern This is the expansion pattern used to decide how the
 #'   covariates will incorporated into the formulas. The options are
@@ -28,74 +62,27 @@
 #'   * __direct__: the covariates will all be included in each formula
 #'
 #'   * __sequential__: the covariates will be added sequentially, one by one, or
-#'   by tiers, as indicated
+#'   by groups, as indicated
 #'
-#'   * __parallel__: the covariates or tiers of covariates will be placed in
+#'   * __parallel__: the covariates or groups of covariates will be placed in
 #'   parallel
-
+#'
 #' @param ... Arguments to be passed to or from other methods
 #'
-#' @inheritSection tm Roles
-#' @section Roles:
-#'
-#' Specific roles the variable plays within the formula. These are of particular
-#' importance, as they serve as special tm that can effect how a formula is
-#' interpreted. The specialized options for roles are as below:
-#'
-#' * __exposure__ or `X(...)`
-#'
-#' * __outcome__ or `O(...)` or placement of variable on LHS of formula
-#'
-#' * __confounder__ or `C(...)`
-#'
-#' * __mediator__ or `M(...)`
-#'
-#' * __strata__ or `S(...)`
-#'
-#' * __interaction__ or `In()`
-#'
-#' Formulas can be condensed by applying their specific role to individual tm
-#' as a function/wrapper. For example, `y ~ X(x1) + x2 + x3`. This would signify
-#' that `x1` has the specific role of an exposure.
-#'
-#' @inheritSection tm Pluralized Arguments
-#'
-#' @section Patterns:
-#'
-#' The expansion pattern allows for instructions on how the covariates should be
-#' included in different formulas. Below, assuming that _x1_, _x2_, and _x3_ are
-#' covariates...
-#'
-#' \deqn{y ~ x1 + x2 + x3}
-#'
-#' __Direct__:
-#'
-#' \deqn{y ~ x1 + x2 + x3}
-#'
-#' __Seqential__:
-#'
-#' \deqn{y ~ x1}
-#' \deqn{y ~ x1 + x2}
-#' \deqn{y ~ x1 + x2 + x3}
-#'
-#' __Parallel__:
-#'
-#' \deqn{y ~ x1}
-#' \deqn{y ~ x2}
-#' \deqn{y ~ x3}
 #'
 #' @return An object of class `fmls`
+#' @name fmls
 #' @export
-sx <- function(x = unspecified(),
-							 role = list(),
-							 tier = list(),
-							 label = list(),
-							 pattern = character(),
-							 ...) {
+fmls <- function(x = unspecified(),
+								 role = list(),
+								 group = list(),
+								 label = list(),
+								 pattern = character(),
+								 ...) {
 
 	# Break early if nothing is given
 	# If appropriate class, but empty, then also break early but warn/message
-	if (class(x)[1] == "vctrs_unspecified") {
+	if (length(x) == 0) {
 		return(new_fmls())
 	}
 	validate_class(x, c("tm", "formula"))
@@ -107,7 +94,7 @@ sx <- function(x = unspecified(),
 	if (length(pattern) == 0) {
 		pattern <- "direct"
 	}
-	if (!pattern %in% template_patterns) {
+	if (!pattern %in% .patterns) {
 		stop("The pattern ",
 				 deparse(pattern),
 				 " is not yet supported.",
@@ -119,7 +106,7 @@ sx <- function(x = unspecified(),
 	t <-
 		tm(x) |>
 		set_roles(roles = formula_to_named_list(role)) |>
-		set_tiers(tiers = formula_to_named_list(tier)) |>
+		set_groups(groups = formula_to_named_list(group)) |>
 		set_labels(labels = formula_to_named_list(label)) |>
 		unique()
 
@@ -131,45 +118,29 @@ sx <- function(x = unspecified(),
 
 	# Return
 	new_fmls(
-		formula = f,
-		tm = t,
+		terms = t,
 		pattern = pattern,
 		order = order
 	)
 }
 
-#' @rdname fmlss
-#' @export
-cast_fmls <- sx
-
-# Vector Creation --------------------------------------------------------------
-
 #' Formula vector
 #' @keywords internal
 #' @noRd
-new_fmls <- function(tm = tm(),
-											formula = character(),
-											pattern = character(),
-											order = integer()) {
+new_fmls <- function(terms = tmls(),
+										 pattern = character(),
+										 order = integer()) {
 
-	# Validation of types
-	vec_assert(tm, ptype = tm())
-	vec_assert(formula, ptype = character())
+	# Validation
+	vec_assert(terms, ptype = tmls())
 	vec_assert(pattern, ptype = character())
 	vec_assert(order, ptype = integer())
 
-	# Bend tm into a list
-	if (vec_size(tm) == 0) {
-		tm <- tm()
-	} else {
-		tm <- list(tm)
-	}
-
 	# Everything needs to be the same length
+	# This builds an atomic/vectorized object on top of `list_of` constructor
 	new_rcrd(
 		fields = list(
-			"formula" = formula,
-			"tm" = tm,
+			"formula" = terms,
 			"pattern" = pattern,
 			"order" = order
 		),
@@ -179,9 +150,7 @@ new_fmls <- function(tm = tm(),
 
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("fmls", "vctrs_vctr"))
-
-# Output -----------------------------------------------------------------------
+methods::setOldClass(c("fmls", "vctrs_rcrd"))
 
 #' @export
 format.fmls <- function(x, ...) {
@@ -235,15 +204,13 @@ obj_print_data.fmls <- function(x, ...) {
 
 #' @export
 vec_ptype_full.fmls <- function(x, ...) {
-	"fmls"
+	"formulas"
 }
 
 #' @export
 vec_ptype_abbr.fmls <- function(x, ...) {
-	"sx"
+	"fmls"
 }
-
-# Casting and coercion ---------------------------------------------------------
 
 # Arithmetic
 vec_arith.fmls <- function(op, x, y, ...) {
@@ -255,8 +222,6 @@ vec_arith.fmls.default <- function(op, x, y, ...) {
 }
 
 
-### self
-
 #' @export
 vec_ptype2.fmls.fmls <- function(x, y, ...) {
 	x
@@ -266,8 +231,6 @@ vec_ptype2.fmls.fmls <- function(x, y, ...) {
 vec_cast.fmls.fmls <- function(x, to, ...) {
 	x
 }
-
-### characters
 
 #' @export
 vec_ptype2.fmls.character <- function(x, y, ...) {
@@ -284,8 +247,6 @@ vec_cast.character.fmls <- function(x, to, ...) {
 	format(x) # Returns a character class by default
 }
 
-### sx
-
 #' @export
 vec_ptype2.fmls.tm <- function(x, y, ...) {
 	y
@@ -301,7 +262,7 @@ vec_cast.tm.fmls <- function(x, to, ...) {
 	tm.fmls(x)
 }
 
-### base formula
+### Formula Helpers ------------------------------------------------------------
 
 #' @export
 formula.fmls <- function(x, ...) {

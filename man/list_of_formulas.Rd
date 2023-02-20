@@ -2,8 +2,11 @@
 % Please edit documentation in R/list-of-formulas.R
 \name{list_of_formulas}
 \alias{list_of_formulas}
+\alias{lst_fmls}
 \title{List of formulas}
 \usage{
+lst_fmls(...)
+
 list_of_formulas(...)
 }
 \description{

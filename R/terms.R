@@ -1,4 +1,4 @@
-### Class Definition ----------------------------------------------------------
+### Term class -----------------------------------------------------------------
 
 #' Create vectorized terms
 #'
@@ -6,6 +6,8 @@
 #'
 #' A vectorized term object that allows for additional information to be carried
 #' with the variable name.
+#'
+#' @details
 #'
 #' This is not meant to replace traditional [stats::terms()], but to supplement
 #' it using additional information that is more informative for causal modeling.
@@ -90,13 +92,13 @@
 #' @param transformation Modification of the term to be applied when
 #'   combining with data
 #'
-#' @name terms
+#' @name tm
 #' @export
 tm <- function(x = unspecified(), ...) {
 	UseMethod("tm", object = x)
 }
 
-#' @rdname terms
+#' @rdname tm
 #' @export
 tm.character <- function(x,
 												 role = character(),
@@ -149,7 +151,7 @@ tm.character <- function(x,
 	)
 }
 
-#' @rdname terms
+#' @rdname tm
 #' @export
 tm.formula <- function(x,
 											 role = formula(),
@@ -346,7 +348,7 @@ tm.formula <- function(x,
 	tm_vector
 }
 
-#' @rdname terms
+#' @rdname tm
 #' @export
 tm.default <- function(x = unspecified(), ...) {
 	# Early break
@@ -407,7 +409,7 @@ new_tm <- function(term = character(),
 	)
 }
 
-#' @rdname terms
+#' @rdname tm
 #' @export
 is_tm <- function(x) {
 	inherits(x, "tm")
@@ -490,7 +492,7 @@ obj_print_data.tm <- function(x, ...) {
 
 #' @export
 vec_ptype_full.tm <- function(x, ...) {
-	"tm"
+	"term"
 }
 
 #' @export
@@ -543,3 +545,66 @@ formula.tm <- function(x, ...) {
 
 }
 
+### Term List Wrapper Class ----------------------------------------------------
+
+#' List of terms
+#'
+#' A simple `list_of` wrapper class around `tm` objects to allow them to be
+#' vectorized.
+#' @export
+tmls <- function(...) {
+	# Early break
+	if (missing(..1)) {
+		return(new_tmls(list()))
+	}
+	x <- vec_cast_common(..., .to = tm())
+
+	new_tmls(x)
+}
+
+new_tmls <- function(...) {
+	new_list_of(
+		x = ...,
+		ptype = tm(),
+		class = "tmls"
+	)
+}
+
+#' @export
+vec_ptype_full.tmls <- function(x, ...) "term_list"
+
+#' @export
+vec_ptype_abbr.tmls <- function(x, ...) "tmls"
+
+#' @keywords internal
+methods::setOldClass(c("tmls", "vctrs_list_of"))
+
+#' @export
+format.tmls <- function(x, ...) {
+
+	fmt <- character()
+	# Character representation of formula
+	if (vec_size(x) == 0) {
+		return()
+	} else if (vec_size(x) >= 1) {
+		fmt <- lapply(x, format)
+	}
+
+	# Return
+	fmt
+}
+
+#' @export
+obj_print_data.tmls <- function(x, ...) {
+	if (vec_size(x) == 0) {
+		new_tmls()
+	} else if (length(x) == 1) {
+		y <- x[[1]]
+		cat(format(y), sep = " | ")
+	} else if (length(x) > 1) {
+		lapply(x, FUN = function(.x) {
+			cat(format(.x), sep = " | ")
+			cat("\n")
+		})
+	}
+}
