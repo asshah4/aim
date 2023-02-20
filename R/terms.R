@@ -493,6 +493,8 @@ vec_ptype_abbr.tm <- function(x, ...) {
 	"tm"
 }
 
+#' @export
+methods::setOldClass(c("tm", "vctrs_rcrd"))
 
 #' @export
 vec_ptype2.tm.tm <- function(x, y, ...) x
@@ -569,7 +571,7 @@ vec_ptype_full.tmls <- function(x, ...) "term_list"
 #' @export
 vec_ptype_abbr.tmls <- function(x, ...) "tmls"
 
-#' @keywords internal
+#' @export
 methods::setOldClass(c("tmls", "vctrs_list_of"))
 
 #' @export

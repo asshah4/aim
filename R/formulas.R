@@ -208,6 +208,9 @@ vec_ptype_abbr.fmls <- function(x, ...) {
 	"fmls"
 }
 
+#' @export
+methods::setOldClass(c("tm", "vctrs_rcrd"))
+
 # Arithmetic
 vec_arith.fmls <- function(op, x, y, ...) {
 	UseMethod("vec_arith.fmls", y)

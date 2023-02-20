@@ -139,6 +139,5 @@ test_that("term list wrappers can be generated", {
 	expect_length(t2, 2)
 	expect_output(print(t2), "\\|")
 
-
 })
 
