@@ -3,7 +3,7 @@ test_that("lists can be fit", {
 	f <- mpg + wt ~ X(hp) + X(cyl) + gear + drat + qsec
 	labels <- list(mpg ~ "Mileage", hp ~  "Horsepower")
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
-	t <- rx(f, label = labels, tier = tiers)
+	t <- tm(f, label = labels, tier = tiers)
 	x <- sx(t, pattern = "sequential")
 	lof <- fmls(x, order = 2)
 	expect_s3_class(lof, "fmls")
@@ -38,7 +38,7 @@ test_that("fitting can be done with strata", {
 	f <- mpg ~ X(wt) + hp + qsec + S(cyl) + S(am)
 	labels <- list(mpg ~ "Mileage", hp ~  "Horsepower")
 	tiers <- list(c(drat, qsec) ~ "speed", wt ~ "hardware")
-	t <- rx(f, label = labels, tier = tiers)
+	t <- tm(f, label = labels, tier = tiers)
 	x <- sx(t, pattern = "sequential")
 	lof <- fmls(x, order = 2)
 	expect_s3_class(lof, "fmls")
