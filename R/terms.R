@@ -169,7 +169,6 @@ tm.formula <- function(x,
 	}
 
 	# Validate arguments and coerce into original assignments
-	# Uses zeallot for more compact code
 	allArgs <- c(as.list(environment()), list(...))
 	formalNames <-
 		methods::formalArgs(tm.formula) |>
@@ -177,17 +176,15 @@ tm.formula <- function(x,
 		utils::tail(-1)
 	namedArgs <- allArgs[which(names(allArgs) %in% formalNames)]
 	validate_classes(namedArgs, what = c("list", "formula"))
-	modArgs <- lapply(namedArgs, function(.x) {
-		.y <-
-			list_of_formulas(.x) |>
-			formula()
 
-		sapply(.y, formula_to_named_list)
-	})
-	zeallot::`%<-%`(
-		c(role, label, group, type, distribution, description, transformation),
-		modArgs
-	)
+	# Turn all formula-based arguments into named lists
+	role <- formulas_to_named_list(role)
+	label <- formulas_to_named_list(label)
+	group <- formulas_to_named_list(group)
+	type <- formulas_to_named_list(type)
+	distribution <- formulas_to_named_list(distribution)
+	description <- formulas_to_named_list(description)
+	transformation <- formulas_to_named_list(transformation)
 
 	# Get actual formula components
 	# Check to see if the RHS has any shortcut variables attached
@@ -414,10 +411,6 @@ new_tm <- function(term = character(),
 is_tm <- function(x) {
 	inherits(x, "tm")
 }
-
-#' @keywords internal
-#' @noRd
-methods::setOldClass(c("tm", "rcrds_rcrd"))
 
 #' @export
 format.tm <- function(x, ...) {

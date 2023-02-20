@@ -151,12 +151,31 @@ formula.lst_fmls <- function(x, ...) {
 
 #' Take list of formula, and return as a named list (name = LHS, value = RHS)
 #' @export
-formula_to_named_list <- function(x) {
-	stopifnot("Should be applied to individual formulas" = inherits(x, "formula"))
-	nm <- lhs(x)
-	val <- rhs(x)
-	names(val) <- nm
-	as.list(val)
+formulas_to_named_list <- function(x) {
+
+	# Check to see if its a single formula or a list of formulas
+	stopifnot("Should be applied to individual or list of formulas" =
+							inherits(x, c("list", "formula")))
+
+	# Empty, list, or formula management
+	if (length(x) == 0) { # If an empty formula or list, return an empty list
+		y <- list()
+	} else if (class(x) == "formula") { # If a single formula
+		nm <- lhs(x)
+		val <- rhs(x)
+		names(val) <- nm
+		y <- as.list(val)
+	} else if (class(x) == "list") { # if a list of formulas
+		y <- sapply(x, function(.x) {
+			nm <- lhs(.x)
+			val <- rhs(.x)
+			names(val) <- nm
+			val <- as.list(val)
+		})
+	}
+
+	# Return
+	y
 }
 
 ### Formula Helpers -----------------------------------------------------------
