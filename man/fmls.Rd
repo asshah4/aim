@@ -7,8 +7,8 @@
 fmls(
   x = unspecified(),
   role = list(),
-  group = list(),
   label = list(),
+  group = list(),
   pattern = character(),
   ...
 )
@@ -35,9 +35,9 @@ further details. The options for roles are as below:
 \item unknown
 }}
 
-\item{group}{Grouping variable name for modeling or placing terms together}
-
 \item{label}{Display-quality label describing the variable}
+
+\item{group}{Grouping variable name for modeling or placing terms together}
 
 \item{pattern}{This is the expansion pattern used to decide how the
 covariates will incorporated into the formulas. The options are

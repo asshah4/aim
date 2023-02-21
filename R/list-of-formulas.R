@@ -13,28 +13,36 @@
 #' @export
 lst_fmls <- function(...) {
 
-	# Early break
-	if (missing(..1) | length(..1) == 0) {
+	# Early break if needed
+	dots <- list(...)
+	if (length(dots) == 0) {
 		return(new_lst_fmls())
+	} else if (inherits(dots[[1]], "lst_fmls")) {
+		return(dots[[1]])
+	}
+	if (length(dots) == 1 && is.list(dots[[1]])) {
+		dots <- dots[[1]]
 	}
 
-	if (inherits(..1, "list") & ...length() == 1) {
-		f <- list(...)[[1]]
-	} else {
-		f <- list(...)
-	}
+	# Validate contents
+	stopifnot("Should be applied to individual or list of formulas" =
+							inherits(f, c("list", "formula")))
 
-	lof <- lapply(
-		f,
+	listOfFormulas <- lapply(
+		dots,
 		FUN = function(.x) {
-			stopifnot(inherits(.x, "formula"))
+
+			# Get components
+			.l <- lhs(.x)
+			.r <- rhs(.x)
+
+			# If there are spaces within an term, it has to have escapable quotes
 			.y <- deparse1(.x)
-			gsub("\"", "", .y)
 
 		}
 	)
 
-	new_lst_fmls(lof)
+	new_lst_fmls(listOfFormulas)
 
 }
 
@@ -160,12 +168,21 @@ formulas_to_named_list <- function(x) {
 	# Empty, list, or formula management
 	if (length(x) == 0) { # If an empty formula or list, return an empty list
 		y <- list()
-	} else if (class(x) == "formula") { # If a single formula
+	} else if (inherits(x, "formula")) { # If a single formula
 		nm <- lhs(x)
 		val <- rhs(x)
 		names(val) <- nm
 		y <- as.list(val)
-	} else if (class(x) == "list") { # if a list of formulas
+	} else if (inherits(x, "lst_fmls")) { # if it is a `lst_fmls` object
+		y <-
+			stats::formula(x) |>
+			sapply(function(.x) {
+				nm <- lhs(.x)
+				val <- rhs(.x)
+				names(val) <- nm
+				val <- as.list(val)
+			})
+	} else if (inherits(x, "list")) { # if a list that contains formulas
 		y <- sapply(x, function(.x) {
 			nm <- lhs(.x)
 			val <- rhs(.x)

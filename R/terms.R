@@ -540,6 +540,49 @@ formula.tm <- function(x, ...) {
 
 }
 
+#' Update `tm` objects
+#'
+#' This updates properties or attributes of a `tm` vector. This only updates
+#' `tm` objects that already exist.
+#'
+#' @param ... A series of `name = value` pairs that represent the attribute to
+#'   be updated. Can have a value of __<NA>__ if the goal is to remove an
+#'   attribute or property.
+#'
+#' @return A `tm` object with updated attributes
+#' @export
+update.tm <- function(object, ...) {
+
+	# Early break
+	if (missing(..1) | length(..1) == 0) {
+		return(object)
+	}
+
+	# Get update options and original data
+	dots <- list(...)
+	if (length(dots) == 1 && is.list(dots[[1]])) {
+		dots <- dots[[1]]
+	}
+	termData <- vec_proxy(object)
+
+	# Property management loop
+	for (i in names(termData[-1])) {
+		if (!is.null(dots[[i]])) {
+			newProperties <-
+				dots[[i]] |>
+				formulas_to_named_list()
+
+			# Term management loop
+			for (j in names(newProperties)) {
+				termData[termData$term == j, i] <- newProperties[[j]]
+			}
+		}
+	}
+
+	# Restore and return
+	vec_restore(termData, to = tm())
+}
+
 ### Term List Wrapper Class ----------------------------------------------------
 
 #' List of terms

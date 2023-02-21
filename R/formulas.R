@@ -69,14 +69,13 @@
 #'
 #' @param ... Arguments to be passed to or from other methods
 #'
-#'
 #' @return An object of class `fmls`
 #' @name fmls
 #' @export
 fmls <- function(x = unspecified(),
 								 role = list(),
-								 group = list(),
 								 label = list(),
+								 group = list(),
 								 pattern = character(),
 								 ...) {
 
@@ -90,6 +89,15 @@ fmls <- function(x = unspecified(),
 		return(new_fmls())
 	}
 
+	# Obtain main component for dispatching, will always be a `tm` object
+	tms <- tm(x)
+
+	# New/potentially updating arguments
+	role <- lst_fmls(role)
+	label <- lst_fmls(label)
+	group <- lst_fmls(group)
+	tms <- update(tms, role = role, label = label, group = group)
+
 	# Check pattern
 	if (length(pattern) == 0) {
 		pattern <- "direct"
@@ -101,17 +109,9 @@ fmls <- function(x = unspecified(),
 				 call. = FALSE)
 	}
 
-	# tm list (nested for field length equivalence)
-	# Updated attributes/components internally
-	t <-
-		tm(x) |>
-		set_roles(roles = formula_to_named_list(role)) |>
-		set_groups(groups = formula_to_named_list(group)) |>
-		set_labels(labels = formula_to_named_list(label)) |>
-		unique()
-
 	# Look at composition of tm
-	order <- decipher(t)
+	# TODO
+	order <- decipher(tms)
 
 	# Formula
 	f <- deparse1(stats::formula(t))

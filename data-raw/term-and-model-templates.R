@@ -1,15 +1,21 @@
 ## code to prepare `templates` dataset goes here
-.models <- c("model_fit",
-						 "lm",
-						 "glm",
-						 "coxph")
+.models <- c(
+	"model_fit",
+	"lm",
+	"glm",
+	"coxph"
+)
 
-.patterns <- c("fundamental",
-							 "direct",
-							 "sequential",
-							 "parallel")
+.patterns <- c(
+	"fundamental",
+	"direct",
+	"sequential",
+	"parallel"
+)
 
-.transformations <- c("log")
+.transformations <- c(
+	"log"
+)
 
 .roles <- list(
 	"outcome" = ".o",

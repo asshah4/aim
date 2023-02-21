@@ -141,3 +141,28 @@ test_that("term list wrappers can be generated", {
 
 })
 
+test_that("terms can be updated", {
+
+	object <- tm(output ~ input + .c(modifier))
+
+	dots <- list(
+		role = input ~ "exposure",
+		label = list(output ~ "The Final Outcome", input ~ "The First Mover")
+	)
+
+	x <- update(
+		object,
+		role = input ~ "exposure",
+		label = list(output ~ "The Final Outcome", input ~ "The First Mover")
+	)
+	x <- update(
+		object,
+		role = input ~ "exposure",
+		label = formulas_to_named_list(label)
+	)
+
+	y <- update(object, dots)
+
+	expect_equal(x, y)
+	expect_equal(vec_data(x)$role, c("outcome", "exposure", "confounder"))
+})
