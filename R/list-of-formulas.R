@@ -13,36 +13,26 @@
 #' @export
 lst_fmls <- function(...) {
 
-	# Early break if needed
-	dots <- list(...)
-	if (length(dots) == 0) {
+
+	# The input here can be quite varied. Our goal is to flatten an unnested list
+	# Options are:
+	# 	Empty
+	# 	Empty list
+	# 	Single formula
+	#		List of formulas
+	# 	`fmls` (single or multiple)
+	# 	Incorrect type of object
+
+	# Early break for empty
+	if (missing(..1)) {
 		return(new_lst_fmls())
-	} else if (inherits(dots[[1]], "lst_fmls")) {
-		return(dots[[1]])
 	}
-	if (length(dots) == 1 && is.list(dots[[1]])) {
-		dots <- dots[[1]]
-	}
+	x <- list(...)
+	y <- Filter(length, x)
+	z <- vec_cast_common(y, .to = fmls())
 
-	# Validate contents
-	stopifnot("Should be applied to individual or list of formulas" =
-							inherits(f, c("list", "formula")))
-
-	listOfFormulas <- lapply(
-		dots,
-		FUN = function(.x) {
-
-			# Get components
-			.l <- lhs(.x)
-			.r <- rhs(.x)
-
-			# If there are spaces within an term, it has to have escapable quotes
-			.y <- deparse1(.x)
-
-		}
-	)
-
-	new_lst_fmls(listOfFormulas)
+	# Return
+	new_lst_fmls(x)
 
 }
 
@@ -54,8 +44,8 @@ list_of_formulas = lst_fmls
 new_lst_fmls <- function(...) {
 
 	new_list_of(
-		x = list(...),
-		ptype = character(),
+		x = ...,
+		ptype = fmls(),
 		class = "lst_fmls"
 	)
 

@@ -155,11 +155,6 @@ test_that("terms can be updated", {
 		role = input ~ "exposure",
 		label = list(output ~ "The Final Outcome", input ~ "The First Mover")
 	)
-	x <- update(
-		object,
-		role = input ~ "exposure",
-		label = formulas_to_named_list(label)
-	)
 
 	y <- update(object, dots)
 

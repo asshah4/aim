@@ -16,4 +16,11 @@ test_that("simple formulas can be made from base::formula()", {
 	role <- input ~ "exposure"
 	label <- list(output ~ "The Final Outcome", input ~ "The First Mover")
 
+	x <- fmls(f1, role = role, label = label, group = group)
+	y <- fmls(f2)
+	z <- fmls(f3)
+	f <- c(x, y, z)
+	expect_s3_class(x, "fmls")
+	expect_length(f, 3)
+
 })

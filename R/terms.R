@@ -568,13 +568,13 @@ update.tm <- function(object, ...) {
 	# Property management loop
 	for (i in names(termData[-1])) {
 		if (!is.null(dots[[i]])) {
-			newProperties <-
+			newProps <-
 				dots[[i]] |>
 				formulas_to_named_list()
 
 			# Term management loop
-			for (j in names(newProperties)) {
-				termData[termData$term == j, i] <- newProperties[[j]]
+			for (j in names(newProps)) {
+				termData[termData$term == j, i] <- newProps[[j]]
 			}
 		}
 	}

@@ -72,31 +72,44 @@
 #' @return An object of class `fmls`
 #' @name fmls
 #' @export
-fmls <- function(x = unspecified(),
-								 role = list(),
-								 label = list(),
-								 group = list(),
-								 pattern = character(),
-								 ...) {
+fmls <- function(x = unspecified(), ...) {
+	UseMethod("fmls", object = x)
+}
+
+#' @rdname fmls
+#' @export
+fmls.formula <- function(x,
+												 role = list(),
+												 label = list(),
+												 group = list(),
+												 pattern = character(),
+												 ...) {
 
 	# Break early if nothing is given
 	# If appropriate class, but empty, then also break early but warn/message
 	if (length(x) == 0) {
 		return(new_fmls())
 	}
-	validate_class(x, c("tm", "formula"))
-	if (validate_empty(x)) {
-		return(new_fmls())
+
+	# Wrap class of instructions in a list if not already a formula
+	if (class(role) == "formula") {
+		role <- list(role)
+	}
+	if (class(label) == "formula") {
+		label <- list(label)
+	}
+	if (class(group) == "formula") {
+		group <- list(group)
 	}
 
 	# Obtain main component for dispatching, will always be a `tm` object
-	tms <- tm(x)
-
-	# New/potentially updating arguments
-	role <- lst_fmls(role)
-	label <- lst_fmls(label)
-	group <- lst_fmls(group)
-	tms <- update(tms, role = role, label = label, group = group)
+	# Update the terms with new attributes, etc
+	tms <-
+		x |>
+		tm() |>
+		update(role = role,
+					 label = label,
+					 group = group)
 
 	# Check pattern
 	if (length(pattern) == 0) {
@@ -109,16 +122,17 @@ fmls <- function(x = unspecified(),
 				 call. = FALSE)
 	}
 
-	# Look at composition of tm
-	# TODO
-	order <- decipher(tms)
+	# Temporary order situation
+	if (length(tms) == 2) {
+		order <- 2L
+	} else if (length(tms) > 2) {
+		order <- 3L
+	}
 
-	# Formula
-	f <- deparse1(stats::formula(t))
 
 	# Return
 	new_fmls(
-		terms = t,
+		terms = tmls(tms),
 		pattern = pattern,
 		order = order
 	)
@@ -156,11 +170,28 @@ format.fmls <- function(x, ...) {
 		return()
 	} else {
 		fmt <-
-			sapply(x, FUN = function(.x) {
-				field(.x, "formula") |>
-					format()
-			})
+			sapply(
+				x,
+				FUN = function(.x) {
+					# Get term list, lenght of one, into terms
+					.t <- field(.x, "formula")[[1]]
+					dt <- vec_data(.t)
+
+					# Convert into formula pattern
+					.l <-
+						vec_restore(dt[dt$side == "left",], to = tm()) |>
+						format() |>
+						paste0(collapse = " + ")
+					.r <-
+						vec_restore(dt[dt$side == "right",], to = tm()) |>
+						format() |>
+						paste0(collapse = " + ")
+
+					.f <- paste(.l, sep = " ~ ", .r)
+				}
+			)
 	}
+
 	# Return
 	fmt
 }
@@ -171,30 +202,10 @@ obj_print_data.fmls <- function(x, ...) {
 	# Colorful printing
 	if (vec_size(x) == 0) {
 		fmt <- new_fmls()
-	} else {
-		fmt <-
-			sapply(
-				x,
-				FUN = function(.x) {
-					t <- field(.x, "tm")[[1]]
-					f <- stats::formula(field(.x, "formula"))
-					left <- match_tm(t, lhs(f))
-					right <- match_tm(t, rhs(f))
-
-					f <-
-						paste(format(left), collapse = " + ") |>
-						paste(paste(format(right), collapse = " + "), sep = " ~ ")
-
-					f
-				}
-			)
-
-	}
-
-	if (length(fmt) > 1) {
-		cat(format(fmt), sep = "\n")
-	} else {
-		cat(format(fmt))
+	} else if (length(x) > 1) {
+		cat(format(x), sep = "\n")
+	} else if (length(x) == 1) {
+		cat(format(x))
 	}
 }
 
