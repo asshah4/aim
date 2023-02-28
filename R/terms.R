@@ -347,6 +347,14 @@ tm.formula <- function(x,
 
 #' @rdname tm
 #' @export
+tm.fmls <- function(x,
+										...) {
+
+	field(x, "formula")[[1]]
+}
+
+#' @rdname tm
+#' @export
 tm.default <- function(x = unspecified(), ...) {
 	# Early break
 	if (length(x) == 0) {
@@ -496,13 +504,15 @@ vec_ptype_abbr.tm <- function(x, ...) {
 #' @export
 methods::setOldClass(c("tm", "vctrs_rcrd"))
 
+### Coercion methods -----------------------------------------------------------
+
 #' @export
 vec_ptype2.tm.tm <- function(x, y, ...) x
 
 #' @export
 vec_cast.tm.tm <- function(x, to, ...) x
 
-### character() ###
+# CHARACTER
 
 #' @export
 vec_ptype2.tm.character <- function(x, y, ...) y # X = tm
@@ -523,6 +533,57 @@ vec_cast.character.tm <- function(x, to, ...) {
 	# order is flipped, such that `x` is tm
 	attributes(x) <- NULL
 	x[[1]]
+}
+
+# FORMULA
+
+#' @export
+vec_ptype2.tm.formula <- function(x, y, ...) {
+	x # A formula and term should vectorize to a term object
+}
+
+#' @export
+vec_ptype2.formula.tm <- function(x, y, ...) {
+	y # A formula and term should vectorize to a term object
+}
+
+#' @export
+vec_cast.tm.formula <- function(x, to, ...) {
+	# order is flipped, such that `x` is formula
+	# Cast from formula into terms
+	tm(x)
+}
+
+#' @export
+vec_cast.formula.tm <- function(x, to, ...) {
+	# order is flipped, such that `x` is tm
+	formula(x)
+}
+
+# FMLS
+
+#' @export
+vec_ptype2.tm.fmls <- function(x, y, ...) {
+	x # A fmls and term should vectorize to a term object
+}
+
+#' @export
+vec_ptype2.fmls.tm <- function(x, y, ...) {
+	y # A fmls and term should vectorize to a term object
+}
+
+#' @export
+vec_cast.tm.fmls <- function(x, to, ...) {
+	# order is flipped, such that `x` is fmls
+	# Cast from fmls into terms
+	tm(x)
+}
+
+#' @export
+vec_cast.fmls.tm <- function(x, to, ...) {
+	# order is flipped, such that `x` is tm
+	# Cast from `tm` into `fmls`
+	fmls(x)
 }
 
 ### Term Helpers ---------------------------------------------------------------

@@ -111,6 +111,14 @@ test_that("terms can be generated from a formula", {
 
 })
 
+test_that("term coercion works", {
+
+	f <- fmls(.o(wicked) ~ .x(witch) + west)
+	t <- tm(f)
+	expect_s3_class(t, "tm")
+
+})
+
 test_that("mediation terms will be assessed correctly", {
 
 	x <- .o(output) ~ .x(input) + .m(mediator) + random
@@ -133,11 +141,15 @@ test_that("term list wrappers can be generated", {
 	expect_output(print(t1), "<term_list\\[1\\]>")
 
 	x <- tm(.o(good) ~ .x(bad) + ugly)
-	y <- tm(.o(wicked) ~ .x(witch) + west)
+	f <- .o(wicked) ~ .x(witch) + west
+	y <- tm(f)
+	expect_equal(tm(f), y)
 	t2 <- tmls(x, y)
+	t3 <- tmls(x, f)
 	expect_s3_class(t2, "tmls")
 	expect_length(t2, 2)
 	expect_output(print(t2), "\\|")
+	expect_equal(t2, t3)
 
 })
 

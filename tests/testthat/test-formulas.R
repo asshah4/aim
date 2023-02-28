@@ -24,3 +24,10 @@ test_that("simple formulas can be made from base::formula()", {
 	expect_length(f, 3)
 
 })
+
+test_that("coercion by vctrs works", {
+
+	# Characters
+	f <- fmls(witch ~ wicked + west)
+	expect_type(c(f, "test"), "character")
+})

@@ -2,13 +2,10 @@
 % Please edit documentation in R/formulas.R
 \name{fmls}
 \alias{fmls}
-\alias{fmls.formula}
 \title{Vectorized formulas}
 \usage{
-fmls(x = unspecified(), ...)
-
-\method{fmls}{formula}(
-  x,
+fmls(
+  x = unspecified(),
   role = list(),
   label = list(),
   group = list(),
@@ -22,8 +19,6 @@ fmls(x = unspecified(), ...)
 \item \code{tm}
 \item \code{formula}
 }}
-
-\item{...}{Arguments to be passed to or from other methods}
 
 \item{role}{Specific roles the variable plays within the formula. These are
 of particular importance, as they serve as special terms that can effect
@@ -55,6 +50,8 @@ by groups, as indicated
 \item \strong{parallel}: the covariates or groups of covariates will be placed in
 parallel
 }}
+
+\item{...}{Arguments to be passed to or from other methods}
 }
 \value{
 An object of class \code{fmls}

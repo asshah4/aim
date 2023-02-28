@@ -4,6 +4,7 @@
 \alias{tm}
 \alias{tm.character}
 \alias{tm.formula}
+\alias{tm.fmls}
 \alias{tm.default}
 \alias{is_tm}
 \title{Create vectorized terms}
@@ -34,6 +35,8 @@ tm(x = unspecified(), ...)
   transformation = formula(),
   ...
 )
+
+\method{tm}{fmls}(x, ...)
 
 \method{tm}{default}(x = unspecified(), ...)
 

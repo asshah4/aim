@@ -14,8 +14,8 @@ test_that("lst_fmls class generation works", {
 
 	# Explicit conversion to `lst_fmls`
 	fl_3 <- lst_fmls(output ~ input, x ~ y)
-	expect_length(fl_3, 1)
-	expect_equal(lengths(fl_3), 2) # Number of components in the list
+	expect_length(fl_3, 2)
+	expect_equal(lengths(fl_3), c(1, 1)) # Number of components in the list
 
 	# Test empty input
 	expect_length(lst_fmls(), 0)
@@ -28,12 +28,10 @@ test_that("lst_fmls class generation works", {
 	dots <- list(a = a, b = b, c = c)
 	l1 <- lst_fmls(a = a)
 	l2 <- lst_fmls(a)
-	expect_equal(l1, l2)
+	expect_equal(l1, l2, ignore_attr = TRUE)
 	expect_length(lst_fmls(b), 0)
 	expect_length(lst_fmls(b = b), 0)
-	l3 <- lst_fmls(a = a, b = b, c = c)
-	expect_length(l3, 1)
-	expect_equal(lengths(l3), 3)
+	expect_error(lst_fmls(a = a, b = b, c = c))
 
 })
 

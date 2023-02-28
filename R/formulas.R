@@ -72,18 +72,12 @@
 #' @return An object of class `fmls`
 #' @name fmls
 #' @export
-fmls <- function(x = unspecified(), ...) {
-	UseMethod("fmls", object = x)
-}
-
-#' @rdname fmls
-#' @export
-fmls.formula <- function(x,
-												 role = list(),
-												 label = list(),
-												 group = list(),
-												 pattern = character(),
-												 ...) {
+fmls <- function(x = unspecified(),
+								 role = list(),
+								 label = list(),
+								 group = list(),
+								 pattern = character(),
+								 ...) {
 
 	# Break early if nothing is given
 	# If appropriate class, but empty, then also break early but warn/message
@@ -222,15 +216,9 @@ vec_ptype_abbr.fmls <- function(x, ...) {
 #' @export
 methods::setOldClass(c("tm", "vctrs_rcrd"))
 
-# Arithmetic
-vec_arith.fmls <- function(op, x, y, ...) {
-	UseMethod("vec_arith.fmls", y)
-}
+### Coercion methods -----------------------------------------------------------
 
-vec_arith.fmls.default <- function(op, x, y, ...) {
-	stop_incompatible_op(op, x, y)
-}
-
+# FMLS
 
 #' @export
 vec_ptype2.fmls.fmls <- function(x, y, ...) {
@@ -241,6 +229,8 @@ vec_ptype2.fmls.fmls <- function(x, y, ...) {
 vec_cast.fmls.fmls <- function(x, to, ...) {
 	x
 }
+
+# CHARACTER
 
 #' @export
 vec_ptype2.fmls.character <- function(x, y, ...) {
@@ -257,6 +247,8 @@ vec_cast.character.fmls <- function(x, to, ...) {
 	format(x) # Returns a character class by default
 }
 
+### TM
+
 #' @export
 vec_ptype2.fmls.tm <- function(x, y, ...) {
 	y
@@ -269,7 +261,33 @@ vec_ptype2.tm.fmls <- function(x, y, ...) {
 
 #' @export
 vec_cast.tm.fmls <- function(x, to, ...) {
-	tm.fmls(x)
+	tm(x)
+}
+
+# FORMULA
+
+#' @export
+vec_ptype2.fmls.formula <- function(x, y, ...) {
+	x
+}
+
+#' @export
+vec_ptype2.formula.fmls <- function(x, y, ...) {
+	y
+}
+
+#' @export
+vec_cast.formula.fmls <- function(x, to, ...) {
+	# Cast from `fmls` into `formula`
+	x |>
+		tm() |>
+		stats::formula()
+}
+
+#' @export
+vec_cast.fmls.formula <- function(x, to, ...) {
+	# Cast from `formula` into `fmls`
+	fmls(x)
 }
 
 ### Formula Helpers ------------------------------------------------------------
