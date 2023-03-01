@@ -1,21 +1,28 @@
 test_that("lst_fmls class generation works", {
 
-	x <- .x(output) ~ input
-	y <- apples + bananas ~ orange + (1 | peels)
-	z <- ~ garbage_in
-	f <- list(x, y, z)
-	fl_1 <- lst_fmls(x, y, z)
-	fl_2 <- list_of_formulas(f)
-	expect_equal(fl_1, fl_2)
-	expect_s3_class(fl_1, "lst_fmls")
+	# Uses fmls as base object
+	x1 <- .x(output) ~ input
+	x2 <- apples + bananas ~ orange + (1 | peels)
+	x3 <- ~ garbage_in
+	f1 <- fmls(x1)
+	f2 <- fmls(x2)
+	f3 <- fmls(x3)
+	fl <- c(f1, f2, f3)
+	expect_length(lst_fmls(fl), 1)
+	expect_length(lst_fmls(fl, f3), 2)
 
-	# Conversion
-	expect_type(formula(fl_1), "list")
+	# Can attempt with formulas as well
+	lof <- lst_fmls(x1, x2, x3)
+	expect_message(lst_fmls(x1))
+	expect_length(lof, 3) # This are 3 different objects that are coerced to fmls
+	expect_error(lst_fmls(list(x1, x2, x3)))
+	expect_s3_class(lof, "lst_fmls")
 
 	# Explicit conversion to `lst_fmls`
-	fl_3 <- lst_fmls(output ~ input, x ~ y)
-	expect_length(fl_3, 2)
-	expect_equal(lengths(fl_3), c(1, 1)) # Number of components in the list
+	lof <- lst_fmls(output ~ input, x ~ y)
+	expect_type(formula(lof), "list")
+	expect_length(lof, 2)
+	expect_equal(lengths(lof), c(1, 1)) # Number of components in the list
 
 	# Test empty input
 	expect_length(lst_fmls(), 0)

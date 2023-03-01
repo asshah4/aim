@@ -31,3 +31,10 @@ test_that("coercion by vctrs works", {
 	f <- fmls(witch ~ wicked + west)
 	expect_type(c(f, "test"), "character")
 })
+
+
+test_that("patterns can be included into formula", {
+
+	f <- fmls(witch ~ wicked + west, pattern = "parallel")
+
+})

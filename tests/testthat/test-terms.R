@@ -153,9 +153,13 @@ test_that("term list wrappers can be generated", {
 
 })
 
-test_that("terms can be updated", {
+test_that("terms can be found and updated and attributes can be found", {
 
 	object <- tm(output ~ input + .c(modifier))
+
+	t <- find_terms(object, role = "outcome")
+	expect_length(t, 1)
+	expect_equal(roles(t)[[1]], "outcome")
 
 	dots <- list(
 		role = input ~ "exposure",
