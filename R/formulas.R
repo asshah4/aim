@@ -126,7 +126,7 @@ fmls <- function(x = unspecified(),
 
 	# Return
 	new_fmls(
-		terms = tmls(tms),
+		termList = tmls(tms),
 		pattern = pattern,
 		order = order
 	)
@@ -135,12 +135,12 @@ fmls <- function(x = unspecified(),
 #' Formula vector
 #' @keywords internal
 #' @noRd
-new_fmls <- function(terms = tmls(),
+new_fmls <- function(termList = tmls(),
 										 pattern = character(),
 										 order = integer()) {
 
 	# Validation
-	vec_assert(terms, ptype = tmls())
+	vec_assert(termList, ptype = tmls())
 	vec_assert(pattern, ptype = character())
 	vec_assert(order, ptype = integer())
 
@@ -148,12 +148,18 @@ new_fmls <- function(terms = tmls(),
 	# This builds an atomic/vectorized object on top of `list_of` constructor
 	new_rcrd(
 		fields = list(
-			"formula" = terms,
+			"formula" = termList,
 			"pattern" = pattern,
 			"order" = order
 		),
 		class = "fmls"
 	)
+}
+
+#' @rdname fmls
+#' @export
+is_fmls <- function(x) {
+	inherits(x, "fmls")
 }
 
 #' @export
@@ -166,9 +172,9 @@ format.fmls <- function(x, ...) {
 		fmt <-
 			sapply(
 				x,
-				FUN = function(.x) {
+				function(.x) {
 					# Get term list, lenght of one, into terms
-					.t <- field(.x, "formula")[[1]]
+					.t <- tm(.x)
 					dt <- vec_data(.t)
 
 					# Convert into formula pattern

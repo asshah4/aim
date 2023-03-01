@@ -11,10 +11,6 @@ list_of_formulas(...)
 }
 \description{
 Vectorized subclass of the \code{list_of} class from \code{\link[vctrs:list_of]{vctrs::list_of()}} that
-utilizes a formula pattern for containing information or relationships.
-}
-\details{
-For arguments that may need to be pluralized, the arguments should be input
-as a formula, or as a list of formulas. The purpose of this format is to give
-multiple descriptions or instructions at once.
+utilizes a formula pattern for containing information or relationships. This
+serves as a base class that can be expanded as needed.
 }

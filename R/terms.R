@@ -644,6 +644,54 @@ update.tm <- function(object, ...) {
 	vec_restore(termData, to = tm())
 }
 
+#' Find matching terms by criteria
+#'
+#' @param x A vector of `tm` objects
+#'
+#' @param ... A series of `name = value` pairs that represent the attribute to
+#'   retrieve. Can have a value of __<NA>__ if needed to find missing attributes
+#'   of terms. This is a filtering process, so all requirements will be returned
+#'
+#' @return A `tm` object
+#' @export
+find_terms <- function(x, ...) {
+
+	# Break early
+	if (missing(..1)) {
+		return(x)
+	}
+
+	dots <- list(...)
+	termData <- vec_proxy(x)
+
+	for (i in seq_along(dots)) {
+		termData <- termData[termData[names(dots[i])] == dots[[i]], ]
+	}
+
+	# Restore and return
+	vec_restore(termData, to = tm())
+
+}
+
+#' Retrieve components of `tm` objects
+#'
+#' Family of related functions that extract components of `tm` objects.
+#'
+#' @param x A vector `tm` objects
+#'
+#' @name term_components
+#' @export
+roles <- function(x) {
+
+	validate_class(x, "tm")
+
+	y <- vec_data(x)
+	z <- y$role
+	names(z) <- y$term
+	as.list(z)
+
+}
+
 ### Term List Wrapper Class ----------------------------------------------------
 
 #' List of terms

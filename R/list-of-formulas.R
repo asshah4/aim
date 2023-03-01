@@ -3,16 +3,12 @@
 #' List of formulas
 #'
 #' Vectorized subclass of the `list_of` class from [vctrs::list_of()] that
-#' utilizes a formula pattern for containing information or relationships.
-#'
-#' For arguments that may need to be pluralized, the arguments should be input
-#' as a formula, or as a list of formulas. The purpose of this format is to give
-#' multiple descriptions or instructions at once.
+#' utilizes a formula pattern for containing information or relationships. This
+#' serves as a base class that can be expanded as needed.
 #'
 #' @name list_of_formulas
 #' @export
 lst_fmls <- function(...) {
-
 
 	# The input here can be quite varied. Our goal is to flatten an unnested list
 	# Options are:
@@ -30,14 +26,7 @@ lst_fmls <- function(...) {
 		return(new_lst_fmls(list()))
 	}
 
-	if (class(..1) == "list") {
-		x <-
-			Filter(length, ...) |>
-			sapply(vec_cast_common, .to = fmls())
-
-	} else {
-		x <- vec_cast_common(..., .to = fmls())
-	}
+	x <- vec_cast_common(..., .to = fmls())
 
 	# Return
 	new_lst_fmls(x)
@@ -90,7 +79,7 @@ obj_print_data.lst_fmls <- function(x, ...) {
 		cat(format(y), sep = " | ")
 	} else if (length(x) > 1) {
 		lapply(x, FUN = function(.x) {
-			cat(format(.x), sep = " | ")
+			cat(format(.x), sep = " || ")
 			cat("\n")
 		})
 	}

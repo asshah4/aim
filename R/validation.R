@@ -119,3 +119,30 @@ validate_classes <- function(x, what) {
 
 }
 
+
+#' Check objects for their class type If its incorrect based on the validator,
+#' should message about the problem object. Returns TRUE invisibly if all
+#' objects are appropriate.
+#' @keywords internal
+#' @noRd
+check_classes <- function(x, fn) {
+
+	stopifnot("Must check classes via logical determinant function `is_***()`"
+						= inherits(fn, "function"))
+
+	functionName <- as.character(match.call()[3])
+
+	y <-
+		sapply(x, function(.x) {
+			.y <- fn(.x)
+			if (!.y) {
+				message("Element `", deparse1(.x),
+								"` returns FALSE for `", functionName, "()`")
+			}
+			.y
+		}, USE.NAMES = FALSE)
+
+
+	invisible(all(y))
+
+}

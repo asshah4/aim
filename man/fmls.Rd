@@ -2,6 +2,7 @@
 % Please edit documentation in R/formulas.R
 \name{fmls}
 \alias{fmls}
+\alias{is_fmls}
 \title{Vectorized formulas}
 \usage{
 fmls(
@@ -12,6 +13,8 @@ fmls(
   pattern = character(),
   ...
 )
+
+is_fmls(x)
 }
 \arguments{
 \item{x}{Objects of the following types can be used as inputs
