@@ -26,10 +26,37 @@ lst_fmls <- function(...) {
 		return(new_lst_fmls(list()))
 	}
 
+	# Get inheritance type, either `formula` or `fmls`
+	.i <- class(..1)[1]
+
+	# Identify the pattern used if a `fmls`
+	if (.i == "fmls") {
+
+		# Pattern identification
+		.p <- unique(field(..., "pattern"))
+
+		# For multiple, non-expanded patterns
+		if (length(.p) > 1) {
+			.f <- "mixed"
+		} else {
+			.f <- .p
+		}
+
+	} else { # For cases defined by user, when not using `fmls` as base class
+		.f <- "user_defined"
+	}
+
+	# For level of complexity:
+	# 	e.g. if mediation has not yet been expanded
+	# 	e.g. if multiple outcomes are within LHS
+
+
 	x <- vec_cast_common(..., .to = fmls())
 
 	# Return
-	new_lst_fmls(x)
+	new_lst_fmls(x,
+							 inheritance = i,
+							 family = f)
 
 }
 
@@ -38,10 +65,15 @@ list_of_formulas = lst_fmls
 
 #' @keywords internal
 #' @noRd
-new_lst_fmls <- function(...) {
+new_lst_fmls <- function(x,
+												 inheritance = NA_character_,
+												 family = NA_character_) {
 
 	new_list_of(
-		x = ...,
+		x = x,
+		inheritance = inheritance,
+		family = family,
+		complexity = complexity,
 		ptype = fmls(),
 		class = "lst_fmls"
 	)

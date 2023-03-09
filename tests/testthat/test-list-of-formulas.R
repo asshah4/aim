@@ -42,8 +42,15 @@ test_that("lst_fmls will not lose attributes of terms", {
 
 test_that("formulas are appropriately and safely placed into a list of formulas", {
 
+	x1 <- .x(output) ~ input
+	x2 <- apples + bananas ~ orange + (1 | peels)
+	x3 <- ~ garbage_in
 	lof <- lst_fmls(x1, x2, x3)
 	expect_length(lof, 3) # This are 3 different objects that are coerced to fmls
 	expect_error(lst_fmls(list(x1, x2, x3)))
 	expect_s3_class(lof, "lst_fmls")
+
+	# Attributes for formulas to be retained
+	expect_equal(attributes(lof)$inheritance, "formula")
+	expect_equal(attributes(lof)$family, "user_defined")
 })
