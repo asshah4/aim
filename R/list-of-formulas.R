@@ -76,7 +76,7 @@ obj_print_data.lst_fmls <- function(x, ...) {
 		new_lst_fmls()
 	} else if (length(x) == 1) {
 		y <- x[[1]]
-		cat(format(y), sep = " | ")
+		cat(format(y), sep = " || ")
 	} else if (length(x) > 1) {
 		lapply(x, FUN = function(.x) {
 			cat(format(.x), sep = " || ")

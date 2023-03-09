@@ -36,5 +36,6 @@ test_that("coercion by vctrs works", {
 test_that("patterns can be included into formula", {
 
 	f <- fmls(witch ~ wicked + west, pattern = "parallel")
+	expect_equal(field(f, "pattern"), "parallel")
 
 })

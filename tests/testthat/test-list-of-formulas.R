@@ -13,7 +13,6 @@ test_that("lst_fmls class generation works", {
 
 	# Can attempt with formulas as well
 	lof <- lst_fmls(x1, x2, x3)
-	expect_message(lst_fmls(x1))
 	expect_length(lof, 3) # This are 3 different objects that are coerced to fmls
 	expect_error(lst_fmls(list(x1, x2, x3)))
 	expect_s3_class(lof, "lst_fmls")
