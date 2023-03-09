@@ -11,12 +11,6 @@ test_that("lst_fmls class generation works", {
 	expect_length(lst_fmls(fl), 1)
 	expect_length(lst_fmls(fl, f3), 2)
 
-	# Can attempt with formulas as well
-	lof <- lst_fmls(x1, x2, x3)
-	expect_length(lof, 3) # This are 3 different objects that are coerced to fmls
-	expect_error(lst_fmls(list(x1, x2, x3)))
-	expect_s3_class(lof, "lst_fmls")
-
 	# Explicit conversion to `lst_fmls`
 	lof <- lst_fmls(output ~ input, x ~ y)
 	expect_type(formula(lof), "list")
@@ -45,3 +39,11 @@ test_that("lst_fmls will not lose attributes of terms", {
 
 })
 
+
+test_that("formulas are appropriately and safely placed into a list of formulas", {
+
+	lof <- lst_fmls(x1, x2, x3)
+	expect_length(lof, 3) # This are 3 different objects that are coerced to fmls
+	expect_error(lst_fmls(list(x1, x2, x3)))
+	expect_s3_class(lof, "lst_fmls")
+})
