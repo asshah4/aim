@@ -26,37 +26,101 @@ lst_fmls <- function(...) {
 		return(new_lst_fmls(list()))
 	}
 
-	# Get inheritance type, either `formula` or `fmls`
-	.i <- class(..1)[1]
+	dots <- eval(substitute(alist(...)))
 
-	# Identify the pattern used if a `fmls`
-	if (.i == "fmls") {
+	inheritanceTypes <- sapply(
+		dots,
+		FUN = function(.x) {
+			.y <- eval(.x)
+			class(.y)[1]
+		},
+		USE.NAMES = FALSE
+	)
 
-		# Pattern identification
-		.p <- unique(field(..., "pattern"))
+	familyTypes <- sapply(
+		dots,
+		FUN = function(.x) {
+			.y <- eval(.x)
 
-		# For multiple, non-expanded patterns
-		if (length(.p) > 1) {
-			.f <- "mixed"
-		} else {
-			.f <- .p
-		}
+			if (class(.y)[1] == "fmls") {
+				.z <- unique(field(.y, "pattern"))
+			} else if (class(.y)[1] == "formula") {
+				.z <- "user_defined"
+			}
 
-	} else { # For cases defined by user, when not using `fmls` as base class
-		.f <- "user_defined"
-	}
+			.z
+		},
+		USE.NAMES = FALSE
+	)
 
-	# For level of complexity:
-	# 	e.g. if mediation has not yet been expanded
-	# 	e.g. if multiple outcomes are within LHS
+	complexityLevels <- sapply(
+		dots,
+		FUN = function(.x) {
+			.y <- eval(.x)
+			complexity(.y)
+		},
+		USE.NAMES = FALSE
+	)
+	# complexityLevel <- max(sapply(..., FUN = complexity, USE.NAMES = FALSE))
 
+	# # Get inheritance type, either `formula` or `fmls`
+	# inheritanceType <- class(..1)[1]
+	#
+	# if (inheritanceType == "fmls") {
+	#
+	# 	# Pattern to family
+	# 	patternVector <- field(..., "pattern")
+	#
+	# } else if (inheritanceType == "fmls" & ...length() > 1) {
+	#
+	# # Identify the pattern used if a `fmls`
+	# if (inheritanceType == "fmls" & ...length() == 1) {
+	#
+	# 	# Pattern to family
+	# 	familyType <- field(..., "pattern")
+	#
+	# } else if (inheritanceType == "fmls" & ...length() > 1) {
+	#
+	# 	# Pattern identification
+	# 	patternVector <- unique(sapply(
+	# 		list(...),
+	# 		FUN = function(.x) {
+	# 			unique(field(.x, "pattern"))
+	# 		},
+	# 		USE.NAMES = FALSE
+	# 	))
+	#
+	#
+	# 	# For multiple, non-expanded patterns
+	# 	if (length(patternVector) > 1) {
+	# 		familyType <- "mixed"
+	# 	} else {
+	# 		familyType <- patternVector
+	# 	}
+	#
+	# } else { # For cases defined by user, when not using `fmls` as base class
+	# 	familyType <- "user_defined"
+	# }
+	#
+	# # Complexity of any variable type
+	# # Max complexity to be returned
+	# complexityLevel <- max(sapply(..., FUN = complexity, USE.NAMES = FALSE))
 
-	x <- vec_cast_common(..., .to = fmls())
+	formulaList <- sapply(
+		dots,
+		FUN = function(.x) {
+			.y <- eval(.x)
+			vec_cast_common(.y, .to = fmls())
+		},
+		USE.NAMES = FALSE
+	)
+
 
 	# Return
-	new_lst_fmls(x,
-							 inheritance = i,
-							 family = f)
+	new_lst_fmls(x = formulaList,
+							 inheritance = inheritanceTypes,
+							 family = familyTypes,
+							 complexity = complexityLevels)
 
 }
 
@@ -67,7 +131,8 @@ list_of_formulas = lst_fmls
 #' @noRd
 new_lst_fmls <- function(x,
 												 inheritance = NA_character_,
-												 family = NA_character_) {
+												 family = NA_character_,
+												 complexity = NA_integer_) {
 
 	new_list_of(
 		x = x,

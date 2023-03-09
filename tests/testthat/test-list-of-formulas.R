@@ -8,6 +8,7 @@ test_that("lst_fmls class generation works", {
 	f2 <- fmls(x2)
 	f3 <- fmls(x3)
 	fl <- c(f1, f2, f3)
+	lof <- lst_fmls(fl)
 	expect_length(lst_fmls(fl), 1)
 	expect_length(lst_fmls(fl, f3), 2)
 
@@ -51,6 +52,6 @@ test_that("formulas are appropriately and safely placed into a list of formulas"
 	expect_s3_class(lof, "lst_fmls")
 
 	# Attributes for formulas to be retained
-	expect_equal(attributes(lof)$inheritance, "formula")
-	expect_equal(attributes(lof)$family, "user_defined")
+	expect_equal(attributes(lof)$inheritance[1], "formula")
+	expect_equal(attributes(lof)$family[1], "user_defined")
 })

@@ -116,13 +116,8 @@ fmls <- function(x = unspecified(),
 				 call. = FALSE)
 	}
 
-	# Temporary order situation
-	if (length(tms) == 2) {
-		order <- 2L
-	} else if (length(tms) > 2) {
-		order <- 3L
-	}
-
+	# Get complexity of the formula
+	order <- complexity(tms)
 
 	# Return
 	new_fmls(
