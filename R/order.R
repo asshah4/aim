@@ -32,7 +32,9 @@
 #'
 #' # Complexity
 #'
-#' The complexity of a formula is derived from how well it follows the _rules of roles_, how informative the _directionality_ of the terms are, and the number of terms on the _LHS_ and _RHS_
+#' The complexity of a formula is derived from how well it follows the _rules of
+#' roles_, how informative the _directionality_ of the terms are, and the number
+#' of terms on the _LHS_ and _RHS_
 #'
 #' | Order | Rules | Directionality | LHS | RHS |
 #' | :-- | :-: | :-: | --: | --: |

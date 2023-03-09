@@ -37,7 +37,9 @@ terms are present independently and as an interaction e.g. \code{Y ~ X + I + X:I
 }
 
 \section{Complexity}{
-The complexity of a formula is derived from how well it follows the \emph{rules of roles}, how informative the \emph{directionality} of the terms are, and the number of terms on the \emph{LHS} and \emph{RHS}\tabular{lccrr}{
+The complexity of a formula is derived from how well it follows the \emph{rules of
+roles}, how informative the \emph{directionality} of the terms are, and the number
+of terms on the \emph{LHS} and \emph{RHS}\tabular{lccrr}{
    Order \tab Rules \tab Directionality \tab LHS \tab RHS \cr
    0th \tab + \tab - \tab ≤ 1 \tab ≤ 1 \cr
    1st \tab - \tab - \tab 1 \tab 1 \cr
