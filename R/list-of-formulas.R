@@ -61,50 +61,6 @@ lst_fmls <- function(...) {
 		},
 		USE.NAMES = FALSE
 	)
-	# complexityLevel <- max(sapply(..., FUN = complexity, USE.NAMES = FALSE))
-
-	# # Get inheritance type, either `formula` or `fmls`
-	# inheritanceType <- class(..1)[1]
-	#
-	# if (inheritanceType == "fmls") {
-	#
-	# 	# Pattern to family
-	# 	patternVector <- field(..., "pattern")
-	#
-	# } else if (inheritanceType == "fmls" & ...length() > 1) {
-	#
-	# # Identify the pattern used if a `fmls`
-	# if (inheritanceType == "fmls" & ...length() == 1) {
-	#
-	# 	# Pattern to family
-	# 	familyType <- field(..., "pattern")
-	#
-	# } else if (inheritanceType == "fmls" & ...length() > 1) {
-	#
-	# 	# Pattern identification
-	# 	patternVector <- unique(sapply(
-	# 		list(...),
-	# 		FUN = function(.x) {
-	# 			unique(field(.x, "pattern"))
-	# 		},
-	# 		USE.NAMES = FALSE
-	# 	))
-	#
-	#
-	# 	# For multiple, non-expanded patterns
-	# 	if (length(patternVector) > 1) {
-	# 		familyType <- "mixed"
-	# 	} else {
-	# 		familyType <- patternVector
-	# 	}
-	#
-	# } else { # For cases defined by user, when not using `fmls` as base class
-	# 	familyType <- "user_defined"
-	# }
-	#
-	# # Complexity of any variable type
-	# # Max complexity to be returned
-	# complexityLevel <- max(sapply(..., FUN = complexity, USE.NAMES = FALSE))
 
 	formulaList <- sapply(
 		dots,
@@ -114,7 +70,6 @@ lst_fmls <- function(...) {
 		},
 		USE.NAMES = FALSE
 	)
-
 
 	# Return
 	new_lst_fmls(x = formulaList,
@@ -197,7 +152,7 @@ vec_ptype_abbr.lst_fmls <- function(x, ...) {
 # SELF
 
 #' @export
-vec_ptype2.lst_fmls.list_of_forulas <- function(x, y, ...) {
+vec_ptype2.lst_fmls.lst_fmls <- function(x, y, ...) {
 	new_lst_fmls()
 }
 
@@ -246,3 +201,4 @@ formula.lst_fmls <- function(x, ...) {
 			stats::formula()
 	})
 }
+

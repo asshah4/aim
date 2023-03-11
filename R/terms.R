@@ -27,7 +27,7 @@
 #' | mediator | `.m(...)` | exposure &rarr; __mediator__ &rarr; outcome |
 #' | interaction | `.i(...)` | exposure &times; __interaction__ &rarr; outcome |
 #' | strata | `.s(...)` | exposure &divide; __strata__ &rarr; outcome |
-#' | _unknown_ |  | not yet assigned |
+#' | _unknown_ | `-` | not yet assigned |
 #'
 #' Formulas can be condensed by applying their specific role to individual runes
 #' as a function/wrapper. For example, `y ~ .x(x1) + x2 + x3`. This would
@@ -644,7 +644,13 @@ update.tm <- function(object, ...) {
 	vec_restore(termData, to = tm())
 }
 
-#' Find matching terms by criteria
+#' @importFrom generics components
+#' @export
+generics::components
+
+#' Extract components from a vector of terms (`tm`)
+#'
+#' This is a [generics::components()] method for extract individual components from a formula.
 #'
 #' @param x A vector of `tm` objects
 #'
@@ -652,9 +658,9 @@ update.tm <- function(object, ...) {
 #'   retrieve. Can have a value of __<NA>__ if needed to find missing attributes
 #'   of terms. This is a filtering process, so all requirements will be returned
 #'
-#' @return A `tm` object
+#' @return  A `tm` object
 #' @export
-find_terms <- function(x, ...) {
+components.terms <- function(x, ...) {
 
 	# Break early
 	if (missing(..1)) {
@@ -673,13 +679,32 @@ find_terms <- function(x, ...) {
 
 }
 
+#' @importFrom generics intersect
+#' @export
+generics::intersect
+
+#' @importFrom generics union
+#' @export
+generics::union
+
+#' @importFrom generics setdiff
+#' @export
+generics::setdiff
+
+#' Set operations for `tm` objects
+#'
+#' @param x,y Pair of `tm` vectors
+#'
+#' @param ... These dots are for future extensions and must be empty
+# TODO
+
+
 #' Retrieve components of `tm` objects
 #'
 #' Family of related functions that extract components of `tm` objects.
 #'
 #' @param x A vector `tm` objects
 #'
-#' @name term_components
 #' @export
 roles <- function(x) {
 

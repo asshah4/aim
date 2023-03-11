@@ -380,3 +380,9 @@ decompose_patterns <- function(s) {
 	# return
 	unique(fl)
 }
+
+
+#' Expand by pattern
+expand_by_pattern <- function(x) {
+
+}

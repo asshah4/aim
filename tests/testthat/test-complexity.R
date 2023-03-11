@@ -82,3 +82,12 @@ test_that("interaction complexity can be determined", {
 	expect_equal(complexity(t), 2)
 
 })
+
+test_that("complex formulas can be appropriately split apart", {
+
+	x <- fmls(witch + fairy ~ .x(wicked) + .m(west) + good)
+	expect_length(x, 1)
+	expect_equal(complexity(x), 4) # Two outcomes and a mediator...
+
+
+})

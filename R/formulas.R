@@ -298,3 +298,13 @@ formula.fmls <- function(x, ...) {
 	format(x) |>
 		stats::as.formula()
 }
+
+#' @importFrom generics augment
+#' @export
+generics::augment
+
+#' Augment a formula with information from a `fmls` object
+#' @export
+augment.fmls <- function(x, ...) {
+	x
+}

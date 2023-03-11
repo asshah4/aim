@@ -102,7 +102,7 @@ interpreted.\tabular{lll}{
    mediator \tab \code{.m(...)} \tab exposure → \strong{mediator} → outcome \cr
    interaction \tab \code{.i(...)} \tab exposure × \strong{interaction} → outcome \cr
    strata \tab \code{.s(...)} \tab exposure ÷ \strong{strata} → outcome \cr
-   \emph{unknown} \tab  \tab not yet assigned \cr
+   \emph{unknown} \tab \code{-} \tab not yet assigned \cr
 }
 
 

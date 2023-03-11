@@ -36,7 +36,21 @@ test_that("lst_fmls class generation works", {
 
 })
 
-test_that("lst_fmls will not lose attributes of terms", {
+test_that("lst_fmls will handle attributes well", {
+
+	f1 <- fmls(.x(output) ~ input)
+	f2 <- fmls(apples + bananas ~ orange + (1 | peels))
+	f3 <- fmls(garbage_out ~ garbage_in)
+	fl <- c(f1, f2, f3)
+
+	A <- lst_fmls(fl)
+	B <- lst_fmls(f1, f2, f3)
+
+	# TODO
+	# Expect and error here for now
+	expect_output(print(attributes(A)$complexity), "1")
+	expect_output(print(attributes(A)$complexity), "4")
+	expect_output(print(attributes(B)$complexity), "4")
 
 })
 
