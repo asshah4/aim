@@ -660,7 +660,7 @@ generics::components
 #'
 #' @return  A `tm` object
 #' @export
-components.terms <- function(x, ...) {
+components.tm <- function(x, ...) {
 
 	# Break early
 	if (missing(..1)) {

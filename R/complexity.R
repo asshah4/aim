@@ -204,30 +204,39 @@ expand_by_complexity <- function(x) {
 	t <- field(x, "formula")[[1]]
 	d <- vec_data(t)
 
-	outcome <- components(t, role = "outcome")
-	predictor <- components(t, role = "predictor")
-	exposure <- components(t, role = "exposure")
-	confounder <- components(t, role = "confounder")
-	mediator <- components(t, role = "mediator")
-	interaction <- components(t, role = "interaction")
-	strata <- components(t, role = "strata")
-
-	# Number of variables
-	out <- length(unique(outcome))
-	exp <- length(exposure)
-	prd <- length(c(confounder, predictor))
-	med <- length(mediator)
-	sta <- length(strata)
-	int <- length(interaction)
+	out <- as.character(components(t, role = "outcome"))
+	exp <- as.character(components(t, role = "exposure"))
+	prd <- as.character(components(t, role = "predictor"))
+	con <- as.character(components(t, role = "confounder"))
+	med <- as.character(components(t, role = "mediator"))
+	int <- as.character(components(t, role = "interaction"))
+	sta <- as.character(components(t, role = "strata"))
 
 	# The number of formulas that will be multiplicative by complexity
 	# 	N = n x outcome
 	#		N = n x mediator x 3
 	#		N = n x exposure
-	n <- out * (med * 3) * exp
+	if (o >= 2) {
+		n <- length(out) * length(exp) * (length(med) * 3)
+	} else {
+		n <- 1
+	}
 
+	tl <- list()
 	# Split first by outcome
+	for (i in seq_along(out)) {
 
+		.t <- c(out[i], exp, prd, con, med, int, sta)
+		tl <- append(tl, list(.t))
+	}
+
+	# TODO split by exposure count
+
+
+	# TODO split by mediation
+
+
+	# TODO split by interaction
 
 
 }
