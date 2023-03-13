@@ -93,5 +93,13 @@ test_that("complex formulas can be appropriately split apart", {
 	expect_length(simplify_mediation(x), 6)
 	expect_length(simplify(x), 16) # Unique variables only
 
+	# Evaluate `formula` objects instead
+	x <- witch + fairy ~ wicked + good + west + east + green
+	expect_equal(complexity(x), 4) # two outcomes
+	expect_length(simplify_outcomes(x), 2)
+	expect_length(simplify_mediation(x), 1)
+	expect_length(simplify_exposures(x), 1)
+	expect_length(simplify(x), 2)
+
 
 })

@@ -60,11 +60,6 @@ complexity <- function(x) {
 	# Require a group of `tm` objects eventually, but may start with formulas/fmls
 	validate_class(x, c("formula", "fmls", "tmls", "tm"))
 
-	# Can only be a single formula or term list
-	if (inherits(x, c("formula", "fmls", "tmls")) & length(x) > 1) {
-		paste0("The argument `", deparse(substitute(x)), "` has length > 1")
-	}
-
 	# Convert to terms
 	cl <- class(x)[1]
 
@@ -214,13 +209,13 @@ simplify <- function(x, ...) {
 
 	# Validate
 	validate_class(x, c("fmls", "formula"))
-	stopifnot("Must be applied to a single formula at a time."
-						= length(x) == 1)
 
 	# Ensure appropriate type
-	f <- fmls(x)
+  if (inherits(x, "formula")) {
+    x <- fmls(x)
+  }
 	o <- field(x, "order")
-	t <- field(f, "formula")[[1]]
+	t <- field(x, "formula")[[1]]
 
 	# The number of formulas that will be multiplicative by complexity
 	# 	N = n x outcome
@@ -239,12 +234,14 @@ simplify <- function(x, ...) {
 
 }
 
-
 #' @rdname simplify
 #' @export
-simplify_outcomes <- function(x) {
+simplify_outcomes <- function(x, ...) {
 
 	validate_class(x, c("fmls", "formula"))
+  if (inherits(x, "formula")) {
+    x <- fmls(x)
+  }
 
 	# If multiple fmls, need to run through them all
 	f <- fmls()
@@ -259,345 +256,125 @@ simplify_outcomes <- function(x) {
 		int <- components(t, role = "interaction")
 		sta <- components(t, role = "strata")
 
-		# Simplify RHS
-		cov <- c(exp, prd, con, med, int, sta)
+		if (length(out) > 0) {
 
-		for (j in seq_along(out)) {
+  		# Simplify RHS
+  		cov <- c(exp, prd, con, med, int, sta)
 
-			o <- c(out[j], cov) |>
-				fmls()
-
-			f <- c(f, o)
-
-		}
-	}
-
-	# Return
-	f
-
-}
-
-#' @rdname simplify
-#' @export
-simplify_exposures <- function(x) {
-
-	validate_class(x, c("fmls", "formula"))
-
-	# If multiple fmls, need to run through them all
-	f <- fmls()
-	for (i in seq_along(x)) {
-
-		t <- tm(x[i])
-		out <- components(t, role = "outcome")
-		exp <- components(t, role = "exposure")
-		prd <- components(t, role = "predictor")
-		con <- components(t, role = "confounder")
-		med <- components(t, role = "mediator")
-		int <- components(t, role = "interaction")
-		sta <- components(t, role = "strata")
-
-		# Simplify RHS
-		cov <- c(prd, con, med, int, sta)
-
-		for (j in seq_along(exp)) {
-
-			e <- c(out, exp[j], cov) |>
-				fmls()
-
-			f <- c(f, e)
-
-		}
-	}
-
-	# Return
-	f
-
-}
-
-#' @rdname simplify
-#' @export
-simplify_mediation <- function(x) {
-
-	validate_class(x, c("fmls", "formula"))
-
-	# If multiple fmls, need to run through them all
-	f <- fmls()
-	for (i in seq_along(x)) {
-
-		t <- tm(x[i])
-		out <- components(t, role = "outcome")
-		exp <- components(t, role = "exposure")
-		prd <- components(t, role = "predictor")
-		con <- components(t, role = "confounder")
-		med <- components(t, role = "mediator")
-		int <- components(t, role = "interaction")
-		sta <- components(t, role = "strata")
-
-		# Simplify RHS
-		cov <- c(prd, con, int, sta)
-
-		# Mediation...
-		# 	The combinations of mediation are based on causal reasoning
-		# 	outcome ~ exposure + mediator + predictors
-		#		mediator ~ exposure
-		# 	outcome ~ mediator
-
-		for (j in seq_along(med)) {
-
-			# outcome ~ exposure
-			m1 <-
-				c(out, exp, cov) |>
-				fmls()
-
-			# mediator ~ exposure
-			md <- vec_proxy(c(med[j], exp))
-			md$side[md$term == as.character(med[j])] <- "left"
-			m2 <-
-				vec_restore(md, to = tm()) |>
-				fmls()
-
-			# outcome ~ mediator + exposure
-			m3 <-
-				c(out, med[j], exp) |>
-				fmls()
-
-			f <- c(f, m1, m2, m3)
-		}
-	}
-
-	# Return
-	f
-
-}
-
-temp_function <- function() {
-	# Validation, also can take more than one spell at a time
-	validate_class(s, "spell")
-	sl <- s
-
-	for (i in seq_along(sl)) {
-		t <- field(sl[i], "runes")[[1]]
-		order <- decipher(t)
-		p <- field(sl[i], "pattern")
-
-		# roles
-		rls <- roles(t)
-		labs <- labels(t)
-		outcome <- names(rls[rls == "outcome"])
-		predictor <- names(rls[rls == "predictor"])
-		exposure <- names(rls[rls == "exposure"])
-		confounder <- names(rls[rls == "confounder"])
-		mediator <- names(rls[rls == "mediator"])
-		interaction <- names(rls[rls == "interaction"])
-		strata <- names(rls[rls == "strata"])
-
-		if (length(interaction) > 0 & length(exposure) > 0) {
-			combined <-
-				paste(rep(exposure, each = length(interaction)),
-							interaction,
-							sep = ":")
+  		for (j in seq_along(out)) {
+  			f <- c(f, fmls(c(out[j], cov)))
+  		}
 		} else {
-			combined <- character()
-		}
-
-		covariates <- c(confounder, predictor, interaction, combined)
-
-		#### Creating formulas one level down
-
-		# Order = 2
-		if (order == 2) {
-			if (length(mediator) > 0 & length(outcome) == 0) {
-				left <- mediator
-				right <- setdiff(rhs(t), mediator)
-			} else if (length(interaction) > 0) {
-				left <- lhs(t)
-				right <- c(exposure, covariates)
-			} else {
-				left <- lhs(t)
-				right <- rhs(t)
-			}
-
-			if (p == "direct") {
-				right <- paste0(right, collapse = " + ")
-			}
-
-			for (j in seq_along(left)) {
-				for (k in seq_along(right)) {
-
-					f <- paste0(left[j], " ~ ", right[k])
-					if (length(strata) > 0) { for (l in seq_along(strata)) {
-						mt <-
-							match_runes(t, stats::formula(f)) |>
-							c(get_runes(t, field = "runes", value = strata[l]))
-						sl <- append(
-							sl,
-							new_spell(
-								formula = f,
-								runes = mt,
-								pattern = p,
-								order = decipher(mt)
-							)
-						)
-					}} else {
-						mt <- match_runes(t, stats::formula(f))
-						p <- field(sl[i], "pattern")
-						sl <- append(
-							sl,
-							new_spell(
-								formula = f,
-								runes = mt,
-								pattern = p,
-								order = decipher(mt)
-							)
-						)
-					}
-				}
-			}
-		}
-
-		# Order = 3
-		if (order == 3) {
-
-			# Exposure on the right if outcome is present
-			if (length(outcome) > 0) {
-				for (j in seq_along(exposure)) {
-					f <- paste0(
-						outcome,
-						" ~ ",
-						paste(c(exposure[j], covariates), collapse = " + ")
-					)
-					if (length(strata) > 0) for (k in seq_along(strata)) {
-						mt <-
-							match_runes(t, stats::formula(f)) |>
-							c(get_runes(t, field = "runes", value = strata[k]))
-						p <- field(sl[i], "pattern")
-						sl <- append(
-							sl,
-							new_spell(
-								formula = f,
-								runes = mt,
-								pattern = p,
-								order = decipher(mt)
-							)
-						)
-					} else {
-						mt <- match_runes(t, stats::formula(f))
-						p <- field(sl[i], "pattern")
-						sl <- append(
-							sl,
-							new_spell(
-								formula = f,
-								runes = mt,
-								pattern = p,
-								order = decipher(mt)
-							)
-						)
-					}
-				}
-			}
-
-			# mediation if present
-			if (length(mediator) > 0) {
-				for (j in 1:seq_along(mediator)) {
-					# mediator on the right if outcome is available
-					if (length(outcome) > 0) {
-						f <- paste0(
-							outcome,
-							" ~ ",
-							mediator[j]
-						)
-						if (length(strata) > 0) for (k in seq_along(strata)) {
-							mt <-
-								match_runes(t, stats::formula(f)) |>
-								c(get_runes(t, field = "runes", value = strata[k]))
-							p <- field(sl[i], "pattern")
-							sl <- append(
-								sl,
-								new_spell(
-									formula = f,
-									runes = mt,
-									pattern = p,
-									order = decipher(mt)
-								)
-							)
-						} else {
-							mt <- match_runes(t, stats::formula(f))
-							p <- field(sl[i], "pattern")
-							sl <- append(
-								sl,
-								new_spell(
-									formula = f,
-									runes = mt,
-									pattern = p,
-									order = decipher(mt)
-								)
-							)
-						}
-					}
-
-					# mediator on the left
-					f <- paste0(
-						mediator[j],
-						" ~ ",
-						paste(c(exposure, covariates), collapse = " + ")
-					)
-					# adding strata to the decomposition if needed
-					if (length(strata) > 0) for (k in seq_along(strata)) {
-						mt <-
-							match_runes(t, stats::formula(f)) |>
-							c(get_runes(t, field = "runes", value = strata[k]))
-						p <- field(sl[i], "pattern")
-						sl <- append(
-							sl,
-							new_spell(
-								formula = f,
-								runes = mt,
-								pattern = p,
-								order = decipher(mt)
-							)
-						)
-					} else {
-						mt <- match_runes(t, stats::formula(f))
-						p <- field(sl[i], "pattern")
-						sl <- append(
-							sl,
-							new_spell(
-								formula = f,
-								runes = mt,
-								pattern = p,
-								order = decipher(mt)
-							)
-						)
-					}
-				}
-			}
-		}
-
-		# Order = 4
-		if (order == 4) {
-			for (j in seq_along(outcome)) {
-				f <- paste0(
-					outcome[j],
-					" ~ ",
-					paste(c(exposure, mediator, covariates), collapse = " + ")
-				)
-				mt <- match_runes(t, stats::formula(f))
-				p <- field(sl[i], "pattern")
-				sl <- append(
-					sl,
-					new_spell(
-						formula = f,
-						runes = mt,
-						pattern = p,
-						order = decipher(mt)
-					)
-				)
-			}
+		  f <- c(f, fmls(t))
 		}
 	}
 
-	# Return spells, expected to have one level order less
-	sl[field(sl, "order") > 0] |>
-		unique()
+	# Return
+	f
+
+}
+
+#' @rdname simplify
+#' @export
+simplify_exposures <- function(x, ...) {
+
+	validate_class(x, c("fmls", "formula"))
+  if (inherits(x, "formula")) {
+    x <- fmls(x)
+  }
+
+	# If multiple fmls, need to run through them all
+	f <- fmls()
+	for (i in seq_along(x)) {
+
+		t <- tm(x[i])
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+
+		if (length(exp) > 0) {
+  		# Simplify RHS
+  		cov <- c(prd, con, med, int, sta)
+
+  		for (j in seq_along(exp)) {
+  			f <- c(f, fmls(c(out, exp[j], cov)))
+  		}
+		} else {
+		  f <- c(f, fmls(t))
+		}
+
+	}
+
+	# Return
+	f
+
+}
+
+#' @rdname simplify
+#' @export
+simplify_mediation <- function(x, ...) {
+
+	validate_class(x, c("fmls", "formula"))
+  if (inherits(x, "formula")) {
+    x <- fmls(x)
+  }
+
+	# If multiple fmls, need to run through them all
+	f <- fmls()
+	for (i in seq_along(x)) {
+
+		t <- tm(x[i])
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+
+		if (length(med) > 0) {
+
+  		# Simplify RHS
+  		cov <- c(prd, con, int, sta)
+
+  		# Mediation...
+  		# 	The combinations of mediation are based on causal reasoning
+  		# 	outcome ~ exposure + mediator + predictors
+  		#		mediator ~ exposure
+  		# 	outcome ~ mediator
+
+  		for (j in seq_along(med)) {
+
+  			# outcome ~ exposure
+  			m1 <-
+  				c(out, exp, cov) |>
+  				fmls()
+
+  			# mediator ~ exposure
+  			md <- vec_proxy(c(med[j], exp))
+  			md$side[md$term == as.character(med[j])] <- "left"
+  			m2 <-
+  				vec_restore(md, to = tm()) |>
+  				fmls()
+
+  			# outcome ~ mediator + exposure
+  			m3 <-
+  				c(out, med[j], exp) |>
+  				fmls()
+
+  			f <- c(f, m1, m2, m3)
+  		}
+		} else {
+		  f <- c(f, fmls(t))
+		}
+	}
+
+	# Return
+	f
+
 }
 

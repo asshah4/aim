@@ -9,11 +9,11 @@
 \usage{
 simplify(x, ...)
 
-simplify_outcomes(x)
+simplify_outcomes(x, ...)
 
-simplify_exposures(x)
+simplify_exposures(x, ...)
 
-simplify_mediation(x)
+simplify_mediation(x, ...)
 }
 \arguments{
 \item{x}{A \code{tm}, \code{fmls}, or \code{formula} object}
