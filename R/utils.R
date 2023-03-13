@@ -29,7 +29,26 @@ rhs.formula <- function(x, ...) {
 			\(.x) gsub('"', "", .x)
 		}()
 
-	y
+	# Handle special interaction terms in original formula
+	# Will expand from "a * b" -> "a + b + a:b"
+	pos <- grep("\\*", y)
+	npos <- grep("\\*", y, invert = TRUE)
+
+	ints <- character()
+	if (length(pos) > 0) {
+	  ints <-
+	    y[pos] |>
+	    strsplit("\\*") |>
+	    unlist() |>
+	    trimws() |>
+	    {
+	      \(.x) c(.x[1], .x[2], paste0(.x[1], ":", .x[2]))
+	    }()
+	}
+
+	# Return
+	c(ints, y[npos])
+
 }
 
 #' @rdname formula_helpers

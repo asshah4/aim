@@ -101,5 +101,15 @@ test_that("complex formulas can be appropriately split apart", {
 	expect_length(simplify_exposures(x), 1)
 	expect_length(simplify(x), 2)
 
+	# Interaction terms can be simplified
+	x1 <- witch ~ wicked * west + green
+	x2 <- witch ~ wicked + west + wicked:west + green
+	x3 <- fmls(witch ~ .x(wicked) + .i(west) + green)
+	expect_length(rhs(x1), 4)
+	expect_equal(rhs(x1), rhs(x2))
+
+	simplify_interaction(x3)
 
 })
+
+

@@ -48,3 +48,10 @@ test_that("patterns can be included into formula", {
 	expect_equal(field(f, "pattern"), "parallel")
 
 })
+
+test_that("interaction terms can be included explicitly", {
+
+	x <- witch ~ wicked + west + wicked:west + green
+	expect_equal(as.character(fmls(x)), x)
+
+})

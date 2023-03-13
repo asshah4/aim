@@ -178,7 +178,7 @@ format.fmls <- function(x, ...) {
 						format() |>
 						paste0(collapse = " + ")
 					.r <-
-						vec_restore(dt[dt$side == "right",], to = tm()) |>
+						vec_restore(dt[dt$side == "right" | dt$side == "unknown",], to = tm()) |>
 						format() |>
 						paste0(collapse = " + ")
 
@@ -234,19 +234,26 @@ vec_cast.fmls.fmls <- function(x, to, ...) {
 # CHARACTER
 
 #' @export
-vec_ptype2.fmls.character <- function(x, y, ...) {
-	y
-}
+vec_ptype2.fmls.character <- function(x, y, ...) y # X = fmls
 
 #' @export
-vec_ptype2.character.fmls <- function(x, y, ...) {
-	x
+vec_ptype2.character.fmls <- function(x, y, ...) x # X = character
+
+#' @export
+vec_cast.fmls.character <- function(x, to, ...) {
+	# order is flipped, such that `x` is character
+	# Cast from character into fmls
+  tm(x) |>
+    stats::as.formula(env = .GlobalEnv)
 }
 
 #' @export
 vec_cast.character.fmls <- function(x, to, ...) {
-	format(x) # Returns a character class by default
+	# order is flipped, such that `x` is fmls
+  tm(x) |>
+    stats::as.formula(env = .GlobalEnv)
 }
+
 
 # FORMULA
 
@@ -265,7 +272,7 @@ vec_cast.formula.fmls <- function(x, to, ...) {
 	# Cast from `fmls` into `formula`
 	x |>
 		tm() |>
-		stats::formula()
+		stats::as.formula(env = .GlobalEnv)
 }
 
 #' @export

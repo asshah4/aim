@@ -596,9 +596,11 @@ vec_cast.fmls.tm <- function(x, to, ...) {
 formula.tm <- function(x, ...) {
 
 	# Lose information when converting to just character
-	y <- vec_data(x)
-	left <- paste0(y$term[y$side == "left"], collapse = " + ")
-	right <- paste0(y$term[y$side == "right"], collapse = " + ")
+  y <- vec_data(x)
+  left <- paste0(y$term[y$side == "left"], collapse = " + ")
+  right <-
+    paste0(y$term[y$side == "right" |
+                    y$side == "unknown"], collapse = " + ")
 
 	# Return formula
 	stats::formula(paste0(left, " ~ ", right))

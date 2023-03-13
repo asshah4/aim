@@ -378,3 +378,59 @@ simplify_mediation <- function(x, ...) {
 
 }
 
+#' @rdname simplify
+#' @export
+simplify_interaction <- function(x, ...) {
+
+	validate_class(x, c("fmls", "formula"))
+  if (inherits(x, "formula")) {
+    # Expands potential interaction terms
+    x <-
+      paste0(paste0(lhs(x), collapse = " + "),
+             " ~ ",
+             paste0(rhs(x), collapse = " + ")) |>
+      stats::formula() |>
+      fmls()
+  }
+
+	# If multiple fmls, need to run through them all
+	f <- fmls()
+	for (i in seq_along(x)) {
+
+		t <- tm(x[i])
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+		unk <- components(t, role = "unknown")
+		cov <- c(prd, con, sta, unk)
+
+		if (length(int) == 1 & length(exp) == 1) {
+
+		  .i <- tm(paste0(exp, ":", int), role = "unknown", side = "right")
+		  message(
+		    "Interaction term `",
+		    as.character(int),
+		    "` has been applied to exposure `",
+		    as.character(exp),
+		    "`"
+		  )
+			id <- vec_proxy(int)
+			id$role[id$term == as.character(int)] <- "predictor"
+			int <- vec_restore(id, to = tm())
+
+			f <- c(f, fmls(c(out, exp, int, .i, cov)))
+
+		} else {
+		  f <- c(f, fmls(t))
+		}
+	}
+
+	# Return
+	f
+
+}
+

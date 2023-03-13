@@ -382,7 +382,124 @@ decompose_patterns <- function(s) {
 }
 
 
-#' Expand by pattern
-expand_by_pattern <- function(x) {
+#' Expand formula by a pattern
+#' Must occur after the formula has been simplified
+expand_patterns <- function(x, ...) {
+
+	# Validation, also can take more than one spell at a time
+	validate_class(x, "fmls")
+
+	# Empty list for combinations for all combinations
+	f <- fmls()
+	for (i in seq_along(x)) {
+
+		t <- tm(x[i])
+		d <- vec_proxy(t)
+		p <- field(x[i], "pattern")
+
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+		unk <- components(t, role = "unknown")
+
+
+		# covariates and grouped variables that are not part of the main outcome and
+		# exposure relationships must be separated out
+		tier_list <- tiers(t)
+		tier_lvls <- as.character(unique(tier_list))
+		tier_vars <- character()
+		for (i in seq_along(tier_lvls)) {
+			tier_vars[i] <-
+				tier_list[tier_list == tier_lvls[i]] |>
+				names() |>
+				paste(collapse = " + ")
+		}
+
+		covariates <-
+			c(confounder, predictor, int_combined) |>
+			{
+				\(.x) .x[!(.x %in% names(tier_list))]
+			}() |>
+			c(tier_vars)
+
+		# define left and right
+		if (length(mediator) > 0) {
+			left <- mediator
+			right <- c(outcome, exposure)
+		} else if (length(mediator) == 0) {
+			left <- outcome
+			right <- exposure
+		}
+
+		switch(pattern,
+					 direct = {
+					 	f <-
+					 		c(right, covariates) |>
+					 		paste(collapse = " + ") |>
+					 		{
+					 			\(.x) paste(left, .x, sep = " ~ ")
+					 		}()
+
+					 	fl <- append(fl, f)
+					 },
+					 sequential = {
+					 	p <- ifelse(length(right) == 0 & length(covariates) > 0, 1, 0)
+					 	for (n in p:length(covariates)) {
+
+					 		right_side <-
+					 			c(right, covariates[0:n]) |>
+					 			paste0(collapse = " + ")
+
+					 		if (right_side == "") {
+					 			f <- list()
+					 		} else {
+					 			f <-
+					 				c(right, covariates[0:n]) |>
+					 				paste0(collapse = " + ") |>
+					 				{
+					 					\(.x) paste(left, .x, sep = " ~ ")
+					 				}()
+					 		}
+
+					 		fl <- append(fl, f)
+					 	}
+					 },
+					 parallel = {
+					 	# modifier for covariates in mediation
+					 	if (is.null(covariates)) {
+					 		seq_covariates <- 1
+					 	} else {
+					 		seq_covariates <- seq_along(covariates)
+					 	}
+
+					 	for (n in seq_covariates) {
+					 		f <-
+					 			c(right, covariates[n]) |>
+					 			paste0(collapse = " + ") |>
+					 			{
+					 				\(.x) paste(left, .x, sep = " ~ ")
+					 			}()
+
+					 		fl <- append(fl, f)
+					 	}
+					 },
+					 fundamental = {
+					 	all_right <- c(right, confounder, predictor, interaction, int_alone)
+					 	for (j in seq_along(outcome)) {
+					 		for (k in seq_along(all_right)) {
+					 			f <- paste(outcome[j], all_right[k], sep = " ~ ")
+					 			fl <- append(fl, f)
+					 		}
+					 	}
+					 },
+		)
+	}
+
+	# return
+	unique(fl)
 
 }
