@@ -26,9 +26,14 @@
 #'
 #' 1. There may not be &gt; 1 `mediator` on the _RHS_
 #'
-#' 1. `mediator` terms on the _RHS_ may either exist alone, or alongside an `exposure` term, but not just with other `confounder` terms (as they can be assessed against the `outcome` directly as an adjustment for the `exposure`).
+#' 1. `mediator` terms may not exist alone on the _RHS_.
 #'
-#' 1. `mediator` terms may exist on the _LHS_, but the `exposure` term must be oon the _RHS_ without other `confounder` terms.
+#' 1. `mediator` terms on the _RHS_ exist along with the corresponding
+#' `exposure`, which may confound the relationship between `mediator` and
+#' `outcome`.
+#'
+#' 1. `mediator` terms may exist on the _LHS_, but the `exposure` term must be
+#' on the _RHS_ without other `confounder` terms.
 #'
 #' 1. A single _meta_ term, such as `strata`, may only exist on the _RHS_.
 #'
@@ -92,7 +97,7 @@ complexity <- function(x) {
 	# 	Follows rules of roles
 	# 	lhs = 1
 	# 	rhs = exposure + confounder
-	# 	rhs = mediator (no confounders allowed)
+	# 	rhs = mediator + exposure + confounder
 	# 	rhs =/= outcome
 	# 	rhs = exposure + interaction + exposure:interaction
 	# 	strata = 1
@@ -191,53 +196,177 @@ complexity <- function(x) {
 	order
 }
 
+#' Simplify a complex formula
+#'
+#'
+#' @details
+#'
+#' Takes either a `tm`, `fmls`, object or a `formula` object as its main
+#' argument. If a `fmls` object is given, then the attributes/properties of
+#' those objects are maintained.
+#'
+#' @param x A `tm`, `fmls`, or `formula` object
+#' @param ... For future extensions
+#' @return A vector of `fmls` objects
+#' @name simplify
 #' @export
-expand_by_complexity <- function(x) {
+simplify <- function(x, ...) {
 
 	# Validate
 	validate_class(x, c("fmls", "formula"))
 	stopifnot("Must be applied to a single formula at a time."
-						= length(x) > 1)
+						= length(x) == 1)
 
+	# Ensure appropriate type
+	f <- fmls(x)
 	o <- field(x, "order")
-
-	t <- field(x, "formula")[[1]]
-	d <- vec_data(t)
-
-	out <- as.character(components(t, role = "outcome"))
-	exp <- as.character(components(t, role = "exposure"))
-	prd <- as.character(components(t, role = "predictor"))
-	con <- as.character(components(t, role = "confounder"))
-	med <- as.character(components(t, role = "mediator"))
-	int <- as.character(components(t, role = "interaction"))
-	sta <- as.character(components(t, role = "strata"))
+	t <- field(f, "formula")[[1]]
 
 	# The number of formulas that will be multiplicative by complexity
 	# 	N = n x outcome
-	#		N = n x mediator x 3
 	#		N = n x exposure
-	if (o >= 2) {
-		n <- length(out) * length(exp) * (length(med) * 3)
-	} else {
-		n <- 1
+	#		N = n x mediator x 3
+
+	# Working formula list
+	workingList <-
+		x |>
+		simplify_outcomes() |>
+		simplify_exposures() |>
+		simplify_mediation()
+
+	# Return
+	unique(workingList)
+
+}
+
+
+#' @rdname simplify
+#' @export
+simplify_outcomes <- function(x) {
+
+	validate_class(x, c("fmls", "formula"))
+
+	# If multiple fmls, need to run through them all
+	f <- fmls()
+	for (i in seq_along(x)) {
+
+		t <- tm(x[i])
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+
+		# Simplify RHS
+		cov <- c(exp, prd, con, med, int, sta)
+
+		for (j in seq_along(out)) {
+
+			o <- c(out[j], cov) |>
+				fmls()
+
+			f <- c(f, o)
+
+		}
 	}
 
-	tl <- list()
-	# Split first by outcome
-	for (i in seq_along(out)) {
+	# Return
+	f
 
-		.t <- c(out[i], exp, prd, con, med, int, sta)
-		tl <- append(tl, list(.t))
+}
+
+#' @rdname simplify
+#' @export
+simplify_exposures <- function(x) {
+
+	validate_class(x, c("fmls", "formula"))
+
+	# If multiple fmls, need to run through them all
+	f <- fmls()
+	for (i in seq_along(x)) {
+
+		t <- tm(x[i])
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+
+		# Simplify RHS
+		cov <- c(prd, con, med, int, sta)
+
+		for (j in seq_along(exp)) {
+
+			e <- c(out, exp[j], cov) |>
+				fmls()
+
+			f <- c(f, e)
+
+		}
 	}
 
-	# TODO split by exposure count
+	# Return
+	f
 
+}
 
-	# TODO split by mediation
+#' @rdname simplify
+#' @export
+simplify_mediation <- function(x) {
 
+	validate_class(x, c("fmls", "formula"))
 
-	# TODO split by interaction
+	# If multiple fmls, need to run through them all
+	f <- fmls()
+	for (i in seq_along(x)) {
 
+		t <- tm(x[i])
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+
+		# Simplify RHS
+		cov <- c(prd, con, int, sta)
+
+		# Mediation...
+		# 	The combinations of mediation are based on causal reasoning
+		# 	outcome ~ exposure + mediator + predictors
+		#		mediator ~ exposure
+		# 	outcome ~ mediator
+
+		for (j in seq_along(med)) {
+
+			# outcome ~ exposure
+			m1 <-
+				c(out, exp, cov) |>
+				fmls()
+
+			# mediator ~ exposure
+			md <- vec_proxy(c(med[j], exp))
+			md$side[md$term == as.character(med[j])] <- "left"
+			m2 <-
+				vec_restore(md, to = tm()) |>
+				fmls()
+
+			# outcome ~ mediator + exposure
+			m3 <-
+				c(out, med[j], exp) |>
+				fmls()
+
+			f <- c(f, m1, m2, m3)
+		}
+	}
+
+	# Return
+	f
 
 }
 

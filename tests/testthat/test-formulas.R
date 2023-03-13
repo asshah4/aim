@@ -25,6 +25,15 @@ test_that("simple formulas can be made from base::formula()", {
 
 })
 
+test_that("tm can convert to fmls objects", {
+
+	t <- tm(.o(good) ~ .x(bad) + ugly)
+	f <- fmls(t)
+	fmls(t)
+	expect_equal(f, fmls(t))
+
+})
+
 test_that("coercion by vctrs works", {
 
 	# Characters

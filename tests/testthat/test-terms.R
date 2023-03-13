@@ -6,6 +6,7 @@ test_that("`tm` objects can be generated and printed", {
 	expect_length(tm(), 0)
 	expect_s3_class(tm(), "tm")
 	expect_output(print(tm()), "<term\\[0\\]>")
+	expect_equal(tm(), tm(tm()))
 })
 
 test_that("new `tm` can be made from character/atomic components", {
@@ -157,7 +158,7 @@ test_that("terms can be found and updated and attributes can be found", {
 
 	object <- tm(output ~ input + .c(modifier))
 
-	t <- find_terms(object, role = "outcome")
+	t <- components(object, role = "outcome")
 	expect_length(t, 1)
 	expect_equal(roles(t)[[1]], "outcome")
 

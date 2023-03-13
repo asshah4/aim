@@ -31,8 +31,12 @@ roles that a term can be given:
 \item \code{interaction} terms must be expanded against an \code{exposure}, such that both
 terms are present independently and as an interaction e.g. \code{Y ~ X + I + X:I}
 \item There may not be > 1 \code{mediator} on the \emph{RHS}
-\item \code{mediator} terms on the \emph{RHS} may either exist alone, or alongside an \code{exposure} term, but not just with other \code{confounder} terms (as they can be assessed against the \code{outcome} directly as an adjustment for the \code{exposure}).
-\item \code{mediator} terms may exist on the \emph{LHS}, but the \code{exposure} term must be oon the \emph{RHS} without other \code{confounder} terms.
+\item \code{mediator} terms may not exist alone on the \emph{RHS}.
+\item \code{mediator} terms on the \emph{RHS} exist along with the corresponding
+\code{exposure}, which may confound the relationship between \code{mediator} and
+\code{outcome}.
+\item \code{mediator} terms may exist on the \emph{LHS}, but the \code{exposure} term must be
+on the \emph{RHS} without other \code{confounder} terms.
 \item A single \emph{meta} term, such as \code{strata}, may only exist on the \emph{RHS}.
 }
 }

@@ -248,23 +248,6 @@ vec_cast.character.fmls <- function(x, to, ...) {
 	format(x) # Returns a character class by default
 }
 
-### TM
-
-#' @export
-vec_ptype2.fmls.tm <- function(x, y, ...) {
-	y
-}
-
-#' @export
-vec_ptype2.tm.fmls <- function(x, y, ...) {
-	x
-}
-
-#' @export
-vec_cast.tm.fmls <- function(x, to, ...) {
-	tm(x)
-}
-
 # FORMULA
 
 #' @export

@@ -347,10 +347,14 @@ tm.formula <- function(x,
 
 #' @rdname tm
 #' @export
-tm.fmls <- function(x,
-										...) {
-
+tm.fmls <- function(x, ...) {
 	field(x, "formula")[[1]]
+}
+
+#' @rdname tm
+#' @export
+tm.tm <- function(x, ...) {
+	x
 }
 
 #' @rdname tm
@@ -606,9 +610,9 @@ formula.tm <- function(x, ...) {
 #' This updates properties or attributes of a `tm` vector. This only updates
 #' `tm` objects that already exist.
 #'
-#' @param ... A series of `name = value` pairs that represent the attribute to
-#'   be updated. Can have a value of __<NA>__ if the goal is to remove an
-#'   attribute or property.
+#' @param ... A series of `field = term ~ value` pairs that represent the
+#'   attribute to be updated. Can have a value of __<NA>__ if the goal is to
+#'   remove an attribute or property.
 #'
 #' @return A `tm` object with updated attributes
 #' @export

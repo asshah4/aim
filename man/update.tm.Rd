@@ -7,9 +7,9 @@
 \method{update}{tm}(object, ...)
 }
 \arguments{
-\item{...}{A series of \code{name = value} pairs that represent the attribute to
-be updated. Can have a value of \strong{\if{html}{\out{<NA>}}} if the goal is to remove an
-attribute or property.}
+\item{...}{A series of \code{field = term ~ value} pairs that represent the
+attribute to be updated. Can have a value of \strong{\if{html}{\out{<NA>}}} if the goal is to
+remove an attribute or property.}
 }
 \value{
 A \code{tm} object with updated attributes
