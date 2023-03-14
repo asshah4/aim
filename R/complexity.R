@@ -212,6 +212,7 @@ simplify <- function(x, ...) {
 
 	# Ensure appropriate type
   if (inherits(x, "formula")) {
+  	message_formula_to_fmls()
     x <- fmls(x)
   }
 	o <- field(x, "order")
@@ -320,6 +321,7 @@ simplify_mediation <- function(x, ...) {
 
 	validate_class(x, c("fmls", "formula"))
   if (inherits(x, "formula")) {
+  	message_formula_to_fmls()
     x <- fmls(x)
   }
 
@@ -384,6 +386,7 @@ simplify_interaction <- function(x, ...) {
 
 	validate_class(x, c("fmls", "formula"))
   if (inherits(x, "formula")) {
+  	message_formula_to_fmls()
     # Expands potential interaction terms
     x <-
       paste0(paste0(lhs(x), collapse = " + "),

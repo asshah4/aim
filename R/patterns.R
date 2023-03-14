@@ -384,7 +384,10 @@ decompose_patterns <- function(s) {
 
 #' Expand formula by a pattern
 #' Must occur after the formula has been simplified
-expand_patterns <- function(x, ...) {
+#' @return `fmls` objects expanded by pattern
+#' @name pattern
+#' @export
+pattern <- function(x, ...) {
 
 	# Validation, also can take more than one spell at a time
 	validate_class(x, "fmls")
@@ -502,4 +505,51 @@ expand_patterns <- function(x, ...) {
 	# return
 	unique(fl)
 
+}
+
+
+#' @rdname pattern
+#' @export
+pattern_sequentially <- function(x, ...) {
+
+	validate_class(x, c("fmls", "formula"))
+  if (inherits(x, "formula")) {
+  	message_formula_to_fmls()
+    x <- fmls(x, pattern = "sequential")
+  }
+
+	# If multiple fmls, need to run through them all
+	f <- fmls()
+	for (i in seq_along(x)) {
+
+		t <- tm(x[i])
+		out <- components(t, role = "outcome")
+		exp <- components(t, role = "exposure")
+		prd <- components(t, role = "predictor")
+		con <- components(t, role = "confounder")
+		med <- components(t, role = "mediator")
+		int <- components(t, role = "interaction")
+		sta <- components(t, role = "strata")
+
+		# Determine the covariates
+		cov <- c(prd, con, int)
+
+		# Left and right
+		allLeft <- components(t, side = "left")
+		allRight <- components(t, side = "right")
+
+		# Fixed right side would include exposures, strata, or grouped variables
+		fixedRight <- allRight[!vec_in(allRight, cov)]
+
+		# Sequential expansion based on if there are exposure variables or strata
+		n <- ifelse(length(fixedRight) == 0 & length(cov) > 0, 1, 0)
+
+		for (j in n:length(cov)) {
+			rightSide <- c(fixedRight, cov[0:j])
+			f <- c(f, fmls(c(allLeft, rightSide)))
+		}
+	}
+
+	# Return
+	f
 }
