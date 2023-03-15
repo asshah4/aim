@@ -102,6 +102,9 @@ formulas_to_named_list <- function(x) {
 		y <- sapply(x, function(.x) {
 			nm <- lhs(.x)
 			val <- rhs(.x)
+			if (grepl("^[[:digit:]]$", val)) {
+				val <- as.integer(val)
+			}
 			names(val) <- nm
 			val <- as.list(val)
 		})

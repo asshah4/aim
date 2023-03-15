@@ -37,8 +37,8 @@ test_that("tm can convert to fmls objects", {
 test_that("coercion by vctrs works", {
 
 	# Characters
-	f <- fmls(witch ~ wicked + west)
-	expect_type(c(f, "test"), "character")
+	x <- fmls(witch ~ wicked + west)
+	expect_type(c(x, "test"), "character")
 })
 
 

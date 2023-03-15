@@ -243,15 +243,15 @@ vec_ptype2.character.fmls <- function(x, y, ...) x # X = character
 vec_cast.fmls.character <- function(x, to, ...) {
 	# order is flipped, such that `x` is character
 	# Cast from character into fmls
-  tm(x) |>
-    stats::as.formula(env = .GlobalEnv)
+	x
 }
 
 #' @export
 vec_cast.character.fmls <- function(x, to, ...) {
 	# order is flipped, such that `x` is fmls
-  tm(x) |>
-    stats::as.formula(env = .GlobalEnv)
+	x |>
+		stats::formula() |>
+		deparse1()
 }
 
 
@@ -285,8 +285,9 @@ vec_cast.fmls.formula <- function(x, to, ...) {
 
 #' @export
 formula.fmls <- function(x, ...) {
-	format(x) |>
-		stats::as.formula()
+	x |>
+		tm() |>
+		stats::as.formula(env = .GlobalEnv)
 }
 
 #' @importFrom generics augment

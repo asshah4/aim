@@ -27,11 +27,20 @@
 #' | mediator | `.m(...)` | exposure &rarr; __mediator__ &rarr; outcome |
 #' | interaction | `.i(...)` | exposure &times; __interaction__ &rarr; outcome |
 #' | strata | `.s(...)` | exposure &divide; __strata__ &rarr; outcome |
+#' | group | `.g(...)` | exposure &plus; __group__ &rarr; outcome |
 #' | _unknown_ | `-` | not yet assigned |
 #'
 #' Formulas can be condensed by applying their specific role to individual runes
 #' as a function/wrapper. For example, `y ~ .x(x1) + x2 + x3`. This would
 #' signify that `x1` has the specific role of an _exposure_.
+#'
+#' Grouped variables are slightly different in that they are placed together in
+#' a hierarchy or tier. To indicate the group and the tier, the shortcut can
+#' have an `integer` following the `.g`. If no number is given, then it is
+#' assumed they are all on the same tier. Ex: `y ~ x1 + .g1(x2) + .g1(x3)`
+#'
+#' __Warning__: Only a single shortcut can be applied to a variable within a
+#' formula directly.
 #'
 #' # Pluralized Arguments
 #'
@@ -70,6 +79,8 @@
 #'
 #'   * strata
 #'
+#'   * group
+#'
 #'   * unknown
 #'
 #' @param side Which side of a formula should the term be on. Options are
@@ -78,7 +89,9 @@
 #'
 #' @param label Display-quality label describing the variable
 #'
-#' @param group Grouping variable name for modeling or placing terms together
+#' @param group Grouping variable name for modeling or placing terms together.
+#'   An integer value is given to identify which group the term will be in. The
+#'   hierarchy will be `1` &rarr; `n` incrementally.
 #'
 #' @param type Type of variable, either categorical (qualitative) or
 #'   continuous (quantitative)
@@ -104,7 +117,7 @@ tm.character <- function(x,
 												 role = character(),
 												 side = character(),
 												 label = character(),
-												 group = character(),
+												 group = integer(),
 												 type = character(),
 												 distribution = character(),
 												 description = character(),
@@ -120,19 +133,19 @@ tm.character <- function(x,
 	# Redefine empty variables
 	if (length(role) == 0) role <- "unknown"
 	if (length(side) == 0) side <- "unknown"
-	if (length(label) == 0) label <- NA
-	if (length(group) == 0) group <- NA
-	if (length(type) == 0) type <- NA
-	if (length(distribution) == 0) distribution <- NA
-	if (length(description) == 0) description <- NA
-	if (length(transformation) == 0) transformation <- NA
+	if (length(label) == 0) label <- NA_character_
+	if (length(group) == 0) group <- NA_integer_
+	if (length(type) == 0) type <- NA_character_
+	if (length(distribution) == 0) distribution <- NA_character_
+	if (length(description) == 0) description <- NA_character_
+	if (length(transformation) == 0) transformation <- NA_character_
 
 	# Casting
 	x <- vec_cast(x, character())
 	role <- vec_cast(role, character())
 	side <- vec_cast(side, character())
 	label <- vec_cast(label, character())
-	group <- vec_cast(group, character())
+	group <- vec_cast(group, integer())
 	description <- vec_cast(description, character())
 	type <- vec_cast(type, character())
 	distribution <- vec_cast(distribution, character())
@@ -200,18 +213,18 @@ tm.formula <- function(x,
 		{
 			\(.x) {
 				# These will be all roles
-				var_names <- character()
-				var_roles <- character()
+				varNames <- character()
+				varRoles <- character()
+
 				for (i in seq_along(.x)) {
 					if (.x[i] %in% .roles) {
-						var_names <- append(var_names, .x[i + 1])
-						var_roles <- append(var_roles, .x[i])
+						varNames <- append(varNames, .x[i + 1])
+						varRoles <- append(varRoles, .x[i])
 					}
 				}
 
-				names(var_roles) <- var_names
-				var_roles |>
-					as.list()
+				names(varRoles) <- varNames
+				as.list(varRoles)
 			}
 		}()
 
@@ -222,23 +235,47 @@ tm.formula <- function(x,
 		{
 			\(.x) {
 				# These will be all roles
-				var_names <- character()
-				var_roles <- character()
+				varNames <- character()
+				varRoles <- character()
 				for (i in seq_along(.x)) {
 					if (.x[i] %in% .transformations) {
-						var_names <- append(var_names, .x[i + 1])
-						var_roles <- append(var_roles, .x[i])
+						varNames <- append(varNames, .x[i + 1])
+						varRoles <- append(varRoles, .x[i])
 					}
 				}
 
-				names(var_roles) <- var_names
-				var_roles |>
-					as.list()
+				names(varRoles) <- varNames
+				as.list(varRoles)
+			}
+		}()
+
+	# Grouped variables
+	allGroups <-
+		x |>
+		all.names() |>
+		{
+			\(.x) {
+				varNames <- character()
+				varGroup <- character()
+
+				# These will be all grouped variables
+				grpInd <- grep("^\\.g$|^\\.g[[:digit:]]$", .x)
+				varNames <- .x[grpInd + 1]
+				varGroup <-
+					.x[grpInd] |>
+					{\(.y) gsub("\\.g$", ".g0", .y)}() |>
+					substr(start = 3, stop = 3) |>
+					as.integer()
+
+				# Clean up group names to be alphanumeric and sequential
+				names(varGroup) <- varNames
+				as.list(varGroup)
+
 			}
 		}()
 
 	# Combine to make supported variable names
-	allNamed <- c(allRoles, allOps)
+	allNamed <- c(allRoles, allOps, allGroups)
 
 	# Remove role/op shortcut from terms (e.g. function in front of term)
 	for (i in seq_along(allNamed)) {
@@ -285,8 +322,14 @@ tm.formula <- function(x,
 		allRoles[[i]] <- names(.roles[which(.roles %in% allRoles[[i]])])
 	}
 
+	# Correct for explicit roles specified in arguments
+	for (i in seq_along(role)) {
+		allRoles[[names(role[i])]] <- role[[i]]
+	}
+
+
 	# Setup to create new terms using all elements of original formula
-	tm_vector <- new_tm()
+	tm_vector <- tm()
 
 	for (i in 1:length(both)) {
 		# make parameters
@@ -311,12 +354,12 @@ tm.formula <- function(x,
 		# Roles (every term has a role)
 		rl <- allRoles[[t]]
 
-		# groups
+		# Grouped terms
 		grp <-
 			if (t %in% names(group)) {
-				groups[[t]]
-			} else {
-				NA
+				group[[t]]
+			} else if (t %in% names(allGroups)) {
+				allGroups[[t]]
 			}
 
 		# Labels
@@ -326,7 +369,7 @@ tm.formula <- function(x,
 			NA
 		}
 
-		# place into rx list after casting appropriate classes
+		# Place into term list after casting appropriate classes
 		tm_vector <- append(
 			tm_vector,
 			tm.character(
@@ -334,7 +377,7 @@ tm.formula <- function(x,
 				role = vec_cast(rl, character()),
 				side = vec_cast(sd, character()),
 				label = vec_cast(lb, character()),
-				group = vec_cast(grp, character()),
+				group = vec_cast(grp, integer()),
 				transformation = vec_cast(op, character()),
 			)
 		)
@@ -379,7 +422,7 @@ new_tm <- function(term = character(),
 									 side = character(),
 									 role = character(),
 									 label = character(),
-									 group = character(),
+									 group = integer(),
 									 type = character(),
 									 distribution = character(),
 									 description = character(),
@@ -391,6 +434,7 @@ new_tm <- function(term = character(),
 	vec_assert(role, ptype = character())
 	vec_assert(side, ptype = character())
 	vec_assert(label, ptype = character())
+	vec_assert(group, ptype = integer())
 	vec_assert(description, ptype = character())
 	vec_assert(type, ptype = character())
 	vec_assert(distribution, ptype = character())
@@ -408,6 +452,7 @@ new_tm <- function(term = character(),
 			"role" = role,
 			"side" = side,
 			"label" = label,
+			"group" = group,
 			"description" = description,
 			"type" = type,
 			"distribution" = distribution,
@@ -702,23 +747,35 @@ generics::setdiff
 #' @param x,y Pair of `tm` vectors
 #'
 #' @param ... These dots are for future extensions and must be empty
+#' @export
+intersect.tm <- function(x, y, ...) {
+
 # TODO
+	c(x, y)
+
+}
 
 
-#' Retrieve components of `tm` objects
-#'
-#' Family of related functions that extract components of `tm` objects.
+#' Describe attributes of a `tm` vector
 #'
 #' @param x A vector `tm` objects
 #'
+#' @param property A character vector of the following attributes of a `tm`
+#'   object: role, side, label, group, description, type, distribution
 #' @export
-roles <- function(x) {
+describe <- function(x, property) {
 
 	validate_class(x, "tm")
+	fieldNames <- fields(x)
+	if (!(property %in% fieldNames)) {
+		stop("`", property, "` is not an accessible property for this `tm` object.")
+	}
 
 	y <- vec_data(x)
-	z <- y$role
+	z <- y[[property]]
 	names(z) <- y$term
+
+	# Return in list format
 	as.list(z)
 
 }

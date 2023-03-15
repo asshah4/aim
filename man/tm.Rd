@@ -17,7 +17,7 @@ tm(x = unspecified(), ...)
   role = character(),
   side = character(),
   label = character(),
-  group = character(),
+  group = integer(),
   type = character(),
   distribution = character(),
   description = character(),
@@ -60,6 +60,7 @@ further details. The options for roles are as below:
 \item mediator
 \item interaction
 \item strata
+\item group
 \item unknown
 }}
 
@@ -69,7 +70,9 @@ that may apply globally to other terms.}
 
 \item{label}{Display-quality label describing the variable}
 
-\item{group}{Grouping variable name for modeling or placing terms together}
+\item{group}{Grouping variable name for modeling or placing terms together.
+An integer value is given to identify which group the term will be in. The
+hierarchy will be \code{1} → \code{n} incrementally.}
 
 \item{type}{Type of variable, either categorical (qualitative) or
 continuous (quantitative)}
@@ -105,6 +108,7 @@ interpreted.\tabular{lll}{
    mediator \tab \code{.m(...)} \tab exposure → \strong{mediator} → outcome \cr
    interaction \tab \code{.i(...)} \tab exposure × \strong{interaction} → outcome \cr
    strata \tab \code{.s(...)} \tab exposure ÷ \strong{strata} → outcome \cr
+   group \tab \code{.g(...)} \tab exposure + \strong{group} → outcome \cr
    \emph{unknown} \tab \code{-} \tab not yet assigned \cr
 }
 
@@ -112,6 +116,14 @@ interpreted.\tabular{lll}{
 Formulas can be condensed by applying their specific role to individual runes
 as a function/wrapper. For example, \code{y ~ .x(x1) + x2 + x3}. This would
 signify that \code{x1} has the specific role of an \emph{exposure}.
+
+Grouped variables are slightly different in that they are placed together in
+a hierarchy or tier. To indicate the group and the tier, the shortcut can
+have an \code{integer} following the \code{.g}. If no number is given, then it is
+assumed they are all on the same tier. Ex: \code{y ~ x1 + .g1(x2) + .g1(x3)}
+
+\strong{Warning}: Only a single shortcut can be applied to a variable within a
+formula directly.
 }
 
 \section{Pluralized Arguments}{

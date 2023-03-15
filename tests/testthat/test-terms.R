@@ -1,3 +1,5 @@
+# Term vector implementation ----
+
 test_that("`tm` objects can be generated and printed", {
 	# Basic generation
 	expect_length(new_tm(), 0)
@@ -104,6 +106,10 @@ test_that("terms can be generated from a formula", {
 			transformation = transformation
 		)
 
+	tms <- tm(f1, role = rl, label = lb)
+	d <- vec_data(tms)
+	expect_equal(d$role[d$term == "input"], "exposure")
+
 	tms <- tm(f3, role = rl, label = lb)
 	expect_s3_class(tms, "tm")
 	expect_length(tms, 5)
@@ -120,6 +126,8 @@ test_that("term coercion works", {
 
 })
 
+# Special terms ----
+
 test_that("mediation terms will be assessed correctly", {
 
 	x <- .o(output) ~ .x(input) + .m(mediator) + random
@@ -127,6 +135,55 @@ test_that("mediation terms will be assessed correctly", {
 	expect_equal(field(t[3], "role"), "mediator")
 
 })
+
+test_that("term groups can be established", {
+
+	x <- witch ~ glinda + wicked + west
+	role = label = type = distribution = description = transformation = formula()
+	group <- list(wicked ~ 1, west ~ 1)
+	allArgs <-
+		list(
+			role = role,
+			label = label,
+			group = group,
+			type = type,
+			distribution = distribution,
+			description = description,
+			transformation = transformation
+		)
+
+	# Group by term implementation external to formula
+	t <- tm(x, group = group)
+	d <- vec_data(t)
+	expect_equal(d$group[d$term == "wicked"], 1)
+
+	### Group term implemntation using shortcuts
+
+	# Expect .g to become .g0, and .g1 to be g1
+	x1 <- witch ~ west + .g(green) + .g(wicked)
+	x2 <- witch ~ west + .g(green) + .g1(wicked)
+	t1 <- tm(x1)
+	t2 <- tm(x2)
+	expect_equal(describe(t1, "group")$green, describe(t2, "group")$green)
+	expect_equal(describe(t2, "group")$wicked, 1)
+
+	# Expect appropriate group levels
+	x1 <- witch ~ west + .g1(green) + .g1(wicked)
+	x2 <- witch ~ west + .g1(green) + .g2(wicked)
+	t1 <- tm(x1)
+	t2 <- tm(x2)
+	expect_equal(describe(t1, "group")$green, describe(t2, "group")$green)
+	expect_equal(describe(t2, "group")$wicked, 2)
+})
+
+test_that("interaction terms are appropriately made", {
+
+	x <- witch ~ green + wicked*west
+
+
+})
+
+# Term list implementation ----
 
 test_that("term list wrappers can be generated", {
 
@@ -154,13 +211,15 @@ test_that("term list wrappers can be generated", {
 
 })
 
+# Term helpers ----
+
 test_that("terms can be found and updated and attributes can be found", {
 
 	object <- tm(output ~ input + .c(modifier))
 
 	t <- components(object, role = "outcome")
 	expect_length(t, 1)
-	expect_equal(roles(t)[[1]], "outcome")
+	expect_equal(describe(t, "role")[[1]], "outcome")
 
 	dots <- list(
 		role = input ~ "exposure",
