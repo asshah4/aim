@@ -178,8 +178,17 @@ test_that("term groups can be established", {
 
 test_that("interaction terms are appropriately made", {
 
-	x <- witch ~ green + wicked*west
+	# From formula
+	f <- witch ~ green + wicked*west
+	expect_length(tm(f), 5)
 
+	# Role-based interaction
+	x <- witch ~ .x(wicked) + green + .i(west)
+	role = label = group = type = distribution = description = transformation =
+		formula()
+	t <- tm(x)
+	expect_message(tm(x))
+	expect(length(t), 5)
 
 })
 

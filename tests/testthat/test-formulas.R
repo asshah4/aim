@@ -51,7 +51,10 @@ test_that("patterns can be included into formula", {
 
 test_that("interaction terms can be included explicitly", {
 
-	x <- witch ~ wicked + west + wicked:west + green
-	expect_equal(as.character(fmls(x)), x)
+	x <- witch ~ wicked + green + west + wicked:west
+	expect_equal(as.character(fmls(x)), deparse1(x))
+
+	f <- fmls(witch ~ .x(wicked) + green + .i(west))
+	expect_equal(formula(f), x)
 
 })

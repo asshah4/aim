@@ -203,7 +203,6 @@ tm.formula <- function(x,
 	# Check to see if the RHS has any shortcut variables attached
 	left <- lhs(x)
 	right <- rhs(x)
-	both <- c(left, right)
 
 	# Roles/operations and need to be identified (on which terms they apply)
 	# Output is named list (names = variable, list item = role|op)
@@ -274,48 +273,92 @@ tm.formula <- function(x,
 			}
 		}()
 
-	# Combine to make supported variable names
-	allNamed <- c(allRoles, allOps, allGroups)
-
-	# Remove role/op shortcut from terms (e.g. function in front of term)
-	for (i in seq_along(allNamed)) {
-		both[grepl(names(allNamed)[i], both)] <- names(allNamed)[i]
+	# Handle interaction terms here (to match that of normal formulas)
+	# 	Warn and validate for interaction (as needs exposure variable)
+	# 	If both interaction and exposure available...
+	# 		Create new interaction terms `a*b = a + b + a:b`
+	# 		Create new grouping `.g(a) + .g(b) + .g(a:b)`
+	#		Add back to original variables (allRoles, left, right, both)
+	if (".i" %in% allRoles & !(".x" %in% allRoles)) {
+		warning(
+			"In interaction term was specified but was not attached to a specific exposure. The result will treat the interaction term as a regular predictor/covariate."
+		)
 	}
 
-	# Update left and rights
-	for (i in both) {
-		for (j in seq_along(left)) {
-			if (grepl(i, left[j])) {
-				left[j] <- i
+	if (".i" %in% allRoles & ".x" %in% allRoles) {
+
+		exp <- names(allRoles[allRoles == ".x"])
+		int <- names(allRoles[allRoles == ".i"])
+
+		for (i in seq_along(exp)) {
+			for (j in seq_along(int)) {
+
+				# Explicit new interaction term
+				.i <- paste0(exp[i], ":", int[j])
+				allRoles[.i] <- ".i"
+
+				# Correct interaction term changes in all related variables
+				#		Remove prior interaction term that was now used
+				#		Change to predictor
+				#		Add interaction term to all terms = both + right
+				allRoles[int[j]] <- ".p"
+				right[grepl(names(allRoles[int[j]]), right)] <- int[j]
+				right <- c(right, .i)
+
+				# Add new group here (first find number, then addend)
+				if (length(allGroups) == 0) {
+					g <- 0
+				} else {
+					g <- max(unlist(unname(allGroups))) + 1
+				}
+
+				allGroups[exp[i]] <- g
+				allGroups[int[j]] <- g
+				allGroups[.i] <- g
+
+			  message(
+			    "Interaction term `",
+			    int[j],
+			    "` has been applied to exposure `",
+			    exp[i],
+			    "`"
+			  )
 			}
 		}
-		for (j in seq_along(right)) {
-			if (grepl(i, right[j])) {
-				right[j] <- i
-			}
+
+	}
+
+	# Remove roles and operations in term names
+	for (i in seq_along(left)) {
+		if (grepl("^\\.[[:lower:]]\\(", left[i])) {
+			left[i] <- gsub("^\\.[[:lower:]]\\(", "", left[i])
+			left[i] <- gsub("\\)$", "", left[i])
+		}
+	}
+	for (i in seq_along(right)) {
+		if (grepl("^\\.[[:lower:]]\\(", right[i])) {
+			right[i] <- gsub("^\\.[[:lower:]]\\(", "", right[i])
+			right[i] <- gsub("\\)$", "", right[i])
 		}
 	}
 
 	# Find remaining terms that do not have a role
 	# Right = Give them the role of a general predictor
 	# Left = Make sure is an "outcome"
-	for (j in left) {
-		if (!(j %in% names(allRoles))) {
-			allRoles[[j]] <- ".o"
+	for (i in left) {
+		if (!(i %in% names(allRoles))) {
+			allRoles[[i]] <- ".o"
 		}
 	}
-	for (j in right) {
-		if (!(j %in% names(allRoles))) {
-			allRoles[[j]] <- ".p"
+	for (i in right) {
+		if (!(i %in% names(allRoles))) {
+			allRoles[[i]] <- ".p"
 		}
 	}
 
-	# Warn and validate for interaction (as needs exposure variable)
-	if (".i" %in% allNamed & !(".x" %in% allNamed)) {
-		warning(
-			"In interaction term was specified but was not attached to a specific exposure. The result will treat the interaction term as a regular predictor/covariate."
-		)
-	}
+	# Combine all terms
+	both <- c(left, right)
+
 
 	# Re-name into full name
 	for (i in seq_along(allRoles)) {

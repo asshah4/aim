@@ -73,6 +73,7 @@ lhs.formula <- function(x, ...) {
 	z
 }
 
+
 #' Take list of formula, and return as a named list (name = LHS, value = RHS)
 #' @export
 formulas_to_named_list <- function(x) {
