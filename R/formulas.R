@@ -143,7 +143,7 @@ new_fmls <- function(termList = tmls(),
 	# This builds an atomic/vectorized object on top of `list_of` constructor
 	new_rcrd(
 		fields = list(
-			"formula" = termList,
+			"terms" = termList,
 			"pattern" = pattern,
 			"order" = order
 		),
@@ -219,7 +219,7 @@ methods::setOldClass(c("tm", "vctrs_rcrd"))
 
 ### Coercion methods -----------------------------------------------------------
 
-# FMLS
+# SELF
 
 #' @export
 vec_ptype2.fmls.fmls <- function(x, y, ...) {

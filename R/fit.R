@@ -7,76 +7,64 @@ fit.fmls <- function(object,
 										 .fit,
 										 ...,
 										 data,
-										 name = deparse1(substitute(object)),
 										 raw = TRUE) {
 
 	cl <- match.call()
 	args <- list(...)
 
 	# Validate functions
-	if (!is.function(eval(cl[[3]]))) {
-		stop(
-			"The `.fit = ",
-			paste(cl[[3]]),
-			"` is not yet an accepted function for model fitting."
-		)
-	}
 	.fn <- as.character(cl[[3]])
+	stopifnot("The .fit argument supplied is not yet supported" =
+							.fn %in% .models)
 
-	# Manage data
+	# Check data
 	stopifnot(is.data.frame(data))
+	dataName <- deparse1(cl[["data"]])
 
-	# Create models and tags for the models
-	ma <- model_raw()
-	nms <- character()
+	# Models to be returned
+	modList <- mdl()
 
 	for (i in seq_along(object)) {
+		t <- field(object, "terms")[[1]]
+		f <- stats::as.formula(t)
+		sta <- filter.tm(t, role == "strata")
 
-		f <- stats::formula(field(object[i], "formulas"))
-		strata <-
-			vec_data(object[i])$strata[[1]] |>
-			as.character()
-
-		if (length(strata) == 0) {
+		# If no strata, can model simply
+		if (length(sta) == 0) {
 			args$data <- quote(data)
-			m <- do.call(.fn, args = c(formula = f, args))
-			# Convert to archeytpe before moving on
-			ma <- append(ma,
-									 model_raw(
-									 	m,
-									 	name = paste0(name, "_", i),
-									 	fmls = object[i]
-									 ))
+			x <- do.call(.fn, args = c(formula = f, args))
+			mx <- mdl(x,
+								formulas = object,
+								data_name = dataName)
+			modList <- c(modList, mx)
 		} else {
-			# Should NA values be reported as being missing?
-			strata_lvls <- unique(stats::na.omit(data[[strata]]))
-			for (j in seq_along(strata_lvls)) {
-				.data <- data[data[[strata]] == strata_lvls[j], ]
-				args$data <- quote(.data)
-				m <- do.call(.fn, args = c(formula = f, args))
-
-				# Strata formula
-				s <- as.formula(paste(strata, "~", strata_lvls[j]))
-				ma <-
-					append(ma, model_raw(
-						m,
-						name = paste0(name, "_", i, "_STRATA_", j),
-						fmls = object[i],
-						strata_info = s
-					))
+			for (j in seq_along(sta)) {
+				strata <- as.character(sta[j])
+				# Ignores NA values
+				strataLevels <- unique(stats::na.omit(data[[strata]]))
+				for (k in seq_along(strataLevels)) {
+					strataInfo <- list()
+					strataInfo[[strata]] <- strataLevels[k]
+					strataData <- data[data[[strata]] == strataLevels[k], ]
+					args$data <- quote(strataData)
+					x <- do.call(.fn, args = c(formula = f, args))
+					mx <- mdl(x,
+										formulas = object,
+										data_name = dataName,
+										strata_info = strataInfo)
+					modList <- c(modList, mx)
+				}
 			}
 		}
 	}
 
-
 	# Return
 	if (raw) {
-		ma
+		field(modList, "model")
 	} else {
-		ml <- field(ma, "model")
-		names(ml) <- field(ma, "name")
-		ml
+		modList
 	}
+
 }
 
 #' @importFrom generics tidy

@@ -66,7 +66,7 @@ complexity <- function(x) {
 	if (cl == "tmls") {
 		t <- x[[1]]
 	} else if (cl == "fmls") {
-		t <- field(x, "formula")[[1]]
+		t <- field(x, "terms")[[1]]
 	} else if (cl == "formula") {
 		t <- tm(x)
 	} else if (cl == "tm") {
@@ -217,7 +217,7 @@ simplify <- function(x, ...) {
     x <- fmls(x)
   }
 	o <- field(x, "order")
-	t <- field(x, "formula")[[1]]
+	t <- field(x, "terms")[[1]]
 
 	# The number of formulas that will be multiplicative by complexity
 	# 	N = n x outcome

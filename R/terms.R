@@ -456,7 +456,7 @@ tm.formula <- function(x,
 #' @rdname tm
 #' @export
 tm.fmls <- function(x, ...) {
-	field(x, "formula")[[1]]
+	field(x, "terms")[[1]]
 }
 
 #' @rdname tm
