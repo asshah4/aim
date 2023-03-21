@@ -93,6 +93,7 @@ complexity <- function(x) {
 	# 	lhs = 1
 	# 	rhs = exposure + confounder
 	# 	rhs = mediator + exposure + confounder
+	# 	rhs = mediator + exposure
 	# 	rhs =/= outcome
 	# 	rhs = exposure + interaction + exposure:interaction
 	# 	strata = 1
@@ -109,13 +110,13 @@ complexity <- function(x) {
 	# Fourth
 	# 	lhs > 1
 
-	outcome <- components(t, role = "outcome")
-	predictor <- components(t, role = "predictor")
-	exposure <- components(t, role = "exposure")
-	confounder <- components(t, role = "confounder")
-	mediator <- components(t, role = "mediator")
-	interaction <- components(t, role = "interaction")
-	strata <- components(t, role = "strata")
+	outcome <- filter.tm(t, role == "outcome")
+	predictor <- filter.tm(t, role == "predictor")
+	exposure <- filter.tm(t, role == "exposure")
+	confounder <- filter.tm(t, role == "confounder")
+	mediator <- filter.tm(t, role == "mediator")
+	interaction <- filter.tm(t, role == "interaction")
+	strata <- filter.tm(t, role == "strata")
 
 	# number of variables
 	out <- length(unique(outcome))
@@ -249,13 +250,13 @@ simplify_outcomes <- function(x, ...) {
 	for (i in seq_along(x)) {
 
 		t <- tm(x[i])
-		out <- components(t, role = "outcome")
-		exp <- components(t, role = "exposure")
-		prd <- components(t, role = "predictor")
-		con <- components(t, role = "confounder")
-		med <- components(t, role = "mediator")
-		int <- components(t, role = "interaction")
-		sta <- components(t, role = "strata")
+		out <- filter.tm(t, role == "outcome")
+		exp <- filter.tm(t, role == "exposure")
+		prd <- filter.tm(t, role == "predictor")
+		con <- filter.tm(t, role == "confounder")
+		med <- filter.tm(t, role == "mediator")
+		int <- filter.tm(t, role == "interaction")
+		sta <- filter.tm(t, role == "strata")
 
 		if (length(out) > 0) {
 
@@ -289,13 +290,13 @@ simplify_exposures <- function(x, ...) {
 	for (i in seq_along(x)) {
 
 		t <- tm(x[i])
-		out <- components(t, role = "outcome")
-		exp <- components(t, role = "exposure")
-		prd <- components(t, role = "predictor")
-		con <- components(t, role = "confounder")
-		med <- components(t, role = "mediator")
-		int <- components(t, role = "interaction")
-		sta <- components(t, role = "strata")
+		out <- filter.tm(t, role == "outcome")
+		exp <- filter.tm(t, role == "exposure")
+		prd <- filter.tm(t, role == "predictor")
+		con <- filter.tm(t, role == "confounder")
+		med <- filter.tm(t, role == "mediator")
+		int <- filter.tm(t, role == "interaction")
+		sta <- filter.tm(t, role == "strata")
 
 		if (length(exp) > 0) {
   		# Simplify RHS
@@ -330,13 +331,13 @@ simplify_mediation <- function(x, ...) {
 	for (i in seq_along(x)) {
 
 		t <- tm(x[i])
-		out <- components(t, role = "outcome")
-		exp <- components(t, role = "exposure")
-		prd <- components(t, role = "predictor")
-		con <- components(t, role = "confounder")
-		med <- components(t, role = "mediator")
-		int <- components(t, role = "interaction")
-		sta <- components(t, role = "strata")
+		out <- filter.tm(t, role == "outcome")
+		exp <- filter.tm(t, role == "exposure")
+		prd <- filter.tm(t, role == "predictor")
+		con <- filter.tm(t, role == "confounder")
+		med <- filter.tm(t, role == "mediator")
+		int <- filter.tm(t, role == "interaction")
+		sta <- filter.tm(t, role == "strata")
 
 		if (length(med) > 0) {
 

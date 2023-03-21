@@ -55,6 +55,6 @@ test_that("interaction terms can be included explicitly", {
 	expect_equal(as.character(fmls(x)), deparse1(x))
 
 	f <- fmls(witch ~ .x(wicked) + green + .i(west))
-	expect_equal(formula(f), x)
+	expect_equal(formula(f, env = .GlobalEnv), x, ignore_attr = TRUE)
 
 })

@@ -92,7 +92,7 @@ formulas_to_named_list <- function(x) {
 		y <- as.list(val)
 	} else if (inherits(x, "lst_fmls")) { # if it is a `lst_fmls` object
 		y <-
-			stats::formula(x) |>
+			stats::formula(x, env = .GlobalEnv) |>
 			sapply(function(.x) {
 				nm <- lhs(.x)
 				val <- rhs(.x)

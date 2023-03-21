@@ -132,7 +132,11 @@ test_that("mediation terms will be assessed correctly", {
 
 	x <- .o(output) ~ .x(input) + .m(mediator) + random
 	t <- tm(x)
-	expect_equal(field(t[3], "role"), "mediator")
+	expect_equal(describe(t, "role")$mediator, "mediator")
+
+	x <- output ~ input + .m(mediator) + random
+	expect_warning(t <- tm(x))
+	expect_equal(describe(t, "role")$mediator, "predictor")
 
 })
 
@@ -182,6 +186,12 @@ test_that("interaction terms are appropriately made", {
 	f <- witch ~ green + wicked*west
 	expect_length(tm(f), 5)
 
+	# Expanded formula
+	x <- witch ~ wicked + west + wicked:west + green
+	t <- tm(x)
+	expect_length(t, 5)
+	expect_equal(describe(t, "role")$'wicked:west', "interaction")
+
 	# Role-based interaction
 	x <- witch ~ .x(wicked) + green + .i(west)
 	role = label = group = type = distribution = description = transformation =
@@ -189,6 +199,8 @@ test_that("interaction terms are appropriately made", {
 	t <- tm(x)
 	expect_message(tm(x))
 	expect(length(t), 5)
+
+
 
 })
 
@@ -225,8 +237,7 @@ test_that("term list wrappers can be generated", {
 test_that("terms can be found and updated and attributes can be found", {
 
 	object <- tm(output ~ input + .c(modifier))
-
-	t <- components(object, role = "outcome")
+	t <- filter(object, role == "outcome")
 	expect_length(t, 1)
 	expect_equal(describe(t, "role")[[1]], "outcome")
 

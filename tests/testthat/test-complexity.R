@@ -108,8 +108,6 @@ test_that("complex formulas can be appropriately split apart", {
 	expect_length(rhs(x1), 4)
 	expect_equal(rhs(x1), rhs(x2))
 
-	simplify_interaction(x3)
-
 })
 
 

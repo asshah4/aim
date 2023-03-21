@@ -5,7 +5,6 @@
 \alias{simplify_outcomes}
 \alias{simplify_exposures}
 \alias{simplify_mediation}
-\alias{simplify_interaction}
 \title{Simplify a complex formula}
 \usage{
 simplify(x, ...)
@@ -15,8 +14,6 @@ simplify_outcomes(x, ...)
 simplify_exposures(x, ...)
 
 simplify_mediation(x, ...)
-
-simplify_interaction(x, ...)
 }
 \arguments{
 \item{x}{A \code{tm}, \code{fmls}, or \code{formula} object}

@@ -273,17 +273,27 @@ tm.formula <- function(x,
 			}
 		}()
 
+	# WARNINGS ABOUT TERM ROLES
+	if (".i" %in% allRoles & !(".x" %in% allRoles)) {
+		warning(
+			"In interaction term was specified but was not attached to a specific exposure. The result will treat the interaction term as a regular predictor/covariate."
+		)
+		allRoles[allRoles == ".i"] <- ".p"
+	}
+	if (".m" %in% allRoles & !(".x" %in% allRoles)) {
+		warning(
+			"A mediator term was specified but was not attached to a specific exposure. The result will treat the mediator term as a regular predictor/covariate."
+		)
+		allRoles[allRoles == ".m"] <- ".p"
+	}
+
 	# Handle interaction terms here (to match that of normal formulas)
 	# 	Warn and validate for interaction (as needs exposure variable)
 	# 	If both interaction and exposure available...
 	# 		Create new interaction terms `a*b = a + b + a:b`
 	# 		Create new grouping `.g(a) + .g(b) + .g(a:b)`
 	#		Add back to original variables (allRoles, left, right, both)
-	if (".i" %in% allRoles & !(".x" %in% allRoles)) {
-		warning(
-			"In interaction term was specified but was not attached to a specific exposure. The result will treat the interaction term as a regular predictor/covariate."
-		)
-	}
+	#		Explicity interaction terms `a:b` will be handled at role clean up
 
 	if (".i" %in% allRoles & ".x" %in% allRoles) {
 
@@ -340,11 +350,19 @@ tm.formula <- function(x,
 			right[i] <- gsub("^\\.[[:lower:]]\\(", "", right[i])
 			right[i] <- gsub("\\)$", "", right[i])
 		}
+		if (grepl("^\\.g[[:digit:]]\\(", right[i])) {
+			right[i] <- gsub("^\\.g[[:digit:]]\\(", "", right[i])
+			right[i] <- gsub("\\)$", "", right[i])
+		}
+
 	}
 
 	# Find remaining terms that do not have a role
-	# Right = Give them the role of a general predictor
-	# Left = Make sure is an "outcome"
+	# Right
+	#		Evaluate for explicitly given interaction terms
+	# 	Give them the role of a general predictor
+	# Left
+	# 	Make sure is an "outcome"
 	for (i in left) {
 		if (!(i %in% names(allRoles))) {
 			allRoles[[i]] <- ".o"
@@ -352,7 +370,11 @@ tm.formula <- function(x,
 	}
 	for (i in right) {
 		if (!(i %in% names(allRoles))) {
-			allRoles[[i]] <- ".p"
+			if (grepl(":", i)) {
+				allRoles[[i]] <- ".i"
+			} else {
+				allRoles[[i]] <- ".p"
+			}
 		}
 	}
 
@@ -691,7 +713,7 @@ formula.tm <- function(x, ...) {
                     y$side == "unknown"], collapse = " + ")
 
 	# Return formula
-	stats::formula(paste0(left, " ~ ", right))
+	stats::formula(paste0(left, " ~ ", right), env = .GlobalEnv)
 
 }
 
@@ -738,38 +760,33 @@ update.tm <- function(object, ...) {
 	vec_restore(termData, to = tm())
 }
 
-#' @importFrom generics components
+#' Extending `dplyr` for `tm` class
+#'
+#' The `filter()` function extension subsets `tm` that satisfy set conditions.
+#' To be retained, the `tm` must prodcue a value of `TRUE` for all conditions.
+#' Note that when a condition evalutes to `NA`, the row will be dropped, unlike
+#' base subsetting with `[`.
+#'
+#' @inheritParams dplyr::filter
+#'
+#' @seealso [dplyr::filter()] for examples of generic implementation
+#'
+#' @examples
+#' # Filter by role
+#' object <- tm(output ~ input + .c(modifier))
+#' filter(object, role == "outcome")
+#'
+#' @name dplyr_extensions
+#' @importFrom dplyr filter
 #' @export
-generics::components
+filter.tm <- function(.data, ...) {
 
-#' Extract components from a vector of terms (`tm`)
-#'
-#' This is a [generics::components()] method for extract individual components from a formula.
-#'
-#' @param x A vector of `tm` objects
-#'
-#' @param ... A series of `name = value` pairs that represent the attribute to
-#'   retrieve. Can have a value of __<NA>__ if needed to find missing attributes
-#'   of terms. This is a filtering process, so all requirements will be returned
-#'
-#' @return  A `tm` object
-#' @export
-components.tm <- function(x, ...) {
+	x <-
+		.data |>
+		vec_proxy() |>
+		dplyr::filter(...)
 
-	# Break early
-	if (missing(..1)) {
-		return(x)
-	}
-
-	dots <- list(...)
-	termData <- vec_proxy(x)
-
-	for (i in seq_along(dots)) {
-		termData <- termData[termData[names(dots[i])] == dots[[i]], ]
-	}
-
-	# Restore and return
-	vec_restore(termData, to = tm())
+	vec_restore(x, to = tm())
 
 }
 
@@ -814,7 +831,7 @@ describe <- function(x, property) {
 		stop("`", property, "` is not an accessible property for this `tm` object.")
 	}
 
-	y <- vec_data(x)
+	y <- vec_proxy(x)
 	z <- y[[property]]
 	names(z) <- y$term
 

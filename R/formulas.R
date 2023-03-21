@@ -250,7 +250,7 @@ vec_cast.fmls.character <- function(x, to, ...) {
 vec_cast.character.fmls <- function(x, to, ...) {
 	# order is flipped, such that `x` is fmls
 	x |>
-		stats::formula() |>
+		stats::formula(env = .GlobalEnv) |>
 		deparse1()
 }
 

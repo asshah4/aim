@@ -7,7 +7,6 @@
 \alias{tidy}
 \alias{glance}
 \alias{augment}
-\alias{components}
 \alias{intersect}
 \alias{union}
 \alias{setdiff}
@@ -18,6 +17,6 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{generics}{\code{\link[generics]{augment}}, \code{\link[generics]{components}}, \code{\link[generics]{fit}}, \code{\link[generics]{glance}}, \code{\link[generics:setops]{intersect}}, \code{\link[generics:setops]{setdiff}}, \code{\link[generics]{tidy}}, \code{\link[generics:setops]{union}}}
+  \item{generics}{\code{\link[generics]{augment}}, \code{\link[generics]{fit}}, \code{\link[generics]{glance}}, \code{\link[generics:setops]{intersect}}, \code{\link[generics:setops]{setdiff}}, \code{\link[generics]{tidy}}, \code{\link[generics:setops]{union}}}
 }}
 
