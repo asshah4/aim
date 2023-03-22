@@ -72,7 +72,7 @@ fit.fmls <- function(object,
 generics::tidy
 
 #' @export
-tidy.mdls <- function(x,
+tidy.mdl <- function(x,
 											conf.int = TRUE,
 											conf.level = 0.95,
 											exponentiate = TRUE,

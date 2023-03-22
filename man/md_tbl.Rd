@@ -2,12 +2,16 @@
 % Please edit documentation in R/model-table.R
 \name{md_tbl}
 \alias{md_tbl}
+\alias{temporary}
 \alias{model_table}
+\alias{is_model_table}
 \title{Many models in a table}
 \usage{
-md_tbl(..., data = NULL)
+temporary(..., data = NULL)
 
-model_table(..., data = NULL)
+model_table(...)
+
+is_model_table(x)
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

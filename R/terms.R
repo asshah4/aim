@@ -275,15 +275,11 @@ tm.formula <- function(x,
 
 	# WARNINGS ABOUT TERM ROLES
 	if (".i" %in% allRoles & !(".x" %in% allRoles)) {
-		warning(
-			"In interaction term was specified but was not attached to a specific exposure. The result will treat the interaction term as a regular predictor/covariate."
-		)
+		warning_interaction_roles(allRoles)
 		allRoles[allRoles == ".i"] <- ".p"
 	}
 	if (".m" %in% allRoles & !(".x" %in% allRoles)) {
-		warning(
-			"A mediator term was specified but was not attached to a specific exposure. The result will treat the mediator term as a regular predictor/covariate."
-		)
+		warning_mediation_roles(allRoles)
 		allRoles[allRoles == ".m"] <- ".p"
 	}
 
@@ -297,44 +293,50 @@ tm.formula <- function(x,
 
 	if (".i" %in% allRoles & ".x" %in% allRoles) {
 
+		# Need variables to interate through
 		exp <- names(allRoles[allRoles == ".x"])
 		int <- names(allRoles[allRoles == ".i"])
+		intRoles <- intGroups <- list()
 
-		for (i in seq_along(exp)) {
-			for (j in seq_along(int)) {
+		for (ii in seq_along(int)) {
+			for (ix in seq_along(exp)) {
 
 				# Explicit new interaction term
-				.i <- paste0(exp[i], ":", int[j])
-				allRoles[.i] <- ".i"
+				.i <- paste0(exp[ix], ":", int[ii])
+				intRoles[.i] <- ".i"
 
-				# Correct interaction term changes in all related variables
-				#		Remove prior interaction term that was now used
-				#		Change to predictor
-				#		Add interaction term to all terms = both + right
-				allRoles[int[j]] <- ".p"
-				right[grepl(names(allRoles[int[j]]), right)] <- int[j]
-				right <- c(right, .i)
-
-				# Add new group here (first find number, then addend)
-				if (length(allGroups) == 0) {
+				# Will need to "regroup" if interaction term is added
+				#		If the exposure already has a group, then 3 terms belong to it
+				if (length(intGroups) == 0) {
 					g <- 0
+				} else if (!is.null(intGroups[[exp[ix]]])) {
+					g <- intGroups[[exp[ix]]]
+				} else if (!is.null(intGroups[[int[ii]]])) {
+					g <- intGroups[[int[ii]]]
 				} else {
-					g <- max(unlist(unname(allGroups))) + 1
+					g <- max(unlist(unname(intGroups))) + 1
 				}
 
-				allGroups[exp[i]] <- g
-				allGroups[int[j]] <- g
-				allGroups[.i] <- g
+				intGroups[exp[ix]] <- g
+				intGroups[int[ii]] <- g
+				intGroups[.i] <- g
 
-			  message(
-			    "Interaction term `",
-			    int[j],
-			    "` has been applied to exposure `",
-			    exp[i],
-			    "`"
-			  )
+				message_interaction(int[[ii]], exp[[ix]])
 			}
 		}
+
+		# Interaction terms change roles of other variables and add variables
+		# 	Update all roles and groups
+		#		for i in interactions
+		#			Change to old/unfixed interactor to predictor
+		#			Add new/corrected interactor onto right side
+		allGroups <- c(allGroups, intGroups)
+		allRoles <- c(allRoles, intRoles)
+		for (ii in seq_along(int)) {
+			allRoles[int[ii]] <- ".p"
+			right[grepl(names(allRoles[int[ii]]), right)] <- int[ii]
+		}
+		right <- c(right, names(intRoles))
 
 	}
 
@@ -392,10 +394,8 @@ tm.formula <- function(x,
 		allRoles[[names(role[i])]] <- role[[i]]
 	}
 
-
 	# Setup to create new terms using all elements of original formula
 	tm_vector <- tm()
-
 	for (i in 1:length(both)) {
 		# make parameters
 		t <- both[i]
@@ -449,7 +449,7 @@ tm.formula <- function(x,
 
 	}
 
-	# return as a record of tm
+	# Return as a `tm` vector
 	tm_vector
 }
 

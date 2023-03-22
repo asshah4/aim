@@ -57,20 +57,18 @@ lhs.formula <- function(x, ...) {
 	if (length(x) == 2) {
 		y <- character()
 	} else if (length(x) == 3) {
-		y <- x[[2]]
+		y <-
+			x[[2]] |>
+			deparse1() |>
+			strsplit("\\+|-") |>
+			unlist() |>
+			trimws() |>
+			{
+				\(.x) gsub('"', "", .x)
+			}()
 	}
 
-	z <-
-		y |>
-		deparse1() |>
-		strsplit("\\+|-") |>
-		unlist() |>
-		trimws() |>
-		{
-			\(.x) gsub('"', "", .x)
-		}()
-
-	z
+	y
 }
 
 

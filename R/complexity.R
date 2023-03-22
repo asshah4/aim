@@ -242,6 +242,7 @@ simplify_outcomes <- function(x, ...) {
 
 	validate_class(x, c("fmls", "formula"))
   if (inherits(x, "formula")) {
+  	message_formula_to_fmls()
     x <- fmls(x)
   }
 
@@ -282,6 +283,7 @@ simplify_exposures <- function(x, ...) {
 
 	validate_class(x, c("fmls", "formula"))
   if (inherits(x, "formula")) {
+  	message_formula_to_fmls()
     x <- fmls(x)
   }
 

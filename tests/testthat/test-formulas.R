@@ -1,14 +1,14 @@
-test_that("`fmls` objects can be generated", {
+test_that("simple formulas can be made from base::formula()", {
+
+	# Empty class
 	expect_length(new_fmls(), 0)
 	expect_s3_class(new_fmls(), "fmls")
 	expect_output(print(new_fmls()), "<formulas\\[0\\]>")
 	expect_length(fmls(), 0)
 	expect_s3_class(fmls(), "fmls")
 	expect_output(print(fmls()), "<formulas\\[0\\]>")
-})
 
-test_that("simple formulas can be made from base::formula()", {
-
+	# Simple formulas
 	f1 <- output ~ input + modifier
 	f2 <- output ~ .x(input) + modifier
 	f3 <- output ~ .x(input) + log(modifier) + log(variable) + another
@@ -20,8 +20,13 @@ test_that("simple formulas can be made from base::formula()", {
 	y <- fmls(f2)
 	z <- fmls(f3)
 	f <- c(x, y, z)
+	expect_true(is_fmls(f))
 	expect_s3_class(x, "fmls")
 	expect_length(f, 3)
+
+	# Print output
+	expect_output(print(format(x)), "output|input|modifier")
+
 
 })
 
@@ -54,7 +59,8 @@ test_that("interaction terms can be included explicitly", {
 	x <- witch ~ wicked + green + west + wicked:west
 	expect_equal(as.character(fmls(x)), deparse1(x))
 
-	f <- fmls(witch ~ .x(wicked) + green + .i(west))
+	expect_message(f <- fmls(witch ~ .x(wicked) + green + .i(west)))
 	expect_equal(formula(f, env = .GlobalEnv), x, ignore_attr = TRUE)
 
 })
+

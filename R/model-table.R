@@ -1,4 +1,4 @@
-# Class definition -------------------------------------------------------------
+# Class ------------------------------------------------------------------------
 
 #' Many models in a table
 #'
@@ -14,7 +14,7 @@
 #' @name md_tbl
 #' @importFrom dplyr mutate
 #' @export
-md_tbl <- function(..., data = NULL) {
+temporary <- function(..., data = NULL) {
 
 	# Break early
 	if (missing(..1)) {
@@ -148,16 +148,34 @@ md_tbl <- function(..., data = NULL) {
 	)
 }
 
+
+#' @export
+md_tbl <- function(...) {
+
+	# Collect dots and validate
+	dots <- rlang::list2(...)
+	if (length(dots) == 0) {
+		return(build_model_table(plan_model_table()))
+	}
+	# Handles either a list or a series of arugments
+	if (length(dots) == 1 && is.list(dots[[1]])) {
+		dots <- dots[[1]]
+	}
+
+	tbl <- plan_model_table()
+
+
+}
+
 #' @rdname md_tbl
 #' @export
 model_table <- md_tbl
 
-# Model md_tbl Construction and Definition --------------------------------------
-
-#' Model md_tbl construction
+#' Model table construction and definition
+#' Work-horse function for reshaping model data into a table.
 #' @keywords internal
 #' @noRd
-construct_model_table <- function(model = list(),
+temporary_constructor <- function(model = list(),
 																	type = character(),
 																	subtype = character(),
 																	name = character(),
@@ -239,22 +257,69 @@ construct_model_table <- function(model = list(),
 	tbl
 }
 
-#' Model md_tbl initialization
+#' Model table construction
+#' Work-horse for reshaping data into a table
 #' @keywords internal
 #' @noRd
-new_model_table <- function(x = tibble(),
-											data_list = data_list()) {
+structure_model_table <- function(x = tibble(),
+																	model = character(),
+																	formulas = fmls(),
+																	data_info = list(),
+																	model_fit = tibble(),
+																	parameter_estimates = tibble(),
+																	run = logical()) {
+
+	stopifnot("Input must be a `tbl_df`" = is.tibble(x))
+
+}
+
+
+#' Model table planning
+#' Sets up the tibble that will be used to make a `md_tbl`
+#' @keywords internal
+#' @noRd
+plan_model_table <- function(model = character(),
+														 formulas = fmls(),
+														 data_info = list(),
+														 model_fit = tibble(),
+														 parameter_estimates = tibble(),
+														 run = logical()) {
+
+	# Essentially each row is made or added here
+	# All will be empty, no validation at this step
+	plan <-
+		tibble::tibble(
+			model = model,
+			formulas = formulas,
+			data_info = data_info,
+			model_fit = list(model_fit),
+			parameter_estimates = list(parameter_estimates),
+			run = run
+		)
+
+	plan
+
+}
+
+#' Model table initialization
+#' @keywords internal
+#' @noRd
+build_model_table <- function(x = tibble()) {
 
 	# Validation
 	stopifnot(is.data.frame(x))
-	vec_assert(data_list, ptype = data_list())
 
 	tibble::new_tibble(
 		x,
-		data_list = data_list,
 		class = "md_tbl",
 		nrow = nrow(x)
 	)
+}
+
+#' @rdname md_tbl
+#' @export
+is_model_table <- function(x) {
+	inherits(x, "md_tbl")
 }
 
 #' @keywords internal
@@ -276,7 +341,7 @@ vec_ptype_full.md_tbl <- function(x, ...) {
 
 #' @export
 vec_ptype_abbr.md_tbl <- function(x, ...) {
-	"mdls"
+	"md_tbl"
 }
 
 
@@ -288,20 +353,15 @@ vec_ptype_abbr.md_tbl <- function(x, ...) {
 md_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 	out <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
 
-	# Combine new data
-	dl <- c(attributes(x)$data_list, attributes(y)$data_list)
 
-	new_md_tbl(out, data_list = dl)
+	new_md_tbl(out)
 }
 
 #' @export
 md_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 	out <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
 
-	# Combine new data
-	dl <- c(attributes(x)$data_list, attributes(to)$data_list)
-
-	new_md_tbl(out, data_list = dl)
+	new_md_tbl(out)
 }
 
 #' @export

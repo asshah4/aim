@@ -86,6 +86,12 @@ test_that("new `tm` can be made from character/atomic components", {
 
 test_that("terms can be generated from a formula", {
 
+	# Formula stump
+	x <- ~ input
+	t <- tm(x)
+	expect_length(t, 1)
+
+	# Simple formulas
 	f1 <- output ~ input + modifier
 	f2 <- output ~ .x(input) + modifier
 	f3 <- output ~ .x(input) + log(modifier) + log(variable) + another
@@ -196,11 +202,19 @@ test_that("interaction terms are appropriately made", {
 	x <- witch ~ .x(wicked) + green + .i(west)
 	role = label = group = type = distribution = description = transformation =
 		formula()
-	t <- tm(x)
-	expect_message(tm(x))
+	expect_message(t <- tm(x))
 	expect(length(t), 5)
 
+	# Multiple interactions
+	# Two messages about two interaction terms
+	expect_message(expect_message(t <- tm(mpg ~ .x(hp) + .i(am) + .i(vs))))
+	expect_length(t, 6)
 
+	# Multiple exposures with interaction
+	# Two messages for two exposures
+	x <- mpg ~ .x(hp) + .x(cyl) + .i(am)
+	expect_message(expect_message(t <- tm(x)))
+	expect_length(t, 6)
 
 })
 
@@ -257,3 +271,4 @@ test_that("terms can be found and updated and attributes can be found", {
 	expect_equal(x, y)
 	expect_equal(vec_data(x)$role, c("outcome", "exposure", "confounder"))
 })
+
