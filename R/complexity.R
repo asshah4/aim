@@ -219,18 +219,6 @@ simplify <- function(x, ...) {
 	o <- field(x, "order")
 	t <- field(x, "terms")[[1]]
 
-	# TODO workspace
-	if (FALSE) {
-
-		d <-
-			vec_proxy(t)[c("term", "role")] |>
-			table() |>
-			rbind() |>
-			data.frame()
-
-		colSums(d)
-
-	}
 
 	# The number of formulas that will be multiplicative by complexity
 	# 	N = n x outcome

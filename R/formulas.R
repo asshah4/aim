@@ -127,6 +127,34 @@ fmls <- function(x = unspecified(),
 	)
 }
 
+
+fmls2 <- function(x) {
+
+	# Formula shape is based off of roles primarily
+	# 	Take terms and crystallize them into a matrix
+	# 	Each column is a term name, and each row is a defined role
+
+	tms <- field(x, "term")
+	rls <- field(x, "role")
+
+	dplyr::bind_cols(term = tms, role = rls)
+
+	d <-
+		vec_proxy(t)[c("term", "role")] |>
+		table() |>
+		rbind() |>
+		data.frame() |>
+		rownames_to_column(var = "term") |>
+		tibble()
+
+	tmp <-
+		d |>
+		group_by(outcome) |>
+		tidyr::nest()
+
+	d <- vec_proxy(t)[c("term", "role")]
+
+}
 #' Formula vector
 #' @keywords internal
 #' @noRd
