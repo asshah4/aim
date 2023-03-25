@@ -2,14 +2,10 @@
 % Please edit documentation in R/model-table.R
 \name{md_tbl}
 \alias{md_tbl}
-\alias{temporary}
-\alias{model_table}
 \alias{is_model_table}
 \title{Many models in a table}
 \usage{
-temporary(..., data = NULL)
-
-model_table(...)
+md_tbl(...)
 
 is_model_table(x)
 }

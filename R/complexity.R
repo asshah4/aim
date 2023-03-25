@@ -219,6 +219,19 @@ simplify <- function(x, ...) {
 	o <- field(x, "order")
 	t <- field(x, "terms")[[1]]
 
+	# TODO workspace
+	if (FALSE) {
+
+		d <-
+			vec_proxy(t)[c("term", "role")] |>
+			table() |>
+			rbind() |>
+			data.frame()
+
+		colSums(d)
+
+	}
+
 	# The number of formulas that will be multiplicative by complexity
 	# 	N = n x outcome
 	#		N = n x exposure
@@ -330,6 +343,7 @@ simplify_mediation <- function(x, ...) {
 
 	# If multiple fmls, need to run through them all
 	f <- fmls()
+
 	for (i in seq_along(x)) {
 
 		t <- tm(x[i])

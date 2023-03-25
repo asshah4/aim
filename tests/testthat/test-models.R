@@ -15,14 +15,16 @@ test_that("`mdl` objects can be retrieved from fit", {
 
 	# Simple
 	object <- fmls(mpg ~ wt + hp)
-	m1 <- fit(object, .fit = lm, data = mtcars, raw = FALSE)
+	m1 <- fit(object, .fn = lm, data = mtcars, .unpack = FALSE)
 	expect_s3_class(m1, "mdl")
+	expect_equal(object, field(m1, "formulas"))
 
 	# Stratified
 	object <- fmls(mpg ~ wt + hp + .s(am))
-	m2 <- fit(object, .fit = lm, data = mtcars, raw = FALSE)
+	m2 <- fit(object, .fn = lm, data = mtcars, .unpack = FALSE)
 	expect_s3_class(m2, "mdl")
 	expect_length(m2, 2)
+	expect_length(field(m2, "formulas"), 2)
 
 
 })

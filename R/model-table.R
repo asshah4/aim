@@ -14,6 +14,144 @@
 #' @name md_tbl
 #' @importFrom dplyr mutate
 #' @export
+#' @export
+md_tbl <- function(...) {
+
+	# Initial data ----
+
+	dots <- rlang::list2(...)
+	if (length(dots) == 0) {
+		res <-
+			plan_model_table() |>
+			build_model_table() |>
+			new_model_table()
+		return(res)
+	}
+	# Handles either a list or a series of arguments
+	if (length(dots) == 1 && is.list(dots[[1]])) {
+		dots <- dots[[1]]
+	}
+
+	stopifnot("Only the <mdl> class is currently supported" =
+							inherits(dots, "mdl"))
+
+	# Restructure data ----
+
+	if (inherits(dots, "mdl")) {
+		m <- field(dots, "model")
+		mx <- field(dots, "model_type")
+		fx <- field(dots, "formulas")
+		dn <- field(dots, "data_name")
+		si <- field(dots, "strata_info")
+
+		dd <- list()
+		for (i in 1:length(si)) {
+
+			if (!is.na(si[i])) {
+				nm <- names(si[i])
+				lvl <- si[[i]]
+			} else {
+				nm <- NA
+				lvl <- NA
+			}
+
+			dd[[i]] <-
+				list(
+					data_name = dn[i],
+					strata_name = nm,
+					strata_level = lvl
+				)
+		}
+
+		mi <- lapply(m, possible_glance)
+		pe <- lapply(m, possible_tidy)
+
+		rn <- rep(TRUE, length(m))
+	}
+
+
+	# Make list ----
+
+	# Returns a list
+	.plan <-
+		plan_model_table(
+			model = mx,
+			formulas = fx,
+			data_desc = dd,
+			model_info = mi,
+			parameter_estimates = pe,
+			run = rn
+		)
+
+	# Finalize table ----
+
+	# Returns a data frame
+	.build <- build_model_table(
+		x = .plan
+	)
+
+	# Define class ----
+
+	new_model_table(
+		x = .build,
+		term_table = tms
+	)
+
+}
+
+#' @rdname model_table
+#' @export
+model_table <- md_tbl
+
+plan_model_table <- function(model = character(),
+														 formulas = fmls(),
+														 data_desc = list(),
+														 model_info = tibble(),
+														 parameter_estimates = tibble(),
+														 run = logical()) {
+
+	# Essentially each row is made or added here
+	# All will be empty, no validation at this step
+	df_list(
+		model = model,
+		formulas = formulas,
+		data_desc = data_desc,
+		model_info = list(model_info),
+		parameter_estimates = list(parameter_estimates),
+		run = run
+	)
+
+}
+
+build_model_table <- function(x = list()) {
+
+	# Can insert additional attributes to pass along if needed
+	new_data_frame(x) |>
+		tidyr::nest(model_info = model_info) |>
+		tidyr::nest(parameter_estimates = parameter_estimates)
+
+}
+
+# Develop constructor
+new_model_table <- function(x = data.frame()) {
+
+	new_tibble(
+		x,
+		class = "md_tbl",
+	)
+}
+
+#' @rdname md_tbl
+#' @export
+is_model_table <- function(x) {
+	inherits(x, "md_tbl")
+}
+
+#' @keywords internal
+#' @noRd
+methods::setOldClass(c("md_tbl", "vctrs_vctr"))
+
+
 temporary <- function(..., data = NULL) {
 
 	# Break early
@@ -147,186 +285,6 @@ temporary <- function(..., data = NULL) {
 		data_list = data_list(dl)
 	)
 }
-
-
-#' @export
-md_tbl <- function(...) {
-
-	# Collect dots and validate
-	dots <- rlang::list2(...)
-	if (length(dots) == 0) {
-		return(build_model_table(plan_model_table()))
-	}
-	# Handles either a list or a series of arugments
-	if (length(dots) == 1 && is.list(dots[[1]])) {
-		dots <- dots[[1]]
-	}
-
-	tbl <- plan_model_table()
-
-
-}
-
-#' @rdname md_tbl
-#' @export
-model_table <- md_tbl
-
-#' Model table construction and definition
-#' Work-horse function for reshaping model data into a table.
-#' @keywords internal
-#' @noRd
-temporary_constructor <- function(model = list(),
-																	type = character(),
-																	subtype = character(),
-																	name = character(),
-																	subname = character(),
-																	number = integer(),
-																	description = character(),
-																	formula = character(),
-																	outcome = character(),
-																	exposure = character(),
-																	mediator = character(),
-																	interaction = character(),
-																	strata = character(),
-																	level = numeric(),
-																	terms = rune_list(),
-																	model_info = model_info(),
-																	parameter_estimates = parameter_estimates(),
-																	run = logical()) {
-
-	# Validation
-	vec_assert(model, ptype = list())
-	vec_assert(type, ptype = character())
-	vec_assert(subtype, ptype = character())
-	vec_assert(name, ptype = character())
-	vec_assert(subname, ptype = character())
-	vec_assert(number, ptype = integer())
-	vec_assert(description, ptype = character())
-	vec_assert(formula, ptype = character())
-	vec_assert(outcome, ptype = character())
-	vec_assert(exposure, ptype = character())
-	vec_assert(mediator, ptype = character())
-	vec_assert(interaction, ptype = character())
-	vec_assert(strata, ptype = character())
-	vec_assert(level, size = 1)
-	vec_assert(terms, ptype = rune_list())
-	vec_assert(parameter_estimates, ptype = parameter_estimates())
-	vec_assert(model_info, ptype = model_info())
-	vec_assert(run, ptype = logical())
-
-	# Handle emptiness
-	if (length(parameter_estimates) == 0) {
-		parameter_estimates <- NA
-	}
-	if (length(model_info) == 0) {
-		model_info <- NA
-	}
-	if (length(strata) == 0) {
-		strata <- NA
-	}
-	if (length(interaction) == 0) {
-		interaction <- NA
-	}
-	if (length(level) == 0) {
-		level <- NA
-	}
-
-	# Essentially each row is made or added here
-	tbl <- tibble::tibble(
-		model = model,
-		type = type,
-		subtype = subtype,
-		name = name,
-		subname = subname,
-		description = description,
-		number = number,
-		formula = formula,
-		outcome = outcome,
-		exposure = exposure,
-		mediator = mediator,
-		interaction = interaction,
-		strata = strata,
-		level = level,
-		terms = terms,
-		model_info = model_info,
-		parameter_estimates = parameter_estimates,
-		run = run
-	)
-
-	# Return tibble
-	tbl
-}
-
-#' Model table construction
-#' Work-horse for reshaping data into a table
-#' @keywords internal
-#' @noRd
-structure_model_table <- function(x = tibble(),
-																	model = character(),
-																	formulas = fmls(),
-																	data_info = list(),
-																	model_fit = tibble(),
-																	parameter_estimates = tibble(),
-																	run = logical()) {
-
-	stopifnot("Input must be a `tbl_df`" = is.tibble(x))
-
-}
-
-
-#' Model table planning
-#' Sets up the tibble that will be used to make a `md_tbl`
-#' @keywords internal
-#' @noRd
-plan_model_table <- function(model = character(),
-														 formulas = fmls(),
-														 data_info = list(),
-														 model_fit = tibble(),
-														 parameter_estimates = tibble(),
-														 run = logical()) {
-
-	# Essentially each row is made or added here
-	# All will be empty, no validation at this step
-	plan <-
-		tibble::tibble(
-			model = model,
-			formulas = formulas,
-			data_info = data_info,
-			model_fit = list(model_fit),
-			parameter_estimates = list(parameter_estimates),
-			run = run
-		)
-
-	plan
-
-}
-
-#' Model table initialization
-#' @keywords internal
-#' @noRd
-build_model_table <- function(x = tibble()) {
-
-	# Validation
-	stopifnot(is.data.frame(x))
-
-	tibble::new_tibble(
-		x,
-		class = "md_tbl",
-		nrow = nrow(x)
-	)
-}
-
-#' @rdname md_tbl
-#' @export
-is_model_table <- function(x) {
-	inherits(x, "md_tbl")
-}
-
-#' @keywords internal
-#' @noRd
-methods::setOldClass(c("md_tbl", "vctrs_vctr"))
-
-# Output -----------------------------------------------------------------------
 
 #' @export
 print.md_tbl <- function(x, ...) {

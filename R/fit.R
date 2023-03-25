@@ -4,17 +4,17 @@ generics::fit
 
 #' @export
 fit.fmls <- function(object,
-										 .fit,
+										 .fn,
 										 ...,
 										 data,
-										 raw = TRUE) {
+										 .unpack = TRUE) {
 
 	cl <- match.call()
 	args <- list(...)
 
 	# Validate functions
 	.fn <- as.character(cl[[3]])
-	stopifnot("The .fit argument supplied is not yet supported" =
+	stopifnot("The .fn argument supplied is not yet supported" =
 							.fn %in% .models)
 
 	# Check data
@@ -59,7 +59,7 @@ fit.fmls <- function(object,
 	}
 
 	# Return
-	if (raw) {
+	if (.unpack) {
 		field(modList, "model")
 	} else {
 		modList

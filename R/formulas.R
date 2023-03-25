@@ -297,5 +297,8 @@ generics::augment
 #' Augment a formula with information from a `fmls` object
 #' @export
 augment.fmls <- function(x, ...) {
-	x
+
+	# Pattern expand and then simplify each formula
+	pattern(x) |>
+		simplify()
 }

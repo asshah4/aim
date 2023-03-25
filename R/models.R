@@ -38,7 +38,7 @@ mdl <- function(x = unspecified(),
 	new_model(
 		model = m,
 		model_type = class(x)[1],
-		formula = formulas,
+		formulas = formulas,
 		data_name = data_name,
 		strata_info = strata_info
 	)
@@ -54,7 +54,7 @@ model <- mdl
 #' @keywords internal
 #' @noRd
 new_model <- function(model = list(),
-											formula = fmls(),
+											formulas = fmls(),
 											model_type = character(),
 											data_name = character(),
 											strata_info = list()) {
@@ -62,7 +62,7 @@ new_model <- function(model = list(),
 	# Validation
 	vec_assert(model, ptype = list())
 	vec_assert(model_type, ptype = character())
-	vec_assert(formula, ptype = fmls())
+	vec_assert(formulas, ptype = fmls())
 	vec_assert(data_name, ptype = character())
 	vec_assert(strata_info, ptype = list())
 
@@ -76,7 +76,7 @@ new_model <- function(model = list(),
 		fields = list(
 			"model" = model,
 			"model_type" = model_type,
-			"formula" = formula,
+			"formulas" = formulas,
 			"data_name" = data_name,
 			"strata_info" = strata_info
 		),
@@ -99,7 +99,7 @@ format.mdl <- function(x, ...) {
 	} else {
 		fmt <-
 			sapply(x, FUN = function(.x) {
-				f <- field(.x, "formula")
+				f <- field(.x, "formulas")
 				cl <- field(.x, "model_type")
 				paste0(cl, "(", f, ")")
 			})

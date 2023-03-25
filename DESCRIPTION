@@ -21,7 +21,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Depends:
     R (>= 4.0.0),
-    vctrs (>= 0.3.8.0),
+    vctrs (>= 0.5.0),
     tibble,
 Imports: 
     generics,
@@ -29,20 +29,15 @@ Imports:
     methods,
     dplyr,
     broom,
-    purrr,
     tidyr,
     rlang,
     pillar
 Suggests: 
     testthat (>= 3.0.0),
     covr,
-    knitr,
-    markdown,
+    cli,
     rmarkdown,
-    glue,
-    gt,
-    parsnip,
-    durandal,
+    knitr
 Remotes:
     asshah4/durandal
 VignetteBuilder: knitr

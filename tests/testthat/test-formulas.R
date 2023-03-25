@@ -64,3 +64,19 @@ test_that("interaction terms can be included explicitly", {
 
 })
 
+test_that("formulas can be augmented", {
+
+	x <- fmls(green ~ .x(wicked) + witch + west, pattern = "sequential")
+	xs <- simplify(x)
+	expect_equal(field(xs, "pattern"), "direct")
+	xp <- pattern(x)
+	expect_equal(field(xp, "pattern"), rep("direct", 3))
+
+	x <-
+		fmls(witch ~ .x(wicked) + .x(good) + .m(magic) + west + north + green,
+				 pattern = "sequential")
+
+	# Very slow...
+	y <- augment(x)
+	expect_length(y, 12)
+})
