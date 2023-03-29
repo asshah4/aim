@@ -66,6 +66,7 @@ test_that("interaction terms can be included explicitly", {
 
 test_that("formulas can be augmented", {
 
+	x <- tm(green + white ~ .x(wicked) + .x(good) + witch + fairy + .m(west))
 	x <- fmls(green ~ .x(wicked) + witch + west, pattern = "sequential")
 	xs <- simplify(x)
 	expect_equal(field(xs, "pattern"), "direct")
