@@ -67,8 +67,11 @@ message_formula_to_fmls <- function() {
 
 #' @keywords internal
 #' @noRd
-message_fundamental_pattern <- function(mediationTerm = NA_character_,
-																				strataTerm = NA_character_) {
+message_fundamental_pattern <- function(mediationTerm,
+																				strataTerm) {
+
+	if (length(mediationTerm) == 0) mediationTerm <- NA
+	if (length(strataTerm) == 0) strataTerm <- NA
 
 	msg <-
 		paste0(

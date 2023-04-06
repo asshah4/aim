@@ -8,7 +8,13 @@
 #'
 #' @param pattern A method for formula expansion
 #' @export
-fmls2 <- function(x = tm(), simplify = TRUE, pattern = "direct") {
+fmls2 <- function(x = tm(),
+									simplify = TRUE,
+									pattern = c("direct",
+															"sequential",
+															"parallel",
+															"fundamental"),
+									...) {
 
 	# Take terms and create a matrix
 	# A <fmls> object is a group of terms that can or have been expanded
@@ -48,7 +54,6 @@ fmls2 <- function(x = tm(), simplify = TRUE, pattern = "direct") {
 	if (length(sta) > 0) {
 		tidyr::expand_grid(tbl, strata = sta)
 	}
-
 
 	# Predictor patterns ----
 
@@ -124,6 +129,7 @@ fmls2 <- function(x = tm(), simplify = TRUE, pattern = "direct") {
 			# However fundamental decomposition breaks the rules generally
 			cov <- c(exp, prd, con, med, int, sta)
 			tbl <- tidyr::expand_grid(left = out, right = cov)
+			message_fundamental_pattern(med, sta)
 
 		},
 		message("Pattern not currently supported.")
@@ -186,5 +192,16 @@ fmls2 <- function(x = tm(), simplify = TRUE, pattern = "direct") {
 		mutate(across(everything(), ~ dplyr::if_else(is.na(.x), 0, .x)))
 
 
+}
+
+
+new_fmls2 <- function(termMatrix = data.frame(),
+											key = tm()) {
+
+	new_rcrd(
+		fields = termMatrix,
+		key = key,
+		class = "fmls2"
+	)
 }
 # nocov end
