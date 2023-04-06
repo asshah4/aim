@@ -5,11 +5,8 @@ has_cli <- function() {
 }
 
 
-#' @keywords internal
-#' @noRd
-message_formula_to_fmls <- function() {
-	message("Converting the supplied `formula` to a `fmls`")
-}
+
+# Term conversion messages -----------------------------------------------------
 
 #' @keywords internal
 #' @noRd
@@ -59,3 +56,27 @@ warning_mediation_roles <- function(roleList) {
 
 	warning(msg)
 }
+
+# Formula simplification messages ----------------------------------------------
+
+#' @keywords internal
+#' @noRd
+message_formula_to_fmls <- function() {
+	message("Converting the supplied `formula` to a `fmls`")
+}
+
+#' @keywords internal
+#' @noRd
+message_fundamental_pattern <- function(mediationTerm = NA_character_,
+																				strataTerm = NA_character_) {
+
+	msg <-
+		paste0(
+			"Using `", .patterns[1], "` decomposition pattern: \n",
+			"- Mediation term: ", mediationTerm, "\n",
+			"- Stratifying term: ", strataTerm
+		)
+
+	message(msg)
+}
+

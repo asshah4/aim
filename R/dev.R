@@ -29,9 +29,9 @@ fmls2 <- function(x = tm(), simplify = TRUE, pattern = "direct") {
 	int <- termKey$term[termKey$role == "interaction"]
 	sta <- termKey$term[termKey$role == "strata"]
 
-	# Complexity ----
+	# Simplify the complexity of key roles ----
 
-	# Simplification of outcomes and exposures
+	# Outcomes and exposures should be set as a "key pair"
 	if (length(out) > 0 & length(exp) > 0) {
 		tbl <- tidyr::expand_grid(outcome = out, exposure = exp)
 	} else if (length(out) > 0 & length(exp) == 0) {
@@ -42,55 +42,24 @@ fmls2 <- function(x = tm(), simplify = TRUE, pattern = "direct") {
 		tbl <- tidyr::expand_grid()
 	}
 
-	# Mediation
-	if (length(med) > 0) {
-
-		# Each row has been expanded for exposure and outcome
-		# This will triple the number of rows
-
-		# Mediation...
-		# 	The combinations of mediation are based on causal reasoning
-		# 	outcome ~ exposure + mediator + predictors
-		#		mediator ~ exposure
-		# 	outcome ~ mediator
-
-		# outcome ~ exposure + covariates exists in each row already
-		# 	Simply add mediator
-		m1 <- tidyr::expand_grid(tbl, mediator = med)
-
-		# mediator ~ exposure as new row
-		# 	No other variables allowed
-		m2 <- tidyr::expand_grid(mediator = med, exposure = exp)
-
-		# outcome ~ mediator + exposure
-		m3 <- tidyr::expand_grid(outcome = out, mediator = med, exposure = exp)
-
-		# Bind all the tables together
-		tbl <-
-			m1 |>
-			dplyr::bind_rows(m2) |>
-			dplyr::bind_rows(m3) |>
-			unique()
-
+	# Strata terms are unique in...
+	# 	Right sided variables
+	# 	Not considered covariates however
+	if (length(sta) > 0) {
+		tidyr::expand_grid(tbl, strata = sta)
 	}
 
-	# Patterns ----
+
+	# Predictor patterns ----
 
 	# Covariates are the fodder for pattern expansions
-	cov <- c(prd, con, int, sta)
-	if (length(cov) > 0) {
-		n <- ncol(tbl)
-		for (i in seq_along(cov)) {
-			tbl[[paste0("covariate_", i)]] <- cov[i]
-		}
-	}
-
 
 	switch(
 		pattern,
 		direct = {
 		},
 		sequential = {
+			cov <- c(prd, con, int)
 
 			for (i in seq_along(cov)) {
 				tbl <-
@@ -141,13 +110,67 @@ fmls2 <- function(x = tm(), simplify = TRUE, pattern = "direct") {
 		},
 		parallel = {
 
+			cov <- c(prd, con, int)
+			if (length(cov) > 0) {
+				tbl <- tidyr::expand_grid(tbl, covariate = cov)
+			} else {
+				tbl
+			}
+
 		},
 		fundamental = {
+
+			# This forms the right hand side variables
+			# However fundamental decomposition breaks the rules generally
+			cov <- c(exp, prd, con, med, int, sta)
+			tbl <- tidyr::expand_grid(left = out, right = cov)
 
 		},
 		message("Pattern not currently supported.")
 	)
-	# Sequential
+
+
+	# Mediating variables ----
+
+	# Mediation should be done only if covariates are already added
+
+	if (length(med) > 0 & pattern != "fundamental") {
+
+		# Each row has been expanded for exposure and outcome
+		# This will triple the number of rows
+
+		# Mediation...
+		# 	The combinations of mediation are based on causal reasoning
+		# 	outcome ~ exposure + mediator + predictors
+		#		mediator ~ exposure
+		# 	outcome ~ mediator + exposure
+
+		# 'outcome ~ exposure + mediator + predictors'
+		# 	Covariates exists in each row already
+		# 	Simply add mediator
+		m1 <- tidyr::expand_grid(tbl, mediator = med)
+
+		# 'mediator ~ exposure'
+		# 	No other variables allowed
+		# 	Add a new row of just this
+		m2 <- tidyr::expand_grid(mediator = med, exposure = exp)
+
+		# 'outcome ~ mediator + exposure'
+		#		Only looking for effect of mediator on outcome WITH exposure
+		m3 <- tidyr::expand_grid(outcome = out, mediator = med, exposure = exp)
+
+		# Bind all the tables together
+		tbl <-
+			m1 |>
+			dplyr::bind_rows(m2) |>
+			dplyr::bind_rows(m3) |>
+			unique()
+
+	}
+
+
+	# Term matrix creation ----
+
 	# Create a list where each item is a vector of terms
 	# These can be then turned into a term matrix
 	tblList <-
