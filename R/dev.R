@@ -16,24 +16,30 @@ fmls2 <- function(x = tm(),
 															"fundamental"),
 									...) {
 
+	# Break early if nothing is given
+	# If appropriate class, but empty, then also break early but warn/message
+	if (length(x) == 0) {
+		return(new_fmls())
+	}
+
 	# Take terms and create a matrix
 	# A <fmls> object is a group of terms that can or have been expanded
 	# <tm> object serves as a key to relay back information about individual terms
-	termKey <- vec_proxy(x)
+	tmKey <- vec_proxy(x)
 
 	# Formula shape is based off of roles primarily
 	# 	Take terms and crystallize them into a matrix
 	# 	Each column is a term name, and each row is a defined role
-	nms <- termKey$term
+	nms <- tmKey$term
 
 	# Handle complexity
-	out <- termKey$term[termKey$role == "outcome"]
-	exp <- termKey$term[termKey$role == "exposure"]
-	prd <- termKey$term[termKey$role == "predictor"]
-	con <- termKey$term[termKey$role == "confounder"]
-	med <- termKey$term[termKey$role == "mediator"]
-	int <- termKey$term[termKey$role == "interaction"]
-	sta <- termKey$term[termKey$role == "strata"]
+	out <- tmKey$term[tmKey$role == "outcome"]
+	exp <- tmKey$term[tmKey$role == "exposure"]
+	prd <- tmKey$term[tmKey$role == "predictor"]
+	con <- tmKey$term[tmKey$role == "confounder"]
+	med <- tmKey$term[tmKey$role == "mediator"]
+	int <- tmKey$term[tmKey$role == "interaction"]
+	sta <- tmKey$term[tmKey$role == "strata"]
 
 	# Simplify the complexity of key roles ----
 
@@ -179,18 +185,18 @@ fmls2 <- function(x = tm(),
 
 	# Create a list where each item is a vector of terms
 	# These can be then turned into a term matrix
-	tblList <-
+	tmMat <-
 		lapply(as.list(as.data.frame(t(tbl))), function(.x) {
 			table(.x) |>
 				rbind() |>
 				data.frame()
-		})
-
-	tmMat <-
-		tblList |>
+		}) |>
 		dplyr::bind_rows() |>
 		mutate(across(everything(), ~ dplyr::if_else(is.na(.x), 0, .x)))
 
+
+	new_fmls2(termMatrix = tmMat,
+						key = x)
 
 }
 
@@ -204,4 +210,69 @@ new_fmls2 <- function(termMatrix = data.frame(),
 		class = "fmls2"
 	)
 }
+
+#' @export
+format.fmls2 <- function(x, ...) {
+
+	# Break into matrix and key
+	tmMat <- vec_data(x)
+	key <- vec_data(attr(x, "key"))
+
+	fmt <-
+		apply(
+			tmMat,
+			MARGIN = 1,
+			FUN = function(.x) {
+				.y <- key[key$term %in% names(.x[which(.x == 1)]),]
+
+				if (!("mediator" %in% .y$role)) {
+					.l <-
+						vec_restore(.y[.y$side == "left", ], to = tm()) |>
+						format() |>
+						paste0(collapse = " + ")
+
+					.r <-
+						vec_restore(.y[.y$side == "right", ], to = tm()) |>
+						format() |>
+						paste0(collapse = " + ")
+
+					.f <- paste(.l, sep = " ~ ", .r)
+				} else {
+					# Handle mediation formula
+					.l <-
+						vec_restore(.y[.y$role == "mediator", ], to = tm()) |>
+						format() |>
+						paste0(collapse = " + ")
+
+					.r <-
+						vec_restore(.y[.y$side == "right" &
+													 	.y$role != "mediator", ], to = tm()) |>
+						format() |>
+						paste0(collapse = " + ")
+
+					.f <- paste(.l, sep = " ~ ", .r)
+				}
+
+				.f
+			}
+		)
+
+
+	# Return
+	fmt
+}
+
+#' @export
+obj_print_data.fmls2 <- function(x, ...) {
+
+	# Colorful printing
+	if (vec_size(x) == 0) {
+		fmt <- new_fmls()
+	} else if (length(x) > 1) {
+		cat(format(x), sep = "\n")
+	} else if (length(x) == 1) {
+		cat(format(x))
+	}
+}
+
 # nocov end

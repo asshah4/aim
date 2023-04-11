@@ -2,19 +2,14 @@
 % Please edit documentation in R/formulas.R
 \name{fmls}
 \alias{fmls}
-\alias{is_fmls}
 \title{Vectorized formulas}
 \usage{
 fmls(
-  x = unspecified(),
-  role = list(),
-  label = list(),
-  group = list(),
-  pattern = character(),
+  x = tm(),
+  simplify = TRUE,
+  pattern = c("direct", "sequential", "parallel", "fundamental"),
   ...
 )
-
-is_fmls(x)
 }
 \arguments{
 \item{x}{Objects of the following types can be used as inputs
@@ -22,28 +17,6 @@ is_fmls(x)
 \item \code{tm}
 \item \code{formula}
 }}
-
-\item{role}{Specific roles the variable plays within the formula. These are
-of particular importance, as they serve as special terms that can effect
-how a formula is interpreted. Please see the \emph{Roles} section below for
-further details. The options for roles are as below:
-\itemize{
-\item outcome
-\item exposure
-\item predictor
-\item confounder
-\item mediator
-\item interaction
-\item strata
-\item group
-\item unknown
-}}
-
-\item{label}{Display-quality label describing the variable}
-
-\item{group}{Grouping variable name for modeling or placing terms together.
-An integer value is given to identify which group the term will be in. The
-hierarchy will be \code{1} → \code{n} incrementally.}
 
 \item{pattern}{This is the expansion pattern used to decide how the
 covariates will incorporated into the formulas. The options are
