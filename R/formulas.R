@@ -291,14 +291,25 @@ fmls <- function(x = tm(),
 
 
 new_fmls <- function(termMatrix = data.frame(),
-											key = tm()) {
+										 key = tm()) {
 
-	new_rcrd(
-		fields = termMatrix,
+
+	stopifnot(is.data.frame(termMatrix))
+
+	new_data_frame(
+		x = termMatrix,
 		key = key,
 		class = "fmls"
 	)
 
+}
+
+key_terms <- function(x) {
+	if (is_fmls(x)) {
+		attr(x, "key")
+	} else {
+		NULL
+	}
 }
 
 #' @export
@@ -351,7 +362,7 @@ format.fmls <- function(x, ...) {
 }
 
 #' @export
-obj_print_data.fmls <- function(x, ...) {
+print.fmls <- function(x, ...) {
 
 	# Colorful printing
 	if (length(x) > 1) {
@@ -389,42 +400,70 @@ methods::setOldClass(c("fmls", "vctrs_rcrd"))
 # SELF
 
 #' @export
-vec_ptype2.fmls.fmls <- function(x, y, ...) {
-	x
-}
+fmls_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
-#' @export
-vec_cast.fmls.fmls <- function(x, to, ...) {
+	# Creates a "empty" data frame with appropraite fields
+	newMatrix <- df_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
 
-	# Take left hand side as original
-	# Standardize when possible to the LHS
-
-	# Terms are handled first
-	xkey <- attr(x, "key")
-	ykey <- attr(y, "key")
+	# Handle scalar term attribute
+	xKey <- key_terms(x)
+	yKey <- key_terms(y)
 
 	tmat <-
-		rbind(vec_proxy(xkey), vec_proxy(ykey)) |>
+		rbind(vec_proxy(xKey), vec_proxy(yKey)) |>
 		unique()
 
 	dups <- duplicated(tmat$term)
 
-	if (any(dups)) {
-		message("Duplicated terms will be discarded, with newest added terms being the first to be removed")
-	}
+	# New terms that will be the key scalar attribute
+	newKey <-
+		tmat[!dups, ] |>
+		vec_restore(to = tm())
+
+	new_fmls(newMatrix, key = newKey)
+}
+
+#' @export
+fmls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
+
+	# New terms that will be the key scalar attribute
+
+	# Handle terms first
+	toKey <- attr(to, "key")
+	xKey <- attr(x, "key")
+
+	tmat <-
+		rbind(vec_proxy(toKey), vec_proxy(xKey)) |>
+		unique()
+
+	dups <- duplicated(tmat$term)
 
 	newKey <-
 		tmat[!dups, ] |>
 		vec_restore(to = tm())
 
-	# Formulas are handled second
-	xmat <- vec_proxy(x)
-	ymat <- vec_proxy(y)
-	fmat <-
-		rbind(xmat, ymat) |>
-		unique()
+	# When casting, the matrices need to be similar in columns
+	newMatrix <-
+		df_cast(
+			x,
+			to,
+			...,
+			x_arg = x_arg,
+			to_arg = to_arg
+		)
 
-	new_fmls(termMatrix = fmat, key = newKey)
+	new_fmls(newMatrix, key = newKey)
+}
+
+
+#' @export
+vec_ptype2.fmls.fmls <- function(x, y, ...) {
+	fmls_ptype2(x, y, ...)
+}
+
+#' @export
+vec_cast.fmls.fmls <- function(x, to, ...) {
+	fmls_cast(x, to, ...)
 }
 
 # CHARACTER

@@ -7,22 +7,48 @@ test_that("fmls can be initialized and formatted", {
 
 test_that("fmls-fmls can be combined", {
 
-	# Simple formulas
+	# Vec ptype2 and cast testing
+
 	f1 <- output ~ input + modifier
 	f2 <- output ~ .x(input) + modifier
 	f3 <- output ~ .x(input) + log(modifier) + log(variable) + another
 
+	# Simple
 	x <- fmls(f1)
 	y <- fmls(f2)
-	z <- fmls(f3)
-	f <- c(x, y, z)
-	expect_true(is_fmls(f))
-	expect_s3_class(x, "fmls")
+	expect_s3_class(vec_ptype2(x, y), "fmls")
+
+	# Should remove exposure variable from second term
+	f <- vec_c(x, y)
 	expect_length(f, 3)
+	expect_equal(nrow(f), 2)
+	expect_equal(f[1, ], f[2, ], ignore_attr = TRUE)
+	expect_false("exposure" %in% vec_data(key_terms(f))$role)
+
+	# Flipped version should enrich the exposure term value
+	f <- vec_c(y, x)
+	expect_equal(f[1, ], f[2, ], ignore_attr = TRUE)
+	expect_true("exposure" %in% vec_data(key_terms(f))$role)
+	expect_length(key_terms(f), 3)
+
+	# More complex version
+	x <- fmls(f1)
+	y <- fmls(f3)
+	f <- vec_c(x, y) # "weaker" version is first, richer is second
+
+	expect_length(f, 6)
+	expect_equal(nrow(f), 2)
+	expect_s3_class(f, "fmls")
+	expect_false("exposure" %in% vec_data(key_terms(f))$role)
+
+	f <- vec_c(y, x) # Flip the order so the richer formula is first
+	expect_equal(sum(f[1, ], na.rm = TRUE), 5)
+	expect_equal(sum(f[2, ], na.rm = TRUE), 3)
+	expect_s3_class(f, "fmls")
+	expect_true("exposure" %in% vec_data(key_terms(f))$role)
 
 	# Print output
 	expect_output(print(format(x)), "output|input|modifier")
-
 
 })
 
