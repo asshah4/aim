@@ -102,3 +102,4 @@ test_that("complex formulas/terms can be converted", {
 				 pattern = "sequential")
 	expect_length(x, 10)
 })
+
