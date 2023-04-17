@@ -72,7 +72,7 @@
 #' @return An object of class `fmls`
 #' @name fmls
 #' @export
-fmls <- function(x = tm(),
+fmls <- function(x = unspecified(),
 								 simplify = TRUE,
 								 pattern = c("direct",
 								 						"sequential",
@@ -80,11 +80,9 @@ fmls <- function(x = tm(),
 								 						"fundamental"),
 								 ...) {
 
-
-	# Break early if nothing is given
-	# If appropriate class, but empty, then also break early but warn/message
+	# Return early if nothing is given
 	if (length(x) == 0) {
-		stop("An object must be given to be converted by `fmls()`")
+		return(new_fmls())
 	}
 
 	# Convert to term object if possible
@@ -304,6 +302,14 @@ new_fmls <- function(termMatrix = data.frame(),
 
 }
 
+
+#' @export
+is_fmls <- function(x) {
+	inherits(x, "fmls")
+}
+
+#' @rdname fmls
+#' @export
 key_terms <- function(x) {
 	if (is_fmls(x)) {
 		attr(x, "key")
@@ -312,12 +318,33 @@ key_terms <- function(x) {
 	}
 }
 
+formulas_to_terms <- function(x) {
+
+	checkmate::assert_class(x, "fmls")
+
+	tmMat <- vec_data(x)
+	key <- vec_data(key_terms(x))
+
+	tms <-
+		apply(
+			tmMat,
+			MARGIN = 1,
+			FUN = function(.x) {
+				.y <- key[key$term %in% names(.x[which(.x == 1)]),]
+				vec_restore(.y, to = tm())
+		})
+
+	# Return
+	tms
+
+}
+
 #' @export
-format.fmls <- function(x, ...) {
+format.fmls <- function(x, color = TRUE, ...) {
 
 	# Break into matrix and key
 	tmMat <- vec_data(x)
-	key <- vec_data(attr(x, "key"))
+	key <- vec_data(key_terms(x))
 
 	fmt <-
 		apply(
@@ -372,15 +399,6 @@ print.fmls <- function(x, ...) {
 	}
 }
 
-#' Formula vector
-#' @keywords internal
-#' @noRd
-
-#' @rdname fmls
-#' @export
-is_fmls <- function(x) {
-	inherits(x, "fmls")
-}
 
 #' @export
 vec_ptype_full.fmls <- function(x, ...) {
@@ -478,17 +496,25 @@ vec_ptype2.character.fmls <- function(x, y, ...) x # X = character
 vec_cast.fmls.character <- function(x, to, ...) {
 	# order is flipped, such that `x` is character
 	# Cast from character into fmls
-	x
+	x |>
+		stats::as.formula(env = .GlobalEnv) |>
+		fmls()
 }
 
 #' @export
 vec_cast.character.fmls <- function(x, to, ...) {
+	# Going from fmls to character
 	# order is flipped, such that `x` is fmls
-	x |>
-		stats::formula(env = .GlobalEnv) |>
-		deparse1()
+	as.character(x)
 }
 
+#' @export
+as.character.fmls <- function(x, ...) {
+	formulas_to_terms(x) |>
+		lapply(formula) |>
+		sapply(deparse1)
+
+}
 
 # FORMULA
 
@@ -505,8 +531,9 @@ vec_ptype2.formula.fmls <- function(x, y, ...) {
 #' @export
 vec_cast.formula.fmls <- function(x, to, ...) {
 	# Cast from `fmls` into `formula`
-	attr(x, "key") |>
-		stats::as.formula(env = .GlobalEnv)
+	# Returns a list of formulas
+	formula(x)
+
 }
 
 #' @export
@@ -519,6 +546,7 @@ vec_cast.fmls.formula <- function(x, to, ...) {
 
 #' @export
 formula.fmls <- function(x, ...) {
-	attr(x, "key") |>
-		stats::as.formula(env = .GlobalEnv)
+	x |>
+		formulas_to_terms() |>
+		lapply(stats::as.formula, env = .GlobalEnv)
 }

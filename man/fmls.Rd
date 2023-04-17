@@ -2,14 +2,17 @@
 % Please edit documentation in R/formulas.R
 \name{fmls}
 \alias{fmls}
+\alias{key_terms}
 \title{Vectorized formulas}
 \usage{
 fmls(
-  x = tm(),
+  x = unspecified(),
   simplify = TRUE,
   pattern = c("direct", "sequential", "parallel", "fundamental"),
   ...
 )
+
+key_terms(x)
 }
 \arguments{
 \item{x}{Objects of the following types can be used as inputs

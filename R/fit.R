@@ -22,10 +22,12 @@ fit.fmls <- function(object,
 	dataName <- deparse1(cl[["data"]])
 
 	# Models to be returned
-	modList <- mdl()
+	modList <- list()
 
 	for (i in seq_along(object)) {
-		t <- field(object, "terms")[[1]]
+		#t <- field(object, "terms")[[1]]
+		t <- formulas_to_terms(object[i,])[[1]]
+
 		f <- stats::as.formula(t)
 		sta <- filter.tm(t, role == "strata")
 
@@ -34,7 +36,7 @@ fit.fmls <- function(object,
 			args$data <- quote(data)
 			x <- do.call(.fn, args = c(formula = f, args))
 			mx <- mdl(x,
-								formulas = object,
+								formulas = object[i,],
 								data_name = dataName)
 			modList <- c(modList, mx)
 		} else {
@@ -45,13 +47,15 @@ fit.fmls <- function(object,
 				for (k in seq_along(strataLevels)) {
 					strataInfo <- list()
 					strataInfo[[strata]] <- strataLevels[k]
-					strataData <- data[data[[strata]] == strataLevels[k], ]
+					strataData <- data[data[[strata]] == strataLevels[k],]
 					args$data <- quote(strataData)
 					x <- do.call(.fn, args = c(formula = f, args))
-					mx <- mdl(x,
-										formulas = object,
-										data_name = dataName,
-										strata_info = strataInfo)
+					mx <- mdl(
+						x,
+						formulas = object[i,],
+						data_name = dataName,
+						strata_info = strataInfo
+					)
 					modList <- c(modList, mx)
 				}
 			}

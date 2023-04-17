@@ -133,6 +133,7 @@ build_model_table <- function(x = list()) {
 }
 
 # Develop constructor
+# TODO figure out what a model table would need
 new_model_table <- function(x = data.frame()) {
 
 	new_tibble(

@@ -456,7 +456,7 @@ tm.formula <- function(x,
 #' @rdname tm
 #' @export
 tm.fmls <- function(x, ...) {
-	field(x, "terms")[[1]]
+	key_terms(x)
 }
 
 #' @rdname tm
@@ -705,15 +705,26 @@ vec_cast.fmls.tm <- function(x, to, ...) {
 #' @export
 formula.tm <- function(x, ...) {
 
+	# Create vec_data / proxy to help re-arrange terms as needed
 	# Lose information when converting to just character
-  y <- vec_data(x)
-  left <- paste0(y$term[y$side == "left"], collapse = " + ")
-  right <-
-    paste0(y$term[y$side == "right" |
-                    y$side == "unknown"], collapse = " + ")
+  y <- vec_proxy(x)
 
-	# Return formula
-	stats::formula(paste0(left, " ~ ", right), env = .GlobalEnv)
+	# Create basic structure for formula
+	# 	Handle mediator equations differently than standard formulas
+  #		Results a left and right hand side
+	if ("mediator" %in% y$role & !("outcome" %in% y$role)) {
+		left <- y[y$role == "mediator",]$term
+		right <- y[y$side == "right" & y$role != "mediator", ]$term
+	} else {
+		left <- y[y$side == "left",]$term
+		right <- y[y$side == "right", ]$term
+	}
+
+  f <- paste0(paste0(left, collapse = " + "),
+  						sep = " ~ ",
+  						paste0(right, collapse = " + "))
+
+  stats::formula(f, env = .GlobalEnv)
 
 }
 
@@ -840,66 +851,3 @@ describe <- function(x, property) {
 
 }
 
-### Term List Wrapper Class ----------------------------------------------------
-
-#' List of terms
-#'
-#' A simple `list_of` wrapper class around `tm` objects to allow them to be
-#' vectorized.
-#' @export
-tmls <- function(...) {
-	# Early break
-	if (missing(..1)) {
-		return(new_tmls(list()))
-	}
-	x <- vec_cast_common(..., .to = tm())
-
-	new_tmls(x)
-}
-
-new_tmls <- function(...) {
-	new_list_of(
-		x = ...,
-		ptype = tm(),
-		class = "tmls"
-	)
-}
-
-#' @export
-vec_ptype_full.tmls <- function(x, ...) "term_list"
-
-#' @export
-vec_ptype_abbr.tmls <- function(x, ...) "tmls"
-
-#' @export
-methods::setOldClass(c("tmls", "vctrs_list_of"))
-
-#' @export
-format.tmls <- function(x, ...) {
-
-	fmt <- character()
-	# Character representation of formula
-	if (vec_size(x) == 0) {
-		return()
-	} else if (vec_size(x) >= 1) {
-		fmt <- lapply(x, format)
-	}
-
-	# Return
-	fmt
-}
-
-#' @export
-obj_print_data.tmls <- function(x, ...) {
-	if (vec_size(x) == 0) {
-		new_tmls()
-	} else if (length(x) == 1) {
-		y <- x[[1]]
-		cat(format(y), sep = " | ")
-	} else if (length(x) > 1) {
-		lapply(x, FUN = function(.x) {
-			cat(format(.x), sep = " | ")
-			cat("\n")
-		})
-	}
-}

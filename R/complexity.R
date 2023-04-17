@@ -58,14 +58,12 @@
 complexity <- function(x) {
 
 	# Require a group of `tm` objects eventually, but may start with formulas/fmls
-	validate_class(x, c("formula", "fmls", "tmls", "tm"))
+	validate_class(x, c("formula", "fmls", "tm"))
 
 	# Convert to terms
 	cl <- class(x)[1]
 
-	if (cl == "tmls") {
-		t <- x[[1]]
-	} else if (cl == "fmls") {
+	if (cl == "fmls") {
 		t <- field(x, "terms")[[1]]
 	} else if (cl == "formula") {
 		t <- tm(x)

@@ -1,7 +1,7 @@
 test_that("fmls can be initialized and formatted", {
 
 	# Empty class
-	expect_error(fmls())
+	expect_length(fmls(), 0)
 
 })
 
@@ -64,14 +64,14 @@ test_that("fmls can be coerced to character class", {
 
 	# Characters
 	x <- fmls(witch ~ wicked + west)
-	expect_type(c(x, "test"), "character")
+	expect_type(vec_c(x, "test"), "character")
 })
 
 
 test_that("patterns can be included into formula", {
 
 	f <- fmls(witch ~ wicked + west, pattern = "parallel")
-	expect_length(f, 2)
+	expect_equal(nrow(f), 2)
 
 })
 
@@ -81,7 +81,7 @@ test_that("interaction terms can be included explicitly", {
 	expect_equal(as.character(fmls(x)), deparse1(x))
 
 	expect_message(f <- fmls(witch ~ .x(wicked) + green + .i(west)))
-	expect_equal(formula(f, env = .GlobalEnv), x, ignore_attr = TRUE)
+	expect_equal(formula(f, env = .GlobalEnv)[[1]], x, ignore_attr = TRUE)
 
 })
 
@@ -89,17 +89,17 @@ test_that("complex formulas/terms can be converted", {
 
 	x <- tm(green + white ~ .x(wicked) + .x(good) + witch + fairy + magic + .m(west))
 	f <- fmls(x)
-	expect_length(f, 10)
+	expect_equal(nrow(f), 10)
 
 	f <- fmls(green ~ .x(wicked) + witch + west, pattern = "sequential")
-	expect_length(f, 3)
+	expect_equal(nrow(f), 3)
 
 	f <- fmls(green ~ .x(wicked) + witch + west, pattern = "direct")
-	expect_length(f, 1)
+	expect_equal(nrow(f), 1)
 
-	x <-
+	f <-
 		fmls(witch ~ .x(wicked) + .x(good) + .m(magic) + west + north + green,
 				 pattern = "sequential")
-	expect_length(x, 10)
+	expect_equal(nrow(f), 10)
 })
 
