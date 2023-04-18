@@ -5,11 +5,12 @@ test_that("`mdl` objects can be retrieved from fit", {
 	# Explicit
 	expect_s3_class(mdl(), "mdl")
 	x <- lm(mpg ~ wt + hp, data = mtcars)
+	f <- fmls(mpg ~ wt + hp)
 	m <- mdl(
 		x,
 		formulas = fmls(mpg ~ wt + hp),
-		data_name = "mtcars",
-		strata_info = list()
+		dataName = "mtcars",
+		strataLevels = list()
 	)
 	expect_s3_class(m, "mdl")
 

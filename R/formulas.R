@@ -105,21 +105,21 @@ fmls <- function(x = unspecified(),
 	# Take terms and create a matrix
 	# A <fmls> object is a group of terms that can or have been expanded
 	# <tm> object serves as a key to relay back information about individual terms
-	tmKey <- vec_proxy(x)
+	tmTab <- vec_proxy(x)
 
 	# Formula shape is based off of roles primarily
 	# 	Take terms and crystallize them into a matrix
 	# 	Each column is a term name, and each row is a defined role
-	nms <- tmKey$term
+	nms <- tmTab$term
 
 	# Handle complexity
-	out <- tmKey$term[tmKey$role == "outcome"]
-	exp <- tmKey$term[tmKey$role == "exposure"]
-	prd <- tmKey$term[tmKey$role == "predictor"]
-	con <- tmKey$term[tmKey$role == "confounder"]
-	med <- tmKey$term[tmKey$role == "mediator"]
-	int <- tmKey$term[tmKey$role == "interaction"]
-	sta <- tmKey$term[tmKey$role == "strata"]
+	out <- tmTab$term[tmTab$role == "outcome"]
+	exp <- tmTab$term[tmTab$role == "exposure"]
+	prd <- tmTab$term[tmTab$role == "predictor"]
+	con <- tmTab$term[tmTab$role == "confounder"]
+	med <- tmTab$term[tmTab$role == "mediator"]
+	int <- tmTab$term[tmTab$role == "interaction"]
+	sta <- tmTab$term[tmTab$role == "strata"]
 
 	# Simplify the complexity of key roles ----
 
@@ -272,7 +272,7 @@ fmls <- function(x = unspecified(),
 
 	# Create a list where each item is a vector of terms
 	# These can be then turned into a term matrix
-	tmMat <-
+	fmMat <-
 		lapply(as.list(as.data.frame(t(tbl))), function(.x) {
 			table(.x) |>
 				rbind() |>
@@ -282,21 +282,22 @@ fmls <- function(x = unspecified(),
 		mutate(across(everything(), ~ dplyr::if_else(is.na(.x), 0, .x)))
 
 
-	new_fmls(termMatrix = tmMat,
-						key = x)
+	new_fmls(formulaMatrix = fmMat,
+					 termTable = tmTab)
 
 }
 
 
-new_fmls <- function(termMatrix = data.frame(),
-										 key = tm()) {
+new_fmls <- function(formulaMatrix = data.frame(),
+										 termTable = data.frame()) {
 
 
-	stopifnot(is.data.frame(termMatrix))
+	stopifnot(is.data.frame(formulaMatrix))
+	stopifnot(is.data.frame(termTable))
 
 	new_data_frame(
-		x = termMatrix,
-		key = key,
+		x = formulaMatrix,
+		termTable = termTable,
 		class = "fmls"
 	)
 
@@ -312,7 +313,8 @@ is_fmls <- function(x) {
 #' @export
 key_terms <- function(x) {
 	if (is_fmls(x)) {
-		attr(x, "key")
+		attr(x, "termTable") |>
+			vec_restore(to = tm())
 	} else {
 		NULL
 	}
@@ -322,15 +324,15 @@ formulas_to_terms <- function(x) {
 
 	checkmate::assert_class(x, "fmls")
 
-	tmMat <- vec_data(x)
-	key <- vec_data(key_terms(x))
+	fmMat <- vec_data(x)
+	tmTab <- attr(x, "termTable")
 
 	tms <-
 		apply(
-			tmMat,
+			fmMat,
 			MARGIN = 1,
 			FUN = function(.x) {
-				.y <- key[key$term %in% names(.x[which(.x == 1)]),]
+				.y <- tmTab[tmTab$term %in% names(.x[which(.x == 1)]),]
 				vec_restore(.y, to = tm())
 		})
 
@@ -343,15 +345,15 @@ formulas_to_terms <- function(x) {
 format.fmls <- function(x, color = TRUE, ...) {
 
 	# Break into matrix and key
-	tmMat <- vec_data(x)
-	key <- vec_data(key_terms(x))
+	fmMat <- vec_data(x)
+	tmTab <- attr(x, "termTable")
 
 	fmt <-
 		apply(
-			tmMat,
+			fmMat,
 			MARGIN = 1,
 			FUN = function(.x) {
-				.y <- key[key$term %in% names(.x[which(.x == 1)]),]
+				.y <- tmTab[tmTab$term %in% names(.x[which(.x == 1)]),]
 
 				if ("mediator" %in% .y$role & !("outcome" %in% .y$role)) {
 					# Handle mediation formula
@@ -424,21 +426,19 @@ fmls_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 	newMatrix <- df_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
 
 	# Handle scalar term attribute
-	xKey <- key_terms(x)
-	yKey <- key_terms(y)
+	xTm <- attr(x, "termTable")
+	yTm <- attr(y, "termTable")
 
-	tmat <-
-		rbind(vec_proxy(xKey), vec_proxy(yKey)) |>
+	tmTab <-
+		rbind(xTm, yTm) |>
 		unique()
 
-	dups <- duplicated(tmat$term)
+	dups <- duplicated(tmTab$term)
 
 	# New terms that will be the key scalar attribute
-	newKey <-
-		tmat[!dups, ] |>
-		vec_restore(to = tm())
+	newTmTab <- tmTab[!dups, ]
 
-	new_fmls(newMatrix, key = newKey)
+	new_fmls(newMatrix, termTable = newTmTab)
 }
 
 #' @export
@@ -447,18 +447,16 @@ fmls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 	# New terms that will be the key scalar attribute
 
 	# Handle terms first
-	toKey <- attr(to, "key")
-	xKey <- attr(x, "key")
+	toTm <- attr(to, "termTable")
+	xTm <- attr(x, "termTable")
 
-	tmat <-
-		rbind(vec_proxy(toKey), vec_proxy(xKey)) |>
+	tmTab <-
+		rbind(xTm, yTm) |>
 		unique()
 
-	dups <- duplicated(tmat$term)
+	dups <- duplicated(tmTab$term)
 
-	newKey <-
-		tmat[!dups, ] |>
-		vec_restore(to = tm())
+	newTmTab <- tmTab[!dups, ]
 
 	# When casting, the matrices need to be similar in columns
 	newMatrix <-
@@ -470,7 +468,7 @@ fmls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 			to_arg = to_arg
 		)
 
-	new_fmls(newMatrix, key = newKey)
+	new_fmls(newMatrix, termTable = newTmTab)
 }
 
 

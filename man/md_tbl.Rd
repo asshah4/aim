@@ -2,10 +2,13 @@
 % Please edit documentation in R/model-table.R
 \name{md_tbl}
 \alias{md_tbl}
+\alias{model_table}
 \alias{is_model_table}
-\title{Many models in a table}
+\title{Model Tables}
 \usage{
 md_tbl(...)
+
+model_table(...)
 
 is_model_table(x)
 }

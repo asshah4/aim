@@ -21,26 +21,34 @@ mdl <- function(x = unspecified(),
 	# Validate classes
 	validate_class(x, .models)
 	validate_class(formulas, "fmls")
+	checkmate::assert_class(data_name, "character")
+	if (length(data_name) == 0) {
+		data_name <- NA_character_
+	}
 
 	# No current validation for
 	#		if data is correct name
 	# 	if strata is correct and have appropriate levels
-	validate_class(data_name, "character")
-	validate_class(strata_info, "list")
+	checkmate::assert_class(strata_info, "list")
 	if (length(strata_info) == 0) {
 		strata_info <- list(strata = NA)
 	}
 
-	# Wrap model
-	m <- list(x)
+	# Get parameter information
+	parEst <- possible_tidy(x)
+
+	# Get model information
+	modInf <- possible_glance(x)
 
 	# Creation
 	new_model(
-		model = m,
-		model_type = class(x)[1],
+		model = list(x),
+		modelType = class(x)[1],
 		formulas = formulas,
-		data_name = data_name,
-		strata_info = strata_info
+		parameterEstimates = parEst,
+		modelInfo = modInf,
+		dataName = data_name,
+		strataLevels = strata_info
 	)
 }
 
@@ -54,17 +62,12 @@ model <- mdl
 #' @keywords internal
 #' @noRd
 new_model <- function(model = list(),
+											modelType = character(),
 											formulas = fmls(),
-											model_type = character(),
-											data_name = character(),
-											strata_info = list()) {
-
-	# Validation
-	vec_assert(model, ptype = list())
-	vec_assert(model_type, ptype = character())
-	vec_assert(formulas, ptype = fmls())
-	vec_assert(data_name, ptype = character())
-	vec_assert(strata_info, ptype = list())
+											parameterEstimates = data.frame(),
+											modelInfo = data.frame(),
+											dataName = character(),
+											strataLevels = list()) {
 
 	# Model archetype description is essentially deconstructed here
 	# class = defined by the mdl, its base class, and a list
@@ -72,13 +75,16 @@ new_model <- function(model = list(),
 	# model defined descriptors = type, subtype
 	# model level findings = statistics, formula
 	# internals = terms, term descriptors... contained within the script
+	# TODO
 	new_rcrd(
 		fields = list(
 			"model" = model,
-			"model_type" = model_type,
-			"formulas" = formulas,
-			"data_name" = data_name,
-			"strata_info" = strata_info
+			"modelType" = modelType,
+			"formulas" = list(formulas),
+			"parameterEstimates" = list(parameterEstimates),
+			"modelInfo" = list(modelInfo),
+			"dataName" = dataName,
+			"strataLevels" = strataLevels
 		),
 		class = "mdl"
 	)
@@ -99,8 +105,8 @@ format.mdl <- function(x, ...) {
 	} else {
 		fmt <-
 			sapply(x, FUN = function(.x) {
-				f <- field(.x, "formulas")
-				cl <- field(.x, "model_type")
+				f <- as.character(field(.x, "formulas")[[1]])
+				cl <- field(.x, "modelType")
 				paste0(cl, "(", f, ")")
 			})
 	}

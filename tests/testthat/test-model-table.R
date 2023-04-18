@@ -1,3 +1,9 @@
+test_that("model can be initialized", {
+
+	m <- lm(mpg ~ wt + hp, data = mtcars)
+})
+
+
 test_that("model tables can be created", {
 
 	# Empty builds
