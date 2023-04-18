@@ -9,16 +9,18 @@
 mdl(
   x = unspecified(),
   formulas = fmls(),
-  data_name = character(),
-  strata_info = list(),
+  data_name = NA_character_,
+  strata_variable = NA_character_,
+  strata_level = NA,
   ...
 )
 
 model(
   x = unspecified(),
   formulas = fmls(),
-  data_name = character(),
-  strata_info = list(),
+  data_name = NA_character_,
+  strata_variable = NA_character_,
+  strata_level = NA,
   ...
 )
 }

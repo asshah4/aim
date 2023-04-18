@@ -10,8 +10,9 @@
 #' @export
 mdl <- function(x = unspecified(),
 								formulas = fmls(),
-								data_name = character(),
-								strata_info = list(),
+								data_name = NA_character_,
+								strata_variable = NA_character_,
+								strata_level = NA,
 								...) {
 
 	if (length(x) == 0) {
@@ -22,9 +23,12 @@ mdl <- function(x = unspecified(),
 	validate_class(x, .models)
 	validate_class(formulas, "fmls")
 	checkmate::assert_class(data_name, "character")
-	if (length(data_name) == 0) {
-		data_name <- NA_character_
-	}
+
+	dtArgs <- tribble(
+		~dataName, ~strataVariable, ~strataLevel,
+		data_name, strata_variable, strata_level
+	)
+
 
 	# No current validation for
 	#		if data is correct name
@@ -47,8 +51,7 @@ mdl <- function(x = unspecified(),
 		formulas = formulas,
 		parameterEstimates = parEst,
 		modelInfo = modInf,
-		dataName = data_name,
-		strataLevels = strata_info
+		dataArgs = dtArgs,
 	)
 }
 
@@ -66,8 +69,7 @@ new_model <- function(model = list(),
 											formulas = fmls(),
 											parameterEstimates = data.frame(),
 											modelInfo = data.frame(),
-											dataName = character(),
-											strataLevels = list()) {
+											dataArgs = data.frame()) {
 
 	# Model archetype description is essentially deconstructed here
 	# class = defined by the mdl, its base class, and a list
@@ -83,8 +85,7 @@ new_model <- function(model = list(),
 			"formulas" = list(formulas),
 			"parameterEstimates" = list(parameterEstimates),
 			"modelInfo" = list(modelInfo),
-			"dataName" = dataName,
-			"strataLevels" = strataLevels
+			"dataArgs" = list(dataName),
 		),
 		class = "mdl"
 	)
