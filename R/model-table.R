@@ -11,10 +11,12 @@
 #' into a `md_tbl`.
 #'
 #' @name md_tbl
+#' @inheritParams rlang::args_dots_empty
 #' @importFrom dplyr mutate
 #' @export
 md_tbl <- function(...) {
 
+	rlang::check_dots_empty()
 	# Steps:
 	# 	Assess model...
 	# 		Model fit/information

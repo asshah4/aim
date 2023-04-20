@@ -18,10 +18,9 @@ test_that("model tables can be initialized/created", {
 	formulaMatrix = data.frame()
 	termTable = data.frame()
 
-	# Empty builds
-	x <- md_tbl()
-	expect_equal(model_table(), x)
-	expect_length(x, 14)
+	# Empty builds should fail
+	expect_error(md_tbl())
+	expect_error(new_model_table())
 
 
 })
@@ -31,7 +30,10 @@ test_that("model can be initialized", {
 	x <- fit(fmls(mpg ~ wt + hp + .s(am)), .fn = lm, data = mtcars, raw = FALSE)
 	expect_length(x, 2)
 
-
+	m <- construct_model_table(x)
+	expect_s3_class(m, "md_tbl")
+	expect_length(m, 14)
+	expect_equal(nrow(m), 2)
 
 })
 

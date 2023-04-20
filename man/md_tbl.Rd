@@ -12,6 +12,9 @@ model_table(...)
 
 is_model_table(x)
 }
+\arguments{
+\item{...}{These dots are for future extensions and must be empty.}
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
