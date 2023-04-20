@@ -1,22 +1,3 @@
-test_that("inputs work", {
-
-	f <- witch ~ wicked + west
-	fl <- fmls(f)
-	t <- tm(f)
-	tl <- tmls(t)
-
-	# Should be the same term list
-	expect_equal(field(fl, "terms"), tl)
-	expect_silent(validate_class(tl, c("formula", "fmls", "tmls", "tm")))
-
-	expect_equal(complexity(f), complexity(fl))
-	expect_equal(complexity(t), complexity(tl))
-	expect_equal(complexity(fl), complexity(tl))
-	expect_equal(complexity(t), 2)
-
-})
-
-
 test_that("formulas can be made with appropriate roles and complexity", {
 
 	# Zeroeth order
@@ -78,36 +59,4 @@ test_that("interaction complexity can be determined", {
 
 
 })
-
-test_that("complex formulas can be appropriately split apart", {
-
-	x <- fmls(witch + fairy ~ .x(wicked) + .x(good) + .m(west) + .m(east) + green)
-	expect_length(x, 1)
-	expect_equal(complexity(x), 4) # 2 x outcomes, 2 x exposures, 1 x mediator ...
-	expect_length(simplify_outcomes(x), 2)
-	expect_length(simplify_exposures(x), 2)
-	expect_length(simplify_mediation(x), 6)
-	# expect_length(simplify(x), 16) # Unique variables only
-
-	# Evaluate `formula` objects instead
-	x <- witch + fairy ~ wicked + good + west + east + green
-	expect_equal(complexity(x), 4) # two outcomes
-	expect_message(so <- simplify_outcomes(x))
-	expect_message(sx <- simplify_exposures(x))
-	expect_message(sm <- simplify_mediation(x))
-	expect_length(so, 2)
-	expect_length(sm, 1)
-	expect_length(sx, 1)
-	expect_message(s <- simplify(x))
-	expect_length(s, 2)
-
-	# Interaction terms can be simplified
-	x1 <- witch ~ wicked * west + green
-	x2 <- witch ~ wicked + west + wicked:west + green
-	expect_message(x3 <- fmls(witch ~ .x(wicked) + .i(west) + green))
-	expect_length(rhs(x1), 4)
-	expect_equal(rhs(x1), rhs(x2))
-
-})
-
 

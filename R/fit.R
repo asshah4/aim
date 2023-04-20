@@ -7,10 +7,10 @@ fit.fmls <- function(object,
 										 .fn,
 										 ...,
 										 data,
-										 .unpack = TRUE) {
+										 raw = TRUE) {
 
 	cl <- match.call()
-	args <- list(...)
+	dots <- list(...)
 
 	# Validate functions
 	.fn <- as.character(cl[[3]])
@@ -22,78 +22,76 @@ fit.fmls <- function(object,
 	dataName <- deparse1(cl[["data"]])
 
 	# Models to be returned
-	modList <- list()
+	if (raw) {
+		ml <- list()
+	} else {
+		ml <- mdl()
+	}
 
-	for (i in seq_along(object)) {
-		#t <- field(object, "terms")[[1]]
+	for (i in nrow(object)) {
 		t <- formulas_to_terms(object[i,])[[1]]
 
 		f <- stats::as.formula(t)
-		sta <- filter.tm(t, role == "strata")
+		sta <- filter(t, role == "strata")
 
 		# If no strata, can model simply
 		if (length(sta) == 0) {
-			args$data <- quote(data)
-			x <- do.call(.fn, args = c(formula = f, args))
-			mx <- mdl(x,
-								formulas = object[i,],
-								data_name = dataName)
-			modList <- c(modList, mx)
+			dots$data <- quote(data)
+			x <- do.call(.fn, args = c(formula = f, dots))
+
+			# Handle model list based on how output (list or <mdl>)
+			if (raw) {
+				y <- list(x)
+				ml <- append(ml, y)
+			} else {
+				y <- mdl(x, formulas = object[i, ], data_name = dataName)
+				ml <- c(ml, y)
+			}
 		} else {
+			# Must now model along the levels of the strata terms
 			for (j in seq_along(sta)) {
-				strata <- as.character(sta[j])
+
 				# Ignores NA values
+				strata <- as.character(sta[j])
 				strataLevels <- unique(stats::na.omit(data[[strata]]))
+
 				for (k in seq_along(strataLevels)) {
-					strataInfo <- list()
-					strataInfo[[strata]] <- strataLevels[k]
+
+					# Organize and get the individual strata term and level
 					strataData <- data[data[[strata]] == strataLevels[k],]
-					args$data <- quote(strataData)
-					x <- do.call(.fn, args = c(formula = f, args))
-					mx <- mdl(
-						x,
-						formulas = object[i,],
-						data_name = dataName,
-						strata_info = strataInfo
-					)
-					modList <- c(modList, mx)
+					dots$data <- quote(strataData)
+					x <- do.call(.fn, args = c(formula = f, dots))
+
+					# Handle model list based on how output (list or <mdl>)
+					if (raw) {
+						y <- list(x)
+						ml <- append(ml, y)
+					} else {
+						y <-
+							mdl(
+								x,
+								formulas = object[i,],
+								data_name = dataName,
+								strata_variable = strata,
+								strata_level = strataLevels[k]
+							)
+
+						ml <- c(ml, y)
+					}
 				}
 			}
 		}
+
 	}
 
-	# Return
-	if (.unpack) {
-		field(modList, "model")
-	} else {
-		modList
-	}
+	# Return the models in either list form or modified as <mdl>
+	ml
 
 }
 
 #' @importFrom generics tidy
 #' @export
 generics::tidy
-
-#' @export
-tidy.mdl <- function(x,
-											conf.int = TRUE,
-											conf.level = 0.95,
-											exponentiate = TRUE,
-											...) {
-	# Get lists of models
-	lom <- vec_data(x)$model
-
-	purrr::map(
-		lom,
-		~ possible_tidy(
-			.x,
-			conf.int = conf.int,
-			conf.level = conf.level,
-			exponentiate = exponentiate
-		)
-	)
-}
 
 #' Create a "fail-safe" of tidying fits
 #' @noRd
@@ -118,12 +116,6 @@ possible_tidy <-
 #' @importFrom generics glance
 #' @export
 generics::glance
-
-#' @export
-glance.mdls <- function(x, ...) {
-	lom <- vec_data(x)$model
-	purrr::map(lom, ~ possible_glance(.x, ))
-}
 
 #' Create a "fail-safe" of glance at fits
 #' @noRd

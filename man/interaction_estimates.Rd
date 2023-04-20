@@ -13,6 +13,9 @@ interaction_estimates(
 )
 }
 \description{
+Models with interaction variables
+}
+\references{
 A. Figueiras, J. M. Domenech-Massons, and Carmen Cadarso, 'Regression models:
 calculating the confidence intervals of effects in the presence of
 interactions', Statistics in Medicine, 17, 2099-2105 (1998)

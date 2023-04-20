@@ -288,6 +288,9 @@ fmls <- function(x = unspecified(),
 }
 
 
+#' Initialize new formula-based data frame
+#' @keywords internal
+#' @noRd
 new_fmls <- function(formulaMatrix = data.frame(),
 										 termTable = data.frame()) {
 
@@ -332,7 +335,9 @@ formulas_to_terms <- function(x) {
 			fmMat,
 			MARGIN = 1,
 			FUN = function(.x) {
-				.y <- tmTab[tmTab$term %in% names(.x[which(.x == 1)]),]
+				.y <-
+					tmTab[tmTab$term %in% names(.x[which(.x == 1)]) |
+									tmTab$role == "strata", ]
 				vec_restore(.y, to = tm())
 		})
 
@@ -451,7 +456,7 @@ fmls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 	xTm <- attr(x, "termTable")
 
 	tmTab <-
-		rbind(xTm, yTm) |>
+		rbind(toTm, xTm) |>
 		unique()
 
 	dups <- duplicated(tmTab$term)

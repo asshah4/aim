@@ -103,3 +103,17 @@ test_that("complex formulas/terms can be converted", {
 	expect_equal(nrow(f), 10)
 })
 
+test_that("strata terms can be kept within the formula appropriately", {
+
+	x <- tm(mpg ~ wt + hp + .s(am))
+	f <- fmls(x)
+	expect_length(key_terms(f), 4)
+
+	x <- mpg ~ wt + hp + .s(am)
+	f <- fmls(x)
+	expect_length(key_terms(f), 4)
+	expect_equal(ncol(f), 3)
+	expect_equal(nrow(f), 1)
+
+})
+

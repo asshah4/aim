@@ -3,26 +3,77 @@
 \name{models}
 \alias{models}
 \alias{mdl}
+\alias{mdl.character}
+\alias{mdl.lm}
+\alias{mdl.glm}
+\alias{mdl.coxph}
+\alias{mdl.default}
 \alias{model}
 \title{Model prototypes}
 \usage{
-mdl(
-  x = unspecified(),
-  formulas = fmls(),
-  data_name = NA_character_,
+mdl(x = unspecified(), ...)
+
+\method{mdl}{character}(
+  x,
+  formulas,
+  parameter_estimates = data.frame(),
+  summary_info = data.frame(),
+  data_name,
   strata_variable = NA_character_,
   strata_level = NA,
   ...
 )
 
-model(
+\method{mdl}{lm}(
   x = unspecified(),
   formulas = fmls(),
-  data_name = NA_character_,
-  strata_variable = NA_character_,
-  strata_level = NA,
+  data_name = character(),
+  strata_variable = character(),
+  strata_level = character(),
   ...
 )
+
+\method{mdl}{glm}(
+  x = unspecified(),
+  formulas = fmls(),
+  data_name = character(),
+  strata_variable = character(),
+  strata_level = character(),
+  ...
+)
+
+\method{mdl}{coxph}(
+  x = unspecified(),
+  formulas = fmls(),
+  data_name = character(),
+  strata_variable = character(),
+  strata_level = character(),
+  ...
+)
+
+\method{mdl}{default}(x, ...)
+
+model(x = unspecified(), ...)
+}
+\arguments{
+\item{x}{model object or representation}
+
+\item{formulas}{formula given as either an \code{formula} or as a \code{fmls} object}
+
+\item{parameter_estimates}{data frame or table that contains columns
+representing terms and individual estimates or coefficients, can be
+accompanied by additional statistic columns}
+
+\item{summary_info}{ata frame or table that contains columns representing
+summary statistic of a model}
+
+\item{data_name}{string representing name of dataset that was used}
+
+\item{strata_variable}{string of a term that served as a stratifying
+variable}
+
+\item{strata_level}{value of the level of the term specified by
+\code{strata_variable}}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}

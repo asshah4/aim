@@ -44,22 +44,10 @@ md_tbl <- function(...) {
 	)
 }
 
-
 #' @rdname md_tbl
 #' @export
 model_table <- md_tbl
 
-new_model_table <- function(x = data.frame(),
-														formulaMatrix = data.frame(),
-														termTable = data.frame()) {
-
-	new_tibble(
-		x,
-		formulaMatrix = formulaMatrix,
-		termTable = termTable,
-		class = "md_tbl",
-	)
-}
 
 #' @rdname md_tbl
 #' @export
@@ -89,9 +77,153 @@ vec_ptype_abbr.md_tbl <- function(x, ...) {
 
 # Constructors ----
 
+#' Restructure models to fit within a model table
+#' @param x Vector of `mdl` objects
 #' @keywords internal
-#' @noRd
+#' @export
+construct_model_table <- function(x, ...) {
 
+	# Meta components of the models
+	n <- length(x)
+	mid <- sapply(x, rlang::hash)
+	fits <- rep(TRUE, n)
+
+	# Components of the model fields
+	mc <- unlist(field(x, "modelCall"))
+	ma <- field(x, "modelArgs")
+	pe <- field(x, "parameterEstimates")
+	si <- field(x, "summaryInfo")
+
+	# Get terms and formulas
+	mf <- field(x, "modelFormula")
+	tl <- lapply(mf, key_terms)
+	fl <- unname(sapply(mf, as.character, USE.NAMES = FALSE))
+
+	# Formula IDs require checking against the formula matrix
+	fid <- lapply(mf, unlist, recursive = FALSE)
+	fmMat <-
+		lapply(mf, vec_proxy) |>
+		do.call(what = rbind, args = _) |>
+		vec_data()
+
+	# Terms must be combined into a term table for later look up
+	tmTab <-
+		lapply(tl, vec_data) |>
+		do.call(what = rbind, args = _) |>
+		unique()
+
+	out <- sapply(tl, function(.x) {
+		.y <- as.character(filter(.x, role == "outcome"))
+		if (length(.y) == 0) {
+			.y <- NA_character_
+		} else {
+			.y
+		}
+	})
+	exp <- sapply(tl, function(.x) {
+		.y <- as.character(filter(.x, role == "exposure"))
+		if (length(.y) == 0) {
+			.y <- NA_character_
+		} else {
+			.y
+		}
+	})
+	med <- sapply(tl, function(.x) {
+		.y <- as.character(filter(.x, role == "mediator"))
+		if (length(.y) == 0) {
+			.y <- NA_character_
+		} else {
+			.y
+		}
+	})
+	int <- sapply(tl, function(.x) {
+		.y <- as.character(filter(.x, role == "interaction"))
+		if (length(.y) == 0) {
+			.y <- NA_character_
+		} else {
+			.y
+		}
+	})
+
+	# Get all data names and strata variables back
+	da <- field(x, "dataArgs")
+	did <- sapply(da, function(.x) {
+		.x$dataName
+	})
+	sta <- sapply(da, function(.x) {
+		.x$strataVariable
+	})
+	slvl <- sapply(da, function(.x) {
+		.x$strataLevel
+	})
+
+	# Initialize a new list
+	res <- df_list(
+		model_id = mid,
+		formula_id = fid,
+		data_id = did,
+		model_call = mc,
+		formula_call = fl,
+		outcome = out,
+		exposure = exp,
+		mediator = med,
+		interaction = int,
+		strata = sta,
+		level = slvl,
+		model_parameters = pe,
+		model_summary = si,
+		fit_status = fits
+	)
+
+	# Return
+	new_model_table(res,
+									formulaMatrix = fmMat,
+									termTable = tmTab)
+
+}
+
+#' Restructure formulas to fit within a model table
+#' @param x Vector of `fmls` objects
+#' @keywords internal
+#' @export
+construct_formula_table <- function(x, ...) {
+
+	new_model_table()
+}
+
+#' Initialize new model-based tibble / tbl_df
+#' @keywords internal
+#' @export
+new_model_table <- function(x = list(),
+														formulaMatrix = data.frame(),
+														termTable = data.frame(),
+														...) {
+
+	# Invariant rules:
+	#		Can add and remove rows (each row is essentially a model)
+	#		Rows can be re-ordered
+	#		Columns cannot be re-ordered
+	#
+	#	Invariant columns:
+	#		Key Relationship: outcome and exposure, roles, etc
+	#		Context: Formula (giving information on covariates) and Model Type
+	#		Fit: Individual parameters and model level estimates/statistics
+
+	checkmate::assert_class(formulaMatrix, "data.frame")
+	checkmate::assert_class(termTable, "data.frame")
+	checkmate::assert_list(
+		x,
+		types = c("character", "list", "factor", "logical", "numeric"),
+		len = 14
+	)
+
+	new_tibble(
+		x,
+		formulaMatrix = formulaMatrix,
+		termTable = termTable,
+		class = "md_tbl"
+	)
+}
 
 
 

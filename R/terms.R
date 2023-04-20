@@ -480,7 +480,7 @@ tm.default <- function(x = unspecified(), ...) {
 	)
 }
 
-#' record of formula tm
+#' Initialize new term record vector
 #' @keywords internal
 #' @noRd
 new_tm <- function(term = character(),

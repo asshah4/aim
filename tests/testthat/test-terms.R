@@ -9,6 +9,13 @@ test_that("`tm` objects can be generated and printed", {
 	expect_s3_class(tm(), "tm")
 	expect_output(print(tm()), "<term\\[0\\]>")
 	expect_equal(tm(), tm(tm()))
+
+
+	if (isTRUE(requireNamespace("tibble", quietly = TRUE))) {
+		tibble::tibble(tm()) |>
+			print() |>
+			expect_output("<tm>")
+	}
 })
 
 test_that("new `tm` can be made from character/atomic components", {
