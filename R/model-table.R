@@ -35,8 +35,14 @@ md_tbl <- function(...) {
 		dots <- dots[[1]]
 	}
 
-	stopifnot("Only the <mdl> class is currently supported" =
-							inherits(dots, "mdl"))
+	# Model Table Lists...
+	mtl <- vector("list", length(dots))
+
+	for (i in seq_along(dots)) {
+		if (inherits(dots[[i]], "mdl")) {
+			mtl[[i]] <- construct_model_table(dots[[i]])
+		}
+	}
 
 	# Return new class
 	new_model_table(
@@ -227,5 +233,52 @@ new_model_table <- function(x = list(),
 	)
 }
 
+# Casting and coercion ---------------------------------------------------------
 
+#' @export
+md_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
+	out <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
+
+
+	new_model_table(out)
+}
+
+#' @export
+md_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
+	out <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
+
+	new_model_table(out)
+}
+
+#' @export
+vec_ptype2.md_tbl.md_tbl <- function(x, y, ...) {
+	md_tbl_ptype2(x, y, ...)
+}
+
+#' @export
+vec_cast.md_tbl.md_tbl <- function(x, to, ...) {
+	md_tbl_cast(x, to, ...)
+}
+
+# TIBBLE
+
+#' @export
+vec_ptype2.md_tbl.tbl_df <- function(x, y, ...) {
+	md_tbl_ptype2(x, y, ...)
+}
+
+#' @export
+vec_ptype2.tbl_df.md_tbl <- function(x, y, ...) {
+	md_tbl_ptype2(x, y, ...)
+}
+
+#' @export
+vec_cast.md_tbl.tbl_df <- function(x, to, ...) {
+	tib_cast(x, to, ...)
+}
+
+#' @export
+vec_cast.tbl_df.md_tbl <- function(x, to, ...) {
+	tib_cast(x, to, ...)
+}
 
