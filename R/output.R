@@ -5,7 +5,6 @@ has_cli <- function() {
 }
 
 
-
 # Term conversion messages -----------------------------------------------------
 
 #' @keywords internal
@@ -83,3 +82,10 @@ message_fundamental_pattern <- function(mediationTerm,
 	message(msg)
 }
 
+# Model and model table messages -----------------------------------------------
+
+#' @keywords internal
+#' @noRd
+message_empty_models <- function() {
+	message("The model was either empty or not able to be parsed.")
+}

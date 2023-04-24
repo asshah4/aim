@@ -33,3 +33,4 @@ test_that("`fmls` objects can be fitted", {
 
 
 })
+

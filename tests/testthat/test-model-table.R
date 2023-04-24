@@ -22,10 +22,9 @@ test_that("model tables can be initialized/created", {
 	expect_error(md_tbl())
 	expect_error(new_model_table())
 
-
 })
 
-test_that("model can be initialized", {
+test_that("model constructors work for initialization", {
 
 	x <- fit(fmls(mpg ~ wt + hp + .s(am)), .fn = lm, data = mtcars, raw = FALSE)
 	expect_length(x, 2)
@@ -34,6 +33,27 @@ test_that("model can be initialized", {
 	expect_s3_class(m, "md_tbl")
 	expect_length(m, 14)
 	expect_equal(nrow(m), 2)
+
+})
+
+test_that("model table inputs can be parsed and incorporated", {
+
+	x <-
+		fit(fmls(mpg ~ wt + hp + .s(am)),
+				.fn = lm,
+				data = mtcars,
+				raw = FALSE)
+	y <-
+		fit(
+			fmls(am ~ disp + cyl),
+			.fn = glm,
+			family = "binomial",
+			data = mtcars,
+			raw = FALSE
+		)
+
+	dots <- list(x, y)
+
 
 })
 

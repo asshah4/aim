@@ -143,6 +143,11 @@ mdl.lm <- function(x = unspecified(),
 	# Get model information
 	si <- possible_glance(x)
 
+	# Warning about empty...
+	if (length(mc) == 0) {
+		warning_empty_models()
+	}
+
 	# Creation
 	new_model(
 		modelCall = mc,
