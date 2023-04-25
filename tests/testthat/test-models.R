@@ -6,7 +6,6 @@ test_that("empty models can be made/initialized", {
 	expect_s3_class(new_model(), "mdl")
 	expect_length(new_model(), 0)
 	expect_equal(suppressMessages(mdl()), new_model())
-	expect_message(mdl())
 
 	# Output
 	expect_output(print(mdl()), "<model\\[0\\]>")

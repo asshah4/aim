@@ -12,11 +12,9 @@
 #'
 #' @name md_tbl
 #' @inheritParams rlang::args_dots_empty
-#' @importFrom dplyr mutate
 #' @export
 md_tbl <- function(...) {
 
-	rlang::check_dots_empty()
 	# Steps:
 	# 	Assess model...
 	# 		Model fit/information
@@ -45,11 +43,8 @@ md_tbl <- function(...) {
 	}
 
 	# Return new class
-	new_model_table(
-		x = mdTab,
-		formulatMatrix = fmMat,
-		termTable = tmTab
-	)
+	mdTab <- do.call(vec_rbind, mtl)
+	mdTab
 }
 
 #' @rdname md_tbl
@@ -235,19 +230,64 @@ new_model_table <- function(x = list(),
 
 # Casting and coercion ---------------------------------------------------------
 
+# SELF
+
 #' @export
 md_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
-	out <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
+
+  # Create a temporary/new structure of the table
+	mdTab <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
+
+	# Terms must be coalesced together
+	xTm <- attr(x, "termTable")
+	yTm <- attr(y, "termTable")
+	tmTab <-
+		rbind(xTm, yTm) |>
+		unique()
+
+	# Formula matrices must bound together
+	xFm <- attr(x, "formulaMatrix")
+	yFm <- attr(y, "formulaMatrix")
+  fmMat <-
+    dplyr::bind_rows(xFm, yFm) |>
+	  {
+	    \(.x) replace(.x, is.na(.x), 0)
+	  }()
 
 
-	new_model_table(out)
+  # Output with correct scalar attributes
+	new_model_table(x = as.list(mdTab),
+	                formulaMatrix = fmMat,
+	                termTable = tmTab)
 }
 
 #' @export
 md_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
-	out <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
 
-	new_model_table(out)
+
+	# Terms must be coalesced together
+	toTm <- attr(to, "termTable")
+	xTm <- attr(x, "termTable")
+	tmTab <-
+		rbind(toTm, xTm) |>
+		unique()
+
+	# Formula matrices must bound together
+	toFm <- attr(to, "formulaMatrix")
+	xFm <- attr(x, "formulaMatrix")
+  fmMat <-
+    dplyr::bind_rows(toFm, xFm) |>
+	  {
+	     \(.x) replace(.x, is.na(.x), 0)
+	  }()
+
+  # Create a temporary/new structure of the table
+  mdTab <- tib_cast(x, to, ..., x_arg = x_arg, y_arg = y_arg)
+
+  # Output with correct scalar attributes
+	new_model_table(x = as.list(mdTab),
+	                formulaMatrix = fmMat,
+	                termTable = tmTab)
 }
 
 #' @export
@@ -258,27 +298,5 @@ vec_ptype2.md_tbl.md_tbl <- function(x, y, ...) {
 #' @export
 vec_cast.md_tbl.md_tbl <- function(x, to, ...) {
 	md_tbl_cast(x, to, ...)
-}
-
-# TIBBLE
-
-#' @export
-vec_ptype2.md_tbl.tbl_df <- function(x, y, ...) {
-	md_tbl_ptype2(x, y, ...)
-}
-
-#' @export
-vec_ptype2.tbl_df.md_tbl <- function(x, y, ...) {
-	md_tbl_ptype2(x, y, ...)
-}
-
-#' @export
-vec_cast.md_tbl.tbl_df <- function(x, to, ...) {
-	tib_cast(x, to, ...)
-}
-
-#' @export
-vec_cast.tbl_df.md_tbl <- function(x, to, ...) {
-	tib_cast(x, to, ...)
 }
 

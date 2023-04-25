@@ -54,6 +54,14 @@ test_that("model table inputs can be parsed and incorporated", {
 
 	dots <- list(x, y)
 
+	z <- model_table(dots)
+	expect_s3_class(z, "md_tbl")
+	expect_output(print(z), "<md_tbl>")
+	expect_equal(nrow(z), 3)
+	expect_length(z, 14)
+	expect_length(attr(z, "termTable")$term, 7)
+	expect_length(unique(attr(z, "termTable")$term), 6)
+	expect_length(attr(z, "formulaMatrix"), 6)
 
 })
 
