@@ -278,8 +278,10 @@ fmls <- function(x = unspecified(),
 				rbind() |>
 				as.data.frame()
 		}) |>
-		dplyr::bind_rows() |>
-		mutate(across(everything(), ~ dplyr::if_else(is.na(.x), 0, .x)))
+	  dplyr::bind_rows() |>
+	  {
+	    \(.x) replace(.x, is.na(.x), 0)
+	  }()
 
 
 	new_fmls(formulaMatrix = fmMat,
