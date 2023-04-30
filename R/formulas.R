@@ -137,9 +137,10 @@ fmls <- function(x = unspecified(),
 	# Strata terms are unique in...
 	# 	Right sided variables
 	# 	Not considered covariates however
-	if (length(sta) > 0) {
-		tidyr::expand_grid(tbl, strata = sta)
-	}
+	# 	But, will be available in formula terms, if not in the matrix itself
+	# if (length(sta) > 0) {
+	# 	tbl <- tidyr::expand_grid(tbl, strata = sta)
+	# }
 
 	# Predictor patterns ----
 
@@ -165,10 +166,17 @@ fmls <- function(x = unspecified(),
 					tidyr::expand_grid(tbl, "{paste0('covariate_', i)}" := c(NA, cov[i]))
 			}
 
-			# Remove "bad rows" that don't follow sequential rules
+			# Remove rows that are not appropriate...
+			# 	e.g. no exposure or covariates
+			# 	e.g. doesn't follow sequential rules
 			n <- length(cov)
 
+			if (n > 0 & !("exposure" %in% names(tbl))) {
+				tbl <- tbl[which(!is.na(tbl[["covariate_1"]])), ]
+			}
+
 			ntbl <- list()
+
 			for (i in seq_along(cov)) {
 				# Potential columns, may not exist
 				pc <- paste0("covariate_", i - 1)
@@ -204,7 +212,8 @@ fmls <- function(x = unspecified(),
 
 			# Combine the bad tables together and cull them from orignal tables
 			ntbl <- unique(dplyr::bind_rows(ntbl))
-			tbl <- setdiff(tbl, ntbl)
+			tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
+
 
 		},
 		parallel = {

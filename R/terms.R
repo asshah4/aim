@@ -801,32 +801,6 @@ filter.tm <- function(.data, ...) {
 
 }
 
-#' @importFrom generics intersect
-#' @export
-generics::intersect
-
-#' @importFrom generics union
-#' @export
-generics::union
-
-#' @importFrom generics setdiff
-#' @export
-generics::setdiff
-
-#' Set operations for `tm` objects
-#'
-#' @param x,y Pair of `tm` vectors
-#'
-#' @param ... These dots are for future extensions and must be empty
-#' @export
-intersect.tm <- function(x, y, ...) {
-
-# TODO
-	c(x, y)
-
-}
-
-
 #' Describe attributes of a `tm` vector
 #'
 #' @param x A vector `tm` objects
