@@ -28,8 +28,8 @@ fit.fmls <- function(object,
 		ml <- mdl()
 	}
 
-	for (i in nrow(object)) {
-		t <- formulas_to_terms(object[i,])[[1]]
+	for (i in 1:nrow(object)) {
+		t <- formulas_to_terms(object)[[i]]
 
 		f <- stats::as.formula(t)
 		sta <- filter(t, role == "strata")

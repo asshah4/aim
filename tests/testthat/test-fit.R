@@ -34,3 +34,11 @@ test_that("`fmls` objects can be fitted", {
 
 })
 
+test_that("sequential/lengthy formulas can be fitted", {
+
+	object <- fmls(mpg ~ wt + hp + cyl + .s(am), pattern = "sequential")
+	m <- fit(object, .fn = lm, data = mtcars, raw = FALSE)
+	expect_length(m, 6)
+
+})
+
