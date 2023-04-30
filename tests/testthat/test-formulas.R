@@ -70,8 +70,22 @@ test_that("fmls can be coerced to character class", {
 
 test_that("patterns can be included into formula", {
 
-	f <- fmls(witch ~ wicked + west, pattern = "parallel")
-	expect_equal(nrow(f), 2)
+	f1 <- fmls(witch ~ wicked + west, pattern = "parallel")
+	expect_equal(nrow(f1), 2)
+
+	f2 <- fmls(witch ~ wicked + west + green, pattern = "sequential")
+	expect_equal(nrow(f2), 3)
+
+	f3 <- fmls(witch ~ .x(wicked) + west + green, pattern = "sequential")
+	expect_equal(nrow(f3), 3)
+
+
+	# Printing for sequential works
+	x <- mpg ~ wt + hp + cyl + .s(am)
+	pattern <- "sequential"
+	f <- fmls(x, pattern = pattern)
+	expect_equal(nrow(f), 3)
+	expect_length(f, 4)
 
 })
 

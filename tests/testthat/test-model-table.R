@@ -29,7 +29,7 @@ test_that("model constructors work for initialization", {
 	x <- fit(fmls(mpg ~ wt + hp + .s(am)), .fn = lm, data = mtcars, raw = FALSE)
 	expect_length(x, 2)
 
-	m <- construct_model_table(x)
+	m <- construct_table_from_models(x)
 	expect_s3_class(m, "md_tbl")
 	expect_length(m, 14)
 	expect_equal(nrow(m), 2)
@@ -62,6 +62,56 @@ test_that("model table inputs can be parsed and incorporated", {
 	expect_length(attr(z, "termTable")$term, 7)
 	expect_length(unique(attr(z, "termTable")$term), 6)
 	expect_length(attr(z, "formulaMatrix"), 6)
+
+})
+
+test_that("formulas can be input into a model table", {
+
+	f <- mpg ~ wt + hp + am
+	x <- fmls(f, pattern = "sequential")
+	m <- construct_table_from_formulas(x)
+	expect_s3_class(m, "md_tbl")
+	expect_length(m, 14)
+	expect_equal(nrow(m), 3)
+
+})
+
+test_that("dplyr compatibility", {
+
+	m1 <-
+		fit(fmls(mpg ~ wt + hp + .s(am)),
+				.fn = lm,
+				data = mtcars,
+				raw = FALSE)
+	m2 <-
+		fit(
+			fmls(vs ~ .x(mpg)),
+			.fn = glm,
+			family = "binomial",
+			data = mtcars,
+			raw = FALSE
+		)
+
+	# MPG is an exposure and an outcome in different formulas
+	# Should be able to use reconstruct methods to update scalar attributes
+	x <- model_table(m1, m2)
+	expect_equal(model_table(list(m1, m2)), x)
+	y <- x[1:2, ]
+	a <- attributes(reconstruct_model_table(x, y))
+	expect_length(a$formulaMatrix, 3)
+	expect_equal(nrow(a$formulaMatrix), 2)
+	expect_length(a$termTable$term, 4)
+	expect_false("vs" %in% a$termTable$term)
+	expect_equal(attributes(dplyr_reconstruct(x, y)), a)
+
+	# Would want attributes to downscale with less information present
+	f <- fmls(mpg ~ wt + hp + cyl + .s(am), pattern = "sequential")
+	m <- fit(f, .fn = lm, data = mtcars, raw = FALSE)
+	x <- model_table(m)
+
+	y <- filter(x, formula_call == "mpg ~ wt")
+	a <- attributes(y)
+	expect_length(a$termTable$term, 3) # mpg wt (strata = am)
 
 })
 
