@@ -1,5 +1,5 @@
 Package: volundr
-Title: Many Model Management
+Title: Forging many models together
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
@@ -38,8 +38,6 @@ Suggests:
     cli,
     rmarkdown,
     knitr
-Remotes:
-    asshah4/durandal
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/volundr
 BugReports: https://github.com/asshah4/volundr/issues

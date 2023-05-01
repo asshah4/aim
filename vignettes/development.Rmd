@@ -14,24 +14,24 @@ knitr::opts_chunk$set(
 )
 ```
 
-**As of `r format(Sys.time(), "%B %d, %Y")`, this is still being *iterated*.**
+**Last updated on `r format(Sys.time(), "%B %d, %Y")`, although still is a work-in-progress.**
 
 # Background
 
-The development of this project was inspired by the a problem of organizing many different hypotheses while writing my thesis. I had several data sets and many, many models, and had trouble with how to store and recall them. I wanted an easier way to pull my thoughts together, creating a dynamic structure that would unfold along with the research project itself.
+The development of this project was inspired by the a problem of organizing many different hypotheses while writing my thesis, amongst other epidemiology/causal-based modeling problems. 
+I had several data sets and many, many models, and had trouble with how to store and recall them. 
+I wanted an easier way to pull my thoughts together, creating a dynamic structure that would unfold along with the research project itself.
 
-The structure, **which is still being iterated**, is about an easy-to-understand interface that allows the following major concepts:
-
-1. Identifying core data that will be queried with specific hypothesis
+1. Identifying core data that will be queried with specific hypotheses
 1. Ability to handle grouping/strata of that data for subsets of analyses
 1. Forming hypotheses of multiple outcomes and multiple predictors with an epidemiological angle (e.g. *exposures*, *outcomes*, *covariates*)
 1. Running and updating tests as the data changes
 1. Extracting or recalling models as the research project progresses
 
-As minimally-experienced programmer, I used examples of current effective packages while designing the API.
+The API was inspired by several packages and programming examples as below, which in no way are supplanted by this package.
 
 | Source | Descriptionn |
-| --- | --- |
+| - | --- |
 | [R4DS](https://r4ds.had.co.nz/many-models.html) | This was the first time I had seen an elegant way of generating multiple models and working with list-columns, particulary the type that could become *tidy*. |
 | [{modelr}](https://modelr.tidyverse.org/) | An example of a package that simplifies modeling in R |
 | [{modelgrid}](https://github.com/smaakage85/modelgrid) | A framework for creating and managing multiple models, with a focus on the {caret} package |
@@ -41,85 +41,14 @@ As minimally-experienced programmer, I used examples of current effective packag
 | [{easystats}](https://easystats.github.io/easystats/) | Forms a different "universe" in parallel to the `tidyverse` for interpreting results of models, with a focus on the presentation and exploration of statistical analysis |
 | [{ggdag}](https://ggdag.malco.io/) | A *tidy* approach to creating directed acyclic graphs |
 
-The features that I found missing in these was the ability to handle a variety of formulas that had specific pre-defined hypotheses, and the focus had been to *compare* or *combine* models, instead of considering the focus on causality. Essentially, I wanted a more epidemiological approach. The *easystats* archetype of R "monsters" was partially the idea for the working name of **{aims}**. I started writing this after reading [this blogpost](https://blog.simonpcouch.com/blog/dev-docs-p1/) on development of a package. 
+# Purpose or _raison d'être_ 
 
-# On Names
+Machine-learning has expanded at a quickening pace, such as the rapid development the [tidymodels](https://tidymodels.org) universe, where causality-based modeling has seemed to move from center stage in the programming world.
+Some of the differences that I have seen, which are by no means correct nor exhaustive, are below:
 
-The project name has gone through many iterations. The reason why the name was important is that the correct *metaphor* helps the planning process, providing a schema for understanding. [Metaphors We Live By](https://en.wikipedia.org/wiki/Metaphors_We_Live_By) by Lakoff was fundamental in this understanding for me.
-
-| Project Name | Reasoning |
-| --- | --- |
-| {marksman} | The first draft included the concept of "specific aims". This research concept is from grant writing, where the first page of a project contains the specific hypotheses that will be explored. Thus, one could *load*, *aim*, and *fire* and specific targets. The problem with this was it seemed to deterministic, as exploration was a crucial component. |
-| {octomod} | The second draft took inspiration from the idea of an *octopus*, with 8 arms or legs all surrounded a central idea. This allowed for flexibility in that the many arms of a project were not necessarily hierarchical. However, theming a project after a cephalopod does make the function names less easy to remember. |
-| {aims} | Another consideration was to go back to the original concept of specific aims. Each project would be initialized, different study arms would be added, and then the corresponding models could be built. This seems more user-friendly in terms of nosological considerations. | 
-| {diagnose} | After iterating through the code, modeling causality and looking at clinically relevant variables was the more refined underlying objective. This allowed for simplification of the hypothesis generating method and opened the door to look at effect modification. | 
-| {dagger} | Although "diagnosing" the relationships between terms was potentially interpretable, it seemed to pull away from the original idea of the multiple potential relationships. Returning to the drawing board, the concept of mapping out relationships, like a **directed acyclic graph**, was the most persistent concept. |
-| {murmur} | Due to the complexity of how the project was coming together, I decided to split the major functions into separate packages. Path/relationships were a different primary concept than modeling, and the API didn't feel smooth. Thus, "Many Unexplained Relationships Modeled Using R" was created. |
-| {armour} | The key feature or class was the concept of the `model list`. This was the most recurrent challenge in that groups of models contain shared information. Visualizing how these relationships evolved in different modeling approaches should be informative in learning about underlying mechanisms. |
-
-# Defining the API
-
-## First Draft
-
-I've currently defined the basic functions as below:
-
--   `octomod()` initializes the modeling structure
--   `core()` defines the core data of the `octomod` structure, allowing tests to be performed from a centralized data set
--   `arm()` creates individual arms to the `octomod`, which reference a specific family of hypotheses
--   `equip()` gives each of the arms a *tidied* output including model fit and parameters, which can subsequently be called
-
-The benefits of this are I can flexibly change the core data, give specific formulas that can be expanded/varied, fit independently, and extracted in a list-column based format.
-
-The problems are that "changing" the central dataset is dangerous, the structure doesn't hold together afterwards, and fitting the data may break older models.
-
-## Second Draft
-
-### Core Functions
-
-As described, the name helps to determine the function's purpose. The core functions represent the major user-facing features. They also help to identify the underlying structure needed to store the data collected.
-
-- `project()` initializes a structure that holds and can retain information about the individual project aims or study arms
-- `set_data()` attaches a specific data frame to the `project` object
-- `add_arm()` creates a hypothesis-driven series of tests around a formula, and allows for multiple tests to be described simultaneously (e.g. sequential addition of covariates)
-- `build_models()` runs the tests, whether it is basic statistics or more complex inferential models, with the capacity to update only the newly added arms
-- `collect_findings()` recalls information from the `project` structure in a flexible way
-
-### Project Structure
-
-The overall project structure requires a specific *class* that will contain a pattern of an internal structure. The `project` object should hold:
-
-- a space to hold the data set
-- a *tidy* table that holds each `arm` as a separate row, containing columns for the title, formula combinations, modifiers/options, description, and build/run status
-- a corresponding *tidy* table that holds the results of each `arm` after it has been run
-
-## Third Draft
-
-I realized this approach was not effective in that it was overly complicated in having multiple names, data frames, and connections between them. I simplified the pipeline to focus on a specific S3 classes that could be used to generate hypotheses, and iterate through to help look at variable relationship.
-
-```{r, eval=FALSE}
-study() %>%
-	add_hypothesis(hypothesis) %>%
-	build_study()
-```
-
-Essentially, this was a list based concept of adding hypotheses to a modified list/tibble structure that had important data stored as attributes.
-
-## Fourth Draft
-
-I decided that I was not really seeing the big picture. What I wanted was a way to store a set of multiple tests with the purpose of studying the relationship between two variables (an exposure and an outcome), and potentially looking at covariates. The *basic* concept was essentially a **directed acyclic graph**, with the relationships storing the hypotheses that were tested. The functionality was the same, but the API was different.
-
-### Classes
-
-The major classes needed would be ...
-
-- `hypothesis` object, that showed and/or carried the relationship between variables, likely a complex formula object
-- `map` object that drew the relationships between the variables, and allowed for the storage of multiple tests
-- `path` object that is extracted after the map has been drawn (if you will), should be able to be evaluated to help understand which variables may be confounders, etc
-
-### Confounding
-
-A purpose of having parallel and sequential model sets, built into a hypothesis, was to identify confounding variables and help remove them.
-
-## Fifth Draft
-
-Hopefully the final draft. I simplified the API to exclude the complexity of path analysis and focused just on the hypotheses and fitting models. I also removed the complexity of formula management, and placed that into a separate package. 
+| Machine learning | Causal modeling |
+|:--- |:--- |
+| Large data sets | Smaller data sets |
+| High-dimensionality | Low-dimensionality |
+| Model specifications and tuning | Term-selection |
+| Optimization focused | Hypothesis focused |

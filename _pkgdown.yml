@@ -9,7 +9,7 @@ url: https://asshah4.github.io/volundr/
 
 home:
   title: Forging many models together
-  description: A way to handle multiple models
+  description: A way to handle many models
   sidebar:
     structure: [links, license, community, citation, authors, dev]
 
