@@ -3,12 +3,20 @@
 \name{md_tbl}
 \alias{md_tbl}
 \alias{model_table}
+\alias{new_model_table}
 \alias{is_model_table}
 \title{Model Tables}
 \usage{
 md_tbl(...)
 
 model_table(...)
+
+new_model_table(
+  x = list(),
+  formulaMatrix = data.frame(),
+  termTable = data.frame(),
+  ...
+)
 
 is_model_table(x)
 }

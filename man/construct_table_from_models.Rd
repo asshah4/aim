@@ -2,7 +2,8 @@
 % Please edit documentation in R/model-table.R
 \name{construct_table_from_models}
 \alias{construct_table_from_models}
-\title{Restructure models to fit within a model table}
+\title{Restructure models to fit within a model table
+Passes information to \code{new_model_table()} for initialization}
 \usage{
 construct_table_from_models(x, ...)
 }
@@ -11,5 +12,6 @@ construct_table_from_models(x, ...)
 }
 \description{
 Restructure models to fit within a model table
+Passes information to \code{new_model_table()} for initialization
 }
 \keyword{internal}

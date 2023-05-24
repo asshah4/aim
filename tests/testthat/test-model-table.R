@@ -65,6 +65,8 @@ test_that("model table inputs can be parsed and incorporated", {
 
 })
 
+
+
 test_that("formulas can be input into a model table", {
 
 	f <- mpg ~ wt + hp + am
@@ -115,3 +117,37 @@ test_that("dplyr compatibility", {
 
 })
 
+
+test_that("attributes of models will adjust appropriately", {
+
+	# Sequential/stratified models
+	m1 <-
+		fmls(mpg ~ wt + hp + cyl + .s(am), pattern = "sequential") |>
+		fit(.fn = lm, data = mtcars, raw = FALSE) |>
+		model_table()
+	expect_length(m1, 14)
+	expect_equal(nrow(m1), 6)
+	expect_length(attr(m1, "formulaMatrix"), 4)
+	expect_equal(nrow(attr(m1, "termTable")), 5)
+
+	m2 <-
+		fmls(wt ~ mpg + cyl, pattern = "parallel") |>
+		fit(.fn = lm, data = mtcars, raw = FALSE) |>
+		model_table()
+
+	# Combining tables
+	m3 <- vec_c(m1, m2)
+	expect_s3_class(m3, "md_tbl")
+	expect_equal(nrow(m3), 8)
+	expect_length(attr(m3, "formulaMatrix"), 4)
+	expect_equal(nrow(attr(m3, "termTable")), 7)
+
+	# Filtering tables
+	m4 <- filter(m3, outcome == "wt")
+	expect_s3_class(m4, "md_tbl")
+	expect_equal(nrow(m4), 2)
+	expect_length(attr(m4, "formulaMatrix"), 3)
+	# STRATA ACCIDENTALLY INCLUDED, MUST BE REMOVED
+	expect_equal(nrow(attr(m4, "termTable")), 3)
+
+})

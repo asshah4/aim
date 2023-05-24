@@ -24,6 +24,7 @@ md_tbl <- function(...) {
 	#			Model data frame
 	#			Formula "matrix"
 	#			Terms (+/- labels and other meta info)
+
 	dots <- rlang::list2(...)
 	if (length(dots) == 0) {
 		return(new_model_table())
@@ -54,38 +55,7 @@ md_tbl <- function(...) {
 #' @export
 model_table <- md_tbl
 
-
-
 #' @rdname md_tbl
-#' @export
-is_model_table <- function(x) {
-	inherits(x, "md_tbl")
-}
-
-#' @keywords internal
-#' @noRd
-methods::setOldClass(c("md_tbl", "vctrs_vctr"))
-
-#' @export
-print.md_tbl <- function(x, ...) {
-	cat(sprintf("<%s>\n", class(x)[[1]]))
-	cli::cat_line(format(x)[-1])
-}
-
-#' @export
-vec_ptype_full.md_tbl <- function(x, ...) {
-	"model_table"
-}
-
-#' @export
-vec_ptype_abbr.md_tbl <- function(x, ...) {
-	"md_tbl"
-}
-
-# Constructors ----
-
-#' Initialize new model-based tibble / tbl_df
-#' @keywords internal
 #' @export
 new_model_table <- function(x = list(),
 														formulaMatrix = data.frame(),
@@ -119,7 +89,37 @@ new_model_table <- function(x = list(),
 }
 
 
+#' @rdname md_tbl
+#' @export
+is_model_table <- function(x) {
+	inherits(x, "md_tbl")
+}
+
+#' @keywords internal
+#' @noRd
+methods::setOldClass(c("md_tbl", "vctrs_vctr"))
+
+#' @export
+print.md_tbl <- function(x, ...) {
+	cat(sprintf("<%s>\n", class(x)[[1]]))
+	cli::cat_line(format(x)[-1])
+}
+
+#' @export
+vec_ptype_full.md_tbl <- function(x, ...) {
+	"model_table"
+}
+
+#' @export
+vec_ptype_abbr.md_tbl <- function(x, ...) {
+	"md_tbl"
+}
+
+# Constructors ----
+
+
 #' Restructure models to fit within a model table
+#' Passes information to `new_model_table()` for initialization
 #' @param x Vector of `mdl` objects
 #' @keywords internal
 #' @export
@@ -384,6 +384,8 @@ tbl_reconstruct <- function(x, to) {
 	attrs$names <- names(x)
 	attrs$row.names <- .row_names_info(x, type = 0L)
 	attributes(x) <- attrs
+
+	# Return the original table (= x) with updated attributes
 	x
 
 }
@@ -453,16 +455,15 @@ md_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 	    \(.x) replace(.x, is.na(.x), 0)
 	  }()
 
-
   # Output with correct scalar attributes
 	new_model_table(x = as.list(mdTab),
 	                formulaMatrix = fmMat,
 	                termTable = tmTab)
+
 }
 
 #' @export
 md_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
-
 
 	# Terms must be coalesced together
 	toTm <- attr(to, "termTable")
@@ -487,6 +488,7 @@ md_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 	new_model_table(x = as.list(mdTab),
 	                formulaMatrix = fmMat,
 	                termTable = tmTab)
+
 }
 
 #' @export
