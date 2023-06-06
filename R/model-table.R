@@ -8,12 +8,12 @@
 #' This function introduces a super class that combines both the `list` class
 #' (and its derivative `list_of`) and regression models and/or hypothesis tests.
 #' Models that are similar and share certain properties can be combined together
-#' into a `md_tbl`.
+#' into a `mdl_tbl`.
 #'
-#' @name md_tbl
+#' @name mdl_tbl
 #' @inheritParams rlang::args_dots_empty
 #' @export
-md_tbl <- function(...) {
+mdl_tbl <- function(...) {
 
 	# Steps:
 	# 	Assess model...
@@ -51,11 +51,11 @@ md_tbl <- function(...) {
 	mdTab
 }
 
-#' @rdname md_tbl
+#' @rdname mdl_tbl
 #' @export
-model_table <- md_tbl
+model_table <- mdl_tbl
 
-#' @rdname md_tbl
+#' @rdname mdl_tbl
 #' @export
 new_model_table <- function(x = list(),
 														formulaMatrix = data.frame(),
@@ -84,35 +84,35 @@ new_model_table <- function(x = list(),
 		x,
 		formulaMatrix = formulaMatrix,
 		termTable = termTable,
-		class = "md_tbl"
+		class = "mdl_tbl"
 	)
 }
 
 
-#' @rdname md_tbl
+#' @rdname mdl_tbl
 #' @export
 is_model_table <- function(x) {
-	inherits(x, "md_tbl")
+	inherits(x, "mdl_tbl")
 }
 
 #' @keywords internal
 #' @noRd
-methods::setOldClass(c("md_tbl", "vctrs_vctr"))
+methods::setOldClass(c("mdl_tbl", "vctrs_vctr"))
 
 #' @export
-print.md_tbl <- function(x, ...) {
+print.mdl_tbl <- function(x, ...) {
 	cat(sprintf("<%s>\n", class(x)[[1]]))
 	cli::cat_line(format(x)[-1])
 }
 
 #' @export
-vec_ptype_full.md_tbl <- function(x, ...) {
+vec_ptype_full.mdl_tbl <- function(x, ...) {
 	"model_table"
 }
 
 #' @export
-vec_ptype_abbr.md_tbl <- function(x, ...) {
-	"md_tbl"
+vec_ptype_abbr.mdl_tbl <- function(x, ...) {
+	"mdl_tbl"
 }
 
 # Constructors ----
@@ -322,31 +322,35 @@ construct_table_from_formulas <- function(x, ...) {
 
 #' @importFrom dplyr dplyr_reconstruct
 #' @export
-dplyr_reconstruct.md_tbl <- function(data, template) {
-	reconstruct_model_table(x = data, to = template)
+dplyr_reconstruct.mdl_tbl <- function(data, template) { # nolint
+	model_table_reconstruct(x = data, to = template)
 }
 
 #' @importFrom dplyr dplyr_row_slice
 #' @export
-dplyr_row_slice.md_tbl <- function(data, i, ...) {
-	reconstruct_model_table(vec_slice(data, i), data)
+dplyr_row_slice.mdl_tbl <- function(data, i, ...) {
+	model_table_reconstruct(vec_slice(data, i), data)
 }
 
 #' @export
-reconstruct_model_table <- function(x, to) {
-	if (can_reconstruct_model_table(x, to)) {
-		tbl_reconstruct(x, to)
+model_table_reconstruct <- function(x, to) {
+	if (model_table_reconstructable(x, to)) {
+		df_reconstruct(x, to)
 	} else {
 		# Return without reconstructing...
+		x <- as.data.frame(x)
+		message("Removing invariant columns in `<mdl_tbl>` returns `<data.frame>` object")
 		x
 	}
 
 }
 
+#' If objects are model tables, attributes are carried over to subset object
 #' @keywords internal
 #' @noRd
-tbl_reconstruct <- function(x, to) {
+df_reconstruct <- function(x, to) {
 
+	validate_model_table(to)
 	tmTab <- attr(to, "termTable")
 	fmMat <- attr(to, "formulaMatrix")
 
@@ -390,20 +394,32 @@ tbl_reconstruct <- function(x, to) {
 
 }
 
-#' Can `md_tbl` be reconstructed based on invariants?
+#' Can `mdl_tbl` be reconstructed based on invariants?
 #' @keywords internal
 #' @param x data frame that will have invariants checked
-#' @param to the tibble subclass of `md_tbl` that would be reconstructed
+#' @param to the tibble subclass of `mdl_tbl` that would be reconstructed
 #' @export
-can_reconstruct_model_table <- function(x, to) {
+model_table_reconstructable <- function(x, to) {
+
+	# Invariant columns must be present
+	XCols <- names(x)
+	ToCols <- names(to)
+	if (all(is.element(XCols, ToCols))) {
+		return(TRUE)
+	} else {
+		return(FALSE)
+	}
+
+}
+
+#' Model table object validation
+#' @keywords internal
+#' @param x data frame that will have invariants checked
+#' @export
+validate_model_table <- function(x) {
 
 	# Invariant columns must be present
 	cols <- names(x)
-	if (all(is.element(cols, names(to)))) {
-		colStatus <- TRUE
-	} else {
-		colStatus <- FALSE
-	}
 
 	modelCols <-
 		c("model_call",
@@ -423,10 +439,12 @@ can_reconstruct_model_table <- function(x, to) {
 		colStatus <- FALSE
 	}
 
-	# TODO strata assessment
+	stopifnot(
+		"Model table does not contain invariant columns" = isTRUE(colStatus)
+	)
 
-	# Return
-	all(colStatus)
+	invisible(x)
+
 }
 
 # Casting and coercion ---------------------------------------------------------
@@ -434,7 +452,7 @@ can_reconstruct_model_table <- function(x, to) {
 # SELF
 
 #' @export
-md_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
+mdl_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
   # Create a temporary/new structure of the table
 	mdTab <- tib_ptype2(x, y, ..., x_arg = x_arg, y_arg = y_arg)
@@ -463,7 +481,7 @@ md_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 }
 
 #' @export
-md_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
+mdl_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 
 	# Terms must be coalesced together
 	toTm <- attr(to, "termTable")
@@ -492,12 +510,11 @@ md_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 }
 
 #' @export
-vec_ptype2.md_tbl.md_tbl <- function(x, y, ...) {
-	md_tbl_ptype2(x, y, ...)
+vec_ptype2.mdl_tbl.mdl_tbl <- function(x, y, ...) {
+	mdl_tbl_ptype2(x, y, ...)
 }
 
 #' @export
-vec_cast.md_tbl.md_tbl <- function(x, to, ...) {
-	md_tbl_cast(x, to, ...)
+vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
+	mdl_tbl_cast(x, to, ...)
 }
-

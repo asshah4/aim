@@ -19,7 +19,7 @@ test_that("model tables can be initialized/created", {
 	termTable = data.frame()
 
 	# Empty builds should fail
-	expect_error(md_tbl())
+	expect_error(mdl_tbl())
 	expect_error(new_model_table())
 
 })
@@ -30,7 +30,7 @@ test_that("model constructors work for initialization", {
 	expect_length(x, 2)
 
 	m <- construct_table_from_models(x)
-	expect_s3_class(m, "md_tbl")
+	expect_s3_class(m, "mdl_tbl")
 	expect_length(m, 14)
 	expect_equal(nrow(m), 2)
 
@@ -55,8 +55,8 @@ test_that("model table inputs can be parsed and incorporated", {
 	dots <- list(x, y)
 
 	z <- model_table(dots)
-	expect_s3_class(z, "md_tbl")
-	expect_output(print(z), "<md_tbl>")
+	expect_s3_class(z, "mdl_tbl")
+	expect_output(print(z), "<mdl_tbl>")
 	expect_equal(nrow(z), 3)
 	expect_length(z, 14)
 	expect_length(attr(z, "termTable")$term, 7)
@@ -72,7 +72,7 @@ test_that("formulas can be input into a model table", {
 	f <- mpg ~ wt + hp + am
 	x <- fmls(f, pattern = "sequential")
 	m <- construct_table_from_formulas(x)
-	expect_s3_class(m, "md_tbl")
+	expect_s3_class(m, "mdl_tbl")
 	expect_length(m, 14)
 	expect_equal(nrow(m), 3)
 
@@ -137,14 +137,14 @@ test_that("attributes of models will adjust appropriately", {
 
 	# Combining tables
 	m3 <- vec_c(m1, m2)
-	expect_s3_class(m3, "md_tbl")
+	expect_s3_class(m3, "mdl_tbl")
 	expect_equal(nrow(m3), 8)
 	expect_length(attr(m3, "formulaMatrix"), 4)
 	expect_equal(nrow(attr(m3, "termTable")), 7)
 
 	# Filtering tables
 	m4 <- filter(m3, outcome == "wt")
-	expect_s3_class(m4, "md_tbl")
+	expect_s3_class(m4, "mdl_tbl")
 	expect_equal(nrow(m4), 2)
 	expect_length(attr(m4, "formulaMatrix"), 3)
 	# STRATA ACCIDENTALLY INCLUDED, MUST BE REMOVED
