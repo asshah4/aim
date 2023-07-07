@@ -99,7 +99,7 @@ test_that("dplyr compatibility", {
 	x <- model_table(m1, m2)
 	expect_equal(model_table(list(m1, m2)), x)
 	y <- x[1:2, ]
-	a <- attributes(reconstruct_model_table(x, y))
+	a <- attributes(model_table_reconstruct(x, y))
 	expect_length(a$formulaMatrix, 3)
 	expect_equal(nrow(a$formulaMatrix), 2)
 	expect_length(a$termTable$term, 4)
