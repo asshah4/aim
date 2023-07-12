@@ -36,7 +36,7 @@ fit.fmls <- function(object,
 
 		# If no strata, can model simply
 		if (length(sta) == 0) {
-			dots$data <- quote(data)
+			dots[[dataName]] <- quote(data)
 			x <- do.call(.fn, args = c(formula = f, dots))
 
 			# Handle model list based on how output (list or <mdl>)
