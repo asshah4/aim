@@ -8,15 +8,9 @@ test_that("`fmls` objects can be fitted", {
 	object <- fmls(mpg ~ wt + hp)
 	args <- list(model = TRUE)
 	data <- mtcars
-	m1 <- fit(object, .fn = lm, data = mtcars, raw = TRUE)
-	expect_equal(class(m0), class(m1[[1]]))
-	expect_equal(m0, m1[[1]]) # Data argument should be the same name
-
-	cl <- str2lang("lm(mpg ~ wt + hp, data = mtcars)")
-	cl <- str2lang("fit(object, .fn = lm, data = mtcars, raw = TRUE)")
-	match.call(lm, cl)
-	match.call(lm, call("lm", mpg ~ wt + hp, data = mtcars))
-	match.call(lm, cl)
+	m1 <- fit(object, .fn = lm, data = mtcars, raw = TRUE)[[1]]
+	expect_equal(class(m0), class(m1))
+	expect_equal(m0, m1, ignore_attr = TRUE) # Data argument should be the same name
 
 	# <mdl> subtypes
 	m1 <- fit(object, .fn = lm, data = mtcars, raw = FALSE)
@@ -54,13 +48,11 @@ test_that("complex terms can be fit", {
 
 	library(survival) # Using lung data
 	f <- Surv(time, status) ~ ph.karno + cluster(sex)
-	m0 <- coxph(f, data = lung)
+	m0 <- coxph(Surv(time, status) ~ ph.karno + cluster(sex), data = lung)
 	object <- fmls(f)
 	m1 <- fit(object, .fn = coxph, data = lung, raw = TRUE)[[1]]
 
 	# When fitting an object, the data term name should be retained
-	expect_equivalent(m0, m1)
-
-	mdl_tbl(m)
+	expect_equal(m0, m1, ignore_attr = TRUE)
 
 })

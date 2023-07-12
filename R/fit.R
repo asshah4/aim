@@ -36,9 +36,11 @@ fit.fmls <- function(object,
 
 		# If no strata, can model simply
 		if (length(sta) == 0) {
-			dots[[dataName]] <- quote(data)
+			dots$data <- quote(data)
 			x <- do.call(.fn, args = c(formula = f, dots))
-
+			x$call[["formula"]] <- str2lang(deparse1(x$call[["formula"]]))
+			x$call[["data"]] <- as.name(dataName)
+			
 			# Handle model list based on how output (list or <mdl>)
 			if (raw) {
 				y <- list(x)
@@ -61,6 +63,8 @@ fit.fmls <- function(object,
 					strataData <- data[data[[strata]] == strataLevels[k],]
 					dots$data <- quote(strataData)
 					x <- do.call(.fn, args = c(formula = f, dots))
+    			x$call[["formula"]] <- str2lang(deparse1(x$call[["formula"]]))
+    			x$call[["data"]] <- as.name(dataName)
 
 					# Handle model list based on how output (list or <mdl>)
 					if (raw) {
