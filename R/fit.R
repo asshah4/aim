@@ -40,7 +40,7 @@ fit.fmls <- function(object,
 			x <- do.call(.fn, args = c(formula = f, dots))
 			x$call[["formula"]] <- str2lang(deparse1(x$call[["formula"]]))
 			x$call[["data"]] <- as.name(dataName)
-			
+
 			# Handle model list based on how output (list or <mdl>)
 			if (raw) {
 				y <- list(x)
@@ -104,12 +104,11 @@ my_tidy <- function(x,
 										conf.level = 0.95,
 										exponentiate = TRUE,
 										...) {
-	broom::tidy(
-		x,
-		conf.int = conf.int,
-		conf.level = conf.level,
-		exponentiate = exponentiate
-	)
+	broom::tidy(x,
+							conf.int = conf.int,
+							conf.level = conf.level,
+							exponentiate = exponentiate) |>
+		janitor::clean_names()
 }
 
 #' Local load of it if not when package starts
@@ -124,7 +123,8 @@ generics::glance
 #' Create a "fail-safe" of glance at fits
 #' @noRd
 my_glance <- function(x, ...) {
-	broom::glance(x)
+	broom::glance(x) |>
+		janitor::clean_names()
 }
 
 #' Local load of it if not when package starts

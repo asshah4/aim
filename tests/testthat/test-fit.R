@@ -17,7 +17,6 @@ test_that("`fmls` objects can be fitted", {
 	expect_s3_class(m1, "mdl")
 	expect_length(m1, 1)
 
-
 	# Stratified, should have two models
 	object <- fmls(mpg ~ wt + hp + .s(am))
 	m2 <- fit(object, .fn = lm, data = mtcars, raw = TRUE)

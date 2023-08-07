@@ -326,8 +326,20 @@ is_fmls <- function(x) {
 #' @rdname fmls
 #' @export
 key_terms <- function(x) {
+
+	# If a formula object, must pull only terms that are available
 	if (is_fmls(x)) {
-		attr(x, "termTable") |>
+		# Formula matrix
+		fm <- vec_data(x)
+		fm[is.na(fm)] <- 0
+		tms <- names(fm)[colSums(fm) >= 1]
+
+		# Term table.. add on extra "meta" terms PRN
+		tmTab <- attr(x, 'termTable')
+		tms <- c(tms, tmTab$term[tmTab$side == 'meta'])
+
+
+		subset(tmTab, term %in% tms) |>
 			vec_restore(to = tm())
 	} else {
 		NULL

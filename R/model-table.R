@@ -154,38 +154,46 @@ construct_table_from_models <- function(x, ...) {
 		do.call(what = rbind, args = _) |>
 		unique()
 
-	out <- sapply(tl, function(.x) {
-		.y <- as.character(filter(.x, role == "outcome"))
-		if (length(.y) == 0) {
-			.y <- NA_character_
-		} else {
-			.y
-		}
-	})
-	exp <- sapply(tl, function(.x) {
-		.y <- as.character(filter(.x, role == "exposure"))
-		if (length(.y) == 0) {
-			.y <- NA_character_
-		} else {
-			.y
-		}
-	})
-	med <- sapply(tl, function(.x) {
-		.y <- as.character(filter(.x, role == "mediator"))
-		if (length(.y) == 0) {
-			.y <- NA_character_
-		} else {
-			.y
-		}
-	})
-	int <- sapply(tl, function(.x) {
-		.y <- as.character(filter(.x, role == "interaction"))
-		if (length(.y) == 0) {
-			.y <- NA_character_
-		} else {
-			.y
-		}
-	})
+	out <-
+		sapply(tl, function(.x) {
+			.y <- as.character(dplyr::filter(.x, role == "outcome"))
+			if (length(.y) == 0) {
+				.y <- NA_character_
+			} else {
+				.y
+			}
+		}) |>
+		as.character()
+	exp <-
+		sapply(tl, function(.x) {
+			.y <- as.character(dplyr::filter(.x, role == "exposure"))
+			if (length(.y) == 0) {
+				.y <- NA_character_
+			} else {
+				.y
+			}
+		}) |>
+		as.character()
+	med <-
+		sapply(tl, function(.x) {
+			.y <- as.character(dplyr::filter(.x, role == "mediator"))
+			if (length(.y) == 0) {
+				.y <- NA_character_
+			} else {
+				.y
+			}
+		}) |>
+		as.character()
+	int <-
+		sapply(tl, function(.x) {
+			.y <- as.character(dplyr::filter(.x, role == "interaction"))
+			if (length(.y) == 0) {
+				.y <- NA_character_
+			} else {
+				.y
+			}
+		}) |>
+		as.character()
 
 	# Get all data names and strata variables back
 	da <- field(x, "dataArgs")

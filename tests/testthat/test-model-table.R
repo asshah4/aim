@@ -36,7 +36,7 @@ test_that("model constructors work for initialization", {
 
 })
 
-test_that("model table inputs can be parsed and incorporated", {
+test_that("can handle list of models appropriately", {
 
 	x <-
 		fit(fmls(mpg ~ wt + hp + .s(am)),
@@ -65,6 +65,15 @@ test_that("model table inputs can be parsed and incorporated", {
 
 })
 
+test_that("correct number of rows are generated", {
+
+	f <- fmls(mpg + wt + hp ~ .x(cyl) + vs + carb + am)
+	m <- fit(f, .fn = lm, data = mtcars, raw = FALSE)
+	x <- model_table(m)
+	expect_equal(nrow(x), 3)
+	expect_equal(nrow(x), length(m))
+
+})
 
 
 test_that("formulas can be input into a model table", {
@@ -150,4 +159,13 @@ test_that("attributes of models will adjust appropriately", {
 	# STRATA ACCIDENTALLY INCLUDED, MUST BE REMOVED
 	expect_equal(nrow(attr(m4, "termTable")), 3)
 
+})
+
+test_that("table can be flattened", {
+
+	library(survival) # Using lung data
+	f <- Surv(time, status) ~ ph.karno + cluster(sex)
+	object <- fmls(f)
+	m <- fit(object, .fn = coxph, data = lung, raw = FALSE)
+	x <- model_table(m)
 })

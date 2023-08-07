@@ -112,3 +112,36 @@ formulas_to_named_list <- function(x) {
 	# Return
 	y
 }
+
+# Model table helpers ----------------------------------------------------------
+
+# Need to take model table
+# Select outcomes or exposures
+# Flatten it so you can actually analyze it
+
+#' Flatten model table
+#' @export
+flatten_table <- function(x) {
+
+	validate_class(x, "mdl_tbl")
+
+	x |>
+		tibble::tibble() |>
+		dplyr::filter(fit_status == TRUE) |>
+		dplyr::select(
+			formula_call,
+			model_call,
+			data_id,
+			outcome,
+			exposure,
+			mediator,
+			interaction,
+			strata,
+			level,
+			model_parameters,
+			model_summary
+		) |>
+		tidyr::unnest(model_parameters) |>
+		tidyr::unnest(model_summary)
+
+}

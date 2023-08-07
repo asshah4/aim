@@ -8,7 +8,6 @@ test_that("fmls can be initialized and formatted", {
 test_that("fmls-fmls can be combined", {
 
 	# Vec ptype2 and cast testing
-
 	f1 <- output ~ input + modifier
 	f2 <- output ~ .x(input) + modifier
 	f3 <- output ~ .x(input) + log(modifier) + log(variable) + another
