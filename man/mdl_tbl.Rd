@@ -3,13 +3,15 @@
 \name{mdl_tbl}
 \alias{mdl_tbl}
 \alias{model_table}
-\alias{new_model_table}
 \alias{is_model_table}
+\alias{new_model_table}
 \title{Model Tables}
 \usage{
 mdl_tbl(...)
 
 model_table(...)
+
+is_model_table(x)
 
 new_model_table(
   x = list(),
@@ -17,8 +19,6 @@ new_model_table(
   termTable = data.frame(),
   ...
 )
-
-is_model_table(x)
 }
 \arguments{
 \item{...}{These dots are for future extensions and must be empty.}

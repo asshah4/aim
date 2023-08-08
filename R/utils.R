@@ -128,10 +128,19 @@ flatten_table <- function(x) {
 	x |>
 		tibble::tibble() |>
 		dplyr::filter(fit_status == TRUE) |>
+		dplyr::mutate(number = sapply(formula_call, function(.x) {
+			.x |>
+				stats::formula() |>
+				stats::terms() |>
+				labels() |>
+				length()
+		}, USE.NAMES = FALSE)) |>
 		dplyr::select(
 			formula_call,
 			model_call,
 			data_id,
+			name,
+			number,
 			outcome,
 			exposure,
 			mediator,

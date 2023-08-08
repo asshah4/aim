@@ -29,9 +29,18 @@ mdl_tbl <- function(...) {
 	if (length(dots) == 0) {
 		return(new_model_table())
 	}
-	# Handles either a list or a series of arguments
-	if (length(dots) == 1 && is.list(dots[[1]])) {
-		dots <- dots[[1]]
+
+	# Initially any number of objects could be given
+	# These are all pushed into a list together
+	# The object may or may not be named, and may or may not be plural
+	if (length(dots) == 1) {
+
+		# If unnamed, return to simplest form
+		# If it is named, leave it alone (obviously a named list)
+		if (is.null(names(dots))) {
+			dots <- dots[[1]]
+		}
+
 	}
 
 	# Model Table Lists...
@@ -39,7 +48,7 @@ mdl_tbl <- function(...) {
 
 	for (i in seq_along(dots)) {
 		if (inherits(dots[[i]], "mdl")) {
-			mtl[[i]] <- construct_table_from_models(dots[[i]])
+			mtl[[i]] <- construct_table_from_models(dots[i])
 		}
 		if (inherits(dots[[i]], "fmls")) {
 			mtl[[i]] <- construct_table_from_formulas(dots[[i]])
@@ -54,40 +63,6 @@ mdl_tbl <- function(...) {
 #' @rdname mdl_tbl
 #' @export
 model_table <- mdl_tbl
-
-#' @rdname mdl_tbl
-#' @export
-new_model_table <- function(x = list(),
-														formulaMatrix = data.frame(),
-														termTable = data.frame(),
-														...) {
-
-	# Invariant rules:
-	#		Can add and remove rows (each row is essentially a model)
-	#		Rows can be re-ordered
-	#		Columns cannot be re-ordered
-	#
-	#	Invariant columns:
-	#		Key Relationship: outcome and exposure, roles, etc
-	#		Context: Formula (giving information on covariates) and Model Type
-	#		Fit: Individual parameters and model level estimates/statistics
-
-	checkmate::assert_class(formulaMatrix, "data.frame")
-	checkmate::assert_class(termTable, "data.frame")
-	checkmate::assert_list(
-		x,
-		types = c("character", "list", "factor", "logical", "numeric"),
-		len = 14
-	)
-
-	new_tibble(
-		x,
-		formulaMatrix = formulaMatrix,
-		termTable = termTable,
-		class = "mdl_tbl"
-	)
-}
-
 
 #' @rdname mdl_tbl
 #' @export
@@ -126,18 +101,20 @@ vec_ptype_abbr.mdl_tbl <- function(x, ...) {
 construct_table_from_models <- function(x, ...) {
 
 	# Meta components of the models
-	n <- length(x)
-	rid <- sapply(x, rlang::hash)
+	obj <- x[[1]] # Removes it from its list
+	nm <- ifelse(is.null(names(x)), NA, ifelse(names(x) == "", NA, names(x)))
+	n <- length(obj)
+	rid <- sapply(obj, rlang::hash)
 	fits <- rep(TRUE, n)
 
 	# Components of the model fields
-	mc <- unlist(field(x, "modelCall"))
-	ma <- field(x, "modelArgs")
-	pe <- field(x, "parameterEstimates")
-	si <- field(x, "summaryInfo")
+	mc <- unlist(field(obj, "modelCall"))
+	ma <- field(obj, "modelArgs")
+	pe <- field(obj, "parameterEstimates")
+	si <- field(obj, "summaryInfo")
 
 	# Get terms and formulas
-	mf <- field(x, "modelFormula")
+	mf <- field(obj, "modelFormula")
 	tl <- lapply(mf, key_terms)
 	fl <- unname(sapply(mf, as.character, USE.NAMES = FALSE))
 
@@ -196,7 +173,7 @@ construct_table_from_models <- function(x, ...) {
 		as.character()
 
 	# Get all data names and strata variables back
-	da <- field(x, "dataArgs")
+	da <- field(obj, "dataArgs")
 	did <- sapply(da, function(.x) {
 		.x$dataName
 	})
@@ -212,6 +189,7 @@ construct_table_from_models <- function(x, ...) {
 		id = rid,
 		formula_index = fid,
 		data_id = did,
+		name = nm,
 		model_call = mc,
 		formula_call = fl,
 		outcome = out,
@@ -239,12 +217,14 @@ construct_table_from_models <- function(x, ...) {
 construct_table_from_formulas <- function(x, ...) {
 
 	# Meta components of the models
-	n <- nrow(x)
-	rid <- apply(x, MARGIN = 1, rlang::hash) # Since formulas are matrices
+	obj <- x[[1]] # Removes it from its list
+	nm <- ifelse(is.null(names(x)), NA, ifelse(names(x) == "", NA, names(x)))
+	n <- nrow(obj)
+	rid <- apply(obj, MARGIN = 1, rlang::hash) # Since formulas are matrices
 	fits <- rep(FALSE, n)
 
 	# Get terms and formulas
-	mf <- x
+	mf <- obj
 	tl <- formulas_to_terms(mf)
 	fl <- as.character(stats::formula(mf))
 
@@ -302,13 +282,12 @@ construct_table_from_formulas <- function(x, ...) {
 		}
 	})
 
-
-
 	# Initialize a new list
 	res <- df_list(
 		id = rid,
 		formula_index = fid,
 		data_id = NA,
+		name = nm,
 		model_call = NA,
 		formula_call = fl,
 		outcome = out,
@@ -326,6 +305,39 @@ construct_table_from_formulas <- function(x, ...) {
 	new_model_table(res,
 									formulaMatrix = fmMat,
 									termTable = tmTab)
+}
+
+#' @rdname mdl_tbl
+#' @export
+new_model_table <- function(x = list(),
+														formulaMatrix = data.frame(),
+														termTable = data.frame(),
+														...) {
+
+	# Invariant rules:
+	#		Can add and remove rows (each row is essentially a model)
+	#		Rows can be re-ordered
+	#		Columns cannot be re-ordered
+	#
+	#	Invariant columns:
+	#		Key Relationship: outcome and exposure, roles, etc
+	#		Context: Formula (giving information on covariates) and Model Type
+	#		Fit: Individual parameters and model level estimates/statistics
+
+	checkmate::assert_class(formulaMatrix, "data.frame")
+	checkmate::assert_class(termTable, "data.frame")
+	checkmate::assert_list(
+		x,
+		types = c("character", "list", "factor", "logical", "numeric"),
+		len = 15
+	)
+
+	new_tibble(
+		x,
+		formulaMatrix = formulaMatrix,
+		termTable = termTable,
+		class = "mdl_tbl"
+	)
 }
 
 #' @importFrom dplyr dplyr_reconstruct

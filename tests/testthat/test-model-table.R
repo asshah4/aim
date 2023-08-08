@@ -4,6 +4,7 @@ test_that("model tables can be initialized/created", {
 	model_id = character()
 	formula_id = numeric()
 	data_id = character()
+	name = character()
 	model = character()
 	formula = character()
 	outcome = character()
@@ -31,7 +32,7 @@ test_that("model constructors work for initialization", {
 
 	m <- construct_table_from_models(x)
 	expect_s3_class(m, "mdl_tbl")
-	expect_length(m, 14)
+	expect_length(m, 15)
 	expect_equal(nrow(m), 2)
 
 })
@@ -52,16 +53,37 @@ test_that("can handle list of models appropriately", {
 			raw = FALSE
 		)
 
+	# Test if unnamed list of multiple objects
 	dots <- list(x, y)
 
 	z <- model_table(dots)
 	expect_s3_class(z, "mdl_tbl")
 	expect_output(print(z), "<mdl_tbl>")
 	expect_equal(nrow(z), 3)
-	expect_length(z, 14)
+	expect_length(z, 15)
 	expect_length(attr(z, "termTable")$term, 7)
 	expect_length(unique(attr(z, "termTable")$term), 6)
 	expect_length(attr(z, "formulaMatrix"), 6)
+
+	# Test if single unnamed object
+	dots <- list(y)
+	z <- model_table(dots)
+	expect_true(is.na(z$name))
+
+	# Test if single named object
+	dots <- list(single = x)
+	z <- model_table(dots)
+	expect_true(unique(z$name) == "single")
+
+	# Test if multiple named objects
+	dots <- list(linear = x, log = y)
+	z <- model_table(dots)
+	expect_equal(unique(z$name), c("linear", "log"))
+
+	# Test for mixed naming of list of objects
+	dots <- list(x, log = y)
+	z <- model_table(dots)
+	expect_equal(unique(z$name), c(NA, "log"))
 
 })
 
@@ -80,9 +102,9 @@ test_that("formulas can be input into a model table", {
 
 	f <- mpg ~ wt + hp + am
 	x <- fmls(f, pattern = "sequential")
-	m <- construct_table_from_formulas(x)
+	m <- construct_table_from_formulas(list(x))
 	expect_s3_class(m, "mdl_tbl")
-	expect_length(m, 14)
+	expect_length(m, 15)
 	expect_equal(nrow(m), 3)
 
 })
@@ -134,7 +156,7 @@ test_that("attributes of models will adjust appropriately", {
 		fmls(mpg ~ wt + hp + cyl + .s(am), pattern = "sequential") |>
 		fit(.fn = lm, data = mtcars, raw = FALSE) |>
 		model_table()
-	expect_length(m1, 14)
+	expect_length(m1, 15)
 	expect_equal(nrow(m1), 6)
 	expect_length(attr(m1, "formulaMatrix"), 4)
 	expect_equal(nrow(attr(m1, "termTable")), 5)
@@ -161,11 +183,3 @@ test_that("attributes of models will adjust appropriately", {
 
 })
 
-test_that("table can be flattened", {
-
-	library(survival) # Using lung data
-	f <- Surv(time, status) ~ ph.karno + cluster(sex)
-	object <- fmls(f)
-	m <- fit(object, .fn = coxph, data = lung, raw = FALSE)
-	x <- model_table(m)
-})
