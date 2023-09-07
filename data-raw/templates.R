@@ -1,30 +1,32 @@
 ## code to prepare `templates` dataset goes here
 .models <- c(
-	"model_fit",
-	"lm",
-	"glm",
-	"coxph"
+	'model_fit',
+	'lm',
+	'glm',
+	'coxph',
+	'crr',
+	'tidycrr'
 )
 
 .patterns <- c(
-	"fundamental",
-	"direct",
-	"sequential",
-	"parallel"
+	'fundamental',
+	'direct',
+	'sequential',
+	'parallel'
 )
 
 .transformations <- c(
-	"log"
+	'log'
 )
 
 .roles <- list(
-	"outcome" = ".o",
-	"exposure" = ".x",
-	"predictor" = ".p",
-	"confounder" = ".c",
-	"mediator" = ".m",
-	"strata" = ".s",
-	"interaction" = ".i"
+	'outcome' = '.o',
+	'exposure' = '.x',
+	'predictor' = '.p',
+	'confounder' = '.c',
+	'mediator' = '.m',
+	'strata' = '.s',
+	'interaction' = '.i'
 )
 
 usethis::use_data(.models,
