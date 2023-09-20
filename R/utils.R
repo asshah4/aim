@@ -19,18 +19,24 @@ rhs.formula <- function(x, ...) {
 
 	# Handles name, call, and character options
 	# Does strip away parentheses
-	y <-
-		x[[length(x)]] |>
-		deparse1() |>
-		strsplit("\\+|-") |>
-		unlist() |>
-		trimws() |>
-		{
-			\(.x) gsub('"', "", .x)
-		}()
+	if (inherits(x[[length(x)]], 'character')) {
+		y <-
+			x[[length(x)]] |>
+			trimws()
+	} else {
+		y <-
+			x[[length(x)]] |>
+			deparse1() |>
+			strsplit("\\+|-") |>
+			unlist() |>
+			trimws() |>
+			{
+				\(.x) gsub('"', "", .x)
+			}()
+	}
 
 	# Handle special interaction terms in original formula
-	# Will expand from "a * b" -> "a + b + a:b"
+	# Will expand from `a * b` -> `a + b + a:b`
 	pos <- grep("\\*", y)
 	npos <- grep("\\*", y, invert = TRUE)
 

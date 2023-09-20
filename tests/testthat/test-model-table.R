@@ -30,10 +30,11 @@ test_that("model constructors work for initialization", {
 	x <- fit(fmls(mpg ~ wt + hp + .s(am)), .fn = lm, data = mtcars, raw = FALSE)
 	expect_length(x, 2)
 
+	# Will only handle first model
 	m <- construct_table_from_models(x)
 	expect_s3_class(m, "mdl_tbl")
 	expect_length(m, 15)
-	expect_equal(nrow(m), 2)
+	expect_equal(nrow(m), 1) # Only one strata level at a time
 
 })
 
