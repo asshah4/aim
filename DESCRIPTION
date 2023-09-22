@@ -31,7 +31,9 @@ Imports:
     broom,
     tidyr,
     rlang,
-    pillar
+    pillar,
+    gt,
+    survival,
 Suggests: 
     testthat (>= 3.0.0),
     covr,
