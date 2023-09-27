@@ -137,7 +137,7 @@ tbl_dichotomous_hazard <- function(object,
 			rates <-
 				rbind(n = py$n, events = py$event, risk = py$event / py$pyears) |>
 				as.data.frame() |>
-				rownames_to_column(var = 'label')
+				rownames_to_column(var = 'row')
 
 			# Save number per group for later in the table
 			n <- rates[1, -1]
@@ -180,8 +180,8 @@ tbl_dichotomous_hazard <- function(object,
 			# Make compatible with binding
 			unadj <-
 				rates[-1, ] |>
-				dplyr::mutate(label = ifelse(label == 'risk', lvl_nms[1], label)) |>
-				tibble::add_row(label = as.character(adj$number[-c(1:2)]))
+				dplyr::mutate(row = ifelse(row == 'risk', lvl_nms[1], row)) |>
+				tibble::add_row(row = as.character(adj$number[-c(1:2)]))
 
 			# Bind the tables together
 			# Order of columns is that reference is on left
@@ -222,7 +222,7 @@ tbl_dichotomous_hazard <- function(object,
 			tbl_tms[[t]] <- dplyr::bind_rows(tbl_out)
 		} else {
 			tbl_tms[[t]] <- dplyr::bind_rows(tbl_out) |>
-				dplyr::select(-label, -outcome)
+				dplyr::select(-row, -outcome)
 		}
 
 	}
@@ -230,8 +230,8 @@ tbl_dichotomous_hazard <- function(object,
 	# Now the terms are bound together and clean up
 	tab <-
 		dplyr::bind_cols(tbl_tms) |>
-		dplyr::mutate(label = as.character(factor(
-			label,
+		dplyr::mutate(row = as.character(factor(
+			row,
 			levels = c('events', lvl_nms),
 			labels = c('Total No. of events', lvl_lab)
 		))) |>
@@ -239,7 +239,7 @@ tbl_dichotomous_hazard <- function(object,
 
 	# Convert into gt table
 	gtbl <-
-		gt(tab, rowname_col = 'label', groupname_col = 'outcome') |>
+		gt(tab, rowname_col = 'row', groupname_col = 'outcome') |>
 		cols_hide(columns = contains('p_value')) |>
 		sub_missing(missing_text = '') |>
 		fmt_number(drop_trailing_zeros = TRUE)
@@ -322,7 +322,7 @@ tbl_dichotomous_hazard <- function(object,
 #' @export
 tbl_categorical_hazard <- function(object,
 																	 data,
-																	 events = formula(),
+																	 outcomes = formula(),
 																	 followup = character(),
 																	 terms = formula(),
 																	 adjustment = formula(),
@@ -411,7 +411,7 @@ tbl_categorical_hazard <- function(object,
 			rates <-
 				rbind(n = py$n, events = py$event, risk = py$event / py$pyears) |>
 				as.data.frame() |>
-				rownames_to_column(var = 'label')
+				rownames_to_column(var = 'row')
 
 			# Save number per group for later in the table
 			n <- rates[1, -1]
@@ -454,8 +454,8 @@ tbl_categorical_hazard <- function(object,
 			# Make compatible with binding
 			unadj <-
 				rates[-1, ] |>
-				dplyr::mutate(label = ifelse(label == 'risk', lvl_nms[1], label)) |>
-				tibble::add_row(label = as.character(adj$number[-c(1:2)]))
+				dplyr::mutate(row = ifelse(row == 'risk', lvl_nms[1], row)) |>
+				tibble::add_row(row = as.character(adj$number[-c(1:2)]))
 
 			# Bind the tables together
 			# Order of columns is that reference is on left
@@ -498,7 +498,7 @@ tbl_categorical_hazard <- function(object,
 			tbl_tms[[t]] <- dplyr::bind_rows(tbl_out)
 		} else {
 			tbl_tms[[t]] <- dplyr::bind_rows(tbl_out) |>
-				dplyr::select(-label, -outcome)
+				dplyr::select(-row, -outcome)
 		}
 
 	}
@@ -506,8 +506,8 @@ tbl_categorical_hazard <- function(object,
 	# Now the terms are bound together and clean up
 	tab <-
 		dplyr::bind_cols(tbl_tms) |>
-		dplyr::mutate(label = as.character(factor(
-			label,
+		dplyr::mutate(row = as.character(factor(
+			row,
 			levels = c('events', lvl_nms),
 			labels = c('Total No. of events', lvl_lab)
 		))) |>
@@ -515,7 +515,7 @@ tbl_categorical_hazard <- function(object,
 
 	# Convert into gt table
 	gtbl <-
-		gt(tab, rowname_col = 'label', groupname_col = 'outcome') |>
+		gt(tab, rowname_col = 'row', groupname_col = 'outcome') |>
 		cols_hide(columns = contains('p_value')) |>
 		sub_missing(missing_text = '') |>
 		fmt_number(drop_trailing_zeros = TRUE)

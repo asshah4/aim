@@ -55,6 +55,7 @@ test_that("for categorical variables", {
 	object <-
 		targets::tar_read(cox_mdls, store = '../mims/_targets') |>
 		dplyr::filter(name == 'groups')
+
 	data <-
 		targets::tar_read(clinical, store = '../mims/_targets') |>
 		dplyr::mutate(lf_grps = factor(
@@ -77,11 +78,15 @@ test_that("for categorical variables", {
 				'Low rest & stress-induced decrease'
 			)
 		))
+
 	outcomes <-
-		list('death_cv_yn' ~ 'Cardiovascular mortality',
-				 'death_any_yn' ~ 'All-cause mortality')
+		list(death_cv_yn ~ 'Cardiovascular mortality',
+				 death_any_yn ~ 'All-cause mortality')
+
 	followup <- 'death_timeto'
+
 	terms <- lf_grps ~ 'HRV response category v. reference'
+
 	adjustment <- list(2 ~ 'Rate per 100 person-years',
 										 5 ~ 'Adjusted for demo',
 										 7 ~ 'Adjust for above + clinical',
