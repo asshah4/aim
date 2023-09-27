@@ -17,7 +17,7 @@ test_that("for dichotomous variables", {
 			labels = c('Yes', 'No')
 		))
 
-	events <-
+	outcomes <-
 		list('death_cv_yn' ~ 'Cardiovascular mortality',
 				 'death_any_yn' ~ 'All-cause mortality')
 
@@ -35,6 +35,18 @@ test_that("for dichotomous variables", {
 		)
 
 	rate_difference <- TRUE
+
+	gtbl <- tbl_dichotomous_hazard(
+		object = object,
+		data = data,
+		outcomes = outcomes,
+		follow = followup,
+		terms = terms,
+		adjustment = adjustment,
+		rate_difference = rate_difference
+	)
+
+	expect_s3_class(gtbl, 'gt_tbl')
 
 })
 
@@ -65,11 +77,11 @@ test_that("for categorical variables", {
 				'Low rest & stress-induced decrease'
 			)
 		))
-	events <-
+	outcomes <-
 		list('death_cv_yn' ~ 'Cardiovascular mortality',
 				 'death_any_yn' ~ 'All-cause mortality')
 	followup <- 'death_timeto'
-	terms <- lf_grps ~ 'HRV response category'
+	terms <- lf_grps ~ 'HRV response category v. reference'
 	adjustment <- list(2 ~ 'Rate per 100 person-years',
 										 5 ~ 'Adjusted for demo',
 										 7 ~ 'Adjust for above + clinical',
@@ -77,4 +89,15 @@ test_that("for categorical variables", {
 
 	rate_difference <- FALSE
 
+	gtbl <- tbl_categorical_hazard(
+		object = object,
+		data = data,
+		outcomes = outcomes,
+		follow = followup,
+		terms = terms,
+		adjustment = adjustment,
+		rate_difference = rate_difference
+	)
+
+	expect_s3_class(gtbl, 'gt_tbl')
 })
