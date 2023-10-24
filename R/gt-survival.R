@@ -126,7 +126,7 @@ tbl_dichotomous_hazard <- function(object,
 				) |>
 				dplyr::filter(number %in% as.numeric(lvl_nms)) |>
 				dplyr::mutate(outcome = o) |>
-				tibble::add_row(number = 0, outcome = o, .before = 1)
+			  dplyr::mutate(number = as.character(number))
 
 			# Person years into table
 			py <-
@@ -180,8 +180,7 @@ tbl_dichotomous_hazard <- function(object,
 			# Make compatible with binding
 			unadj <-
 				rates[-1, ] |>
-				dplyr::mutate(row = ifelse(row == 'risk', lvl_nms[1], row)) |>
-				tibble::add_row(row = as.character(adj$number[-c(1:2)]))
+			  tibble::add_row(row = as.character(adj$number))
 
 			# Bind the tables together
 			# Order of columns is that reference is on left
@@ -197,8 +196,8 @@ tbl_dichotomous_hazard <- function(object,
 
 			# Basic table merge
 			tbl <-
-				dplyr::bind_cols(unadj, adj) |>
-				dplyr::select(-number)
+			  dplyr::full_join(unadj, adj, by = dplyr::join_by(row == number)) |>
+			  dplyr::mutate(outcome = o)
 
 			# Organize columns
 			for (v in seq_along(vars)) {
@@ -232,8 +231,8 @@ tbl_dichotomous_hazard <- function(object,
 		dplyr::bind_cols(tbl_tms) |>
 		dplyr::mutate(row = as.character(factor(
 			row,
-			levels = c('events', lvl_nms),
-			labels = c('Total No. of events', lvl_lab)
+			levels = c('events', 'risk', lvl_nms),
+			labels = c('Total No. of events', 'Rate per 100 person-years', lvl_lab)
 		))) |>
 		dplyr::mutate(outcome = factor(outcome, levels = out_nms, labels = out_lab))
 
@@ -291,7 +290,6 @@ tbl_dichotomous_hazard <- function(object,
 			gtbl |>
 			tab_spanner(label = tms[[t]], columns = span)
 	}
-
 
 
 	# Visual modifications
@@ -400,7 +398,7 @@ tbl_categorical_hazard <- function(object,
 				) |>
 				dplyr::filter(number %in% as.numeric(lvl_nms)) |>
 				dplyr::mutate(outcome = o) |>
-				tibble::add_row(number = 0, outcome = o, .before = 1)
+			  dplyr::mutate(number = as.character(number))
 
 			# Person years into table
 			py <-
@@ -454,8 +452,7 @@ tbl_categorical_hazard <- function(object,
 			# Make compatible with binding
 			unadj <-
 				rates[-1, ] |>
-				dplyr::mutate(row = ifelse(row == 'risk', lvl_nms[1], row)) |>
-				tibble::add_row(row = as.character(adj$number[-c(1:2)]))
+			  tibble::add_row(row = as.character(adj$number))
 
 			# Bind the tables together
 			# Order of columns is that reference is on left
@@ -471,8 +468,8 @@ tbl_categorical_hazard <- function(object,
 
 			# Basic table merge
 			tbl <-
-				dplyr::bind_cols(unadj, adj) |>
-				dplyr::select(-number)
+			  dplyr::full_join(unadj, adj, by = dplyr::join_by(row == number)) |>
+			  dplyr::mutate(outcome = o)
 
 			# Organize columns
 			for (i in seq_along(vars)) {
@@ -508,8 +505,8 @@ tbl_categorical_hazard <- function(object,
 		dplyr::bind_cols(tbl_tms) |>
 		dplyr::mutate(row = as.character(factor(
 			row,
-			levels = c('events', lvl_nms),
-			labels = c('Total No. of events', lvl_lab)
+			levels = c('events', 'risk', lvl_nms),
+			labels = c('Total No. of events', 'Rate per 100 person-years', lvl_lab)
 		))) |>
 		dplyr::mutate(outcome = factor(outcome, levels = out_nms, labels = out_lab))
 

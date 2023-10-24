@@ -28,7 +28,7 @@ test_that("for dichotomous variables", {
 
 	adjustment <-
 		list(
-			3 ~ 'Rate per 100 person-years',
+			3 ~ 'Unadjusted',
 			5 ~ 'Adjusted for demo',
 			7 ~ 'Adjust for above + clinical',
 			8 ~ 'Adjust for above + stress testing'
@@ -87,7 +87,7 @@ test_that("for categorical variables", {
 
 	terms <- lf_grps ~ 'HRV response category v. reference'
 
-	adjustment <- list(2 ~ 'Rate per 100 person-years',
+	adjustment <- list(2 ~ 'Unadjusted',
 										 5 ~ 'Adjusted for demo',
 										 7 ~ 'Adjust for above + clinical',
 										 8 ~ 'Adjust for above + stress testing')
