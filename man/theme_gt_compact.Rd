@@ -7,14 +7,20 @@
 theme_gt_compact(data, table.font.size = pct(80), table.width = pct(90), ...)
 }
 \arguments{
-\item{data}{A table object that is created using the \code{\link[gt:gt]{gt()}} function.}
+\item{data}{\emph{The gt table data object}
 
-\item{table.width}{The width of the table. Can be specified as a
-single-length character with units of pixels or as a percentage. If
-provided as a single-length numeric vector, it is assumed that the value is
-given in units of pixels. The \code{\link[gt:px]{px()}} and \code{\link[gt:pct]{pct()}} helper functions can also
-be used to pass in numeric values and obtain values as pixel or percent
-units.}
+\verb{obj:<gt_tbl>} // \strong{required}
+
+This is the \strong{gt} table object that is commonly created through use of the
+\code{\link[gt:gt]{gt()}} function.}
+
+\item{table.width}{\emph{Table width}
+
+The table width can be specified as a single-length character with units of
+pixels or as a percentage. If provided as a single-length numeric vector,
+it is assumed that the value is given in units of pixels. The \code{\link[gt:px]{px()}} and
+\code{\link[gt:pct]{pct()}} helper functions can also be used to pass in numeric values and
+obtain values as pixel or percent units.}
 
 \item{...}{For passing additional arguments to the \code{\link[=tab_options]{tab_options()}}
 function}
