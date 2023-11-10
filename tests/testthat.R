@@ -1,4 +1,4 @@
 library(testthat)
-library(volundr)
+library(vlndr)
 
-test_check("volundr")
+test_check("vlndr")

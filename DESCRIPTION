@@ -1,5 +1,5 @@
-Package: volundr
-Title: Forging many models together
+Package: vlndr
+Title: Language to Manage Many Models
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Anish",
@@ -41,6 +41,6 @@ Suggests:
     rmarkdown,
     knitr
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/volundr
-BugReports: https://github.com/asshah4/volundr/issues
+URL: https://github.com/asshah4/vlndr
+BugReports: https://github.com/asshah4/vlndr/issues
 Config/testthat/edition: 3

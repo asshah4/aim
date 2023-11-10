@@ -1,7 +1,7 @@
-#' volundr package
+#' vlndr package
 #'
 #' @docType package
-#' @aliases volundr-package
+#' @aliases vlndr-package
 #' @keywords internal
 "_PACKAGE"
 
@@ -9,7 +9,7 @@
 #'
 #' @import vctrs
 #' @keywords internal
-#' @name volundr-vctrs
+#' @name vlndr-vctrs
 NULL
 
 
