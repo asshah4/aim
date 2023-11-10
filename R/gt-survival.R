@@ -1,23 +1,15 @@
-#' Make hazard ratio summary table
+#' Table of hazard ratios
 #'
-#' @param object A `mdl_tbl` object with survival-based regression outcomes
+#' @description
+#' Function that takes a `mdl_tbl` object that includes survival-model data,
+#' usually in the form of Cox proportional hazard models, and allows them to be
+#' displayed.
 #'
-#' @param data A dataset that corresponds to the model group of interest, and
-#'   includes survival times.
-#'
-#' @param outcomes Is a formula or list of formulas selecting the outcome
-#'   variables of interest. The LHS is always the name of the variable that will
-#'   be selected. The RHS is the potential label for the output table. If no
-#'   label is desired, can place an `NA` value on RHS of formula.
+#' @inheritParams tbls
 #'
 #' @param followup Character vector naming the followup duration variable. Must
 #'   be either same length as __outcomes__ or be of length of 1 (which will be
 #'   recycled).
-#'
-#' @param terms Is a formula or list of formulas selecting the model terms that
-#'   should be used. The LHS is always the name of the variable that will be
-#'   selected. The RHS is the potential label for the output table. If no label
-#'   is desired, can place an `NA` value on RHS of formula.
 #'
 #' @param rate_difference If there are only two levels in the term, the rate
 #'   difference between the levels will be calculated. Defaults to `FALSE`.

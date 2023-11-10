@@ -4,7 +4,7 @@
 \alias{tbl_hazard}
 \alias{tbl_dichotomous_hazard}
 \alias{tbl_categorical_hazard}
-\title{Make hazard ratio summary table}
+\title{Table of hazard ratios}
 \usage{
 tbl_dichotomous_hazard(
   object,
@@ -29,10 +29,10 @@ tbl_categorical_hazard(
 )
 }
 \arguments{
-\item{object}{A \code{mdl_tbl} object with survival-based regression outcomes}
+\item{object}{A \code{mdl_tbl} object with the required models}
 
-\item{data}{A dataset that corresponds to the model group of interest, and
-includes survival times.}
+\item{data}{The original dataset used to create the models of interest. The
+variables in the model must be contained within this dataset.}
 
 \item{outcomes}{Is a formula or list of formulas selecting the outcome
 variables of interest. The LHS is always the name of the variable that will
@@ -53,5 +53,7 @@ difference between the levels will be calculated. Defaults to \code{FALSE}.
 Presumes a 95\% confidence interval as the default.}
 }
 \description{
-Make hazard ratio summary table
+Function that takes a \code{mdl_tbl} object that includes survival-model data,
+usually in the form of Cox proportional hazard models, and allows them to be
+displayed.
 }

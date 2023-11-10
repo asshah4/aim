@@ -83,7 +83,7 @@
 #' @import ggplot2
 #' @import gt
 #' @export
-tbl_group_forests <- function(object,
+old_tbl_group_forests <- function(object,
 															formula,
 															type,
 															vars,
@@ -467,6 +467,43 @@ tbl_group_forests <- function(object,
 
 }
 
+#' Forest plot and table
+#'
+#' @inheritParams tbls
+#' @import gt ggplot2
+#' @name tbl_forest
+NULL
+
+#' @rdname tbl_forest
+#' @export
+tbl_stratified_forest <- function(object,
+																	data,
+																	outcomes = formula(),
+																	terms = formula(),
+																	...) {
+
+	# Validation
+	# 	Ensure correct object type
+	# 	Ensure only one model family is present
+	checkmate::assert_class(object, 'mdl_tbl')
+	if (length(unique(object$name)) > 1) {
+		stop('Cannot combine models from different datasets or regressions into a table safely.')
+	}
+
+	# Get relevant filtering variables
+	## Outcomes
+	out <- formulas_to_named_list(outcomes)
+	out_nms <- names(out)
+	out_lab <- unlist(unname(out))
+	## Terms
+	tms <- formulas_to_named_list(terms)
+	tms_nms <- names(tms)
+	tms_lab <- unlist(unname(tms))
+
+	# TODO work on creating data table
+	# TODO need to figure out forest plots again
+
+}
 
 #' Compact and minimal theme for `gt` tables
 #'
