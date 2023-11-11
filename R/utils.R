@@ -156,7 +156,11 @@ flatten_table <- function(x) {
 			model_parameters,
 			model_summary
 		) |>
-		tidyr::unnest(model_parameters) |>
-		tidyr::unnest(model_summary)
+		tidyr::unnest(model_summary) |>
+		dplyr::rename(any_of(c(
+			model_statistic = 'statistic',
+			model_p_value = 'p_value'
+		))) |>
+		tidyr::unnest(model_parameters)
 
 }

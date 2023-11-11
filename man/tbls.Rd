@@ -9,7 +9,12 @@
 \item{data}{The original dataset used to create the models of interest. The
 variables in the model must be contained within this dataset.}
 
-\item{terms}{Is a formula or list of formulas selecting the model terms that
+\item{outcomes}{Is a formula or list of formulas selecting the outcome
+variables of interest. The LHS is always the name of the variable that will
+be selected. The RHS is the potential label for the output table. If no
+label is desired, can place an \code{NA} value on RHS of formula.}
+
+\item{terms}{Is a \code{formula} or \code{list} of formulas selecting the model terms that
 should be used. The LHS is always the name of the variable that will be
 selected. The RHS is the potential label for the output table. If no label
 is desired, can place an \code{NA} value on RHS of formula.}

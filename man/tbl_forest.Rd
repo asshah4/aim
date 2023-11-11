@@ -5,7 +5,18 @@
 \alias{tbl_stratified_forest}
 \title{Forest plot and table}
 \usage{
-tbl_stratified_forest(object, data, terms, ...)
+tbl_stratified_forest(
+  object,
+  data,
+  outcomes = formula(),
+  terms = formula(),
+  strata = formula(),
+  level = formula(),
+  columns = list(beta ~ "Estimate", conf ~ "95\% CI", n ~ "No."),
+  invert = FALSE,
+  axis = list(scale ~ "continuous"),
+  ...
+)
 }
 \arguments{
 \item{object}{A \code{mdl_tbl} object with the required models}
@@ -13,11 +24,75 @@ tbl_stratified_forest(object, data, terms, ...)
 \item{data}{The original dataset used to create the models of interest. The
 variables in the model must be contained within this dataset.}
 
-\item{terms}{Is a formula or list of formulas selecting the model terms that
+\item{outcomes}{Is a formula or list of formulas selecting the outcome
+variables of interest. The LHS is always the name of the variable that will
+be selected. The RHS is the potential label for the output table. If no
+label is desired, can place an \code{NA} value on RHS of formula.}
+
+\item{terms}{Is a \code{formula} or \code{list} of formulas selecting the model terms that
 should be used. The LHS is always the name of the variable that will be
 selected. The RHS is the potential label for the output table. If no label
 is desired, can place an \code{NA} value on RHS of formula.}
+
+\item{strata}{A list of strata that should be evaluated}
+
+\item{level}{List of formulas. Each list-element is a formula with the LHS
+reflecting either the variable to re-label or a specific level, and the RHS
+reflecting what the new level should be called (for display). If there are
+conflicting labels, the most recent will be used.
+
+For example, \verb{list(am ~ c("Manual", "Automatic")} would take, from the
+\code{mtcars} dataset, the \code{am} variable, which consists of \code{c(0, 1)}, and
+relabel them in the order described. They are sorted in ascendiing order
+prior to re-labeling.
+
+The alternative approach is to use the specific level itself and have it
+re-labeled. \code{list(0 ~ "Absent")} would take all levels that are zero, and
+change their value.}
+
+\item{columns}{Additional columns that help to describe the subgroup models.
+At least one column should be selected from this list. The sequence listed
+will reflect the sequence shown in the table. The current options are:
+\itemize{
+\item beta = point estimate value, such as odds ratio or hazard ratio
+\item conf = inclusion of the confidence interval (presumed to be 95\%-ile)
+\item n = number of observations in each model group
+\item p = p_value for model or interaction term
+}
+
+For example: \verb{list(beta ~ "Hazard", conf ~ "95\% CI" n ~ "No.")"}}
+
+\item{invert}{Logical. Determine if the odds or hazard ratio should be shown
+as the reciprocal values. Instead of a decreasing hazard for every unit
+increase, it describes an increasing hazard for every unit decrease.
+Defaults to FALSE}
+
+\item{axis}{Argument to help modify the forest plot itself. This is a
+list-formula of the following parameters. If they are not named, the
+function will attempt to "guess" the optimal parameters. The options are:
+\itemize{
+\item title = label or title for the column describing the forest plot
+\item lim = x-axis limits
+\item breaks = x-axis tick marks or break points that should be numbers
+\item int = x-axis intercept
+\item lab = label for the x-axis
+\item scale = defaults to continuous, but may also use a log transformation as
+well \code{c("continuous", "log")}
+}
+
+For example: \verb{list(title ~ "Decreasing Hazard", lab ~ "HR (95\% CI))}}
+
+\item{width}{Describes the width of each column in a list of two-sided
+formulas. The RHS is a decimal reflecting the percent each column should
+take of the entire table. The forest plot is usually given 30\% of the
+width.
+
+For example: \code{list(n ~ .1, forest ~ 0.3)}}
 }
 \description{
-Forest plot and table
+Forest plots are usually ways to describe contrasting data, such as between
+strata, or to show interaction (if present). We can show the estimates of
+each parameter along a dichotomous subgroup, or we can show the estimates of
+a primary exposure along a multitude of subgroups. This function allows both
+methods (and some spectrum in between) to demonstrate these.
 }

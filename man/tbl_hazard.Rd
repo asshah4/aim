@@ -43,7 +43,7 @@ label is desired, can place an \code{NA} value on RHS of formula.}
 be either same length as \strong{outcomes} or be of length of 1 (which will be
 recycled).}
 
-\item{terms}{Is a formula or list of formulas selecting the model terms that
+\item{terms}{Is a \code{formula} or \code{list} of formulas selecting the model terms that
 should be used. The LHS is always the name of the variable that will be
 selected. The RHS is the potential label for the output table. If no label
 is desired, can place an \code{NA} value on RHS of formula.}

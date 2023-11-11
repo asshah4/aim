@@ -94,7 +94,6 @@ tbl_dichotomous_hazard <- function(object,
 
 	}
 
-
 	# Number of tables to make depends on...
 	#		Number of outcomes
 	# 	Number of terms
