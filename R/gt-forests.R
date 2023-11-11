@@ -469,7 +469,30 @@ old_tbl_group_forests <- function(object,
 
 #' Forest plot and table
 #'
+#' @description
+#' Forest plots are usually ways to describe contrasting data, such as between
+#' strata, or to show interaction (if present). We can show the estimates of
+#' each parameter along a dichotomous subgroup, or we can show the estimates of
+#' a primary exposure along a multitude of subgroups. This function allows both
+#' methods (and some spectrum in between) to demonstrate these.
+#'
 #' @inheritParams tbls
+#'
+#' @param columns Additional columns that help to describe the subgroup models.
+#'   At least one column should be selected from this list. The sequence listed
+#'   will reflect the sequence shown in the table. The current options are:
+#'
+#'   * beta = point estimate value, such as odds ratio or hazard ratio
+#'
+#'   * conf = inclusion of the confidence interval (presumed to be 95%-ile)
+#'
+#'   * n = number of observations in each model group
+#'
+#'   * p = p_value for model or interaction term
+#'
+#'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
+#'
+#' @param strata A list of strata that should be evaluated
 #' @import gt ggplot2
 #' @name tbl_forest
 NULL
@@ -480,7 +503,12 @@ tbl_stratified_forest <- function(object,
 																	data,
 																	outcomes = formula(),
 																	terms = formula(),
+																	strata = character(),
+																	columns = list(beta ~ "Estimate",
+																								 conf ~ "95% CI",
+																								 n ~ "No."),
 																	...) {
+
 
 	# Validation
 	# 	Ensure correct object type
@@ -491,16 +519,37 @@ tbl_stratified_forest <- function(object,
 	}
 
 	# Get relevant filtering variables
+
 	## Outcomes
 	out <- formulas_to_named_list(outcomes)
 	out_nms <- names(out)
 	out_lab <- unlist(unname(out))
+
 	## Terms
 	tms <- formulas_to_named_list(terms)
 	tms_nms <- names(tms)
 	tms_lab <- unlist(unname(tms))
 
+	## Columns
+	cols <- formula_to_named_list(columns)
+	est_var <- character()
+	mod_var <- character()
+	if ("beta" %in% names(cols)) {
+		est_var <- append(est_var, "estimate")
+	}
+	if ("conf" %in% names(cols)) {
+		est_var <- append(est_var, c("conf.low", "conf.high"))
+	}
+	if ("p" %in% names(cols)) {
+		est_var <- append(est_var, "p.value")
+	}
+	if ("n" %in% names(cols)) {
+		mod_var <- append(mod_var, "nobs")
+	}
+
 	# TODO work on creating data table
+
+
 	# TODO need to figure out forest plots again
 
 }

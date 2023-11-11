@@ -1,4 +1,4 @@
-test_that("generation of forest plots", {
+test_that("generate forest plot for strata terms along all variables", {
 
 	object <-
 		fmls(mpg ~ hp + drat + wt + .s(am),
@@ -18,6 +18,9 @@ test_that("generation of forest plots", {
 		wt ~ 'Weight'
 	)
 
+	columns <- list(beta ~ "Estimate",
+								 conf ~ "95% CI",
+								 n ~ "No.")
 
 
 
