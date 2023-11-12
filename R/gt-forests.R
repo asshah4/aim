@@ -559,6 +559,8 @@ tbl_stratified_forest <- function(object,
 																	...) {
 
 
+	# Table setup ----
+
 	## Validation
 	# 	Ensure correct object type
 	# 	Ensure only one model family is present
@@ -634,8 +636,10 @@ tbl_stratified_forest <- function(object,
 	}
 
 
-	# TODO need to figure out forest plots again
 
+	# Plot setup ----
+
+	# TODO need to figure out forest plots again
 
 	## Axis arguments
 	x_vars <- formulas_to_named_list(axis)
