@@ -1,20 +1,21 @@
 test_that("generate forest plot for strata terms along all variables", {
 
 	object <-
-		fmls(mpg ~ hp + drat + wt + .s(am),
+		fmls(vs ~ mpg + disp + wt + .s(am),
 				 pattern = 'parallel') |>
 		fit(
-			.fn = lm,
+			.fn = glm,
+			family = 'binomial',
 			data = mtcars,
 			raw = FALSE
 		) |>
 		mdl_tbl()
 
-	outcomes <- mpg ~ 'Miles per gallon'
+	outcomes <- vs ~ 'Vital signs'
 
 	terms <- list(
-		hp ~ 'Horsepower',
-		drat ~ 'Drag',
+		mpg ~ 'Mileage',
+		disp ~ 'Display',
 		wt ~ 'Weight'
 	)
 
@@ -31,7 +32,24 @@ test_that("generate forest plot for strata terms along all variables", {
 								 n ~ "No.")
 
 	axis <-
-		list(title ~ 'Increasing Estimate', lab ~ 'Estimate (95% CI)')
+		list(
+			title ~ 'Increasing Estimate',
+			lab ~ 'Estimate (95% CI)',
+			lim ~ c(0, 5)
+		)
 
+	# Simple binomial
+	x <- tbl_stratified_forest(
+		object = object,
+		data = mtcars,
+		outcomes = outcomes,
+		terms = terms,
+		strata = strata,
+		level = level,
+		columns = columns,
+		axis = axis
+	)
+
+	expect_s3_class(x, 'gt_tbl')
 
 })

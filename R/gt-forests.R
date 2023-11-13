@@ -539,6 +539,10 @@ old_tbl_group_forests <- function(object,
 #'
 #' For example: `list(n ~ .1, forest ~ 0.3)`
 #'
+#' @param digits The number of significant figures to present. If the numbers
+#'   are not scaled in a presentable fashion, can always adjust the table
+#'   subsequently.
+#'
 #' @import gt ggplot2
 #' @name tbl_forest
 NULL
@@ -556,6 +560,8 @@ tbl_stratified_forest <- function(object,
 																								 n ~ "No."),
 																	invert = FALSE,
 																	axis = list(scale ~ "continuous"),
+																	width = list(),
+																	digits = 2,
 																	...) {
 
 
@@ -618,7 +624,8 @@ tbl_stratified_forest <- function(object,
 		dplyr::filter(strata %in% sta_nms) |>
 		dplyr::filter(outcome %in% out_nms) |>
 		dplyr::filter(term %in% tms_nms) |>
-		dplyr::select(strata, level, outcome, term, any_of(est_var), any_of(mod_var))
+		dplyr::select(strata, level, outcome, term, any_of(est_var), any_of(mod_var)) |>
+		dplyr::mutate(across(is.numeric, ~ signif(.x, digits = digits)))
 
 
 	# Reciprocal odds or hazard if needed
@@ -644,16 +651,16 @@ tbl_stratified_forest <- function(object,
 	## Axis arguments
 	x_vars <- formulas_to_named_list(axis)
 
-	if ("lim" %in% names(x_vars)) {
-		lim_val <- eval(x_vars$lim)
+	if ('lim' %in% names(x_vars)) {
+		lim_val <- eval(str2lang(x_vars$lim))
 		xmin <- min(lim_val)
 		xmax <- max(lim_val)
 	} else {
 		xmin <- min(tbl$conf_low, na.rm = TRUE)
-		xmax <- min(tbl$conf_high, na.rm = TRUE)
+		xmax <- max(tbl$conf_high, na.rm = TRUE)
 	}
 
-	if ("int" %in% names(x_vars)) {
+	if ('int' %in% names(x_vars)) {
 		xint <- eval(x_vars$int)
 	} else {
 		xint <- dplyr::case_when(
@@ -665,28 +672,30 @@ tbl_stratified_forest <- function(object,
 		)
 	}
 
-	if ("breaks" %in% names(x_vars)) {
+	if ('breaks' %in% names(x_vars)) {
 		breaks <- eval(x_vars$breaks)
 	} else {
 		breaks <- ggplot2::waiver()
 	}
 
-	if ("lab" %in% names(x_vars)) {
+	if ('lab' %in% names(x_vars)) {
 		lab <- x_vars$lab
 	} else {
 		lab <- NULL
 	}
 
-	if ("scale" %in% names(x_vars)) {
+	if ('scale' %in% names(x_vars)) {
 		scale <- x_vars$scale
+	} else if (unique(object$model_call) %in% c('glm', 'coxph')) {
+		scale <- 'log'
 	} else {
-		scale <- "continuous"
+		scale <- 'continuous'
 	}
 
 	## Basic plot structure in table
 	plots <-
 		tbl |>
-		dplyr::group_by(strata, level) |>
+		dplyr::group_by(strata, level, term) |>
 		tidyr::nest() |>
 		dplyr::mutate(gg = purrr::map(data, ~ {
 			ggplot(.x, aes(x = estimate, y = 0)) +
@@ -816,7 +825,7 @@ tbl_stratified_forest <- function(object,
 		fmt_number(
 			columns = where(is.numeric),
 			drop_trailing_zeros = TRUE,
-			n_sigfig = 2
+			n_sigfig = digits
 		) |>
 		cols_width(ggplots ~ pct(50)) |>
 		opt_vertical_padding(scale = 0) |>

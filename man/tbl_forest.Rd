@@ -15,6 +15,8 @@ tbl_stratified_forest(
   columns = list(beta ~ "Estimate", conf ~ "95\% CI", n ~ "No."),
   invert = FALSE,
   axis = list(scale ~ "continuous"),
+  width = list(),
+  digits = 2,
   ...
 )
 }
@@ -88,6 +90,10 @@ take of the entire table. The forest plot is usually given 30\% of the
 width.
 
 For example: \code{list(n ~ .1, forest ~ 0.3)}}
+
+\item{digits}{The number of significant figures to present. If the numbers
+are not scaled in a presentable fashion, can always adjust the table
+subsequently.}
 }
 \description{
 Forest plots are usually ways to describe contrasting data, such as between
