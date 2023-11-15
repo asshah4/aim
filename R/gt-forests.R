@@ -492,7 +492,8 @@ old_tbl_group_forests <- function(object,
 #'
 #'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
 #'
-#' @param strata A list of strata that should be evaluated
+#' @param strata A list-formula of strata that should be evaluated, with the LHS
+#'   referring to the strata and the RHS referring to its label.
 #'
 #' @param level List of formulas. Each list-element is a formula with the LHS
 #'   reflecting either the variable to re-label or a specific level, and the RHS
@@ -535,7 +536,13 @@ old_tbl_group_forests <- function(object,
 #' @param width Describes the width of each column in a list of two-sided
 #'   formulas. The RHS is a decimal reflecting the percent each column should
 #'   take of the entire table. The forest plot is usually given 30% of the
-#'   width.
+#'   width. The default options attempt to be sensible. Options include:
+#'
+#'   * n = Column describing number of observations
+#'
+#'   * beta = Column of estimate and confidence intervals (usually combined)
+#'
+#'   * forest = Column containing forest plots
 #'
 #' For example: `list(n ~ .1, forest ~ 0.3)`
 #'
@@ -597,7 +604,13 @@ tbl_stratified_forest <- function(object,
 	# If multiple strata, may have multiple levels to relabel
 	lvl <- formulas_to_named_list(level)
 	lvl_nms <- names(lvl)
-	lvl_lab <- unlist(unname(lvl))
+	lvl_lab <-
+		lvl |>
+		unname() |>
+		unlist() |>
+		str2lang() |>
+		as.character() |>
+		tail(-1)
 
 	## Columns
 	cols <- formulas_to_named_list(columns)
@@ -616,16 +629,31 @@ tbl_stratified_forest <- function(object,
 		mod_var <- append(mod_var, "nobs")
 	}
 
+	## Creating a table
+	# Will need to know the number of strata and terms and outcomes
+	# Need to know relationships and counts of each to help organize
+	# Limit to a single outcome at this time due to simplicity
+
+	stopifnot(
+		'`tbl_*_forest()` only displays a single outcome at a time currently. Please file an issue if there is interest in multi-outcome forest tables.' =
+			length(out_nms) == 1
+	)
+
 	# Create a basic table of required elements
 	tbl <-
 		object |>
 		flatten_table() |>
-		# Cut to needed elements of model table
+		# Ensure correct variables are available
 		dplyr::filter(strata %in% sta_nms) |>
 		dplyr::filter(outcome %in% out_nms) |>
 		dplyr::filter(term %in% tms_nms) |>
-		dplyr::select(strata, level, outcome, term, any_of(est_var), any_of(mod_var)) |>
-		dplyr::mutate(across(is.numeric, ~ signif(.x, digits = digits)))
+		# Place in correct columnar order
+		dplyr::select(outcome,
+									term,
+									strata,
+									level,
+									any_of(mod_var),
+									any_of(est_var))
 
 
 	# Reciprocal odds or hazard if needed
@@ -641,8 +669,6 @@ tbl_stratified_forest <- function(object,
 				dplyr::rename(tbl, conf_high = conf_low, conf_low = conf_high)
 		}
 	}
-
-
 
 	# Plot setup ----
 
@@ -692,17 +718,18 @@ tbl_stratified_forest <- function(object,
 		scale <- 'continuous'
 	}
 
-	## Basic plot structure in table
-	plots <-
+	## Basic plots in table format
+	ptbl <-
 		tbl |>
-		dplyr::group_by(strata, level, term) |>
+		dplyr::group_by(outcome, term, strata, level) |>
 		tidyr::nest() |>
 		dplyr::mutate(gg = purrr::map(data, ~ {
 			ggplot(.x, aes(x = estimate, y = 0)) +
-				geom_point(size = 50) +
-				geom_linerange(aes(xmax = conf_high, xmin = conf_low, linewidth = 5)) +
-				geom_vline(xintercept = xint, linetype = 3, linewidth = 5) +
-				theme_minimal() +
+				geom_point() +
+				geom_linerange(aes(xmax = conf_high, xmin = conf_low)) +
+				geom_vline(xintercept = xint, linetype = 3) +
+				#theme_minimal() +
+				theme_void() +
 				theme(
 					axis.text.y = element_blank(),
 					axis.title.y = element_blank(),
@@ -736,46 +763,86 @@ tbl_stratified_forest <- function(object,
 		dplyr::add_row()
 
 	## Create axis at bottom
-	tmp <- plots$gg[[1]]
+	tmp <- ptbl$gg[[1]]
 	tmp$layers[1:2] <- NULL
 	btm_axis <-
 		tmp +
 		xlab(lab) +
 		theme(
-			axis.text.x = element_text(size = 100, margin = margin(10, 0 , 0 , 0)),
-			axis.ticks.x = element_line(linewidth = 5),
-			axis.ticks.length.x = unit(30, "pt"),
-			axis.title.x = element_text(size = 150, margin = margin(10, 0, 0 , 0)),
+			axis.text.x = element_text(margin = margin(10, 0 , 0 , 0)),
+			axis.ticks.x = element_line(),
+			#axis.ticks.length.x = unit(30, "pt"),
+			axis.title.x = element_text(margin = margin(10, 0, 0 , 0)),
 			axis.line.x = element_line(
-				linewidth = 5,
+				#linewidth = 5,
 				arrow = grid::arrow(
-					length = grid::unit(50, "pt"),
+					#length = grid::unit(50, "pt"),
 					ends = "both",
 					type = "closed"
 				)
 			)
 		)
 
-	plots$gg[nrow(plots)] <- list(btm_axis)
+	ptbl$gg[nrow(ptbl)] <- list(btm_axis)
 
-
+	# As we will be whiting out every other row, will need a masking layer
+	# Will pick hte "lowest level" in each strata to "white out"
 	# To use to help filter for which variables to modify in grouped rows
-	lowest_lvls <-
+	masking_lvls <-
 		subset(tbl, select = c(strata, level)) |>
 		dplyr::group_by(strata) |>
-		dplyr::slice_tail() |>
-		dplyr::pull(level) |>
-		unique()
+		dplyr::mutate(mask = dplyr::if_else(level == min(level), FALSE, TRUE)) |>
+		dplyr::pull(mask)
 
-	# Create table
-	tbl |>
+	## Re-create table, adding in parallel positions for plots
+	# Will need to "organize it" based on how many strata and terms there are
+	# Strata x 1, Terms x >1 = Grouped by Term (no need for strata)
+	# Strata x >1, Terms x 1 = Grouped by Strata (no need for term)
+	# Default = Group by Term
+	ftbl <-
+		tbl |>
+		# Rename or relabel components
+		dplyr::group_by(outcome, term) |>
+		dplyr::mutate(level = lvl_lab) |>
 		dplyr::rowwise() |>
-		dplyr::mutate(strata = sta[[strata]]) |>
+		dplyr::mutate(
+			strata = sta[[strata]],
+			term = tms[[term]],
+			outcome = out[[outcome]]
+		) |>
 		dplyr::ungroup() |>
 		dplyr::mutate(ggplots = NA) |>
 		dplyr::add_row() |>
-		dplyr::select(level, strata, all_of(mod_var), all_of(est_var), ggplots) |>
-		gt(rowname_col = "level", groupname_col = "strata") |>
+		# Place in correct columnar order
+		dplyr::select(term,
+									strata,
+									level,
+									any_of(mod_var),
+									any_of(est_var),
+									ggplots)
+
+	if (length(sta) == 1 & length(tms) > 1) {
+		rowCol <- 'level'
+		groupCol <- 'term'
+		ftbl <-
+			subset(ftbl, select = -strata)
+	} else if (length(sta) >= 1 & length(tms) == 1) {
+		rowCol <- 'level'
+		groupCol <- 'strata'
+	} else {
+		rowCol <- 'level'
+		groupCol <- 'strata'
+	}
+
+	## Convert to a `gt` table here and convert plots
+	# Variable that are meant to fine tune the graph are evaluated here
+
+	width_var <- formulas_to_named_list(width)
+
+
+	#gtbl <-
+		ftbl |>
+		gt(rowname_col = rowCol, groupname_col = groupCol) |>
 		# Estimates and confidence intervals
 		{\(.) {
 			if (all(c("estimate", "conf_low", "conf_high") %in% est_var)) {
