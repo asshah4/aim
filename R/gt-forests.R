@@ -545,18 +545,22 @@ old_tbl_group_forests <- function(object,
 #'   * forest = Column containing forest plots
 #'
 #' For example: `list(n ~ .1, forest ~ 0.3)`
-#' 
+#'
 #' @param forest A `list-formula` object that can be used to help customize the
 #'   forest plot prior to generation of the table. The options directly
 #'   correspond to `ggplot2` aesthetic specifications that can modify the visual
 #'   aspects of the forest plot. The currently supported arguments:
-#'   
-#'   * size = Relative size of the central marker for point estimate
-#'   
-#'   * shape = 
-#'   
-#'   * linetype = Vertical line that serves as the x-intercept. 
-#' 
+#'
+#'   * size = Relative size of the marker for point estimate
+#'
+#'   * shape = Shape of the marker for point estimate
+#'
+#'   * fill = Fill of the marker for point estimate
+#'
+#'   * linetype = Vertical line that serves as the x-intercept across the table
+#'
+#'   * linewidth = Thickness of lines, for both vertical and horixontal axes
+#'
 #' @param digits The number of significant figures to present. If the numbers
 #'   are not scaled in a presentable fashion, can always adjust the table
 #'   subsequently.
@@ -616,13 +620,14 @@ tbl_stratified_forest <- function(object,
 	# If multiple strata, may have multiple levels to relabel
 	lvl <- formulas_to_named_list(level)
 	lvl_nms <- names(lvl)
-	lvl_lab <-
-		lvl |>
-		unname() |>
-		unlist() |>
-		str2lang() |>
-		as.character() |>
-		tail(-1)
+	lvl_lab <- unlist(unname(lvl))
+	if (length(lvl_lab) == 1) {
+		lvl_lab <-
+			lvl_lab |>
+			str2lang()
+			as.character() |>
+			tail(-1)
+	}
 
 	## Columns
 	cols <- formulas_to_named_list(columns)
@@ -682,9 +687,9 @@ tbl_stratified_forest <- function(object,
 		}
 	}
 
-	# Plot setup ----
+	# Modify table based on strata, terms, etc
 
-	# TODO need to figure out forest plots again
+	# Plot setup ----
 
 	## Axis arguments
 	x_vars <- formulas_to_named_list(axis)
@@ -733,19 +738,37 @@ tbl_stratified_forest <- function(object,
 	## Basic plots in table format
 	# Will inject the general sizing of plots here
 	# These options will scale with each other, and start and sensible default
-	
-	# TODO
-	plotOptions <- formulas_to_named_list(forest)
-	
+	forestOptions <- formulas_to_named_list(forest)
+
+	plotOptions <- list(
+	  size = 1,
+	  shape = 'circle',
+	  linetype = 3,
+	  linewidth = 1
+	)
+
+	for (i in names(forestOptions)) {
+		plotOptions[[i]] <- forestOptions[[i]]
+	}
+
+
 	ptbl <-
 		tbl |>
 		dplyr::group_by(outcome, term, strata, level) |>
 		tidyr::nest() |>
 		dplyr::mutate(gg = purrr::map(data, ~ {
 			ggplot(.x, aes(x = estimate, y = 0)) +
-				geom_point() +
-				geom_linerange(aes(xmax = conf_high, xmin = conf_low)) +
-				geom_vline(xintercept = xint, linetype = 3) +
+				geom_point(size = plotOptions$size * 30, shape = plotOptions$shape) +
+				geom_linerange(aes(
+					xmax = conf_high,
+					xmin = conf_low,
+					linewidth = plotOptions$linewidth
+				)) +
+				geom_vline(
+					xintercept = xint,
+					linetype = plotOptions$linetype,
+					linewidth = plotOptions$linewidth * 5
+				) +
 				#theme_minimal() +
 				theme_void() +
 				theme(
@@ -787,17 +810,18 @@ tbl_stratified_forest <- function(object,
 		tmp +
 		xlab(lab) +
 		theme(
-			axis.text.x = element_text(margin = margin(10, 0 , 0 , 0)),
-			axis.ticks.x = element_line(),
-			#axis.ticks.length.x = unit(30, "pt"),
-			axis.title.x = element_text(margin = margin(10, 0, 0 , 0)),
+			axis.text.x = element_text(margin = margin(10, 0 , 0 , 0), size = plotOptions$size * 50),
+			axis.ticks.x = element_line(linewidth = plotOptions$size * 5),
+			axis.ticks.length.x = unit(30, "pt"),
+			axis.title.x = element_text(margin = margin(10, 0, 0 , 0), size = plotOptions$size * 100),
 			axis.line.x = element_line(
-				#linewidth = 5,
+				linewidth = plotOptions$size * 5,
 				arrow = grid::arrow(
-					#length = grid::unit(50, "pt"),
+					length = grid::unit(50, "pt"),
 					ends = "both",
 					type = "closed"
-				)
+				),
+				colour = 'black'
 			)
 		)
 
@@ -821,9 +845,10 @@ tbl_stratified_forest <- function(object,
 		tbl |>
 		# Rename or relabel components
 		dplyr::group_by(outcome, term) |>
-		dplyr::mutate(level = lvl_lab) |>
+		#dplyr::mutate(level = lvl_lab) |>
 		dplyr::rowwise() |>
 		dplyr::mutate(
+			level = lvl[[as.character(level)]],
 			strata = sta[[strata]],
 			term = tms[[term]],
 			outcome = out[[outcome]]
@@ -847,6 +872,8 @@ tbl_stratified_forest <- function(object,
 	} else if (length(sta) >= 1 & length(tms) == 1) {
 		rowCol <- 'level'
 		groupCol <- 'strata'
+		ftbl <-
+			subset(ftbl, select = -term)
 	} else {
 		rowCol <- 'level'
 		groupCol <- 'strata'
@@ -855,7 +882,7 @@ tbl_stratified_forest <- function(object,
 	## Convert to a `gt` table here and convert plots
 	# Variable that are meant to fine tune the graph are evaluated here
 
-	colWidths <- 
+	colWidths <-
 	  formulas_to_named_list(width) |>
 	  lapply(as.numeric)
 	if (is.null(colWidths$n)) {
@@ -867,7 +894,7 @@ tbl_stratified_forest <- function(object,
 	if (is.null(colWidths$forest)) {
 	  colWidths$forest <- 0.4
 	}
-	
+
 	gtbl <-
 		ftbl |>
 		gt(rowname_col = rowCol, groupname_col = groupCol) |>
@@ -914,16 +941,6 @@ tbl_stratified_forest <- function(object,
 			drop_trailing_zeros = TRUE,
 			n_sigfig = 2
 		) |>
-		fmt_scientific(
-		  columns = where(~ is.numeric(.x) && max(.x, na.rm = TRUE) > 100),
-		  n_sigfig = 2,
-		  decimals = 2
-		) |>
-		fmt_scientific(
-		  columns = where(~ is.numeric(.x) && min(.x, na.rm = TRUE) < 0.01),
-		  n_sigfig = 2,
-		  decimals = 2
-		) |>
 		tab_style(
 			style = list(
 				cell_borders(sides = "all", color = NULL)
@@ -933,7 +950,7 @@ tbl_stratified_forest <- function(object,
 				cells_stub(rows = everything())
 			)
 		) |>
-		cols_width(ggplots ~ pct(as.numeric(colWidths$forest * 100))) |>
+		#cols_width(ggplots ~ pct(as.numeric(colWidths$forest * 100))) |>
 		opt_vertical_padding(scale = 0) |>
 		opt_table_outline(style = "none") |>
 		tab_options(
@@ -971,8 +988,8 @@ tbl_stratified_forest <- function(object,
 			fn = function(x) {
 				purrr::map(ptbl$gg,
 									 ggplot_image,
-									 #height = px(50),
-									 aspect_ratio = 1)
+									 height = px(50),
+									 aspect_ratio = colWidths$forest * 10)
 			}
 		)
 

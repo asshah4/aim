@@ -16,6 +16,7 @@ tbl_stratified_forest(
   invert = FALSE,
   axis = list(scale ~ "continuous"),
   width = list(),
+  forest = list(),
   digits = 2,
   ...
 )
@@ -97,11 +98,21 @@ width. The default options attempt to be sensible. Options include:
 
 For example: \code{list(n ~ .1, forest ~ 0.3)}}
 
+\item{forest}{A \code{list-formula} object that can be used to help customize the
+forest plot prior to generation of the table. The options directly
+correspond to \code{ggplot2} aesthetic specifications that can modify the visual
+aspects of the forest plot. The currently supported arguments:
+\itemize{
+\item size = Relative size of the marker for point estimate
+\item shape = Shape of the marker for point estimate
+\item fill = Fill of the marker for point estimate
+\item linetype = Vertical line that serves as the x-intercept across the table
+\item linewidth = Thickness of lines, for both vertical and horixontal axes
+}}
+
 \item{digits}{The number of significant figures to present. If the numbers
 are not scaled in a presentable fashion, can always adjust the table
 subsequently.}
-
-\item{forest}{A \code{list-formula} object that can be used to help customize the forest plot prior to generation of the table.}
 }
 \description{
 Forest plots are usually ways to describe contrasting data, such as between
