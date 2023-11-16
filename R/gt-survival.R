@@ -130,10 +130,14 @@ tbl_dichotomous_hazard <- function(object,
 			py <-
 				survival::pyears(survival::Surv(dat[[followup]], dat[[o]]) ~ dat[[t]])
 
-			py$pyears <- py$pyears / person_years
+			py$pyears <- py$pyears / 100
 
 			rates <-
-				rbind(n = py$n, events = py$event, risk = py$event / py$pyears) |>
+				rbind(
+					n = py$n,
+					events = py$event,
+					risk = py$event / py$pyears
+				) |>
 				as.data.frame() |>
 				rownames_to_column(var = 'row')
 
