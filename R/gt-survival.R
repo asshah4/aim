@@ -19,7 +19,7 @@
 #' @param person_years The length or duration of person-years to use. Is an
 #'   integer, and usually is 10 or 100. Default is `100`, which would represent
 #'   the incidence for every *100 person-years*. Argument only used if
-#'   __rate_difference__ is set to `TRUE`.
+#'   __rate_difference__ is set to `TRUE`. Currently not working!
 #'
 #' @import gt
 #' @name tbl_hazard
@@ -281,7 +281,7 @@ tbl_dichotomous_hazard <- function(object,
 		# Rename rate differences
 		gtbl <-
 			gtbl |>
-			cols_label(contains('rd_') ~ paste('Rate difference per', person_years, 'person-years (95% CI)'))
+			cols_label(contains('rd_') ~ paste('Rate difference per', 100, 'person-years (95% CI)'))
 
 		# Add table spanners for the dichotomous terms
 		# Individual variable coverts the names of the levels only
@@ -556,7 +556,7 @@ tbl_categorical_hazard <- function(object,
 		# Rename rate differences
 		gtbl <-
 			gtbl |>
-			cols_label(contains('rd_') ~ paste('Rate difference per', person_years, 'person-years (95% CI)'))
+			cols_label(contains('rd_') ~ paste('Rate difference per', 100, 'person-years (95% CI)'))
 
 		# Add table spanners for teh categorcial terms
 		# 	Individual variable labels are complex
