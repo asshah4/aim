@@ -545,7 +545,18 @@ old_tbl_group_forests <- function(object,
 #'   * forest = Column containing forest plots
 #'
 #' For example: `list(n ~ .1, forest ~ 0.3)`
-#'
+#' 
+#' @param forest A `list-formula` object that can be used to help customize the
+#'   forest plot prior to generation of the table. The options directly
+#'   correspond to `ggplot2` aesthetic specifications that can modify the visual
+#'   aspects of the forest plot. The currently supported arguments:
+#'   
+#'   * size = Relative size of the central marker for point estimate
+#'   
+#'   * shape = 
+#'   
+#'   * linetype = Vertical line that serves as the x-intercept. 
+#' 
 #' @param digits The number of significant figures to present. If the numbers
 #'   are not scaled in a presentable fashion, can always adjust the table
 #'   subsequently.
@@ -568,6 +579,7 @@ tbl_stratified_forest <- function(object,
 																	invert = FALSE,
 																	axis = list(scale ~ "continuous"),
 																	width = list(),
+																	forest = list(),
 																	digits = 2,
 																	...) {
 
@@ -719,6 +731,12 @@ tbl_stratified_forest <- function(object,
 	}
 
 	## Basic plots in table format
+	# Will inject the general sizing of plots here
+	# These options will scale with each other, and start and sensible default
+	
+	# TODO
+	plotOptions <- formulas_to_named_list(forest)
+	
 	ptbl <-
 		tbl |>
 		dplyr::group_by(outcome, term, strata, level) |>
@@ -837,10 +855,20 @@ tbl_stratified_forest <- function(object,
 	## Convert to a `gt` table here and convert plots
 	# Variable that are meant to fine tune the graph are evaluated here
 
-	width_var <- formulas_to_named_list(width)
-
-
-	#gtbl <-
+	colWidths <- 
+	  formulas_to_named_list(width) |>
+	  lapply(as.numeric)
+	if (is.null(colWidths$n)) {
+	  colWidths$n <- 0.1
+	}
+	if (is.null(colWidths$beta)) {
+	  colWidths$beta <- 0.4
+	}
+	if (is.null(colWidths$forest)) {
+	  colWidths$forest <- 0.4
+	}
+	
+	gtbl <-
 		ftbl |>
 		gt(rowname_col = rowCol, groupname_col = groupCol) |>
 		# Estimates and confidence intervals
@@ -849,7 +877,7 @@ tbl_stratified_forest <- function(object,
 				. |>
 					cols_merge(columns = est_var[1:3],
 												 pattern = "{1} ({2}, {3})") |>
-					cols_width(estimate ~ pct(40)) |>
+					cols_width(estimate ~ pct(colWidths$beta * 100)) |>
 					cols_label(estimate = cols$beta)
 			} else {
 				.
@@ -859,7 +887,7 @@ tbl_stratified_forest <- function(object,
 		{\(.) {
 			if (all(c("nobs") %in% mod_var)) {
 				. |>
-					cols_width(nobs ~ pct(10)) |>
+					cols_width(nobs ~ pct(as.numeric(colWidths$n * 100))) |>
 					cols_label(nobs = cols$n)
 			} else {
 				.
@@ -880,6 +908,22 @@ tbl_stratified_forest <- function(object,
 				.
 			}
 		}}() |>
+	  # Control digits and significant figures
+		fmt_number(
+			columns = where(is.numeric),
+			drop_trailing_zeros = TRUE,
+			n_sigfig = 2
+		) |>
+		fmt_scientific(
+		  columns = where(~ is.numeric(.x) && max(.x, na.rm = TRUE) > 100),
+		  n_sigfig = 2,
+		  decimals = 2
+		) |>
+		fmt_scientific(
+		  columns = where(~ is.numeric(.x) && min(.x, na.rm = TRUE) < 0.01),
+		  n_sigfig = 2,
+		  decimals = 2
+		) |>
 		tab_style(
 			style = list(
 				cell_borders(sides = "all", color = NULL)
@@ -889,12 +933,7 @@ tbl_stratified_forest <- function(object,
 				cells_stub(rows = everything())
 			)
 		) |>
-		fmt_number(
-			columns = where(is.numeric),
-			drop_trailing_zeros = TRUE,
-			n_sigfig = digits
-		) |>
-		cols_width(ggplots ~ pct(50)) |>
+		cols_width(ggplots ~ pct(as.numeric(colWidths$forest * 100))) |>
 		opt_vertical_padding(scale = 0) |>
 		opt_table_outline(style = "none") |>
 		tab_options(
@@ -923,16 +962,17 @@ tbl_stratified_forest <- function(object,
 											 rows = is.na(level))
 			)
 		) |>
+	  # Modification of ggplot
 		cols_label(
 			ggplots = x_vars$title,
 		) |>
 		text_transform(
 			locations = cells_body(columns = ggplots),
 			fn = function(x) {
-				purrr::map(plots$gg,
+				purrr::map(ptbl$gg,
 									 ggplot_image,
-									 height = px(50),
-									 aspect_ratio = 5)
+									 #height = px(50),
+									 aspect_ratio = 1)
 			}
 		)
 

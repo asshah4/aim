@@ -36,7 +36,8 @@ should be used. The LHS is always the name of the variable that will be
 selected. The RHS is the potential label for the output table. If no label
 is desired, can place an \code{NA} value on RHS of formula.}
 
-\item{strata}{A list of strata that should be evaluated}
+\item{strata}{A list-formula of strata that should be evaluated, with the LHS
+referring to the strata and the RHS referring to its label.}
 
 \item{level}{List of formulas. Each list-element is a formula with the LHS
 reflecting either the variable to re-label or a specific level, and the RHS
@@ -87,13 +88,20 @@ For example: \verb{list(title ~ "Decreasing Hazard", lab ~ "HR (95\% CI))}}
 \item{width}{Describes the width of each column in a list of two-sided
 formulas. The RHS is a decimal reflecting the percent each column should
 take of the entire table. The forest plot is usually given 30\% of the
-width.
+width. The default options attempt to be sensible. Options include:
+\itemize{
+\item n = Column describing number of observations
+\item beta = Column of estimate and confidence intervals (usually combined)
+\item forest = Column containing forest plots
+}
 
 For example: \code{list(n ~ .1, forest ~ 0.3)}}
 
 \item{digits}{The number of significant figures to present. If the numbers
 are not scaled in a presentable fashion, can always adjust the table
 subsequently.}
+
+\item{forest}{A \code{list-formula} object that can be used to help customize the forest plot prior to generation of the table.}
 }
 \description{
 Forest plots are usually ways to describe contrasting data, such as between

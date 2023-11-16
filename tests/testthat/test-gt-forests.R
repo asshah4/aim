@@ -38,9 +38,16 @@ test_that("generate forest plot for strata terms along all variables", {
 			lim ~ c(0, 5)
 		)
 
-	## TODO
-	width <- list{
-	}
+	width <- list(
+	  n ~ .1,
+	  beta ~ .4,
+	  forest ~ .5
+	)
+	
+	forest <- list(
+	  size ~ 1,
+	  linetype ~ 1,
+	)
 
 	# Simple binomial
 	x <- tbl_stratified_forest(
