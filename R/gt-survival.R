@@ -13,7 +13,13 @@
 #'
 #' @param rate_difference If there are only two levels in the term, the rate
 #'   difference between the levels will be calculated. Defaults to `FALSE`.
-#'   Presumes a 95% confidence interval as the default.
+#'   Presumes a 95% confidence interval as the default. If `TRUE` will calculate
+#'   the rate by the __person_years__ provided.
+#'
+#' @param person_years The length or duration of person-years to use. Is an
+#'   integer, and usually is 10 or 100. Default is `100`, which would represent
+#'   the incidence for every *100 person-years*. Argument only used if
+#'   __rate_difference__ is set to `TRUE`.
 #'
 #' @import gt
 #' @name tbl_hazard
@@ -28,6 +34,7 @@ tbl_dichotomous_hazard <- function(object,
 																	 terms = formula(),
 																	 adjustment = formula(),
 																	 rate_difference = FALSE,
+																	 person_years = 100,
 																	 ...) {
 
 	# Validation
@@ -123,7 +130,7 @@ tbl_dichotomous_hazard <- function(object,
 			py <-
 				survival::pyears(survival::Surv(dat[[followup]], dat[[o]]) ~ dat[[t]])
 
-			py$pyears <- py$pyears / 100
+			py$pyears <- py$pyears / person_years
 
 			rates <-
 				rbind(n = py$n, events = py$event, risk = py$event / py$pyears) |>
@@ -223,7 +230,7 @@ tbl_dichotomous_hazard <- function(object,
 		dplyr::mutate(row = as.character(factor(
 			row,
 			levels = c('events', 'risk', lvl_nms),
-			labels = c('Total No. of events', 'Rate per 100 person-years', lvl_lab)
+			labels = c('Total No. of events', paste('Rate per', person_years, 'person-years'), lvl_lab)
 		))) |>
 		dplyr::mutate(outcome = factor(outcome, levels = out_nms, labels = out_lab))
 
@@ -270,7 +277,7 @@ tbl_dichotomous_hazard <- function(object,
 		# Rename rate differences
 		gtbl <-
 			gtbl |>
-			cols_label(contains('rd_') ~ 'Rate difference per 100 patient-years (95% CI)')
+			cols_label(contains('rd_') ~ paste('Rate difference per', person_years, 'person-years (95% CI)'))
 
 		# Add table spanners for the dichotomous terms
 		# Individual variable coverts the names of the levels only
@@ -316,6 +323,7 @@ tbl_categorical_hazard <- function(object,
 																	 terms = formula(),
 																	 adjustment = formula(),
 																	 rate_difference = FALSE,
+																	 person_years = 100,
 																	 ...) {
 
 	# Ensure correct object type
@@ -395,7 +403,7 @@ tbl_categorical_hazard <- function(object,
 			py <-
 				survival::pyears(survival::Surv(dat[[followup]], dat[[o]]) ~ dat[[t]])
 
-			py$pyears <- py$pyears / 100
+			py$pyears <- py$pyears / person_years
 
 			rates <-
 				rbind(n = py$n, events = py$event, risk = py$event / py$pyears) |>
@@ -497,7 +505,7 @@ tbl_categorical_hazard <- function(object,
 		dplyr::mutate(row = as.character(factor(
 			row,
 			levels = c('events', 'risk', lvl_nms),
-			labels = c('Total No. of events', 'Rate per 100 person-years', lvl_lab)
+			labels = c('Total No. of events', paste('Rate per', person_years, 'person-years'), lvl_lab)
 		))) |>
 		dplyr::mutate(outcome = factor(outcome, levels = out_nms, labels = out_lab))
 
@@ -544,7 +552,7 @@ tbl_categorical_hazard <- function(object,
 		# Rename rate differences
 		gtbl <-
 			gtbl |>
-			cols_label(contains('rd_') ~ 'Rate difference per 100 patient-years (95% CI)')
+			cols_label(contains('rd_') ~ paste('Rate difference per', person_years, 'person-years (95% CI)'))
 
 		# Add table spanners for teh categorcial terms
 		# 	Individual variable labels are complex

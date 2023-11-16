@@ -14,6 +14,7 @@ tbl_dichotomous_hazard(
   terms = formula(),
   adjustment = formula(),
   rate_difference = FALSE,
+  person_years = 100,
   ...
 )
 
@@ -25,6 +26,7 @@ tbl_categorical_hazard(
   terms = formula(),
   adjustment = formula(),
   rate_difference = FALSE,
+  person_years = 100,
   ...
 )
 }
@@ -50,7 +52,13 @@ is desired, can place an \code{NA} value on RHS of formula.}
 
 \item{rate_difference}{If there are only two levels in the term, the rate
 difference between the levels will be calculated. Defaults to \code{FALSE}.
-Presumes a 95\% confidence interval as the default.}
+Presumes a 95\% confidence interval as the default. If \code{TRUE} will calculate
+the rate by the \strong{person_years} provided.}
+
+\item{person_years}{The length or duration of person-years to use. Is an
+integer, and usually is 10 or 100. Default is \code{100}, which would represent
+the incidence for every \emph{100 person-years}. Argument only used if
+\strong{rate_difference} is set to \code{TRUE}.}
 }
 \description{
 Function that takes a \code{mdl_tbl} object that includes survival-model data,
