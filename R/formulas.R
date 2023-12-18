@@ -73,7 +73,6 @@
 #' @name fmls
 #' @export
 fmls <- function(x = unspecified(),
-								 simplify = TRUE,
 								 pattern = c("direct",
 								 						"sequential",
 								 						"parallel",
