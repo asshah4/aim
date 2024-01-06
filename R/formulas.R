@@ -46,8 +46,6 @@
 #' @inheritSection tm Roles
 #' @inheritSection tm Pluralized Arguments
 #'
-#' @inheritParams tm
-#'
 #' @param x Objects of the following types can be used as inputs
 #'
 #'   * `tm`
@@ -297,13 +295,11 @@ fmls <- function(x = unspecified(),
 
 }
 
-
 #' Initialize new formula-based data frame
 #' @keywords internal
 #' @noRd
 new_fmls <- function(formulaMatrix = data.frame(),
 										 termTable = data.frame()) {
-
 
 	stopifnot(is.data.frame(formulaMatrix))
 	stopifnot(is.data.frame(termTable))
@@ -315,7 +311,6 @@ new_fmls <- function(formulaMatrix = data.frame(),
 	)
 
 }
-
 
 #' @export
 is_fmls <- function(x) {
@@ -343,29 +338,6 @@ key_terms <- function(x) {
 	} else {
 		NULL
 	}
-}
-
-formulas_to_terms <- function(x) {
-
-	checkmate::assert_class(x, "fmls")
-
-	fmMat <- vec_data(x)
-	tmTab <- attr(x, "termTable")
-
-	tms <-
-		apply(
-			fmMat,
-			MARGIN = 1,
-			FUN = function(.x) {
-				.y <-
-					tmTab[tmTab$term %in% names(.x[which(.x == 1)]) |
-									tmTab$role == "strata", ]
-				vec_restore(.y, to = tm())
-		})
-
-	# Return
-	tms
-
 }
 
 #' @export
@@ -427,7 +399,6 @@ print.fmls <- function(x, ...) {
 		cat(format(x))
 	}
 }
-
 
 #' @export
 vec_ptype_full.fmls <- function(x, ...) {
@@ -574,4 +545,29 @@ formula.fmls <- function(x, ...) {
 	x |>
 		formulas_to_terms() |>
 		lapply(stats::as.formula, env = .GlobalEnv)
+}
+
+#' @keywords internal
+#' @noRd
+formulas_to_terms <- function(x) {
+
+	checkmate::assert_class(x, "fmls")
+
+	fmMat <- vec_data(x)
+	tmTab <- attr(x, "termTable")
+
+	tms <-
+		apply(
+			fmMat,
+			MARGIN = 1,
+			FUN = function(.x) {
+				.y <-
+					tmTab[tmTab$term %in% names(.x[which(.x == 1)]) |
+									tmTab$role == "strata", ]
+				vec_restore(.y, to = tm())
+		})
+
+	# Return
+	tms
+
 }

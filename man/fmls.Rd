@@ -7,7 +7,6 @@
 \usage{
 fmls(
   x = unspecified(),
-  simplify = TRUE,
   pattern = c("direct", "sequential", "parallel", "fundamental"),
   ...
 )

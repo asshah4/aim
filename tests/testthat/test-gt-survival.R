@@ -1,10 +1,10 @@
 test_that("for dichotomous variables", {
 
 	object <-
-		targets::tar_read(cox_mdls, store = '../mims/_targets') |>
+		targets::tar_read(cox_mdls, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>
 		dplyr::filter(name == 'parsimonious')
 	data <-
-		targets::tar_read(clinical, store = '../mims/_targets') |>
+		targets::tar_read(clinical, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>
 		dplyr::mutate(lf_delta_bin = factor(
 			lf_delta_bin,
 			levels = c(1, 0),
@@ -47,11 +47,11 @@ test_that("for dichotomous variables", {
 test_that("for categorical variables", {
 
 	object <-
-		targets::tar_read(cox_mdls, store = '../mims/_targets') |>
+		targets::tar_read(cox_mdls, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>
 		dplyr::filter(name == 'groups')
 
 	data <-
-		targets::tar_read(clinical, store = '../mims/_targets') |>
+		targets::tar_read(clinical, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>
 		dplyr::mutate(lf_grps = factor(
 			lf_grps,
 			levels = c(0, 1, 2, 3),

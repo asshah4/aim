@@ -58,7 +58,7 @@ the rate by the \strong{person_years} provided.}
 \item{person_years}{The length or duration of person-years to use. Is an
 integer, and usually is 10 or 100. Default is \code{100}, which would represent
 the incidence for every \emph{100 person-years}. Argument only used if
-\strong{rate_difference} is set to \code{TRUE}.}
+\strong{rate_difference} is set to \code{TRUE}. Currently not working!}
 }
 \description{
 Function that takes a \code{mdl_tbl} object that includes survival-model data,
