@@ -48,7 +48,7 @@ test_that('simple regression models can be built', {
 	expect_output(print(m1, '<model\\[1\\]>'))
 
 	# Binomial...
-	x <- glm(am ~ wt + hp, family = 'binomial', data = mtcars)
+	x <- glm(am ~ wt + vs, family = 'binomial', data = mtcars)
 	m2 <- suppressWarnings(mdl(x))
 	expect_s3_class(m2, 'mdl')
 	expect_length(m2, 1)
@@ -78,39 +78,45 @@ test_that('cox models can be made from survival package', {
 
 test_that('competing risk models can be made', {
 
-	dat <- na.omit(survival::mgus2)
-	time <- with(dat, ifelse(pstat == 0, futime, ptime))
-	status <- with(dat, ifelse(pstat == 0, 2 * death, 1))
-	status <- factor(status, levels = 0:2, labels = c('censor', 'pcm', 'death'))
-	dat$time <- time
-	dat$status <- status
-
-
-	# Requires `crr` from {cmprsk}
-	if (isTRUE(requireNamespace('cmprsk', quietly = TRUE))) {
-
-		x <- cmprsk::crr(
-			ftime = dat$time,
-			fstatus = dat$status,
-			cov1 = stats::get_all_vars(~ mspike, data = dat),
-			failcode = 'death',
-			cencode = 'censor'
-		)
-
-	}
-
-	dat <- MASS::Melanoma
-	dat$status <- dat$status - 1
-	dat$status <- factor(dat$status, levels = 0:2, labels = c('censor', 'death', 'other'))
-
-	# Requires `crr` from {tidycmprsk}
-	if (isTRUE(requireNamespace('tidycmprsk', quietly = TRUE))) {
-
-		x <- tidycmprsk::crr(
-			survival::Surv(time, status) ~ sex + age,
-			data = dat,
-			failcode = 'death'
-		)
-
+  skip_on_cran()
+  
+	if (isTRUE(requireNamespace('survival', quietly = TRUE))) {
+	  
+  	dat <- na.omit(survival::mgus2)
+  	time <- with(dat, ifelse(pstat == 0, futime, ptime))
+  	status <- with(dat, ifelse(pstat == 0, 2 * death, 1))
+  	status <- factor(status, levels = 0:2, labels = c('censor', 'pcm', 'death'))
+  	dat$time <- time
+  	dat$status <- status
+  
+  
+  	# Requires `crr` from {cmprsk}
+  	if (isTRUE(requireNamespace('cmprsk', quietly = TRUE))) {
+  
+  		x <- cmprsk::crr(
+  			ftime = dat$time,
+  			fstatus = dat$status,
+  			cov1 = stats::get_all_vars(~ mspike, data = dat),
+  			failcode = 'death',
+  			cencode = 'censor'
+  		)
+  		
+  		expect_s3_class(x, 'crr')
+  
+  	}
+  
+  	# Requires `crr` from {tidycmprsk}
+  	if (isTRUE(requireNamespace('tidycmprsk', quietly = TRUE))) {
+  
+  		x <- tidycmprsk::crr(
+  			survival::Surv(time, status) ~ sex + age,
+  			data = dat,
+  			failcode = 'death'
+  		)
+  		
+  		expect_s3_class(x, 'tidycrr')
+  
+  	}
+	
 	}
 })
