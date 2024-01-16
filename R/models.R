@@ -64,7 +64,8 @@ mdl.character <- function(x,
 			nobs = NA,
 			p.value = NA,
 			statistic = NA,
-			df = NA_integer_
+			df = NA_integer_,
+			vcov = NA,
 		)
 	}
 
