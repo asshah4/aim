@@ -10,12 +10,26 @@
 #'
 #' @param formulas formula given as either an `formula` or as a `fmls` object
 #'
-#' @param parameter_estimates data frame or table that contains columns
+#' @param parameter_estimates <data.frame> that contains columns
 #'   representing terms and individual estimates or coefficients, can be
-#'   accompanied by additional statistic columns
+#'   accompanied by additional statistic columns. By default, assumes
 #'
-#' @param summary_info ata frame or table that contains columns representing
-#'   summary statistic of a model
+#'  * __term__ = term name
+#'
+#'  * __estimate__ = estimate or coefficient
+#'
+#' @param summary_info <list> that contains columns representing
+#'   summary statistic of a model. By default, assumes...
+#'
+#' * __nobs__ = number of observations
+#'
+#' * __degrees_freedom__ = degrees of freedom
+#'
+#' * __statistic__ = test statistic
+#'
+#' * __p_value__ = p-value for overall model
+#'
+#' * __var_cov__ = variance-covariance matrix for predicted coefficients
 #'
 #' @param data_name string representing name of dataset that was used
 #'
@@ -42,10 +56,10 @@ mdl <- function(x = unspecified(), ...) {
 mdl.character <- function(x,
 													formulas,
 													parameter_estimates = data.frame(),
-													summary_info = data.frame(),
+													summary_info = list(),
 													data_name,
 													strata_variable = NA_character_,
-													strata_level = NA,
+													strata_level = NA_character_,
 													...) {
 
 	# Is the specified model type/call currently accepted?
@@ -53,27 +67,27 @@ mdl.character <- function(x,
 
 	# Ensure equal length objects for the data frames
 	if (length(parameter_estimates) == 0) {
-		parameter_estimates <- tibble(
+		parameter_estimates <- tibble::tibble(
 			term = NA_character_,
 			estimate = NA
 		)
 	}
 
 	if (length(summary_info) == 0) {
-		summary_info <- tibble(
+		summary_info <- list(
 			nobs = NA,
-			p.value = NA,
+			p_value = NA,
 			statistic = NA,
-			df = NA_integer_,
-			vcov = NA,
+			degrees_freedom = NA_integer_,
+			var_cov = NA
 		)
 	}
 
 	# Data arguments
 	dtArgs <-
-		dplyr::bind_cols(dataName = data_name,
-										 strataVariable = strata_variable,
-										 strataLevel = strata_level)
+		list(dataName = data_name,
+				 strataVariable = strata_variable,
+				 strataLevel = strata_level)
 
 	# Assume additional arguments are for the model (from the dots)
 	dots <- list(...)
@@ -133,21 +147,23 @@ mdl.lm <- function(x = unspecified(),
 	}
 
 	da <-
-		dplyr::bind_cols(dataName = data_name,
-										 strataVariable = strata_variable,
-										 strataLevel = strata_level)
+		list(dataName = data_name,
+				 strataVariable = strata_variable,
+				 strataLevel = strata_level)
 
 
 	# Get parameter information
 	pe <- possible_tidy(x)
 
 	# Get model information
-	si <- possible_glance(x)
+	si <-
+		possible_glance(x) |>
+		as.list()
+	si$degrees_freedom <- stats::df.residual(x)
+	si$var_cov <- stats::vcov(x)
 
-	# Warning about empty...
-	if (length(mc) == 0) {
-		warning_empty_models()
-	}
+	# TODO
+	# Consider warning method about empty
 
 	# Creation
 	new_model(
@@ -189,8 +205,8 @@ new_model <- function(modelCall = character(),
 											modelFormula = fmls(),
 											modelArgs = list(),
 											parameterEstimates = data.frame(),
-											summaryInfo = data.frame(),
-											dataArgs = data.frame()) {
+											summaryInfo = list(),
+											dataArgs = list()) {
 
 	# Model description is essentially deconstructed here
 	# Allows for reconstruction of the model, but lightweight, like a blueprint
@@ -208,8 +224,8 @@ new_model <- function(modelCall = character(),
 	checkmate::assert_class(modelFormula, "fmls")
 	checkmate::assert_class(modelArgs, "list")
 	checkmate::assert_class(parameterEstimates, "data.frame")
-	checkmate::assert_class(summaryInfo, "data.frame")
-	checkmate::assert_class(dataArgs, "data.frame")
+	checkmate::assert_class(summaryInfo, "list")
+	checkmate::assert_class(dataArgs, "list")
 
 	if (length(modelCall) == 0) {
 		mc <- list()
