@@ -2,8 +2,8 @@
 % Please edit documentation in R/vlndr-package.R
 \docType{package}
 \name{vlndr-package}
+\alias{vlndr}
 \alias{vlndr-package}
-\alias{_PACKAGE}
 \title{vlndr package}
 \description{
 Organize many models and hypotheses, generate directed acyclic graphs from these models, and cut out variables in a causality-based approach to analyses. The package consists of formulating hypothesis, testing the relationships, and analyzing the parameters. In causality-based studies, the focus is on understanding and contextualizing variables. This package provides methods to understand the relationships between outcomes, exposures, and other covariates.

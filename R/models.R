@@ -162,9 +162,6 @@ mdl.lm <- function(x = unspecified(),
 	si$degrees_freedom <- stats::df.residual(x)
 	si$var_cov <- stats::vcov(x)
 
-	# TODO
-	# Consider warning method about empty
-
 	# Creation
 	new_model(
 		modelCall = mc,
@@ -182,7 +179,75 @@ mdl.glm <- mdl.lm
 
 #' @rdname models
 #' @export
-mdl.coxph <- mdl.lm
+mdl.coxph <- function(x = unspecified(),
+											formulas = fmls(),
+											data_name = character(),
+											strata_variable = character(),
+											strata_level = character(),
+											...) {
+
+	# Class check
+	checkmate::assert_class(formulas, "fmls")
+	checkmate::assert_class(data_name, "character")
+	checkmate::assert_class(strata_variable, "character")
+
+	# Model class/type
+	cl <- x$call
+	mc <- class(x)[1]
+
+	# Model formula
+	if (length(formulas) == 0) {
+		mf <-
+			stats::formula(x) |>
+			fmls()
+	} else {
+		mf <- formulas
+	}
+
+	# Model arguments
+	ma <- list()
+	nms <- names(cl)[!names(cl) %in% c("formula", "data", "")]
+	for (i in seq_along(nms)) {
+		ma[[nms[i]]] <- cl[[nms[i]]]
+	}
+
+	# Model data, if not specified
+	if (length(data_name) == 0) {
+		data_name <- as.character(cl[["data"]])
+	}
+	if (length(strata_variable) == 0 | length(strata_level) == 0) {
+		strata_variable <- NA
+		strata_level <- NA
+	}
+
+	da <-
+		list(dataName = data_name,
+				 strataVariable = strata_variable,
+				 strataLevel = strata_level)
+
+
+	# Get parameter information
+	pe <- possible_tidy(x)
+
+	# Get model information
+	# In Cox models, degrees of freedom represent number of parameters
+	si <-
+		possible_glance(x) |>
+		as.list()
+	si$degrees_freedom <- length(tm(mf)) - 1
+	si$var_cov <- stats::vcov(x)
+
+	# Create new model
+	new_model(
+		modelCall = mc,
+		modelFormula = mf,
+		modelArgs = ma,
+		parameterEstimates = pe,
+		summaryInfo = si,
+		dataArgs = da
+	)
+}
+
 
 #' @rdname models
 #' @export
