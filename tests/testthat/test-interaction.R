@@ -10,7 +10,7 @@ test_that('interaction estimates can be made', {
 			fit(.fn = coxph, data = dat, raw = FALSE)
 	)
 
-	object <- model_table(by_sex = x)
+	object <- model_table(int_sex = x)
 	expect_s3_class(object, 'mdl_tbl')
 	expect_equal(nrow(object), 1)
 
