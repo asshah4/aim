@@ -17,10 +17,10 @@ mdl(x = unspecified(), ...)
   x,
   formulas,
   parameter_estimates = data.frame(),
-  summary_info = data.frame(),
+  summary_info = list(),
   data_name,
   strata_variable = NA_character_,
-  strata_level = NA,
+  strata_level = NA_character_,
   ...
 )
 
@@ -60,12 +60,23 @@ model(x = unspecified(), ...)
 
 \item{formulas}{formula given as either an \code{formula} or as a \code{fmls} object}
 
-\item{parameter_estimates}{data frame or table that contains columns
+\item{parameter_estimates}{<data.frame> that contains columns
 representing terms and individual estimates or coefficients, can be
-accompanied by additional statistic columns}
+accompanied by additional statistic columns. By default, assumes
+\itemize{
+\item \strong{term} = term name
+\item \strong{estimate} = estimate or coefficient
+}}
 
-\item{summary_info}{ata frame or table that contains columns representing
-summary statistic of a model}
+\item{summary_info}{\if{html}{\out{<list>}} that contains columns representing
+summary statistic of a model. By default, assumes...
+\itemize{
+\item \strong{nobs} = number of observations
+\item \strong{degrees_freedom} = degrees of freedom
+\item \strong{statistic} = test statistic
+\item \strong{p_value} = p-value for overall model
+\item \strong{var_cov} = variance-covariance matrix for predicted coefficients
+}}
 
 \item{data_name}{string representing name of dataset that was used}
 
