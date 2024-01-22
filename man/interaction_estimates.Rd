@@ -4,13 +4,7 @@
 \alias{interaction_estimates}
 \title{Models with interaction variables}
 \usage{
-interaction_estimates(
-  object,
-  exposure,
-  binary,
-  conf.level = 0.95,
-  present = TRUE
-)
+interaction_estimates(object, exposure, interaction, conf.level = 0.95, ...)
 }
 \description{
 Models with interaction variables

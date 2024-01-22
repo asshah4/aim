@@ -82,9 +82,10 @@ validate_class <- function(x, what) {
 		stop(
 			deparse(substitute(x)),
 			" needs to inherit from `",
-			paste("c(", paste(what, collapse = ", "), ")", sep = ""),
+			paste(what),
+			#paste("c(", paste(what, collapse = ", "), ")", sep = ""),
 			"`, but is of class `",
-			class(x),
+			paste(class(x), collapse = ', '),
 			"`.",
 			call. = FALSE
 		)

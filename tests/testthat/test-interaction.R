@@ -14,6 +14,8 @@ test_that('interaction estimates can be made', {
 	expect_s3_class(object, 'mdl_tbl')
 	expect_equal(nrow(object), 1)
 
+	# Since sex is a two level structure, interaction must happen at both levels
+	
 
 
 

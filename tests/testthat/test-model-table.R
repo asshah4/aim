@@ -151,7 +151,7 @@ test_that("dplyr compatibility", {
 
 
 test_that("attributes of models will adjust appropriately", {
-  skip_on_cran()
+  skip()
 
 	# Sequential/stratified models
 	m1 <-
@@ -181,7 +181,22 @@ test_that("attributes of models will adjust appropriately", {
 	expect_equal(nrow(m4), 2)
 	expect_length(attr(m4, "formulaMatrix"), 3)
 	# STRATA ACCIDENTALLY INCLUDED, MUST BE REMOVED
-	#expect_true(length(attr(m4, 'termTable')$term) == 3)
+	expect_true(length(attr(m4, 'termTable')$term) == 3)
 
 })
 
+test_that("table can be simplified or reduced", {
+
+	library(survival) # Using lung data
+	f <- Surv(time, status) ~ ph.karno + meal.cal + cluster(sex)
+	object <- fmls(f, pattern = 'sequential')
+	m <- fit(object, .fn = coxph, data = lung, raw = FALSE)
+	x <- model_table(m)
+	y <- reduce_models(x)
+
+	expect_s3_class(reduce_models(x), "data.frame")
+	expect_equal(min(y$number), 1)
+	expect_equal(max(y$number), 3)
+	expect_type(y$var_cov[[1]], 'double')
+	expect_true(inherits(y$var_cov[[1]], 'matrix'))
+})
