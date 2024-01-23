@@ -40,7 +40,6 @@ mdl_tbl <- function(...) {
 		if (is.null(names(dots))) {
 			dots <- dots[[1]]
 		}
-
 	}
 
 	# Model Table Lists...
@@ -581,6 +580,6 @@ reduce_models <- function(x) {
 			model_statistic = 'statistic',
 			model_p_value = 'p_value'
 		))) |>
-		tidyr::unnest(model_parameters) 
+		tidyr::unnest(model_parameters)
 
 }
