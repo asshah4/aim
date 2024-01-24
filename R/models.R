@@ -152,6 +152,8 @@ mdl.lm <- function(x = unspecified(),
 				 strataLevel = strata_level)
 
 	# Get parameter information
+	# None of these values are exponentiated
+	# This must be done at the end through an additional function
 	pe <- possible_tidy(x)
 
 	# Get model information

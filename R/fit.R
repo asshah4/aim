@@ -107,7 +107,7 @@ my_tidy <- function(x,
 	broom::tidy(x,
 							conf.int = conf.int,
 							conf.level = conf.level,
-							exponentiate = exponentiate) |>
+							exponentiate = FALSE) |>
 		janitor::clean_names()
 }
 

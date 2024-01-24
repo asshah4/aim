@@ -43,22 +43,33 @@ estimate_interaction <- function(object,
   if (!grepl(interaction, object$interaction)) {
     stop("The interaction variable is not in the model set.")
   }
-
+  
+  # Check if data is availabe as an attribute from the model table object
+  datLs <- attr(object, "dataList")
+  if (length(datLs) == 0 | !object$data_id %in% names(datLs)) {
+    stop("The model table object does not have the data available.")
+  }
 
   # Interaction term and its levels in the dataset
   exp <- exposure
   int <- interaction
   it <- paste0(exp, ":", int)
-  dat <- attr(object, "dataList")[[object$data_id]]
+  dat <- datLs[[object$data_id]]
+  lvls <-  levels(factor(dat[[int]]))
+  nobs <- table(dat[[int]])
+  stopifnot(
+    "`estimate_interaction()` currently only accepts binary interaction terms." 
+    = length(lvls) == 2
+  )
 
   # Get the model(s) and corresponding data
   mod <-
     object |>
     reduce_models() |>
-    dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, nobs, degrees_freedom, var_cov)
+    dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, p_value, nobs, degrees_freedom, var_cov)
 
-  # Betas are based on number of models
-  coefs <- mod$estimate
+  # Beta coefficients are based on the model type
+  coefs <- log(mod$estimate)
   names(coefs) <- mod$term
 
   # Variance-covariance matrix
@@ -71,13 +82,13 @@ estimate_interaction <- function(object,
   coefVar <- diag(varCovMat)
   halfConf <- stats::qt(conf_level / 2 + 0.5, df = degFree) * sqrt(coefVar[[exp]])
 
-  # Can identify the number of observations in the data set
-
   absent <-
   	list(
   		estimate = coefs[[exp]],
   		conf_low = coefs[[exp]] - halfConf,
-  		conf_high = coefs[[exp]] + halfConf
+  		conf_high = coefs[[exp]] + halfConf,
+  		nobs = nobs[[lvls[1]]],
+  		level = lvls[[1]]
   	)
 
   # When interaction term is present
@@ -87,15 +98,24 @@ estimate_interaction <- function(object,
 
   present <- list(
   	estimate = coefs[[exp]] + coefs[[it]],
-  	conf_low = coefs[[exp]] + coefs[[it]] - halfConf,
-  	conf_high = coefs[[exp]] + coefs[[it]] + halfConf
+  	conf_low = (coefs[[exp]] + coefs[[it]]) - halfConf,
+  	conf_high = (coefs[[exp]] + coefs[[it]]) + halfConf,
+		nobs = nobs[[lvls[2]]],
+		level = lvls[[2]]
   )
+  
+  # Combine the binary outputs into a small table
+  intEsts <-
+    dplyr::bind_rows(absent, present) |>
+    dplyr::mutate(across(estimate:conf_high, ~ exp(.x)))
 
   # TODO
   # For development of this, would need to add some way to generalize
   # 	Categorical interaction variable levels
   # 	Number of observations in each level
 
+  # Return
+  intEsts
 }
 
 #' @keywords internal
