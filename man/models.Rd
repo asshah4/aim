@@ -9,7 +9,7 @@
 \alias{mdl.coxph}
 \alias{mdl.default}
 \alias{model}
-\title{Model prototypes}
+\title{Model Prototypes}
 \usage{
 mdl(x = unspecified(), ...)
 

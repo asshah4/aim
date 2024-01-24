@@ -5,11 +5,11 @@
 \alias{model_table}
 \alias{is_model_table}
 \alias{new_model_table}
-\title{Model Tables}
+\title{Model tables}
 \usage{
-mdl_tbl(...)
+mdl_tbl(..., data = NULL)
 
-model_table(...)
+model_table(..., data = NULL)
 
 is_model_table(x)
 
@@ -17,17 +17,43 @@ new_model_table(
   x = list(),
   formulaMatrix = data.frame(),
   termTable = data.frame(),
+  dataList = list(),
   ...
 )
 }
 \arguments{
-\item{...}{These dots are for future extensions and must be empty.}
+\item{...}{Named or unnamed \verb{<mdl>} or \verb{<fmls>}objects}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
-This function introduces a super class that combines both the \code{list} class
-(and its derivative \code{list_of}) and regression models and/or hypothesis tests.
-Models that are similar and share certain properties can be combined together
-into a \code{mdl_tbl}.
+The \code{model_table()} or \code{mdl_tbl()} function creates a \verb{<mdl_tbl>} object that
+is composed of either \verb{<fmls>} objects or \verb{<mdl>} objects, which are
+thin/informative wrappers for generic formulas and hypothesis-based models.
+The \verb{<mdl_tbl>} is a data frame of model information, such as model fit,
+parameter estimates, and summary statistics about a model, or a formula if it
+has not yet been fit.
 }
+\details{
+The table itself allows for ease of organization of model information and has
+three additional, major components (stored as scalar attributes).
+\enumerate{
+\item A formula matrix that describes the terms used in each model, and how they
+are combined.
+\item A term table that describes the terms and their properties and/or labels.
+\item A list of datasets used for the analyses that can help support additional diagnostic testing.
+}
+
+We go into further detail in the sections below.
+}
+\section{Data List}{
+NA
+}
+
+\section{Term Table}{
+NA
+}
+
+\section{Formula Matrix}{
+NA
+}
+

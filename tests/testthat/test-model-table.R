@@ -18,6 +18,7 @@ test_that("model tables can be initialized/created", {
 	fit_status = logical()
 	formulaMatrix = data.frame()
 	termTable = data.frame()
+	dataList = list()
 
 	# Empty builds should fail
 	expect_error(mdl_tbl())
@@ -185,3 +186,28 @@ test_that("attributes of models will adjust appropriately", {
 
 })
 
+test_that("data can be attached to a model table", {
+
+	# Should be able to attach data secondarily
+	x <-
+		fmls(mpg ~ wt + hp + cyl + .s(am), pattern = "sequential") |>
+		fit(.fn = lm, data = mtcars, raw = FALSE) |>
+		model_table()
+
+	y <- attach_data(x, data = mtcars)
+	z <- attach_data(y, data = lung)
+	dat <- attr(z, "dataList")
+	expect_length(dat, 2)
+	expect_named(dat, c("mtcars", "lung"))
+
+	# Model should also take data directly
+	x <-
+		fmls(mpg ~ wt + hp + cyl + .s(am), pattern = "sequential") |>
+		fit(.fn = lm, data = mtcars, raw = FALSE)
+
+	m <- model_table(x, data = mtcars)
+	dat <- attr(m, "dataList")
+	expect_named(dat, "mtcars")
+	expect_length(dat, 1)
+
+})
