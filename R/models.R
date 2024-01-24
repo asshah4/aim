@@ -1,6 +1,6 @@
 # Class ------------------------------------------------------------------------
 
-#' Model prototypes
+#' Model Prototypes
 #'
 #' @description
 #'

@@ -1,19 +1,40 @@
 # Class ------------------------------------------------------------------------
 
-#' Model Tables
+#' Model tables
+#'
 #' @description
-#'
 #' `r lifecycle::badge('experimental')`
+#' The `model_table()` or `mdl_tbl()` function creates a `<mdl_tbl>` object that
+#' is composed of either `<fmls>` objects or `<mdl>` objects, which are
+#' thin/informative wrappers for generic formulas and hypothesis-based models.
+#' The `<mdl_tbl>` is a data frame of model information, such as model fit,
+#' parameter estimates, and summary statistics about a model, or a formula if it
+#' has not yet been fit.
 #'
-#' This function introduces a super class that combines both the `list` class
-#' (and its derivative `list_of`) and regression models and/or hypothesis tests.
-#' Models that are similar and share certain properties can be combined together
-#' into a `mdl_tbl`.
+#' @details
+#' The table itself allows for ease of organization of model information and has
+#' three additional, major components (stored as scalar attributes).
+#'
+#' 1. A formula matrix that describes the terms used in each model, and how they
+#' are combined.
+#'
+#' 1. A term table that describes the terms and their properties and/or labels.
+#'
+#' 1. A list of datasets used for the analyses that can help support additional diagnostic testing.
+#'
+#' We go into further detail in the sections below.
+#'
+#' @section Data List
+#'
+#' @section Term Table
+#'
+#' @section Formula Matrix
+#'
+#' @param ... Named or unnamed `<mdl>` or `<fmls>`objects
 #'
 #' @name mdl_tbl
-#' @inheritParams rlang::args_dots_empty
 #' @export
-mdl_tbl <- function(...) {
+mdl_tbl <- function(..., data = NULL) {
 
 	# Steps:
 	# 	Assess model...
@@ -24,6 +45,9 @@ mdl_tbl <- function(...) {
 	#			Model data frame
 	#			Formula "matrix"
 	#			Terms (+/- labels and other meta info)
+
+	# Call
+	mc <- match.call()
 
 	dots <- rlang::list2(...)
 	if (length(dots) == 0) {
@@ -54,8 +78,20 @@ mdl_tbl <- function(...) {
 		}
 	}
 
-	# Return new class
+	# Convert into a single table
 	mdTab <- do.call(vec_rbind, mtl)
+
+	# Once it comes back as a new class, we need to add data if its available
+	if (!is.null(data)) {
+
+		datLs <- attr(mdTab, "dataList")
+		dataName <- as.character(mc$data)
+		datLs[[dataName]] <- data
+		attr(mdTab, "dataList") <- datLs
+
+	}
+
+	# Return new class
 	mdTab
 }
 
@@ -90,7 +126,6 @@ vec_ptype_abbr.mdl_tbl <- function(x, ...) {
 }
 
 # Constructors ----
-
 
 #' Restructure models to fit within a model table
 #' Passes information to `new_model_table()` for initialization
@@ -205,7 +240,8 @@ construct_table_from_models <- function(x, ...) {
 	# Return
 	new_model_table(res,
 									formulaMatrix = fmMat,
-									termTable = tmTab)
+									termTable = tmTab,
+									dataList = list())
 
 }
 
@@ -300,10 +336,14 @@ construct_table_from_formulas <- function(x, ...) {
 		fit_status = fits
 	)
 
+	# Data list (empty by default)
+	datLs <- list()
+
 	# Return
 	new_model_table(res,
 									formulaMatrix = fmMat,
-									termTable = tmTab)
+									termTable = tmTab,
+									dataList = datLs)
 }
 
 #' @rdname mdl_tbl
@@ -311,6 +351,7 @@ construct_table_from_formulas <- function(x, ...) {
 new_model_table <- function(x = list(),
 														formulaMatrix = data.frame(),
 														termTable = data.frame(),
+														dataList = list(),
 														...) {
 
 	# Invariant rules:
@@ -325,6 +366,7 @@ new_model_table <- function(x = list(),
 
 	checkmate::assert_class(formulaMatrix, "data.frame")
 	checkmate::assert_class(termTable, "data.frame")
+	checkmate::assert_class(dataList, "list")
 	checkmate::assert_list(
 		x,
 		types = c("character", "list", "factor", "logical", "numeric"),
@@ -335,6 +377,7 @@ new_model_table <- function(x = list(),
 		x,
 		formulaMatrix = formulaMatrix,
 		termTable = termTable,
+		dataList = dataList,
 		class = "mdl_tbl"
 	)
 }
@@ -372,6 +415,7 @@ df_reconstruct <- function(x, to) {
 	validate_model_table(to)
 	tmTab <- attr(to, "termTable")
 	fmMat <- attr(to, "formulaMatrix")
+	datLs <- attr(to, "dataList")
 
 	# Used hash-ids to get the right formulas
 	newMat <-
@@ -398,9 +442,13 @@ df_reconstruct <- function(x, to) {
 		filter(tmTab, term %in% others)
 	)
 
+	# Combine the datasets and make sure they are unique
+	newDat <- unique(datLs)
+
 	# Update attributes of template/target
 	attr(to, "termTable") <- newTab
 	attr(to, "formulaMatrix") <- newMat
+	attr(to, "dataList") <- newDat
 
 	# Incorporate new attributes and return
 	attrs <- attributes(to)
@@ -492,10 +540,18 @@ mdl_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 	    \(.x) replace(.x, is.na(.x), 0)
 	  }()
 
+  # Datasets must be pulled together
+  xDat <- attr(x, "dataList")
+  yDat <- attr(y, "dataList")
+  datLs <-
+    list(xDat, yDat) |>
+    purrr::list_flatten()
+
   # Output with correct scalar attributes
 	new_model_table(x = as.list(mdTab),
 	                formulaMatrix = fmMat,
-	                termTable = tmTab)
+	                termTable = tmTab,
+									dataList = datLs)
 
 }
 
@@ -536,6 +592,40 @@ vec_ptype2.mdl_tbl.mdl_tbl <- function(x, y, ...) {
 #' @export
 vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 	mdl_tbl_cast(x, to, ...)
+}
+
+# Model Data -------------------------------------------------------------------
+
+#' Attach a dataset to a model table
+#'
+#' @details
+#' When models are built, oftentimes the included matrix of data is available
+#' within the raw model, however when handling many models, this can be
+#' expensive in terms of memory and space. By attaching datasets independently
+#' that persist regardless of the underlying models, and by knowing which models
+#' used which datasets, it can be ease to back-transform information.
+#'
+#' @param x a `<mdl_tbl>` object
+#' @param data a `<data.frame>` object that has been used by models
+#' @export
+attach_data <- function(x, data, ...) {
+
+	checkmate::assert_class(x, "mdl_tbl")
+	checkmate::assert_class(data, "data.frame")
+
+	# Get name of object that will be the dataset
+	mc <- match.call()
+	datLs <- attr(x, 'dataList')
+
+	# Add to data list
+	dataName <- as.character(mc$data)
+	datLs[[dataName]] <- data
+
+	# Update attributes
+	attr(x, 'dataList') <- datLs
+
+	# Return
+	x
 }
 
 # Model Table Helper Functions ------------------------------------------------
