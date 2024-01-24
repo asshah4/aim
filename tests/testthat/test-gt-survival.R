@@ -1,4 +1,5 @@
 test_that("for dichotomous variables", {
+  skip()
 
 	object <-
 		targets::tar_read(cox_mdls, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>
@@ -45,6 +46,7 @@ test_that("for dichotomous variables", {
 })
 
 test_that("for categorical variables", {
+  skip()
 
 	object <-
 		targets::tar_read(cox_mdls, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>

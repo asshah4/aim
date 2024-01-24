@@ -64,7 +64,6 @@ mdl_tbl <- function(..., data = NULL) {
 		if (is.null(names(dots))) {
 			dots <- dots[[1]]
 		}
-
 	}
 
 	# Model Table Lists...
@@ -627,5 +626,50 @@ attach_data <- function(x, data, ...) {
 
 	# Return
 	x
+}
+
+# Model Table Helper Functions ------------------------------------------------
+
+# Need to take model table
+# Select outcomes or exposures
+# Flatten it so you can actually analyze it
+
+#' Reduce model table
+#' @export
+reduce_models <- function(x) {
+
+	validate_class(x, "mdl_tbl")
+
+	x |>
+		tibble::tibble() |>
+		dplyr::filter(fit_status == TRUE) |>
+		dplyr::mutate(number = sapply(formula_call, function(.x) {
+			.x |>
+				stats::formula() |>
+				stats::terms() |>
+				labels() |>
+				length()
+		}, USE.NAMES = FALSE)) |>
+		dplyr::select(
+			formula_call,
+			model_call,
+			data_id,
+			name,
+			number,
+			outcome,
+			exposure,
+			mediator,
+			interaction,
+			strata,
+			level,
+			model_parameters,
+			model_summary
+		) |>
+		tidyr::unnest_wider(model_summary) |>
+		dplyr::rename(any_of(c(
+			model_statistic = 'statistic',
+			model_p_value = 'p_value'
+		))) |>
+		tidyr::unnest(model_parameters)
 
 }
