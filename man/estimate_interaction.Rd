@@ -7,7 +7,8 @@
 estimate_interaction(object, exposure, interaction, conf.level = 0.95, ...)
 }
 \value{
-A <data.frame> with \code{n = levels(interaction) + 1} rows.
+A \verb{<data.frame>} with \code{n = 2} rows (for the presence or absence of
+the interaction term).
 }
 \description{
 When using categorical interaction terms in a \verb{<mdl_tbl>} object, estimates
@@ -18,9 +19,11 @@ term. The estimates and intervals can be derived through the
 described by Figueiras et al. (1998).
 }
 \details{
-The \code{estimate_interaction()} requires a <mdl_tbl> object that is a
-\emph{single row in length}. Filtering the <mdl_tbl> should occur prior to passing
-it to this function.
+The \code{estimate_interaction()} requires a \verb{<mdl_tbl>} object that is a
+\emph{single row in length}. Filtering the \verb{<mdl_tbl>} should occur prior to passing
+it to this function. Additionally, this function assumes the interaction term
+is binary. If it is categorical, the current recommendation is to use dummy
+variables for the corresponding levels prior to modeling.
 }
 \references{
 A. Figueiras, J. M. Domenech-Massons, and Carmen Cadarso, 'Regression models:

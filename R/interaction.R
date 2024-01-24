@@ -28,7 +28,6 @@ estimate_interaction <- function(object,
 																 conf.level = 0.95,
 																 ...) {
 
-
 	validate_class(object, "mdl_tbl")
 	# Check that only one row is being provided from the <mdl_tbl> object
 	if (nrow(object) > 1) {
@@ -45,10 +44,12 @@ estimate_interaction <- function(object,
     stop("The interaction variable is not in the model set.")
   }
 
-  # Filtering variables
+
+  # Interaction term and its levels in the dataset
   exp <- exposure
   int <- interaction
   it <- paste0(exp, ":", int)
+  dat <- attr(object, "dataList")[[object$data_id]]
 
   # Get the model(s) and corresponding data
   mod <-
@@ -69,6 +70,8 @@ estimate_interaction <- function(object,
   # This removes the need of having the full dataset
   coefVar <- diag(varCovMat)
   halfConf <- stats::qt(conf_level / 2 + 0.5, df = degFree) * sqrt(coefVar[[exp]])
+
+  # Can identify the number of observations in the data set
 
   absent <-
   	list(
