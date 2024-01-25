@@ -102,7 +102,7 @@ generics::tidy
 my_tidy <- function(x,
 										conf.int = TRUE,
 										conf.level = 0.95,
-										exponentiate = TRUE,
+										exponentiate = FALSE,
 										...) {
 	broom::tidy(x,
 							conf.int = conf.int,

@@ -2,9 +2,19 @@
 % Please edit documentation in R/gt-forests.R
 \name{tbl_forest}
 \alias{tbl_forest}
+\alias{tbl_interaction_forest}
 \alias{tbl_stratified_forest}
 \title{Forest plot and table}
 \usage{
+tbl_interaction_forest(
+  object,
+  outcomes = formula(),
+  exposures = formula(),
+  interactions = formula(),
+  exponentiate = FALSE,
+  ...
+)
+
 tbl_stratified_forest(
   object,
   data,
@@ -22,28 +32,30 @@ tbl_stratified_forest(
 )
 }
 \arguments{
-\item{object}{A \code{mdl_tbl} object with the required models}
+\item{object}{A \verb{<mdl_tbl>} object with the required models}
+
+\item{outcomes}{A \verb{<formula>} or list of formulas selecting the outcome
+variables of interest. The \strong{LHS} is always the name of the variable that will
+be selected. The \strong{RHS} is the potential label for the output table. If no
+label is desired, can place an \code{NA} value on right-side of formula.}
 
 \item{data}{The original dataset used to create the models of interest. The
 variables in the model must be contained within this dataset.}
 
-\item{outcomes}{Is a formula or list of formulas selecting the outcome
-variables of interest. The LHS is always the name of the variable that will
-be selected. The RHS is the potential label for the output table. If no
-label is desired, can place an \code{NA} value on RHS of formula.}
+\item{terms}{A \verb{<formula>} or list of formulas selecting the model terms that
+should be used. The \strong{LHS} is always the name of the variable that will be
+selected. The \strong{RHS} is the potential label for the output table. If no label
+is desired, can place an \code{NA} value on right-side of formula.}
 
-\item{terms}{Is a \code{formula} or \code{list} of formulas selecting the model terms that
-should be used. The LHS is always the name of the variable that will be
-selected. The RHS is the potential label for the output table. If no label
-is desired, can place an \code{NA} value on RHS of formula.}
+\item{strata}{A \verb{<formula>} or list of formulas of strata that should be
+evaluated, with the \strong{LHS} referring to the strata and the \strong{RHS}
+referring to its label.}
 
-\item{strata}{A list-formula of strata that should be evaluated, with the LHS
-referring to the strata and the RHS referring to its label.}
-
-\item{level}{List of formulas. Each list-element is a formula with the LHS
-reflecting either the variable to re-label or a specific level, and the RHS
-reflecting what the new level should be called (for display). If there are
-conflicting labels, the most recent will be used.
+\item{level}{A \verb{<formula>} or list of formulas where each list-element is a
+formula with the \strong{LHS} reflecting either the variable to re-label or a
+specific level, and the \strong{RHS} reflecting what the new level should be
+called (for display). If there are conflicting labels, the most recent will
+be used.
 
 For example, \verb{list(am ~ c("Manual", "Automatic")} would take, from the
 \code{mtcars} dataset, the \code{am} variable, which consists of \code{c(0, 1)}, and
@@ -72,7 +84,7 @@ increase, it describes an increasing hazard for every unit decrease.
 Defaults to FALSE}
 
 \item{axis}{Argument to help modify the forest plot itself. This is a
-list-formula of the following parameters. If they are not named, the
+\verb{<formula>} or list of formulas of the following parameters. If they are not named, the
 function will attempt to "guess" the optimal parameters. The options are:
 \itemize{
 \item title = label or title for the column describing the forest plot
@@ -86,10 +98,10 @@ well \code{c("continuous", "log")}
 
 For example: \verb{list(title ~ "Decreasing Hazard", lab ~ "HR (95\% CI))}}
 
-\item{width}{Describes the width of each column in a list of two-sided
-formulas. The RHS is a decimal reflecting the percent each column should
+\item{width}{Describes the width of each column in a \verb{<formula>} or list of
+formulas. The \strong{RHS} is a decimal reflecting the percent each column should
 take of the entire table. The forest plot is usually given 30\% of the
-width. The default options attempt to be sensible. Options include:
+width. The default options attempt to be sensible. Options, indicated by the term on the \strong{LHS} of the formula, include:
 \itemize{
 \item n = Column describing number of observations
 \item beta = Column of estimate and confidence intervals (usually combined)

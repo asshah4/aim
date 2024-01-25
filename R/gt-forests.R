@@ -23,13 +23,15 @@
 #'
 #'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
 #'
-#' @param strata A list-formula of strata that should be evaluated, with the LHS
-#'   referring to the strata and the RHS referring to its label.
+#' @param strata A `<formula>` or list of formulas of strata that should be
+#'   evaluated, with the **LHS** referring to the strata and the **RHS**
+#'   referring to its label.
 #'
-#' @param level List of formulas. Each list-element is a formula with the LHS
-#'   reflecting either the variable to re-label or a specific level, and the RHS
-#'   reflecting what the new level should be called (for display). If there are
-#'   conflicting labels, the most recent will be used.
+#' @param level A `<formula>` or list of formulas where each list-element is a
+#'   formula with the **LHS** reflecting either the variable to re-label or a
+#'   specific level, and the **RHS** reflecting what the new level should be
+#'   called (for display). If there are conflicting labels, the most recent will
+#'   be used.
 #'
 #'   For example, `list(am ~ c("Manual", "Automatic")` would take, from the
 #'   `mtcars` dataset, the `am` variable, which consists of `c(0, 1)`, and
@@ -46,7 +48,7 @@
 #'   Defaults to FALSE
 #'
 #' @param axis Argument to help modify the forest plot itself. This is a
-#'   list-formula of the following parameters. If they are not named, the
+#'   `<formula>` or list of formulas of the following parameters. If they are not named, the
 #'   function will attempt to "guess" the optimal parameters. The options are:
 #'
 #'   * title = label or title for the column describing the forest plot
@@ -64,10 +66,10 @@
 #'
 #'   For example: `list(title ~ "Decreasing Hazard", lab ~ "HR (95% CI))`
 #'
-#' @param width Describes the width of each column in a list of two-sided
-#'   formulas. The RHS is a decimal reflecting the percent each column should
+#' @param width Describes the width of each column in a `<formula>` or list of
+#'   formulas. The **RHS** is a decimal reflecting the percent each column should
 #'   take of the entire table. The forest plot is usually given 30% of the
-#'   width. The default options attempt to be sensible. Options include:
+#'   width. The default options attempt to be sensible. Options, indicated by the term on the **LHS** of the formula, include:
 #'
 #'   * n = Column describing number of observations
 #'
@@ -108,11 +110,46 @@ tbl_interaction_forest <- function(object,
                                    interactions = formula(),
                                    exponentiate = FALSE,
                                    ...) {
-  
+
+	# Validation
+	# 	Appropriate objects are `mdl_tbl`
+	# 	The models must be of the same type for comparison sake
+	# 	Must have interaction terms available
+	# 	Dataset for interaction must be attached
+
+	# Arguments ----
 	checkmate::assert_class(object, 'mdl_tbl')
-	if (length(unique(object$name)) > 1) {
-		stop('Cannot combine models from different datasets or regressions into a table safely.')
-	}
+
+	## Outcomes
+	out <- formulas_to_named_list(outcomes)
+	out_nms <- names(out)
+	out_lab <- unlist(unname(out))
+	checkmate::assert_true(all(out_nms %in% object$outcome))
+
+	## Exposures
+	exp <- formulas_to_named_list(exposures)
+	exp_nms <- names(exp)
+	exp_lab <- unlist(unname(exp))
+	checkmate::assert_true(all(exp_nms %in% object$exposure))
+
+	## Interactions
+	int <- formulas_to_named_list(interactions)
+	int_nms <- names(int)
+	int_lab <- unlist(unname(int))
+	it <- levels(interaction(exp_nms, int_nms, sep = ":"))
+	checkmate::assert_true(all(it %in% object$interaction))
+
+	## Simplified model table
+	# Only these rows will be given to the `estimate_interaction()` function
+
+	obj <-
+		object |>
+		dplyr::filter(outcome %in% out_nms) |>
+		dplyr::filter(exposure %in% exp_nms) |>
+		dplyr::filter(interaction %in% it)
+
+	estimate_interaction(obj[1, ], exposure = exp_nms[1], interaction = int_nms[1])
+
 }
 
 #' @rdname tbl_forest
