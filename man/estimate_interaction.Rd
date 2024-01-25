@@ -4,7 +4,7 @@
 \alias{estimate_interaction}
 \title{Estimating interaction effect estimates}
 \usage{
-estimate_interaction(object, exposure, interaction, conf.level = 0.95, ...)
+estimate_interaction(object, exposure, interaction, conf_level = 0.95, ...)
 }
 \value{
 A \verb{<data.frame>} with \code{n = 2} rows (for the presence or absence of

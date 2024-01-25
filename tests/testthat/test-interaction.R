@@ -3,6 +3,7 @@ test_that('interaction estimates can be made', {
 	library(survival)
 	pulm <- na.omit(lung)
 
+	# Since sex is a two level structure, interaction must happen at both levels
 	expect_message(
 		x <-
 			fmls(Surv(time, status) ~ .x(age) + .i(sex) + ph.karno,
@@ -13,21 +14,39 @@ test_that('interaction estimates can be made', {
 	mt <- model_table(int_sex = x, data = pulm)
 	expect_s3_class(mt, 'mdl_tbl')
 	expect_equal(nrow(mt), 4)
+	expect_error(estimate_interaction(mt), regexp = "single row")
+	
 	object <- dplyr::filter(mt, interaction == 'age:sex')
 	expect_equal(nrow(object), 1)
+	expect_error(
+	  estimate_interaction(object, exposure = "ph.karno"), 
+	  regexp = "exposure"
+	)
+	expect_error(
+	  estimate_interaction(object, exposure = "age", interaction = "ph.karno"), 
+	  regexp = "interaction"
+	)
 
-	# Since sex is a two level structure, interaction must happen at both levels
+	i <- estimate_interaction(
+	  object,
+	  exposure = "age",
+	  interaction = "sex",
+	  conf_level = 0.95
+	)
 
-	f <- Surv(time, status) ~ (age) + (sex)
-	m <- coxph(f, pulm)
+	expect_length(i, 5)
+	expect_equal(nrow(i), 2)
+	expect_named(i, c("estimate", "conf_low", "conf_high", "nobs", "level"))
 
+})
+
+test_that("interaction for multiple levels can be performed", {
+  
 	dat <-
 		mtcars |>
 		dplyr::mutate(cyl = factor(cyl))
 
 	lm(mpg ~ am*cyl, data = dat) |>
 		summary()
-
-
 
 })

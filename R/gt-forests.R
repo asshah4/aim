@@ -102,6 +102,21 @@ NULL
 
 #' @rdname tbl_forest
 #' @export
+tbl_interaction_forest <- function(object,
+                                   outcomes = formula(),
+                                   exposures = formula(),
+                                   interactions = formula(),
+                                   exponentiate = FALSE,
+                                   ...) {
+  
+	checkmate::assert_class(object, 'mdl_tbl')
+	if (length(unique(object$name)) > 1) {
+		stop('Cannot combine models from different datasets or regressions into a table safely.')
+	}
+}
+
+#' @rdname tbl_forest
+#' @export
 tbl_stratified_forest <- function(object,
 																	data,
 																	outcomes = formula(),
