@@ -144,7 +144,7 @@ tbl_interaction_forest <- function(object,
 
 	obj <-
 		object |>
-		dplyr::filter(outcome %in% out_nms) |>
+		dplyr::filter(outcome %in% out_nms)
 		dplyr::filter(exposure %in% exp_nms) |>
 		dplyr::filter(interaction %in% it)
 
