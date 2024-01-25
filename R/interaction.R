@@ -43,7 +43,7 @@ estimate_interaction <- function(object,
   if (!grepl(interaction, object$interaction)) {
     stop("The interaction variable is not in the model set.")
   }
-  
+
   # Check if data is availabe as an attribute from the model table object
   datLs <- attr(object, "dataList")
   if (length(datLs) == 0 | !object$data_id %in% names(datLs)) {
@@ -58,7 +58,7 @@ estimate_interaction <- function(object,
   lvls <-  levels(factor(dat[[int]]))
   nobs <- table(dat[[int]])
   stopifnot(
-    "`estimate_interaction()` currently only accepts binary interaction terms." 
+    "`estimate_interaction()` currently only accepts binary interaction terms."
     = length(lvls) == 2
   )
 
@@ -69,7 +69,7 @@ estimate_interaction <- function(object,
     dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, p_value, nobs, degrees_freedom, var_cov)
 
   # Beta coefficients are based on the model type
-  coefs <- log(mod$estimate)
+  coefs <- mod$estimate
   names(coefs) <- mod$term
 
   # Variance-covariance matrix
@@ -103,7 +103,7 @@ estimate_interaction <- function(object,
 		nobs = nobs[[lvls[2]]],
 		level = lvls[[2]]
   )
-  
+
   # Combine the binary outputs into a small table
   intEsts <-
     dplyr::bind_rows(absent, present) |>
