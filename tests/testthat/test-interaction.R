@@ -32,9 +32,9 @@ test_that('interaction estimates can be made', {
 	  conf_level = 0.95
 	)
 
-	expect_length(i, 5)
+	expect_length(i, 6)
 	expect_equal(nrow(i), 2)
-	expect_named(i, c("estimate", "conf_low", "conf_high", "nobs", "level"))
+	expect_named(i, c("estimate", "conf_low", "conf_high", "p_value", "nobs", "level"))
 
 })
 

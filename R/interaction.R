@@ -14,13 +14,26 @@
 #' is binary. If it is categorical, the current recommendation is to use dummy
 #' variables for the corresponding levels prior to modeling.
 #'
-#' @return A `<data.frame>` with `n = 2` rows (for the presence or absence of
-#'   the interaction term).
+#' @return A `<data.frame>` with `n = levels(interaction)` rows (for the
+#'   presence or absence of the interaction term) and `n = 5` columns:
+#'
+#'   - estimate: beta coefficient for the interaction effect based on level
+#'
+#'   - conf_low: lower bound of confidence interval for the estimate
+#'
+#'   - conf_high: higher bound of confidence interval for the estimate
+#'
+#'   - p_value: p-value for the overall interaction effect *across levels*
+#'
+#'   - nobs: number of observations within the interaction level
+#'
+#'   - level: level of the interaction term
 #'
 #' @references
 #' A. Figueiras, J. M. Domenech-Massons, and Carmen Cadarso, 'Regression models:
 #' calculating the confidence intervals of effects in the presence of
 #' interactions', Statistics in Medicine, 17, 2099-2105 (1998)
+#'
 #' @export
 estimate_interaction <- function(object,
 																 exposure,
@@ -75,6 +88,8 @@ estimate_interaction <- function(object,
     reduce_models() |>
     dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, p_value, nobs, degrees_freedom, var_cov)
 
+  pVal <- mod$p_value[mod$term == it]
+
   # Beta coefficients are based on the model type
   coefs <- mod$estimate
   names(coefs) <- mod$term
@@ -94,6 +109,7 @@ estimate_interaction <- function(object,
   		estimate = coefs[[exp]],
   		conf_low = coefs[[exp]] - halfConf,
   		conf_high = coefs[[exp]] + halfConf,
+  		p_value = pVal,
   		nobs = nobs[[lvls[1]]],
   		level = lvls[[1]]
   	)
@@ -107,6 +123,7 @@ estimate_interaction <- function(object,
   	estimate = coefs[[exp]] + coefs[[it]],
   	conf_low = (coefs[[exp]] + coefs[[it]]) - halfConf,
   	conf_high = (coefs[[exp]] + coefs[[it]]) + halfConf,
+		p_value = pVal,
 		nobs = nobs[[lvls[2]]],
 		level = lvls[[2]]
   )

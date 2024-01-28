@@ -10,6 +10,34 @@
 #'   be selected. The **RHS** is the potential label for the output table. If no
 #'   label is desired, can place an `NA` value on right-side of formula.
 #'
+#' @param exposures A `<formula>` or list of formulas of strata that should be
+#'   evaluated, with the **LHS** referring to the strata and the **RHS**
+#'   referring to its label.
+#'
+#' @param interactions A `<formula>` or list of formulas of the interaction
+#'   terms that should be evaluated, with the **LHS** referring to the term and
+#'   the **RHS** referring to its label. Currently only supports binary
+#'   interaction terms.
+#'
+#' @param strata A `<formula>` or list of formulas of strata that should be
+#'   evaluated, with the **LHS** referring to the strata and the **RHS**
+#'   referring to its label.
+#'
+#' @param level_labels A `<formula>` or list of formulas where each list-element
+#'   is a formula with the **LHS** reflecting either the variable to re-label or
+#'   a specific level, and the **RHS** reflecting what the new level should be
+#'   called (for display). If there are conflicting labels, the most recent will
+#'   be used.
+#'
+#'   For example, `list(am ~ c("Manual", "Automatic")` would take, from the
+#'   `mtcars` dataset, the `am` variable, which consists of `c(0, 1)`, and
+#'   relabel them in the order described. They are sorted in ascendiing order
+#'   prior to re-labeling.
+#'
+#'   The alternative approach is to use the specific level itself and have it
+#'   re-labeled. `list(0 ~ "Absent")` would take all levels that are zero, and
+#'   change their value.
+#'
 #' @param terms A `<formula>` or list of formulas selecting the model terms that
 #'   should be used. The **LHS** is always the name of the variable that will be
 #'   selected. The **RHS** is the potential label for the output table. If no label

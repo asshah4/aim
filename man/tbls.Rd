@@ -14,6 +14,34 @@ variables of interest. The \strong{LHS} is always the name of the variable that 
 be selected. The \strong{RHS} is the potential label for the output table. If no
 label is desired, can place an \code{NA} value on right-side of formula.}
 
+\item{exposures}{A \verb{<formula>} or list of formulas of strata that should be
+evaluated, with the \strong{LHS} referring to the strata and the \strong{RHS}
+referring to its label.}
+
+\item{interactions}{A \verb{<formula>} or list of formulas of the interaction
+terms that should be evaluated, with the \strong{LHS} referring to the term and
+the \strong{RHS} referring to its label. Currently only supports binary
+interaction terms.}
+
+\item{strata}{A \verb{<formula>} or list of formulas of strata that should be
+evaluated, with the \strong{LHS} referring to the strata and the \strong{RHS}
+referring to its label.}
+
+\item{level_labels}{A \verb{<formula>} or list of formulas where each list-element
+is a formula with the \strong{LHS} reflecting either the variable to re-label or
+a specific level, and the \strong{RHS} reflecting what the new level should be
+called (for display). If there are conflicting labels, the most recent will
+be used.
+
+For example, \verb{list(am ~ c("Manual", "Automatic")} would take, from the
+\code{mtcars} dataset, the \code{am} variable, which consists of \code{c(0, 1)}, and
+relabel them in the order described. They are sorted in ascendiing order
+prior to re-labeling.
+
+The alternative approach is to use the specific level itself and have it
+re-labeled. \code{list(0 ~ "Absent")} would take all levels that are zero, and
+change their value.}
+
 \item{terms}{A \verb{<formula>} or list of formulas selecting the model terms that
 should be used. The \strong{LHS} is always the name of the variable that will be
 selected. The \strong{RHS} is the potential label for the output table. If no label
