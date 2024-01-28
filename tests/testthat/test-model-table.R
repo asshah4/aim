@@ -227,3 +227,28 @@ test_that("table can be simplified or reduced", {
 	expect_type(y$var_cov[[1]], 'double')
 	expect_true(inherits(y$var_cov[[1]], 'matrix'))
 })
+
+test_that("model table can be filtered", {
+
+	# Two messages here
+	expect_message(expect_message(
+		f <- vec_c(
+			fmls(hp + mpg ~ .x(wt) + .i(am) + cyl),
+			fmls(hp + mpg ~ .x(wt) + .i(vs) + cyl)
+		)
+	))
+	m <- fit(f, .fn = lm, data = mtcars, raw = FALSE)
+	object <- model_table(linear = m, data = mtcars)
+
+	# Filtering example
+	x <- object
+	to <- object[object$outcome == "hp", ]
+	expect_length(to$outcome, 2)
+
+	# Filtering
+	obj <-
+		object |>
+		dplyr::filter(outcome == "hp")
+
+	expect_length(obj$outcome, 2)
+})

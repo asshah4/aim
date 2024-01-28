@@ -420,7 +420,11 @@ df_reconstruct <- function(x, to) {
 	newMat <-
 		fmMat[which(to$id %in% x$id), ] |>
 		{
-			\(.x) .x[colSums(.x) > 0]
+			\(.x) {
+				.y <- colSums(.x)
+				.y[is.na(.y)] <- 0
+				.x[which(.y > 0)]
+			}
 		}()
 
 	# Special terms and the rest of terms in formulas
@@ -461,6 +465,7 @@ df_reconstruct <- function(x, to) {
 	attributes(x) <- attrs
 
 	# Return the original table (= x) with updated attributes
+	# This will then be "dplyr"-ed into the new table (= to)
 	x
 
 }

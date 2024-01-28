@@ -13,3 +13,5 @@
 ^R/dev\.R$
 ^cran-comments\.md$
 ^data-raw$
+^ex*.R$
+^ex*.md$
