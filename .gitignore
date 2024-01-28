@@ -46,5 +46,8 @@ vignettes/*.pdf
 .Rproj.user
 inst/doc
 
-# Personal files
+# Personal/working files
 sandbox.R
+ex.R
+ex-reprex.R
+ex-reprex.md

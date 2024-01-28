@@ -121,7 +121,7 @@ tbl_interaction_forest <- function(object,
 	checkmate::assert_class(object, 'mdl_tbl')
 
 	## Outcomes
-  
+
 	## Outcomes = outcomes and how to rename
 	out <- formulas_to_named_list(outcomes)
 	out_nms <- names(out)
@@ -146,14 +146,12 @@ tbl_interaction_forest <- function(object,
 
 	obj <-
 		object |>
-		dplyr::filter(outcome %in% out_nms)
+		dplyr::filter(outcome %in% out_nms) |>
 		dplyr::filter(exposure %in% exp_nms) |>
 		dplyr::filter(interaction %in% it)
 
 	estimate_interaction(obj[1, ], exposure = exp_nms[1], interaction = int_nms[1])
 
-=======
->>>>>>> dc5ae61 (work on forest)
 }
 
 #' @rdname tbl_forest
