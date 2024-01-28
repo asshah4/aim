@@ -113,8 +113,7 @@ estimate_interaction <- function(object,
 
   # Combine the binary outputs into a small table
   intEsts <-
-    dplyr::bind_rows(absent, present) |>
-    dplyr::mutate(across(estimate:conf_high, ~ exp(.x)))
+    dplyr::bind_rows(absent, present)
 
   # Return
   intEsts

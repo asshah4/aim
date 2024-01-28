@@ -141,14 +141,49 @@ tbl_interaction_forest <- function(object,
 	it <- levels(interaction(exp_nms, int_nms, sep = ":"))
 	checkmate::assert_true(all(it %in% object$interaction))
 
-	## Simplified model table
-	# Only these rows will be given to the `estimate_interaction()` function
+	# Table ----
 
-	obj <-
-		object |>
-		dplyr::filter(outcome %in% out_nms) |>
-		dplyr::filter(exposure %in% exp_nms) |>
-		dplyr::filter(interaction %in% it)
+	## Table setup
+	# Each table can only show one outcome ~ exposure relationship
+	# Thus, n_tables = n_outcomes x n_exposures
+	# Rows are dependent on number of interactions being assessed
+	tbl_exp <- list()
+	tbl_out <- list()
+
+	# Loop through each outcome and exposure
+	for (o in out_nms) {
+		for (e in exp_nms) {
+
+			# Limited to the current exposure, outcome, and any interaction terms
+			obj <-
+				object |>
+				dplyr::filter(outcome == o) |>
+				dplyr::filter(exposure == e) |>
+				dplyr::filter(interaction %in% it)
+
+			# Get interaction terms that are available in this subset
+			intVars <-
+				obj$interaction |>
+				gsub(paste0(e, ":"), "", x = _)
+
+			# Rows of table will be be rows in the <mdl_tbl> object
+			# Should be the same length as interaction variables that are available
+			n <- 1:nrow(obj)
+			stopifnot(
+				"Number of interaction variables not equal to number of rows in <mdl_tbl> object." =
+					length(intVars) == length(n)
+			)
+
+			# List of interaction estimates
+			# Need to get p-value from each interaction
+			i <- lapply(n, function(.x) {
+				estimate_interaction(obj[.x, ], exposure = e, interaction = intVars[.x])
+			})
+
+
+		}
+	}
+
 
 	estimate_interaction(obj[1, ], exposure = exp_nms[1], interaction = int_nms[1])
 
@@ -244,7 +279,7 @@ tbl_stratified_forest <- function(object,
 	# Create a basic table of required elements
 	tbl <-
 		object |>
-		flatten_table() |>
+		reduce_models() |>
 		# Ensure correct variables are available
 		dplyr::filter(strata %in% sta_nms) |>
 		dplyr::filter(outcome %in% out_nms) |>
