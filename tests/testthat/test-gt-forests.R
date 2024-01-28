@@ -16,7 +16,7 @@ test_that("forest plot for interaction can be made", {
   # Forest plot modifying variables
   columns <- list(beta ~ "Estimate", conf ~ "95% CI", n ~ "No.", p ~ "Interaction p-value")
   axis <- list(scale ~ "continuous", title ~ "Forest")
-  width <- list()
+  width <- list(forest ~ 0.4)
   forest <- list()
 
   gtbl <-
