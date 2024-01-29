@@ -9,6 +9,7 @@
 ^\.travis\.yml$
 ^codecov\.yml$
 ^sandbox.R$
+^reprex.R$
 ^R/dev\.R$
 ^cran-comments\.md$
 ^data-raw$

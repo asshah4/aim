@@ -1,3 +1,7 @@
+#' ---
+#' output: reprex::reprex_document
+#' ---
+
 library(vlndr)
 f <- vec_c(fmls(hp + mpg ~ .x(wt) + .i(am) + cyl),
            fmls(hp + mpg ~ .x(wt) + .i(vs) + cyl)) |>

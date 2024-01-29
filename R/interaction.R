@@ -14,20 +14,39 @@
 #' is binary. If it is categorical, the current recommendation is to use dummy
 #' variables for the corresponding levels prior to modeling.
 #'
-#' @return A `<data.frame>` with `n = 2` rows (for the presence or absence of
-#'   the interaction term).
+#' @return A `<data.frame>` with `n = levels(interaction)` rows (for the
+#'   presence or absence of the interaction term) and `n = 5` columns:
+#'
+#'   - estimate: beta coefficient for the interaction effect based on level
+#'
+#'   - conf_low: lower bound of confidence interval for the estimate
+#'
+#'   - conf_high: higher bound of confidence interval for the estimate
+#'
+#'   - p_value: p-value for the overall interaction effect *across levels*
+#'
+#'   - nobs: number of observations within the interaction level
+#'
+#'   - level: level of the interaction term
 #'
 #' @references
 #' A. Figueiras, J. M. Domenech-Massons, and Carmen Cadarso, 'Regression models:
 #' calculating the confidence intervals of effects in the presence of
 #' interactions', Statistics in Medicine, 17, 2099-2105 (1998)
+#'
 #' @export
 estimate_interaction <- function(object,
 																 exposure,
 																 interaction,
-																 conf.level = 0.95,
+																 conf_level = 0.95,
 																 ...) {
 
+  # TODO
+  # For development of this, would need to add some way to generalize
+  # 	Categorical interaction variable levels
+  # 	Number of observations in each level
+  # Confidence interval estimates
+  #   Simulation / bootstrapping methods
 
 	validate_class(object, "mdl_tbl")
 	# Check that only one row is being provided from the <mdl_tbl> object
@@ -45,18 +64,33 @@ estimate_interaction <- function(object,
     stop("The interaction variable is not in the model set.")
   }
 
-  # Filtering variables
+  # Check if data is availabe as an attribute from the model table object
+  datLs <- attr(object, "dataList")
+  if (length(datLs) == 0 | !object$data_id %in% names(datLs)) {
+    stop("The model table object does not have the data available.")
+  }
+
+  # Interaction term and its levels in the dataset
   exp <- exposure
   int <- interaction
   it <- paste0(exp, ":", int)
+  dat <- datLs[[object$data_id]]
+  lvls <-  levels(factor(dat[[int]]))
+  nobs <- table(dat[[int]])
+  stopifnot(
+    "`estimate_interaction()` currently only accepts binary interaction terms."
+    = length(lvls) == 2
+  )
 
   # Get the model(s) and corresponding data
   mod <-
     object |>
     reduce_models() |>
-    dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, nobs, degrees_freedom, var_cov)
+    dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, p_value, nobs, degrees_freedom, var_cov)
 
-  # Betas are based on number of models
+  pVal <- mod$p_value[mod$term == it]
+
+  # Beta coefficients are based on the model type
   coefs <- mod$estimate
   names(coefs) <- mod$term
 
@@ -74,7 +108,10 @@ estimate_interaction <- function(object,
   	list(
   		estimate = coefs[[exp]],
   		conf_low = coefs[[exp]] - halfConf,
-  		conf_high = coefs[[exp]] + halfConf
+  		conf_high = coefs[[exp]] + halfConf,
+  		p_value = pVal,
+  		nobs = nobs[[lvls[1]]],
+  		level = lvls[[1]]
   	)
 
   # When interaction term is present
@@ -84,91 +121,18 @@ estimate_interaction <- function(object,
 
   present <- list(
   	estimate = coefs[[exp]] + coefs[[it]],
-  	conf_low = coefs[[exp]] + coefs[[it]] - halfConf,
-  	conf_high = coefs[[exp]] + coefs[[it]] + halfConf
+  	conf_low = (coefs[[exp]] + coefs[[it]]) - halfConf,
+  	conf_high = (coefs[[exp]] + coefs[[it]]) + halfConf,
+		p_value = pVal,
+		nobs = nobs[[lvls[2]]],
+		level = lvls[[2]]
   )
 
-  # TODO
-  # For development of this, would need to add some way to generalize
-  # 	Categorical interaction variable levels
-  # 	Number of observations in each level
+  # Combine the binary outputs into a small table
+  intEsts <-
+    dplyr::bind_rows(absent, present)
 
+  # Return
+  intEsts
 }
 
-#' @keywords internal
-old_interaction_estimates <- function(object,
-																	exposure,
-																	binary,
-																	conf.level = 0.95,
-																	present = TRUE) {
-
-	if (!class(object) %in% .models) {
-		stop("Class of `object` is not supported for extracting interaction estimates.")
-	}
-
-	# Get matrix and basic summary
-	mat <- stats::model.matrix(object)
-	dof <- nrow(mat) - ncol(mat)
-	coefs_var <- stats::vcov(object)
-	coefs <- stats::coefficients(object)
-
-	# Decision tree for if exponentiation will be needed
-	tidy_coefs <- possible_tidy(object)
-	decision <-
-		all.equal(tidy_coefs$estimate[tidy_coefs$term == exposure],
-							coefs[exposure],
-							tolerance = 1e-2,
-							check.names = FALSE)
-
-	# If binary or interaction is not truly dichotomous, should stop
-	stopifnot(is_dichotomous(mat[, binary]))
-
-	# Get interaction term
-	it <- paste0(exposure, ":", binary)
-
-	if (present) {
-		# Confidence interval
-		half_ci <-
-			stats::qt(conf.level / 2 + 0.5, dof) *
-			sqrt(coefs_var[exposure, exposure] +
-					 	coefs_var[it, it] +
-					 	2 * coefs_var[exposure, it])
-		# Estimates
-		est <- unname(coefs[exposure] + coefs[it])
-
-		# Number of obs
-		val <- levels(factor(mat[, binary]))[2]
-		mini_mat <- mat[mat[, binary] == val, ]
-
-		# Parameters
-		pars <- list(est, est - half_ci, est + half_ci, nrow(mini_mat), val)
-
-	} else {
-		# Confidence interval
-		half_ci <-
-			stats::qt(conf.level / 2 + 0.5, dof) * sqrt(diag(coefs_var))
-		half_ci <- half_ci[exposure]
-		# Estimates
-		est <- unname(coefs[exposure])
-
-		# Number of obs
-		val <- levels(factor(mat[, binary]))[1]
-		mini_mat <- mat[mat[, binary] == val, ]
-
-		# Parameters
-		pars <- list(est, est - half_ci, est + half_ci, nrow(mini_mat), val)
-	}
-
-	# Return vector of length 5
-	# Exponentiate if needed
-	names(pars) <- c("estimate", "conf.low", "conf.high", "nobs", "level")
-	if (isTRUE(decision)) {
-		return(pars)
-	} else {
-		pars[[1]] <- exp(pars[[1]])
-		pars[[2]] <- exp(pars[[2]])
-		pars[[3]] <- exp(pars[[3]])
-		return(pars)
-	}
-
-}

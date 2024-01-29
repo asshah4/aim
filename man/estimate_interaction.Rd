@@ -4,11 +4,19 @@
 \alias{estimate_interaction}
 \title{Estimating interaction effect estimates}
 \usage{
-estimate_interaction(object, exposure, interaction, conf.level = 0.95, ...)
+estimate_interaction(object, exposure, interaction, conf_level = 0.95, ...)
 }
 \value{
-A \verb{<data.frame>} with \code{n = 2} rows (for the presence or absence of
-the interaction term).
+A \verb{<data.frame>} with \code{n = levels(interaction)} rows (for the
+presence or absence of the interaction term) and \code{n = 5} columns:
+\itemize{
+\item estimate: beta coefficient for the interaction effect based on level
+\item conf_low: lower bound of confidence interval for the estimate
+\item conf_high: higher bound of confidence interval for the estimate
+\item p_value: p-value for the overall interaction effect \emph{across levels}
+\item nobs: number of observations within the interaction level
+\item level: level of the interaction term
+}
 }
 \description{
 When using categorical interaction terms in a \verb{<mdl_tbl>} object, estimates

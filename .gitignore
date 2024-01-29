@@ -46,5 +46,3 @@ vignettes/*.pdf
 .Rproj.user
 inst/doc
 
-# Personal files
-sandbox.R

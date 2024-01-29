@@ -413,11 +413,10 @@ model_table_reconstruct <- function(x, to) {
 df_reconstruct <- function(x, to) {
 
 	validate_model_table(to)
-	tmTab <- attr(to, "termTable")
-	fmMat <- attr(to, "formulaMatrix")
-	datLs <- attr(to, "dataList")
 
+	# Formula matrix
 	# Used hash-ids to get the right formulas
+	fmMat <- attr(to, "formulaMatrix")
 	newMat <-
 		fmMat[which(to$id %in% x$id), ] |>
 		{
@@ -437,6 +436,8 @@ df_reconstruct <- function(x, to) {
 	special <- na.omit(c(out, exp, med, int, sta))
 	others <- setdiff(names(newMat), special)
 
+	# Terms and term tables
+	tmTab <- attr(to, "termTable")
 	newTab <- dplyr::bind_rows(
 		filter(tmTab, term %in% out & role == "outcome"),
 		filter(tmTab, term %in% exp & role == "exposure"),
@@ -446,8 +447,11 @@ df_reconstruct <- function(x, to) {
 		filter(tmTab, term %in% others)
 	)
 
+	# Datasets
 	# Combine the datasets and make sure they are unique
-	newDat <- unique(datLs)
+	datLs <- attr(to, "dataList")
+	dataNames <- unique(to$data_id)
+	newDat <- datLs[dataNames]
 
 	# Update attributes of template/target
 	attr(to, "termTable") <- newTab

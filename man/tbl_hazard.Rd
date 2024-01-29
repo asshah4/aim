@@ -31,24 +31,24 @@ tbl_categorical_hazard(
 )
 }
 \arguments{
-\item{object}{A \code{mdl_tbl} object with the required models}
+\item{object}{A \verb{<mdl_tbl>} object with the required models}
 
 \item{data}{The original dataset used to create the models of interest. The
 variables in the model must be contained within this dataset.}
 
-\item{outcomes}{Is a formula or list of formulas selecting the outcome
-variables of interest. The LHS is always the name of the variable that will
-be selected. The RHS is the potential label for the output table. If no
-label is desired, can place an \code{NA} value on RHS of formula.}
+\item{outcomes}{A \verb{<formula>} or list of formulas selecting the outcome
+variables of interest. The \strong{LHS} is always the name of the variable that will
+be selected. The \strong{RHS} is the potential label for the output table. If no
+label is desired, can place an \code{NA} value on right-side of formula.}
 
 \item{followup}{Character vector naming the followup duration variable. Must
 be either same length as \strong{outcomes} or be of length of 1 (which will be
 recycled).}
 
-\item{terms}{Is a \code{formula} or \code{list} of formulas selecting the model terms that
-should be used. The LHS is always the name of the variable that will be
-selected. The RHS is the potential label for the output table. If no label
-is desired, can place an \code{NA} value on RHS of formula.}
+\item{terms}{A \verb{<formula>} or list of formulas selecting the model terms that
+should be used. The \strong{LHS} is always the name of the variable that will be
+selected. The \strong{RHS} is the potential label for the output table. If no label
+is desired, can place an \code{NA} value on right-side of formula.}
 
 \item{rate_difference}{If there are only two levels in the term, the rate
 difference between the levels will be calculated. Defaults to \code{FALSE}.
