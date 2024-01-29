@@ -212,16 +212,16 @@ test_that("data can be attached to a model table", {
 
 })
 
-test_that("table can be simplified or reduced", {
+test_that("table can be simplified or flattened", {
 
 	library(survival) # Using lung data
 	f <- Surv(time, status) ~ ph.karno + meal.cal + cluster(sex)
 	object <- fmls(f, pattern = 'sequential')
 	m <- fit(object, .fn = coxph, data = lung, raw = FALSE)
 	x <- model_table(m)
-	y <- reduce_models(x)
+	y <- flatten_models(x)
 
-	expect_s3_class(reduce_models(x), "data.frame")
+	expect_s3_class(flatten_models(x), "data.frame")
 	expect_equal(min(y$number), 1)
 	expect_equal(max(y$number), 3)
 	expect_type(y$var_cov[[1]], 'double')

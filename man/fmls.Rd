@@ -20,16 +20,14 @@ key_terms(x)
 \item \code{formula}
 }}
 
-\item{pattern}{This is the expansion pattern used to decide how the
-covariates will incorporated into the formulas. The options are
-\code{c("direct", "sequential", "parallel")}. See the details for further
-explanation.
+\item{pattern}{A \verb{<character>} from the following choices for pattern
+expansion. This is how the formula will be expanded, and decides how the
+covariates will incorporated. See the details for further explanation.
 \itemize{
-\item \strong{direct}: the covariates will all be included in each formula
-\item \strong{sequential}: the covariates will be added sequentially, one by one, or
-by groups, as indicated
-\item \strong{parallel}: the covariates or groups of covariates will be placed in
-parallel
+\item direct: the covariates will all be included in each formula
+\item sequential: the covariates will be added sequentially, one by one, or by groups, as indicated
+\item parallel: the covariates or groups of covariates will be placed in parallel
+\item fundamental: every formula will be decomposed to a single outcome and predictor in an atomic fashion
 }}
 
 \item{...}{Arguments to be passed to or from other methods}

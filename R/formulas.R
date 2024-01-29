@@ -48,27 +48,27 @@
 #'
 #' @param x Objects of the following types can be used as inputs
 #'
-#'   * `tm`
+#'   - `tm`
 #'
-#'   * `formula`
+#'   - `formula`
 #'
-#' @param pattern This is the expansion pattern used to decide how the
-#'   covariates will incorporated into the formulas. The options are
-#'   `c("direct", "sequential", "parallel")`. See the details for further
-#'   explanation.
+#' @param pattern A `<character>` from the following choices for pattern
+#'   expansion. This is how the formula will be expanded, and decides how the
+#'   covariates will incorporated. See the details for further explanation.
 #'
-#'   * __direct__: the covariates will all be included in each formula
+#'   - direct: the covariates will all be included in each formula
 #'
-#'   * __sequential__: the covariates will be added sequentially, one by one, or
-#'   by groups, as indicated
+#'   - sequential: the covariates will be added sequentially, one by one, or by groups, as indicated
 #'
-#'   * __parallel__: the covariates or groups of covariates will be placed in
-#'   parallel
+#'   - parallel: the covariates or groups of covariates will be placed in parallel
+#'
+#'   - fundamental: every formula will be decomposed to a single outcome and predictor in an atomic fashion
 #'
 #' @param ... Arguments to be passed to or from other methods
 #'
 #' @return An object of class `fmls`
 #' @name fmls
+#' @importFrom rlang !!! :=
 #' @export
 fmls <- function(x = unspecified(),
 								 pattern = c("direct",
@@ -83,6 +83,7 @@ fmls <- function(x = unspecified(),
 	}
 
 	# Convert to term object if possible
+	# Notably, if an interaction term is present, will be a separate variable
 	validate_class(x, c("tm", "formula"))
 	if (inherits(x, "formula")) {
 		x <- tm(x)
@@ -142,7 +143,7 @@ fmls <- function(x = unspecified(),
 	# Predictor patterns ----
 
 	# Covariates are the fodder for pattern expansions
-
+	# The output variable from this section is `tbl`
 	switch(
 		pattern,
 		direct = {
@@ -211,16 +212,53 @@ fmls <- function(x = unspecified(),
 			ntbl <- unique(dplyr::bind_rows(ntbl))
 			tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
 
-
 		},
 		parallel = {
 
-			cov <- c(prd, con, int)
-			if (length(cov) > 0) {
-				tbl <- tidyr::expand_grid(tbl, covariates = cov)
-			} else {
-				tbl
-			}
+			# TODO
+			# This needs to handle the issue of grouped variables
+		  # Group = NA generic variables that can be parallelized
+		  # Group = set(0, inf) integers that must be placed together
+		  #   Covariate columns = max(group != NA)
+		  groupLevels <- with(tmTab, unique(group[!is.na(group)]))
+		  groupedCov <- list()
+		  for (g in groupLevels) {
+		    groupedCov[[as.character(g)]] <-
+		      with(tmTab, term[group == 0L & role != "exposure" & !is.na(group)])
+		  }
+		  
+		  # Ungrouped variables
+		  ungroupedCov <- 
+		    with(tmTab, term[side == "right" & is.na(group)]) |>
+		    as.list()
+		  
+		  # Covariates
+		  covList <- c(ungroupedCov, groupedCov)
+		  
+		  tabList <- list()
+		  for (i in seq_along(covList)) {
+		    cov <- covList[[i]]
+		    rowList <- list()
+		    for (j in seq_along(cov)) {
+		      rowList[[j]] <- 
+  		      #tidyr::expand_grid(tbl, "{paste0('covariate_', j)}" := cov[[j]])
+  		      #tibble::add_column(tbl, "{paste0('covariate_', j)}" := cov[[j]])
+  		      tibble::tibble("{paste0('covariate_', j)}" := cov[[j]])
+		    }
+		    tabList[[i]] <- dplyr::bind_cols(rowList)
+		  }
+		  
+		  tbl <- 
+		    tidyr::expand_grid(tbl, dplyr::bind_rows(tabList))
+		    
+		  
+		  # Original method (which fails to add grouped variables)
+			# cov <- c(prd, con, int)
+			# if (length(cov) > 0) {
+			# 	tbl <- tidyr::expand_grid(tbl, covariates = cov)
+			# } else {
+			# 	tbl
+			# }
 
 		},
 		fundamental = {
@@ -235,11 +273,33 @@ fmls <- function(x = unspecified(),
 		message("Pattern not currently supported.")
 	)
 
+	# Grouping variables now must be assessed
+	# Each row must have its full group present OR ELSE
+	# The term table from above serves as the reference
+
+	groupLevels <- stats::na.omit(unique(tmTab$group))
+	rowNums <- seq(nrow(tbl))
+	badRows <- integer()
+
+	for (g in groupLevels) {
+		groupedTerms <- subset(tmTab, group == g)$term
+		for (r in rowNums) {
+			allTerms <- unname(unlist(tbl[r, ]))
+			if (!all(groupedTerms %in% allTerms)) {
+				badRows <- c(badRows, r)
+			}
+		}
+	}
+
+	# Now remove the "troubled rows"
+	ntbl <- tbl[badRows, ]
+	tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
+	stopifnot("Based on restrictions from the chosen terms and pattern, no <fmls> can be generated."
+	          = nrow(tbl) > 0)
 
 	# Mediating variables ----
 
 	# Mediation should be done only if covariates are already added
-
 	if (length(med) > 0 & pattern != "fundamental") {
 
 		# Each row has been expanded for exposure and outcome
