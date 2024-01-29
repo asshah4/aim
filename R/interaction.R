@@ -85,7 +85,7 @@ estimate_interaction <- function(object,
   # Get the model(s) and corresponding data
   mod <-
     object |>
-    reduce_models() |>
+    flatten_models() |>
     dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, p_value, nobs, degrees_freedom, var_cov)
 
   pVal <- mod$p_value[mod$term == it]

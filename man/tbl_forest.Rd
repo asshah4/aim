@@ -3,7 +3,6 @@
 \name{tbl_forest}
 \alias{tbl_forest}
 \alias{tbl_interaction_forest}
-\alias{tbl_stratified_forest}
 \title{Forest plot and table}
 \usage{
 tbl_interaction_forest(
@@ -18,22 +17,6 @@ tbl_interaction_forest(
   forest = list(),
   exponentiate = FALSE,
   invert = FALSE,
-  digits = 2,
-  ...
-)
-
-tbl_stratified_forest(
-  object,
-  data,
-  outcomes = formula(),
-  terms = formula(),
-  strata = formula(),
-  level_labels = formula(),
-  columns = list(beta ~ "Estimate", conf ~ "95\% CI", n ~ "No."),
-  invert = FALSE,
-  axis = list(scale ~ "continuous"),
-  width = list(),
-  forest = list(),
   digits = 2,
   ...
 )
@@ -131,18 +114,6 @@ Default is \code{FALSE}}
 \item{digits}{The number of significant figures to present. If the numbers
 are not scaled in a presentable fashion, can always adjust the table
 subsequently.}
-
-\item{data}{The original dataset used to create the models of interest. The
-variables in the model must be contained within this dataset.}
-
-\item{terms}{A \verb{<formula>} or list of formulas selecting the model terms that
-should be used. The \strong{LHS} is always the name of the variable that will be
-selected. The \strong{RHS} is the potential label for the output table. If no label
-is desired, can place an \code{NA} value on right-side of formula.}
-
-\item{strata}{A \verb{<formula>} or list of formulas of strata that should be
-evaluated, with the \strong{LHS} referring to the strata and the \strong{RHS}
-referring to its label.}
 }
 \description{
 Forest plots are usually ways to describe contrasting data, such as between

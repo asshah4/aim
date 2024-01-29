@@ -250,15 +250,6 @@ fmls <- function(x = unspecified(),
 		  
 		  tbl <- 
 		    tidyr::expand_grid(tbl, dplyr::bind_rows(tabList))
-		    
-		  
-		  # Original method (which fails to add grouped variables)
-			# cov <- c(prd, con, int)
-			# if (length(cov) > 0) {
-			# 	tbl <- tidyr::expand_grid(tbl, covariates = cov)
-			# } else {
-			# 	tbl
-			# }
 
 		},
 		fundamental = {
@@ -273,29 +264,44 @@ fmls <- function(x = unspecified(),
 		message("Pattern not currently supported.")
 	)
 
-	# Grouping variables now must be assessed
-	# Each row must have its full group present OR ELSE
-	# The term table from above serves as the reference
-
-	groupLevels <- stats::na.omit(unique(tmTab$group))
-	rowNums <- seq(nrow(tbl))
-	badRows <- integer()
-
-	for (g in groupLevels) {
-		groupedTerms <- subset(tmTab, group == g)$term
-		for (r in rowNums) {
-			allTerms <- unname(unlist(tbl[r, ]))
-			if (!all(groupedTerms %in% allTerms)) {
-				badRows <- c(badRows, r)
-			}
-		}
+	## GROUP CHECK
+	if (FALSE) {
+  	# Grouping variables now must be assessed
+  	# IF a group is present, the row must have its full group present OR ELSE
+  	# The term table from above serves as the reference
+  	# Grouping doesn't need to be checked IF no grouping variables in that row
+  
+    groupLevels <- with(tmTab, unique(group[!is.na(group)]))
+  	rowNums <- seq(nrow(tbl))
+  	badRows <- integer()
+  
+  	for (g in groupLevels) {
+  		groupedPredictors <- subset(tmTab, group == g & role != "exposure")$term
+  		for (r in rowNums) {
+  			# All predictors
+  			allPredictors <-
+    			tbl[r, ] |>
+  			  dplyr::select(-dplyr::any_of(c("outcome", "exposure"))) |>
+  			  unlist() |>
+  			  unname()
+  			
+  			# IF any grouping variables are present, then ALL must be present
+  			if (any(groupedPredictors %in% allPredictors)) {
+  			  # THEN check if all are present
+  			  if (!all(groupedPredictors %in% allPredictors)) {
+  			    badRows <- c(badRows, r)
+  			  }
+  			}
+  			
+  		}
+  	}
+  
+  	# Now remove the "troubled rows"
+  	ntbl <- tbl[badRows, ]
+  	tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
+  	stopifnot("Based on restrictions from the chosen terms and pattern, no <fmls> can be generated."
+  	          = nrow(tbl) > 0)
 	}
-
-	# Now remove the "troubled rows"
-	ntbl <- tbl[badRows, ]
-	tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
-	stopifnot("Based on restrictions from the chosen terms and pattern, no <fmls> can be generated."
-	          = nrow(tbl) > 0)
 
 	# Mediating variables ----
 

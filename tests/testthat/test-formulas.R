@@ -96,14 +96,24 @@ test_that("interaction terms can be included", {
 	expect_message(f <- fmls(witch ~ .x(wicked) + green + .i(west)))
 	expect_equal(formula(f, env = .GlobalEnv)[[1]], x, ignore_attr = TRUE)
 
-	# Now with different patterns
-	# Parallel should be the same as sequential
+	## By Patterns
+	
+	# Parallel 
 	# Should produce only one formulas as green and witch:green are needed
 	# This is a grouping issue from `tm()` function
 	x <- wicked ~ .x(witch) + .i(green)
 	f <- fmls(x, pattern = "parallel")
-	expect_length(nrow(f), 1)
+	expect_equal(nrow(f), 1)
 
+	# Sequential should produce 4 formulas in this case
+	x <- wicked ~ .x(witch) + west + .i(green)
+	f <- fmls(x, pattern = "sequential")
+	expect_equal(nrow(f), 4)
+	
+	# Sequential should produce 4 formulas in this case as well
+	x <- wicked ~ .x(witch) + .i(west) + green
+	f <- fmls(x, pattern = "sequential")
+	expect_equal(nrow(f), 4)
 })
 
 

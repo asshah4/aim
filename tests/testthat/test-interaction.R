@@ -4,7 +4,7 @@ test_that('interaction estimates can be made', {
 
 	# Since sex is a two level structure, interaction must happen at both levels
 	x <-
-		fmls(Surv(time, status) ~ .x(age) + .i(sex) + ph.karno,
+		fmls(Surv(time, status) ~ .x(age) + ph.karno + .i(sex),
 				 pattern = 'sequential') |>
 		fit(.fn = coxph, data = lung, raw = FALSE) |>
 		suppressMessages()

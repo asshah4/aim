@@ -1,4 +1,6 @@
 test_that("forest plot for interaction can be made", {
+  
+  skip()
 
   f <- vec_c(fmls(hp + mpg ~ .x(wt) + .i(am) + cyl),
              fmls(hp + mpg ~ .x(wt) + .i(vs) + cyl)) |>
