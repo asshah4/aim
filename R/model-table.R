@@ -639,9 +639,9 @@ attach_data <- function(x, data, ...) {
 # Select outcomes or exposures
 # Flatten it so you can actually analyze it
 
-#' Reduce model table
+#' Flatten model tables
 #' @export
-reduce_models <- function(x) {
+flatten_models <- function(x) {
 
 	validate_class(x, "mdl_tbl")
 

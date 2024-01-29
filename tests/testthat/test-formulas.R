@@ -88,7 +88,7 @@ test_that("patterns can be included into formula", {
 
 })
 
-test_that("interaction terms can be included explicitly", {
+test_that("interaction terms can be included", {
 
 	x <- witch ~ wicked + green + west + wicked:west
 	expect_equal(as.character(fmls(x)), deparse1(x))
@@ -96,7 +96,18 @@ test_that("interaction terms can be included explicitly", {
 	expect_message(f <- fmls(witch ~ .x(wicked) + green + .i(west)))
 	expect_equal(formula(f, env = .GlobalEnv)[[1]], x, ignore_attr = TRUE)
 
+	# Now with different patterns
+	# Parallel should be the same as sequential
+	# Should produce only one formulas as green and witch:green are needed
+	# This is a grouping issue from `tm()` function
+	x <- wicked ~ .x(witch) + .i(green)
+	f <- fmls(x, pattern = "parallel")
+
+
+
 })
+
+
 
 test_that("complex formulas/terms can be converted", {
 
@@ -129,4 +140,3 @@ test_that("strata terms can be kept within the formula appropriately", {
 	expect_equal(nrow(f), 1)
 
 })
-

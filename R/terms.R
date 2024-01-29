@@ -249,6 +249,7 @@ tm.formula <- function(x,
 		}()
 
 	# Grouped variables
+	# Interaction terms are inherently grouped as well but handled later
 	allGroups <-
 		x |>
 		all.names() |>
@@ -293,7 +294,7 @@ tm.formula <- function(x,
 
 	if (".i" %in% allRoles & ".x" %in% allRoles) {
 
-		# Need variables to interate through
+		# Need variables to iterate through
 		exp <- names(allRoles[allRoles == ".x"])
 		int <- names(allRoles[allRoles == ".i"])
 		intRoles <- intGroups <- list()
