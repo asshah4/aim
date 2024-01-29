@@ -68,6 +68,7 @@
 #'
 #' @return An object of class `fmls`
 #' @name fmls
+#' @importFrom rlang !!! :=
 #' @export
 fmls <- function(x = unspecified(),
 								 pattern = c("direct",
@@ -216,12 +217,48 @@ fmls <- function(x = unspecified(),
 
 			# TODO
 			# This needs to handle the issue of grouped variables
-			cov <- c(prd, con, int)
-			if (length(cov) > 0) {
-				tbl <- tidyr::expand_grid(tbl, covariates = cov)
-			} else {
-				tbl
-			}
+		  # Group = NA generic variables that can be parallelized
+		  # Group = set(0, inf) integers that must be placed together
+		  #   Covariate columns = max(group != NA)
+		  groupLevels <- with(tmTab, unique(group[!is.na(group)]))
+		  groupedCov <- list()
+		  for (g in groupLevels) {
+		    groupedCov[[as.character(g)]] <-
+		      with(tmTab, term[group == 0L & role != "exposure" & !is.na(group)])
+		  }
+		  
+		  # Ungrouped variables
+		  ungroupedCov <- 
+		    with(tmTab, term[side == "right" & is.na(group)]) |>
+		    as.list()
+		  
+		  # Covariates
+		  covList <- c(ungroupedCov, groupedCov)
+		  
+		  tabList <- list()
+		  for (i in seq_along(covList)) {
+		    cov <- covList[[i]]
+		    rowList <- list()
+		    for (j in seq_along(cov)) {
+		      rowList[[j]] <- 
+  		      #tidyr::expand_grid(tbl, "{paste0('covariate_', j)}" := cov[[j]])
+  		      #tibble::add_column(tbl, "{paste0('covariate_', j)}" := cov[[j]])
+  		      tibble::tibble("{paste0('covariate_', j)}" := cov[[j]])
+		    }
+		    tabList[[i]] <- dplyr::bind_cols(rowList)
+		  }
+		  
+		  tbl <- 
+		    tidyr::expand_grid(tbl, dplyr::bind_rows(tabList))
+		    
+		  
+		  # Original method (which fails to add grouped variables)
+			# cov <- c(prd, con, int)
+			# if (length(cov) > 0) {
+			# 	tbl <- tidyr::expand_grid(tbl, covariates = cov)
+			# } else {
+			# 	tbl
+			# }
 
 		},
 		fundamental = {
@@ -257,6 +294,8 @@ fmls <- function(x = unspecified(),
 	# Now remove the "troubled rows"
 	ntbl <- tbl[badRows, ]
 	tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
+	stopifnot("Based on restrictions from the chosen terms and pattern, no <fmls> can be generated."
+	          = nrow(tbl) > 0)
 
 	# Mediating variables ----
 

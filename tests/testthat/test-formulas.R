@@ -102,8 +102,7 @@ test_that("interaction terms can be included", {
 	# This is a grouping issue from `tm()` function
 	x <- wicked ~ .x(witch) + .i(green)
 	f <- fmls(x, pattern = "parallel")
-
-
+	expect_length(nrow(f), 1)
 
 })
 
