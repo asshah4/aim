@@ -1,4 +1,4 @@
-# Class ------------------------------------------------------------------------
+# Class ----------------------------------------------------------------------
 
 #' Model tables
 #'
@@ -125,7 +125,7 @@ vec_ptype_abbr.mdl_tbl <- function(x, ...) {
 	"mdl_tbl"
 }
 
-# Constructors ----
+# Constructors -----------------------------------------------------------------
 
 #' Restructure models to fit within a model table
 #' Passes information to `new_model_table()` for initialization
@@ -603,7 +603,7 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 	mdl_tbl_cast(x, to, ...)
 }
 
-# Model Data -------------------------------------------------------------------
+# Model Data -----------------------------------------------------------------
 
 #' Attach a dataset to a model table
 #'

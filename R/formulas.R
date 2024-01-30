@@ -1,4 +1,4 @@
-### Class definition -----------------------------------------------------------
+# Class definition -------------------------------------------------------------
 
 #' Vectorized formulas
 #'
@@ -100,169 +100,17 @@ fmls <- function(x = unspecified(),
 				 call. = FALSE)
 	}
 
-	# Take terms and create a matrix
-	# A <fmls> object is a group of terms that can or have been expanded
-	# <tm> object serves as a key to relay back information about individual terms
-	tmTab <- vec_proxy(x)
+	# If pattern is acceptable can send for pattern tracing
+	# Shuttled through the parent function `trace_pattern()`
+	tbl <- apply_pattern(x, pattern)
 
-	# Formula shape is based off of roles primarily
-	# 	Take terms and crystallize them into a matrix
-	# 	Each column is a term name, and each row is a defined role
-	nms <- tmTab$term
-
-	# Handle complexity
-	out <- tmTab$term[tmTab$role == "outcome"]
-	exp <- tmTab$term[tmTab$role == "exposure"]
-	prd <- tmTab$term[tmTab$role == "predictor"]
-	con <- tmTab$term[tmTab$role == "confounder"]
-	med <- tmTab$term[tmTab$role == "mediator"]
-	int <- tmTab$term[tmTab$role == "interaction"]
-	sta <- tmTab$term[tmTab$role == "strata"]
-
-	# Simplify the complexity of key roles ----
-
-	# Outcomes and exposures should be set as a "key pair"
-	if (length(out) > 0 & length(exp) > 0) {
-		tbl <- tidyr::expand_grid(outcome = out, exposure = exp)
-	} else if (length(out) > 0 & length(exp) == 0) {
-		tbl <- tidyr::expand_grid(outcome = out)
-	} else if (length(out) == 0 & length(exp) > 0) {
-		tbl <- tidyr::expand_grid(exposure = exp)
-	} else if (length(out) == 0 & length(exp) == 0) {
-		tbl <- tidyr::expand_grid()
+	# If mediation is needed
+	# Mediation should be done only if covariates are already added
+	# Function `check_mediation()` is internal only
+	med <- with(vec_proxy(x), term[role == "mediator"])
+	if (length(med) > 0 & pattern != "fundamental") {
+		tbl <- check_mediation(x, tbl)
 	}
-
-	# Strata terms are unique in...
-	# 	Right sided variables
-	# 	Not considered covariates however
-	# 	But, will be available in formula terms, if not in the matrix itself
-	# if (length(sta) > 0) {
-	# 	tbl <- tidyr::expand_grid(tbl, strata = sta)
-	# }
-
-	# Predictor patterns ----
-
-	# Covariates are the fodder for pattern expansions
-	# The output variable from this section is `tbl`
-	switch(
-		pattern,
-		direct = {
-			cov <- c(prd, con, int)
-
-			if (length(cov) > 0) {
-				for (i in seq_along(cov)) {
-					tbl <-
-						tidyr::expand_grid(tbl, "{paste0('covariate_', i)}" := cov[i])
-				}
-			}
-		},
-		sequential = {
-			cov <- c(prd, con, int)
-
-			for (i in seq_along(cov)) {
-				tbl <-
-					tidyr::expand_grid(tbl, "{paste0('covariate_', i)}" := c(NA, cov[i]))
-			}
-
-			# Remove rows that are not appropriate...
-			# 	e.g. no exposure or covariates
-			# 	e.g. doesn't follow sequential rules
-			n <- length(cov)
-
-			if (n > 0 & !("exposure" %in% names(tbl))) {
-				tbl <- tbl[which(!is.na(tbl[["covariate_1"]])), ]
-			}
-
-			ntbl <- list()
-
-			for (i in seq_along(cov)) {
-				# Potential columns, may not exist
-				pc <- paste0("covariate_", i - 1)
-				cc <- paste0("covariate_", i + 0)
-				nc <- paste0("covariate_", i + 1)
-
-				if (i == 1) {
-					# First term
-					# If missing, future terms cannot be present either
-					ntbl[[i]] <-
-						tbl |>
-						dplyr::filter(is.na(!!rlang::sym(cc)) & !is.na(!!rlang::sym(nc)))
-
-				} else if (i == n) {
-					# Last term
-					# If present, previous term must also be present
-					ntbl[[i]] <-
-						tbl |>
-						dplyr::filter(!is.na(!!rlang::sym(cc)) & is.na(!!rlang::sym(pc)))
-
-				} else {
-					# All other rows
-					# If variable i is empty, i...n must also be empty
-					ntbl[[i]] <-
-						tbl |>
-						dplyr::filter(
-							(!is.na(!!rlang::sym(cc)) & is.na(!!rlang::sym(pc))) |
-								(is.na(!!rlang::sym(cc)) & !is.na(!!rlang::sym(nc)))
-						)
-
-				}
-			}
-
-			# Combine the bad tables together and cull them from orignal tables
-			ntbl <- unique(dplyr::bind_rows(ntbl))
-			tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
-
-		},
-		parallel = {
-
-			# TODO
-			# This needs to handle the issue of grouped variables
-		  # Group = NA generic variables that can be parallelized
-		  # Group = set(0, inf) integers that must be placed together
-		  #   Covariate columns = max(group != NA)
-		  groupLevels <- with(tmTab, unique(group[!is.na(group)]))
-		  groupedCov <- list()
-		  for (g in groupLevels) {
-		    groupedCov[[as.character(g)]] <-
-		      with(tmTab, term[group == 0L & role != "exposure" & !is.na(group)])
-		  }
-		  
-		  # Ungrouped variables
-		  ungroupedCov <- 
-		    with(tmTab, term[side == "right" & is.na(group)]) |>
-		    as.list()
-		  
-		  # Covariates
-		  covList <- c(ungroupedCov, groupedCov)
-		  
-		  tabList <- list()
-		  for (i in seq_along(covList)) {
-		    cov <- covList[[i]]
-		    rowList <- list()
-		    for (j in seq_along(cov)) {
-		      rowList[[j]] <- 
-  		      #tidyr::expand_grid(tbl, "{paste0('covariate_', j)}" := cov[[j]])
-  		      #tibble::add_column(tbl, "{paste0('covariate_', j)}" := cov[[j]])
-  		      tibble::tibble("{paste0('covariate_', j)}" := cov[[j]])
-		    }
-		    tabList[[i]] <- dplyr::bind_cols(rowList)
-		  }
-		  
-		  tbl <- 
-		    tidyr::expand_grid(tbl, dplyr::bind_rows(tabList))
-
-		},
-		fundamental = {
-
-			# This forms the right hand side variables
-			# However fundamental decomposition breaks the rules generally
-			cov <- c(exp, prd, con, med, int, sta)
-			tbl <- tidyr::expand_grid(left = out, right = cov)
-			message_fundamental_pattern(med, sta)
-
-		},
-		message("Pattern not currently supported.")
-	)
 
 	## GROUP CHECK
 	if (FALSE) {
@@ -270,11 +118,11 @@ fmls <- function(x = unspecified(),
   	# IF a group is present, the row must have its full group present OR ELSE
   	# The term table from above serves as the reference
   	# Grouping doesn't need to be checked IF no grouping variables in that row
-  
+
     groupLevels <- with(tmTab, unique(group[!is.na(group)]))
   	rowNums <- seq(nrow(tbl))
   	badRows <- integer()
-  
+
   	for (g in groupLevels) {
   		groupedPredictors <- subset(tmTab, group == g & role != "exposure")$term
   		for (r in rowNums) {
@@ -284,7 +132,7 @@ fmls <- function(x = unspecified(),
   			  dplyr::select(-dplyr::any_of(c("outcome", "exposure"))) |>
   			  unlist() |>
   			  unname()
-  			
+
   			# IF any grouping variables are present, then ALL must be present
   			if (any(groupedPredictors %in% allPredictors)) {
   			  # THEN check if all are present
@@ -292,55 +140,16 @@ fmls <- function(x = unspecified(),
   			    badRows <- c(badRows, r)
   			  }
   			}
-  			
+
   		}
   	}
-  
+
   	# Now remove the "troubled rows"
   	ntbl <- tbl[badRows, ]
   	tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
   	stopifnot("Based on restrictions from the chosen terms and pattern, no <fmls> can be generated."
   	          = nrow(tbl) > 0)
 	}
-
-	# Mediating variables ----
-
-	# Mediation should be done only if covariates are already added
-	if (length(med) > 0 & pattern != "fundamental") {
-
-		# Each row has been expanded for exposure and outcome
-		# This will triple the number of rows
-
-		# Mediation...
-		# 	The combinations of mediation are based on causal reasoning
-		# 	outcome ~ exposure + mediator + predictors
-		#		mediator ~ exposure
-		# 	outcome ~ mediator + exposure
-
-		# 'outcome ~ exposure + mediator + predictors'
-		# 	Covariates exists in each row already
-		# 	Simply add mediator
-		m1 <- tidyr::expand_grid(tbl, mediator = med)
-
-		# 'mediator ~ exposure'
-		# 	No other variables allowed
-		# 	Add a new row of just this
-		m2 <- tidyr::expand_grid(mediator = med, exposure = exp)
-
-		# 'outcome ~ mediator + exposure'
-		#		Only looking for effect of mediator on outcome WITH exposure
-		m3 <- tidyr::expand_grid(outcome = out, mediator = med, exposure = exp)
-
-		# Bind all the tables together
-		tbl <-
-			m1 |>
-			dplyr::bind_rows(m2) |>
-			dplyr::bind_rows(m3) |>
-			unique()
-
-	}
-
-	# Return term matrix ----
 
 	# Create a list where each item is a vector of terms
 	# These can be then turned into a term matrix
@@ -355,9 +164,8 @@ fmls <- function(x = unspecified(),
 	    \(.x) replace(.x, is.na(.x), 0)
 	  }()
 
-
 	new_fmls(formulaMatrix = fmMat,
-					 termTable = tmTab)
+					 termTable = vec_proxy(x))
 
 }
 
@@ -479,7 +287,7 @@ vec_ptype_abbr.fmls <- function(x, ...) {
 #' @export
 methods::setOldClass(c("fmls", "vctrs_rcrd"))
 
-### Coercion methods -----------------------------------------------------------
+# Coercion methods -----------------------------------------------------------
 
 # SELF
 
@@ -604,7 +412,7 @@ vec_cast.fmls.formula <- function(x, to, ...) {
 	fmls(x)
 }
 
-### Formula Helpers ------------------------------------------------------------
+# Formula Helpers --------------------------------------------------------------
 
 #' @export
 formula.fmls <- function(x, ...) {
@@ -637,3 +445,4 @@ formulas_to_terms <- function(x) {
 	tms
 
 }
+
