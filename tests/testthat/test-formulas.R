@@ -78,7 +78,6 @@ test_that("patterns can be included into formula", {
 	f3 <- fmls(witch ~ .x(wicked) + west + green, pattern = "sequential")
 	expect_equal(nrow(f3), 3)
 
-
 	# Printing for sequential works
 	x <- mpg ~ wt + hp + cyl + .s(am)
 	pattern <- "sequential"
@@ -97,8 +96,8 @@ test_that("interaction terms can be included", {
 	expect_equal(formula(f, env = .GlobalEnv)[[1]], x, ignore_attr = TRUE)
 
 	## By Patterns
-	
-	# Parallel 
+
+	# Parallel
 	# Should produce only one formulas as green and witch:green are needed
 	# This is a grouping issue from `tm()` function
 	x <- wicked ~ .x(witch) + .i(green)
@@ -109,14 +108,12 @@ test_that("interaction terms can be included", {
 	x <- wicked ~ .x(witch) + west + .i(green)
 	f <- fmls(x, pattern = "sequential")
 	expect_equal(nrow(f), 4)
-	
+
 	# Sequential should produce 4 formulas in this case as well
 	x <- wicked ~ .x(witch) + .i(west) + green
 	f <- fmls(x, pattern = "sequential")
 	expect_equal(nrow(f), 4)
 })
-
-
 
 test_that("complex formulas/terms can be converted", {
 

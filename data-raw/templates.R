@@ -12,7 +12,8 @@
 	'fundamental',
 	'direct',
 	'sequential',
-	'parallel'
+	'parallel',
+	'rolling_interaction'
 )
 
 .transformations <- c(
