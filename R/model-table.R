@@ -198,10 +198,11 @@ construct_table_from_models <- function(x, ...) {
 	int <-
 		sapply(tl, function(.x) {
 			.y <- as.character(dplyr::filter(.x, role == "interaction"))
-			if (length(.y) == 0) {
-				.y <- NA_character_
+			.z <- .y[!grepl(":", .y)]
+			if (length(.z) == 0) {
+				.z <- NA_character_
 			} else {
-				.y
+				.z
 			}
 		}) |>
 		as.character()
@@ -299,10 +300,11 @@ construct_table_from_formulas <- function(x, ...) {
 	})
 	int <- sapply(tl, function(.x) {
 		.y <- as.character(filter(.x, role == "interaction"))
-		if (length(.y) == 0) {
-			.y <- NA_character_
+		.z <- .y[!grepl(":", .y)]
+		if (length(.z) == 0) {
+			.z <- NA_character_
 		} else {
-			.y
+			.z
 		}
 	})
 

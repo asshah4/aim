@@ -161,8 +161,15 @@ apply_sequential_pattern <- function(x) {
 		tbl <- tidyr::expand_grid()
 	}
 
+	## Covariate order
 	# Covariates are all predictors on RHS
+	# They need to be the same order as the original terms however
+	# Cool enough, 'x' as a <tm> works for matching as a <character>
+	# Interaction terms should be placed next to each other
+
 	cov <- c(prd, con, int)
+	cov <- cov[order(match(cov, x))]
+
 
 	# Expand based on number of covariates
 	for (i in seq_along(cov)) {
@@ -262,7 +269,7 @@ apply_parallel_pattern <- function(x) {
 
 	# Ungrouped variables
 	ungroupedCov <-
-	  with(tmTab, term[side == "right" & is.na(group)]) |>
+	  with(tmTab, term[side == "right" & role != "exposure" & is.na(group)]) |>
 	  as.list()
 
 	# Covariates
@@ -295,6 +302,11 @@ apply_parallel_pattern <- function(x) {
 #' @export
 apply_rolling_interaction_pattern <- function(x) {
 
+	# Goal is to have a single formula and apply interaction through
+	# This would create multiple formulas, one for each interaction term
+	# Cannot know the type of variable for this to work
+	# Must occur within fmls function itself
+
 	# Term table
 	tmTab <- vec_proxy(x)
 
@@ -318,57 +330,8 @@ apply_rolling_interaction_pattern <- function(x) {
 		tbl <- tidyr::expand_grid()
 	}
 
-}
-
-# Pattern helpers --------------------------------------------------------------
-
-#' @keywords internal
-#' @noRd
-check_mediation <- function(x, tbl) {
-
-	# Roles
-	tmTab <- vec_proxy(x)
-	out <- tmTab$term[tmTab$role == "outcome"]
-	exp <- tmTab$term[tmTab$role == "exposure"]
-	prd <- tmTab$term[tmTab$role == "predictor"]
-	con <- tmTab$term[tmTab$role == "confounder"]
-	med <- tmTab$term[tmTab$role == "mediator"]
-	int <- tmTab$term[tmTab$role == "interaction"]
-	sta <- tmTab$term[tmTab$role == "strata"]
-
-	# Requires a table from the `apply_*_pattern()` functions
-	# Each row has been expanded for exposure and outcome
-	# This will triple the number of rows subsequently
-	checkmate::assert_tibble(tbl)
-
-	# Mediation...
-	# 	The combinations of mediation are based on causal reasoning
-	# 	outcome ~ exposure + mediator + predictors
-	#		mediator ~ exposure
-	# 	outcome ~ mediator + exposure
-
-	# 'outcome ~ exposure + mediator + predictors'
-	# 	Covariates exists in each row already
-	# 	Simply add mediator
-	m1 <- tidyr::expand_grid(tbl, mediator = med)
-
-	# 'mediator ~ exposure'
-	# 	No other variables allowed
-	# 	Add a new row of just this
-	m2 <- tidyr::expand_grid(mediator = med, exposure = exp)
-
-	# 'outcome ~ mediator + exposure'
-	#		Only looking for effect of mediator on outcome WITH exposure
-	m3 <- tidyr::expand_grid(outcome = out, mediator = med, exposure = exp)
-
-	# Bind all the tables together
-	tbl <-
-		m1 |>
-		dplyr::bind_rows(m2) |>
-		dplyr::bind_rows(m3) |>
-		unique()
-
-	# Return
-	tbl
+	# Crucially, the interaction term marks WHEN in the formula to apply the roll
+	# This means that every term BEFORE the interaction term will be maintained
 
 }
+

@@ -307,18 +307,15 @@ tm.formula <- function(x,
 				intRoles[.i] <- ".i"
 
 				# Will need to "regroup" if interaction term is added
-				#		If the exposure already has a group, then 3 terms belong to it
+				#	Exposure cannot have its own group, since it will be in every equation
 				if (length(intGroups) == 0) {
 					g <- 0
-				} else if (!is.null(intGroups[[exp[ix]]])) {
-					g <- intGroups[[exp[ix]]]
 				} else if (!is.null(intGroups[[int[ii]]])) {
 					g <- intGroups[[int[ii]]]
 				} else {
 					g <- max(unlist(unname(intGroups))) + 1
 				}
 
-				intGroups[exp[ix]] <- g
 				intGroups[int[ii]] <- g
 				intGroups[.i] <- g
 
@@ -329,15 +326,32 @@ tm.formula <- function(x,
 		# Interaction terms change roles of other variables and add variables
 		# 	Update all roles and groups
 		#		for i in interactions
-		#			Change to old/unfixed interactor to predictor
+		#			Do not change to old/unfixed interactor to predictor
 		#			Add new/corrected interactor onto right side
 		allGroups <- c(allGroups, intGroups)
 		allRoles <- c(allRoles, intRoles)
 		for (ii in seq_along(int)) {
-			allRoles[int[ii]] <- ".p"
+			#allRoles[int[ii]] <- ".p" # Don't change to a predictor
 			right[grepl(names(allRoles[int[ii]]), right)] <- int[ii]
 		}
-		right <- c(right, names(intRoles))
+
+		# The group order should be next to each other
+		# For every level of allGroups there will be unique terms
+		# We need only the FIRST term of that group as the matching key
+		# That matching key is found in the RIGHT side terms
+		# Then, the matching key is injected into the right side term groups
+		for (ig in unique(unlist(allGroups))) {
+			# All terms at a set level
+			groupNames <- names(allGroups == ig)
+
+			# First term in the matching group
+			matchingTerm <- groupNames[!grepl(":", groupNames)][1]
+
+			# Add it as a list and then "flatten"
+			right[right == matchingTerm] <- list(groupNames)
+			right <- unlist(right) |> unique()
+
+		}
 
 	}
 
@@ -382,7 +396,10 @@ tm.formula <- function(x,
 	}
 
 	# Combine all terms
+	# Ensure correct order of terms
 	both <- c(left, right)
+
+	order(match(names(allGroups), right))
 
 
 	# Re-name into full name
@@ -396,7 +413,7 @@ tm.formula <- function(x,
 	}
 
 	# Setup to create new terms using all elements of original formula
-	tm_vector <- tm()
+	tm_vector <- new_tm()
 	for (i in 1:length(both)) {
 		# make parameters
 		t <- both[i]
