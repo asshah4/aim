@@ -11,10 +11,10 @@ test_that('interaction estimates can be made', {
 
 	mt <- model_table(int_sex = x, data = lung)
 	expect_s3_class(mt, 'mdl_tbl')
-	expect_equal(nrow(mt), 4)
+	expect_equal(nrow(mt), 3)
 	expect_error(estimate_interaction(mt), regexp = "single row")
 
-	object <- dplyr::filter(mt, interaction == 'age:sex')
+	object <- dplyr::filter(mt, interaction == 'sex')
 	expect_equal(nrow(object), 1)
 	expect_error(
 	  estimate_interaction(object, exposure = "ph.karno"),

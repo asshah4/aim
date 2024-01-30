@@ -21,7 +21,14 @@ test_that("basic patterns can be applied", {
 	y <- apply_parallel_pattern(x)
 	expect_named(y, c("outcome", "exposure", "covariate_1"))
 	expect_length(y, 3)
-	expect_length(y$exposure, 3)
+	expect_length(y$exposure, 2)
 	expect_length(unique(y$exposure), 1)
+
+})
+
+test_that("interaction terms can be rolled through a formula", {
+
+	x <- tm(wicked ~ .x(witch) + west + .i(green) + magic + hat)
+	fmls(x, pattern = "parallel")
 
 })

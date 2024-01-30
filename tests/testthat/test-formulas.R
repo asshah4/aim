@@ -104,15 +104,17 @@ test_that("interaction terms can be included", {
 	f <- fmls(x, pattern = "parallel")
 	expect_equal(nrow(f), 1)
 
-	# Sequential should produce 4 formulas in this case
+	# Sequential should produce 3 formulas in this case?
 	x <- wicked ~ .x(witch) + west + .i(green)
 	f <- fmls(x, pattern = "sequential")
-	expect_equal(nrow(f), 4)
+	expect_equal(nrow(f), 3)
 
-	# Sequential should produce 4 formulas in this case as well
+	# Sequential should produce 3 formulas in this case as well
 	x <- wicked ~ .x(witch) + .i(west) + green
 	f <- fmls(x, pattern = "sequential")
-	expect_equal(nrow(f), 4)
+	expect_equal(nrow(f), 3)
+	f2 <- wicked ~ witch + west + witch:west # Green should not yet have appeared
+	expect_equal(unname(as.character(f[2, ])), deparse1(f2))
 })
 
 test_that("complex formulas/terms can be converted", {

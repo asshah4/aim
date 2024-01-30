@@ -174,7 +174,7 @@ test_that("term groups can be established", {
 	d <- vec_data(t)
 	expect_equal(d$group[d$term == "wicked"], 1)
 
-	### Group term implemntation using shortcuts
+	### Group term implementation using shortcuts
 
 	# Expect .g to become .g0, and .g1 to be g1
 	x1 <- witch ~ west + .g(green) + .g(wicked)
@@ -212,6 +212,12 @@ test_that("interaction terms are appropriately made", {
 	expect_message(t <- tm(x))
 	expect(length(t), 5)
 
+	# Interaction role must be given to the correct term
+	x <- wicked ~ .x(witch) + .i(green)
+	tmTab <- vec_proxy(tm(x))
+	expect_equal(tmTab$role[tmTab$term == "green"], "interaction")
+	expect_equal(tmTab$role[tmTab$term == "witch:green"], "interaction")
+
 	# Multiple interactions
 	# Two messages about two interaction terms
 	expect_message(expect_message(t <- tm(mpg ~ .x(hp) + .i(am) + .i(vs))))
@@ -222,6 +228,15 @@ test_that("interaction terms are appropriately made", {
 	x <- mpg ~ .x(hp) + .x(cyl) + .i(am)
 	expect_message(expect_message(t <- tm(x)))
 	expect_length(t, 6)
+
+	# Most importantly, an interaction term has a grouping
+	# Groups must "go" together in the sequence of terms
+	x <- wicked ~ .x(witch) + .i(west) + green
+	t <- tm(x)
+	expect_equal(vec_data(t)$term,
+									c("wicked", "witch", "west", "witch:west", "green"))
+
+
 
 })
 
