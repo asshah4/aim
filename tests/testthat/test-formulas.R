@@ -1,3 +1,5 @@
+# Basics ----
+
 test_that("fmls can be initialized and formatted", {
 
 	# Empty class
@@ -117,7 +119,28 @@ test_that("interaction terms can be included", {
 	expect_equal(unname(as.character(f[2, ])), deparse1(f2))
 })
 
-test_that("complex formulas/terms can be converted", {
+test_that("strata terms can be kept within the formula appropriately", {
+
+	x <- tm(mpg ~ wt + hp + .s(am))
+	f <- fmls(x)
+	expect_length(key_terms(f), 4)
+
+	x <- mpg ~ wt + hp + .s(am)
+	f <- fmls(x)
+	expect_length(key_terms(f), 4)
+	expect_equal(ncol(f), 3)
+	expect_equal(nrow(f), 1)
+
+})
+
+
+# Special terms ----
+
+test_that("multiple interactions are treated appropriately", {
+
+})
+
+test_that("terms with multiple roles can be converted to formulas", {
 
 	x <- tm(green + white ~ .x(wicked) + .x(good) + witch + fairy + magic + .m(west))
 	f <- fmls(x)
@@ -135,16 +158,3 @@ test_that("complex formulas/terms can be converted", {
 	expect_equal(nrow(f), 10)
 })
 
-test_that("strata terms can be kept within the formula appropriately", {
-
-	x <- tm(mpg ~ wt + hp + .s(am))
-	f <- fmls(x)
-	expect_length(key_terms(f), 4)
-
-	x <- mpg ~ wt + hp + .s(am)
-	f <- fmls(x)
-	expect_length(key_terms(f), 4)
-	expect_equal(ncol(f), 3)
-	expect_equal(nrow(f), 1)
-
-})

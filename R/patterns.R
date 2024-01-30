@@ -194,7 +194,10 @@ apply_sequential_pattern <- function(x) {
 		cc <- paste0("covariate_", i + 0)
 		nc <- paste0("covariate_", i + 1)
 
-		if (i == 1) {
+		if (i == 1 & n == 1) {
+			 # If there is only a single term overall, then it must be present?
+			ntbl <- list()
+		} else if (i == 1) {
 			# First term
 			# If missing, future terms cannot be present either
 			ntbl[[i]] <-
@@ -221,9 +224,11 @@ apply_sequential_pattern <- function(x) {
 		}
 	}
 
-	# Combine the bad tables together and cull them from orignal tables
+	# Combine the bad tables together and cull them from original tables
 	ntbl <- unique(dplyr::bind_rows(ntbl))
-	tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
+	if (nrow(ntbl) > 0) {
+		tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
+	}
 
 	# Return
 	tbl

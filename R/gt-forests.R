@@ -135,7 +135,7 @@ tbl_interaction_forest <- function(object,
 	int_nms <- names(int)
 	int_lab <- unlist(unname(int))
 	it <- levels(interaction(exp_nms, int_nms, sep = ":"))
-	checkmate::assert_true(all(it %in% object$interaction))
+	checkmate::assert_true(all(int_nms %in% object$interaction))
 
 	## Levels
 	# Approach to relabeling interaction levels
@@ -166,7 +166,7 @@ tbl_interaction_forest <- function(object,
 				object |>
 				dplyr::filter(outcome == o) |>
 				dplyr::filter(exposure == e) |>
-				dplyr::filter(interaction %in% it)
+				dplyr::filter(interaction %in% int_nms)
 
 			# Get interaction terms that are available in this subset
 			intVars <-
@@ -450,7 +450,7 @@ tbl_interaction_forest <- function(object,
 				. |>
 					cols_merge(columns = estVar[1:3],
 										 pattern = "{1} ({2}, {3})") |>
-					cols_width(estimate ~ pct(colWidths$beta * 100)) |>
+					cols_width(estimate ~ pct(40)) |>
 					cols_label(estimate = cols$beta)
 			} else {
 				.
@@ -460,7 +460,7 @@ tbl_interaction_forest <- function(object,
 		{\(.) {
 			if (all(c("nobs") %in% modVar)) {
 				. |>
-					cols_width(nobs ~ pct(as.numeric(colWidths$n * 100))) |>
+					cols_width(nobs ~ pct(10)) |>
 					cols_label(nobs = cols$n)
 			} else {
 				.
@@ -550,7 +550,7 @@ tbl_interaction_forest <- function(object,
 				purrr::map(ptbl$gg,
 									 ggplot_image,
 									 height = px(50),
-									 aspect_ratio = colWidths$forest * 10)
+									 aspect_ratio = 1.5)
 			}
 		)
 
