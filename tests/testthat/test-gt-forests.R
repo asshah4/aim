@@ -1,5 +1,5 @@
 test_that("forest plot for interaction can be made", {
-  
+
   skip()
 
   f <- vec_c(fmls(hp + mpg ~ .x(wt) + .i(am) + cyl),
@@ -30,7 +30,6 @@ test_that("forest plot for interaction can be made", {
       level_labels = level_labels,
       columns = columns,
       axis = axis,
-      width = width,
       forest = forest
     )
 
@@ -50,4 +49,31 @@ test_that("forest plot for interaction can be made", {
     sty$cell_text$v_align
   }, "bottom")
 
+})
+
+test_that("multiple interaction terms", {
+
+  cars <-
+  	mtcars |>
+  	dplyr::mutate(heavy = ifelse(wt > 3.2, 1, 0))
+
+  m1 <-
+  	fmls(heavy ~ .x(hp) + .i(vs)) |>
+  	fit(.fn = glm, family = 'binomial', data = cars, raw = FALSE)
+  m2 <-
+  	fmls(heavy ~ .x(hp) + .i(am)) |>
+  	fit(.fn = glm, family = 'binomial', data = cars, raw = FALSE)
+
+  mt <- vlndr::model_table(one = m1, two = m2)
+
+  tbl_interaction_forest(
+  	object = mt,
+  	outcomes = am ~ "Automatic",
+  	exposures = hp ~ 'Horsepower',
+  	interactions = list(vs ~ "V/S", am ~ "Transmission"),
+  	level_labels = list(
+  		vs ~ c("yes", "no"),
+  		am ~ c("Manual", "Automatic")
+  	)
+  )
 })
