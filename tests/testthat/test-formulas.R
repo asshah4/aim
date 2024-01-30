@@ -1,3 +1,5 @@
+# Basics ----
+
 test_that("fmls can be initialized and formatted", {
 
 	# Empty class
@@ -116,6 +118,10 @@ test_that("interaction terms can be included", {
 	f2 <- wicked ~ witch + west + witch:west # Green should not yet have appeared
 	expect_equal(unname(as.character(f[2, ])), deparse1(f2))
 })
+
+
+# Special terms ----
+
 
 test_that("complex formulas/terms can be converted", {
 

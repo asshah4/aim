@@ -24,6 +24,13 @@ test_that("basic patterns can be applied", {
 	expect_length(y$exposure, 2)
 	expect_length(unique(y$exposure), 1)
 
+	# Sequential with restricted terms
+	x <- tm(witch ~ wicked)
+	ys <- apply_sequential_pattern(x)
+	yp <- apply_parallel_pattern(x)
+	yf <- apply_fundamental_pattern(x)
+	yd <- apply_direct_pattern(x)
+
 })
 
 test_that("interaction terms can be rolled through a formula", {
