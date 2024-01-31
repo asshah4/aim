@@ -64,11 +64,11 @@ test_that("multiple interaction terms", {
   	fmls(heavy ~ .x(hp) + .i(am)) |>
   	fit(.fn = glm, family = 'binomial', data = cars, raw = FALSE)
 
-  mt <- vlndr::model_table(one = m1, two = m2)
+  mt <- vlndr::model_table(one = m1, two = m2, data = cars)
 
   tbl_interaction_forest(
   	object = mt,
-  	outcomes = am ~ "Automatic",
+  	outcomes = heavy ~ "Big Car",
   	exposures = hp ~ 'Horsepower',
   	interactions = list(vs ~ "V/S", am ~ "Transmission"),
   	level_labels = list(
