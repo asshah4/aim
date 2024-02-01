@@ -307,11 +307,12 @@ tbl_interaction_forest <- function(object,
 	}
 
 	if ('scale' %in% names(x_vars)) {
-		scale <- x_vars$scale
-	} else if (unique(object$model_call) %in% c('glm', 'coxph')) {
-		scale <- 'log'
+	  scale <- x_vars$scale
+	} else if (unique(object$model_call) %in% c('glm', 'coxph') |
+	           exponentiate == TRUE) {
+	  scale <- 'log'
 	} else {
-		scale <- 'continuous'
+	  scale <- 'continuous'
 	}
 
 	## Basic plots in table format
