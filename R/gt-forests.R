@@ -558,7 +558,6 @@ tbl_interaction_forest <- function(object,
 		cols_label(
 			ggplots = title
 		) |>
-		cols_width(ggplots ~ pct(50)) |>
 		text_transform(
 			locations = cells_body(columns = ggplots),
 			fn = function(x) {
