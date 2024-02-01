@@ -23,7 +23,9 @@
 #'
 #'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
 #'
-#'
+#' @param exponentiate A `<logical>` to determine if the odds or hazard ratio
+#'  should be exponentiated, e.g. `exp(beta)`. Default is `FALSE`
+#'  
 #' @param invert A `<logical>` to determine if the odds or hazard ratio should
 #'   be shown as the reciprocal values. Instead of a decreasing hazard for every
 #'   unit increase, it describes an increasing hazard for every unit decrease.
@@ -219,6 +221,16 @@ tbl_interaction_forest <- function(object,
 	# Now, in the darkness, bind them
 	tbl <- dplyr::bind_rows(tbl_out, .id = 'outcome')
 
+	# Exponentiate if indicated by logical argument
+	if (exponentiate) {
+		tbl <-
+			tbl |>
+			dplyr::mutate(across(
+				any_of(c("estimate", "conf_low", "conf_high")),
+				~ exp(.x)
+			))
+	}
+	
 	# Plot arguments ----
 
 	## Columns

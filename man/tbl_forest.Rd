@@ -106,6 +106,9 @@ the visual aspects of the forest plot. The currently supported arguments:
 \item linewidth = Thickness of lines, for both vertical and horixontal axes
 }}
 
+\item{exponentiate}{A \verb{<logical>} to determine if the odds or hazard ratio
+should be exponentiated, e.g. \code{exp(beta)}. Default is \code{FALSE}}
+
 \item{invert}{A \verb{<logical>} to determine if the odds or hazard ratio should
 be shown as the reciprocal values. Instead of a decreasing hazard for every
 unit increase, it describes an increasing hazard for every unit decrease.

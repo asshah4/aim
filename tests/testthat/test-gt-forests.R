@@ -30,7 +30,8 @@ test_that("forest plot for interaction can be made", {
       level_labels = level_labels,
       columns = columns,
       axis = axis,
-      forest = forest
+      forest = forest,
+      exponentiate = FALSE,
     )
 
   expect_s3_class(gtbl, "gt_tbl")
