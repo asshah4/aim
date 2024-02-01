@@ -149,7 +149,7 @@ tbl_interaction_forest <- function(object,
 		lapply(str2lang) |>
 		lapply(as.character) |>
 		lapply(tail, -1)
-
+		
 	# Table ----
 
 	## Table setup
@@ -463,7 +463,7 @@ tbl_interaction_forest <- function(object,
 				. |>
 					cols_merge(columns = estVar[1:3],
 										 pattern = "{1} ({2}, {3})") |>
-					cols_width(estimate ~ pct(40)) |>
+					cols_width(estimate ~ pct(20)) |>
 					cols_label(estimate = cols$beta)
 			} else {
 				.
@@ -485,6 +485,7 @@ tbl_interaction_forest <- function(object,
 				. |>
 					cols_move_to_end(p_value) |>
 					cols_label(p_value = cols$p) |>
+					cols_width(p_value ~ pct(10)) |>
 					tab_style(
 						style = list(
 							cell_text(color = "white", size = px(0)),
@@ -557,6 +558,7 @@ tbl_interaction_forest <- function(object,
 		cols_label(
 			ggplots = title
 		) |>
+		cols_width(ggplots ~ pct(50)) |>
 		text_transform(
 			locations = cells_body(columns = ggplots),
 			fn = function(x) {

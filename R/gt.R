@@ -31,12 +31,15 @@
 #'
 #'   For example, `list(am ~ c("Manual", "Automatic")` would take, from the
 #'   `mtcars` dataset, the `am` variable, which consists of `c(0, 1)`, and
-#'   relabel them in the order described. They are sorted in ascendiing order
+#'   relabel them in the order described. They are sorted in ascending order
 #'   prior to re-labeling.
-#'
-#'   The alternative approach is to use the specific level itself and have it
-#'   re-labeled. `list(0 ~ "Absent")` would take all levels that are zero, and
-#'   change their value.
+#'   
+#'   Note: If an argument has complex characters, they must be wrapped in an
+#'   additional single quotation mark to avoid issues with parsing. Hyphens (-)
+#'   and percent signs (%) are the most common culprits. 
+#' 
+#'   For example, `speed ~ c("'>= 10%', '< 10%'")` would be needed to avoid an
+#'   error in parsing.
 #'
 #' @param terms A `<formula>` or list of formulas selecting the model terms that
 #'   should be used. The **LHS** is always the name of the variable that will be

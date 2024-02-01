@@ -53,17 +53,15 @@ tbl_compare(
 	missing_text = missing_text
 )
 
-# The map tibble should only be used for a single hypothesis at a time.
-# Grouping/order:
-	# 1. outcome
-	# 2. exposure
-	# 3. covariate
-data <- subset(object, name == "hseq")
 
-data %>%
-	select(outcomes, exposures, number, term, estimate) %>%
-	pivot_wider(
-		names_from = outcomes,
-		values_from = estimate,
-	) %>%
-	gt(rowname_col = "term", groupname_col = "exposures")
+# Misc ----
+
+level_labels = list(
+  sex ~ c("Male", "Female"),
+  black ~ c("White", "Black"),
+  smoking ~ c(0, 1),
+  alcohol ~ c(0, 1),
+  obese ~ c("BMI < 30", "BMI >= 30"),
+  osa ~ c("No", "Yes"),
+  lvef_reduced ~ c("'LVEF < 40%'", "'LVEF >= 40%'")
+)

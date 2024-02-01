@@ -35,12 +35,15 @@ be used.
 
 For example, \verb{list(am ~ c("Manual", "Automatic")} would take, from the
 \code{mtcars} dataset, the \code{am} variable, which consists of \code{c(0, 1)}, and
-relabel them in the order described. They are sorted in ascendiing order
+relabel them in the order described. They are sorted in ascending order
 prior to re-labeling.
 
-The alternative approach is to use the specific level itself and have it
-re-labeled. \code{list(0 ~ "Absent")} would take all levels that are zero, and
-change their value.}
+Note: If an argument has complex characters, they must be wrapped in an
+additional single quotation mark to avoid issues with parsing. Hyphens (-)
+and percent signs (\%) are the most common culprits.
+
+For example, \code{speed ~ c("'>= 10\%', '< 10\%'")} would be needed to avoid an
+error in parsing.}
 
 \item{terms}{A \verb{<formula>} or list of formulas selecting the model terms that
 should be used. The \strong{LHS} is always the name of the variable that will be
