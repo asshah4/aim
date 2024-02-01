@@ -564,7 +564,7 @@ tbl_interaction_forest <- function(object,
 				purrr::map(ptbl$gg,
 									 ggplot_image,
 									 height = px(50),
-									 aspect_ratio = 1.5)
+									 aspect_ratio = 4.0)
 			}
 		)
 
