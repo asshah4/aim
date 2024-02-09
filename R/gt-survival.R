@@ -164,8 +164,8 @@ tbl_dichotomous_hazard <- function(object,
 
 				# Estimates & Confidence Intervals (95%)
 				est <- ire - irc
-				cl <- est - qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
-				ch <- est + qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
+				cl <- est - stats::qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
+				ch <- est + stats::qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
 
 				# Add buffering rows
 				rd <-
@@ -437,8 +437,8 @@ tbl_categorical_hazard <- function(object,
 
 				# Estimates & Confidence Intervals (95%)
 				est <- ire - irc
-				cl <- est - qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
-				ch <- est + qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
+				cl <- est - stats::qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
+				ch <- est + stats::qnorm(0.9725) * sqrt(nde / pte^2 + ndc / ptc^2)
 
 				# Add buffering rows
 				rd <-

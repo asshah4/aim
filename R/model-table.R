@@ -131,7 +131,6 @@ vec_ptype_abbr.mdl_tbl <- function(x, ...) {
 #' Passes information to `new_model_table()` for initialization
 #' @param x Vector of `mdl` objects
 #' @keywords internal
-#' @export
 construct_table_from_models <- function(x, ...) {
 
 	# Meta components of the models
@@ -249,7 +248,6 @@ construct_table_from_models <- function(x, ...) {
 #' Restructure formulas to fit within a model table
 #' @param x Vector of `fmls` objects
 #' @keywords internal
-#' @export
 construct_table_from_formulas <- function(x, ...) {
 
 	# Meta components of the models
@@ -348,8 +346,7 @@ construct_table_from_formulas <- function(x, ...) {
 									dataList = datLs)
 }
 
-#' @rdname mdl_tbl
-#' @export
+#' @keywords internal
 new_model_table <- function(x = list(),
 														formulaMatrix = data.frame(),
 														termTable = data.frame(),
@@ -396,7 +393,7 @@ dplyr_row_slice.mdl_tbl <- function(data, i, ...) {
 	model_table_reconstruct(vec_slice(data, i), data)
 }
 
-#' @export
+#' @keywords internal
 model_table_reconstruct <- function(x, to) {
 	if (model_table_reconstructable(x, to)) {
 		df_reconstruct(x, to)
@@ -411,7 +408,6 @@ model_table_reconstruct <- function(x, to) {
 
 #' If objects are model tables, attributes are carried over to subset object
 #' @keywords internal
-#' @noRd
 df_reconstruct <- function(x, to) {
 
 	validate_model_table(to)
@@ -476,7 +472,6 @@ df_reconstruct <- function(x, to) {
 #' @keywords internal
 #' @param x data frame that will have invariants checked
 #' @param to the tibble subclass of `mdl_tbl` that would be reconstructed
-#' @export
 model_table_reconstructable <- function(x, to) {
 
 	# Invariant columns must be present
@@ -493,7 +488,6 @@ model_table_reconstructable <- function(x, to) {
 #' Model table object validation
 #' @keywords internal
 #' @param x data frame that will have invariants checked
-#' @export
 validate_model_table <- function(x) {
 
 	# Invariant columns must be present
@@ -529,7 +523,8 @@ validate_model_table <- function(x) {
 
 # SELF
 
-#' @export
+
+#' @keywords internal
 mdl_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
   # Create a temporary/new structure of the table
@@ -566,7 +561,7 @@ mdl_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
 }
 
-#' @export
+#' @keywords internal
 mdl_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 
 	# Terms must be coalesced together
@@ -617,7 +612,13 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #' used which datasets, it can be ease to back-transform information.
 #'
 #' @param x a `<mdl_tbl>` object
+#'
 #' @param data a `<data.frame>` object that has been used by models
+#'
+#' @name model_table_helpers
+NULL
+
+#' @describeIn model_table_helpers
 #' @export
 attach_data <- function(x, data, ...) {
 
@@ -646,6 +647,7 @@ attach_data <- function(x, data, ...) {
 # Flatten it so you can actually analyze it
 
 #' Flatten model tables
+#' @param x a `<mdl_tbl>` object
 #' @export
 flatten_models <- function(x) {
 
