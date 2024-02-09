@@ -51,7 +51,7 @@ test_that("forest plot for interaction can be made", {
 
 })
 
-test_that("multiple interaction terms", {
+test_that("interaction table errors appropriately", {
 
   cars <-
   	mtcars |>
@@ -59,16 +59,75 @@ test_that("multiple interaction terms", {
 
   m1 <-
   	fmls(heavy ~ .x(hp) + .i(vs)) |>
-  	fit(.fn = glm, family = 'binomial', data = cars, raw = FALSE)
+  	fit(.fn = glm, data = cars, raw = FALSE)
   m2 <-
   	fmls(heavy ~ .x(hp) + .i(am)) |>
-  	fit(.fn = glm, family = 'binomial', data = cars, raw = FALSE)
+  	fit(.fn = glm, data = cars, raw = FALSE)
 
   mt <- vlndr::model_table(one = m1, two = m2)
 
-  tbl_interaction_forest(
+  expect_error({
+    tbl_interaction_forest(
+    	object = mt,
+    	outcomes = hvy ~ "Weight",
+    	exposures = hp ~ 'Horsepower',
+    	interactions = list(vs ~ "V/S", am ~ "Transmission"),
+    	level_labels = list(
+    		vs ~ c("yes", "no"),
+    		am ~ c("Manual", "Automatic")
+    	)
+    )
+  }, regexp = "object\\$outcome")
+
+  expect_error({
+    tbl_interaction_forest(
+    	object = mt,
+    	outcomes = heavy ~ "Weight",
+    	exposures = hp ~ 'Horsepower',
+    	interactions = list(vs ~ "V/S", am ~ "Transmission"),
+    	level_labels = list(
+    		vs ~ c("yes", "no"),
+    		am ~ c("Manual", "Automatic")
+    	)
+    )
+  }, regexp = "does not have the data")
+
+  expect_error({
+    tbl_interaction_forest(
+    	object = mt,
+    	outcomes = heavy ~ "Weight",
+    	exposures = horsy ~ 'Horsepower',
+    	interactions = list(vs ~ "V/S", am ~ "Transmission"),
+    	level_labels = list(
+    		vs ~ c("yes", "no"),
+    		am ~ c("Manual", "Automatic")
+    	)
+    )
+  }, regexp = "object\\$exposure")
+
+})
+
+test_that("multiple interaction terms", {
+
+  cars <-
+  	mtcars |>
+  	dplyr::mutate(heavy = ifelse(wt > 3.2, 1, 0))
+
+  expect_message({
+    m1 <-
+    	fmls(heavy ~ .x(hp) + .i(vs)) |>
+    	fit(.fn = glm, data = cars, raw = FALSE) |>
+      suppressMessages()
+    m2 <-
+    	fmls(heavy ~ .x(hp) + .i(am)) |>
+    	fit(.fn = glm, data = cars, raw = FALSE)
+  }, regexp = "Interaction term")
+
+  mt <- vlndr::model_table(one = m1, two = m2, data = cars)
+
+  x <- tbl_interaction_forest(
   	object = mt,
-  	outcomes = am ~ "Automatic",
+  	outcomes = heavy ~ "Weight",
   	exposures = hp ~ 'Horsepower',
   	interactions = list(vs ~ "V/S", am ~ "Transmission"),
   	level_labels = list(
@@ -76,4 +135,7 @@ test_that("multiple interaction terms", {
   		am ~ c("Manual", "Automatic")
   	)
   )
+
+  expect_s3_class(x, "gt_tbl")
+
 })

@@ -146,7 +146,7 @@ tbl_interaction_forest <- function(object,
 		lvl |>
 		lapply(str2lang) |>
 		lapply(as.character) |>
-		lapply(tail, -1)
+		lapply(utils::tail, -1)
 
 	# Table ----
 

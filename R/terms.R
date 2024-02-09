@@ -800,11 +800,6 @@ update.tm <- function(object, ...) {
 #'
 #' @seealso [dplyr::filter()] for examples of generic implementation
 #'
-#' @examples
-#' # Filter by role
-#' object <- tm(output ~ input + .c(modifier))
-#' filter(object, role == "outcome")
-#'
 #' @name dplyr_extensions
 #' @importFrom dplyr filter
 #' @export

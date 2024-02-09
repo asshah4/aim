@@ -18,22 +18,25 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 Depends:
     R (>= 4.0.0),
     vctrs (>= 0.5.0),
     tibble,
 Imports: 
+    stats,
+    utils,
     generics,
-    lifecycle,
     methods,
     dplyr,
+    ggplot2,
     broom,
     tidyr,
     rlang,
     pillar,
-    gt,
     survival,
+    gt,
+    lifecycle,
 Suggests: 
     testthat (>= 3.0.0),
     covr,

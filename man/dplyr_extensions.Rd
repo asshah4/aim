@@ -24,12 +24,6 @@ To be retained, the \code{tm} must prodcue a value of \code{TRUE} for all condit
 Note that when a condition evalutes to \code{NA}, the row will be dropped, unlike
 base subsetting with \code{[}.
 }
-\examples{
-# Filter by role
-object <- tm(output ~ input + .c(modifier))
-filter(object, role == "outcome")
-
-}
 \seealso{
 \code{\link[dplyr:filter]{dplyr::filter()}} for examples of generic implementation
 }
