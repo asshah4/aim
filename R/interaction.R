@@ -70,17 +70,6 @@ estimate_interaction <- function(object,
     stop("The model table object does not have the data available.")
   }
 
-  # Interaction term and its levels in the dataset
-  exp <- exposure
-  int <- interaction
-  it <- paste0(exp, ":", int)
-  dat <- datLs[[object$data_id]]
-  lvls <-  levels(factor(dat[[int]]))
-  nobs <- table(dat[[int]])
-  stopifnot(
-    "`estimate_interaction()` currently only accepts binary interaction terms."
-    = length(lvls) == 2
-  )
 
   # Get the model(s) and corresponding data
   mod <-
@@ -88,13 +77,32 @@ estimate_interaction <- function(object,
     flatten_models() |>
     dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, p_value, nobs, degrees_freedom, var_cov)
 
-  pVal <- mod$p_value[mod$term == it]
-
   # Beta coefficients are based on the model type
   coefs <- mod$estimate
-  names(coefs) <- mod$term
+  nms <- mod$term
+  names(coefs) <- nms
+  
+  # Interaction term and its levels in the dataset
+  # The names may also ahve been adjusted from the modeling process
+  # Use "closest match"
+  exp <- exposure
+  expPos <- grep(exp, nms)[1] # Take first match
+  int <- interaction
+  intPos <- grep(int, nms)[1] # Take first match
+  dat <- datLs[[object$data_id]]
+  lvls <-  levels(factor(dat[[int]]))
+  nobs <- table(dat[[int]])
+  stopifnot(
+    "`estimate_interaction()` currently only accepts binary interaction terms."
+    = length(lvls) == 2
+  )
+  
+  # Update interaction term to "actual" name from model
+  it <- paste0(nms[expPos], ":", nms[intPos])
+  itPos <- grep(it, nms)
 
-  # Variance-covariance matrix
+  # Variance-covariance matrix and P value for interaction
+  pval <- mod$p_value[mod$term == it]
   varCovMat <- unique(mod$var_cov)[[1]]
   degFree <- unique(mod$degrees_freedom)
 
@@ -102,14 +110,14 @@ estimate_interaction <- function(object,
   # Taking the diagonal of the variance-covariance matrix gives `var(term)`
   # This removes the need of having the full dataset
   coefVar <- diag(varCovMat)
-  halfConf <- stats::qt(conf_level / 2 + 0.5, df = degFree) * sqrt(coefVar[[exp]])
+  halfConf <- stats::qt(conf_level / 2 + 0.5, df = degFree) * sqrt(coefVar[[expPos]])
 
   absent <-
   	list(
-  		estimate = coefs[[exp]],
-  		conf_low = coefs[[exp]] - halfConf,
-  		conf_high = coefs[[exp]] + halfConf,
-  		p_value = pVal,
+  		estimate = coefs[[expPos]],
+  		conf_low = coefs[[expPos]] - halfConf,
+  		conf_high = coefs[[expPos]] + halfConf,
+  		p_value = pval,
   		nobs = nobs[[lvls[1]]],
   		level = lvls[[1]]
   	)
@@ -117,13 +125,13 @@ estimate_interaction <- function(object,
   # When interaction term is present
   halfConf <-
 	  stats::qt(conf_level / 2 + 0.5, df = degFree) *
-	  	sqrt(coefVar[[exp]] + coefVar[[it]] + 2 * varCovMat[exp, it])
+	  	sqrt(coefVar[[expPos]] + coefVar[[itPos]] + 2 * varCovMat[expPos, itPos])
 
   present <- list(
-  	estimate = coefs[[exp]] + coefs[[it]],
-  	conf_low = (coefs[[exp]] + coefs[[it]]) - halfConf,
-  	conf_high = (coefs[[exp]] + coefs[[it]]) + halfConf,
-		p_value = pVal,
+  	estimate = coefs[[expPos]] + coefs[[itPos]],
+  	conf_low = (coefs[[expPos]] + coefs[[itPos]]) - halfConf,
+  	conf_high = (coefs[[expPos]] + coefs[[itPos]]) + halfConf,
+		p_value = pval,
 		nobs = nobs[[lvls[2]]],
 		level = lvls[[2]]
   )
