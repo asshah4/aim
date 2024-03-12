@@ -31,15 +31,17 @@ tbl_categorical_hazard(
 )
 }
 \arguments{
-\item{object}{A \verb{<mdl_tbl>} object with the required models}
+\item{object}{A \verb{<mdl_tbl>} object with the required models. It must also
+contain the original dataset used to create the models of interest. Please
+see \code{\link[=attach_data]{attach_data()}} for details.}
 
 \item{data}{The original dataset used to create the models of interest. The
-variables in the model must be contained within this dataset.}
+variables in the model must be contained within this dataset. This may also
+be attached}
 
 \item{outcomes}{A \verb{<formula>} or list of formulas selecting the outcome
-variables of interest. The \strong{LHS} is always the name of the variable that will
-be selected. The \strong{RHS} is the potential label for the output table. If no
-label is desired, can place an \code{NA} value on right-side of formula.}
+variables of interest. The \strong{LHS} is always the name of the variable that
+will be selected. The \strong{RHS} is the potential label for the output table.}
 
 \item{followup}{Character vector naming the followup duration variable. Must
 be either same length as \strong{outcomes} or be of length of 1 (which will be
@@ -47,8 +49,7 @@ recycled).}
 
 \item{terms}{A \verb{<formula>} or list of formulas selecting the model terms that
 should be used. The \strong{LHS} is always the name of the variable that will be
-selected. The \strong{RHS} is the potential label for the output table. If no label
-is desired, can place an \code{NA} value on right-side of formula.}
+selected. The \strong{RHS} is the potential label for the output table.}
 
 \item{rate_difference}{If there are only two levels in the term, the rate
 difference between the levels will be calculated. Defaults to \code{FALSE}.
@@ -61,7 +62,7 @@ the incidence for every \emph{100 person-years}. Argument only used if
 \strong{rate_difference} is set to \code{TRUE}. Currently not working!}
 }
 \description{
-Function that takes a \code{mdl_tbl} object that includes survival-model data,
+Function that takes a \verb{<mdl_tbl>} object that includes survival-model data,
 usually in the form of Cox proportional hazard models, and allows them to be
 displayed.
 }

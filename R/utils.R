@@ -78,13 +78,29 @@ lhs.formula <- function(x, ...) {
 }
 
 
-#' Take list of formula, and return as a named list (name = LHS, value = RHS)
+#' Convert labeling formulas to named lists
+#'
+#' @description
+#' Take list of formulas, or a similar construct, and returns a named list. The
+#' convention here is similar to reading from left to right, where the name or
+#' position is the term is the on the *LHS* and the output label or target
+#' instruction is on the *RHS*.
+#'
+#' If no label is desired, then the *LHS* can be left empty, such as `~ x`.
+#'
+#' @return A named list with the index as a `<character>` representing the term
+#'   or variable of interest, and the value at that position as a `<character>`
+#'   representing the label value.
+#'
+#' @param x An argument that may represent a formula to label variables, or can
+#'   be converted to one. This includes, `list`, `formula`, or
+#'   `character` objects. Other types will error.
 #' @export
-formulas_to_named_list <- function(x) {
+labeled_formulas_to_named_list <- function(x) {
 
 	# Check to see if its a single formula or a list of formulas
 	stopifnot("Should be applied to individual or list of formulas" =
-							inherits(x, c("list", "formula")))
+							inherits(x, c("list", "formula", "character")))
 
 	# Empty, list, or formula management
 	if (length(x) == 0) { # If an empty formula or list, return an empty list
@@ -92,27 +108,35 @@ formulas_to_named_list <- function(x) {
 	} else if (inherits(x, "formula")) { # If a single formula
 		nm <- lhs(x)
 		val <- rhs(x)
+		# If unnamed, then give it the same value as the name
+		if (length(nm) == 0) {
+			nm <- val
+		}
 		names(val) <- nm
 		y <- as.list(val)
-	} else if (inherits(x, "lst_fmls")) { # if it is a `lst_fmls` object
-		y <-
-			stats::formula(x, env = .GlobalEnv) |>
-			sapply(function(.x) {
-				nm <- lhs(.x)
-				val <- rhs(.x)
-				names(val) <- nm
-				val <- as.list(val)
-			})
-	} else if (inherits(x, "list")) { # if a list that contains formulas
+	} else if (inherits(x, "list")) { # If a list that contains formulas
+		# Confirm each item is formula
+		stopifnot("If a list is provided, each element must be a `<formula>`"
+							= all(sapply(x, inherits, "formula")))
+
 		y <- sapply(x, function(.x) {
 			nm <- lhs(.x)
 			val <- rhs(.x)
+			# If unnamed, then give it the same value as the name
+			if (length(nm) == 0) {
+				nm <- val
+			}
 			if (grepl("^[[:digit:]]$", val)) {
 				val <- as.integer(val)
 			}
 			names(val) <- nm
-			val <- as.list(val)
+			.y <- as.list(val)
 		})
+	} else if (inherits(x, "character")) {
+		nm <- x
+		val <- x
+		names(val) <- nm
+		y <- as.list(val)
 	}
 
 	# Return

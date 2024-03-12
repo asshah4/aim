@@ -22,12 +22,13 @@ tbl_interaction_forest(
 )
 }
 \arguments{
-\item{object}{A \verb{<mdl_tbl>} object with the required models}
+\item{object}{A \verb{<mdl_tbl>} object with the required models. It must also
+contain the original dataset used to create the models of interest. Please
+see \code{\link[=attach_data]{attach_data()}} for details.}
 
 \item{outcomes}{A \verb{<formula>} or list of formulas selecting the outcome
-variables of interest. The \strong{LHS} is always the name of the variable that will
-be selected. The \strong{RHS} is the potential label for the output table. If no
-label is desired, can place an \code{NA} value on right-side of formula.}
+variables of interest. The \strong{LHS} is always the name of the variable that
+will be selected. The \strong{RHS} is the potential label for the output table.}
 
 \item{exposures}{A \verb{<formula>} or list of formulas of strata that should be
 evaluated, with the \strong{LHS} referring to the strata and the \strong{RHS}
@@ -46,7 +47,7 @@ be used.
 
 For example, \verb{list(am ~ c("Manual", "Automatic")} would take, from the
 \code{mtcars} dataset, the \code{am} variable, which consists of \code{c(0, 1)}, and
-relabel them in the order described. They are sorted in ascendiing order
+relabel them in the order described. They are sorted in ascendinng order
 prior to re-labeling.
 
 The alternative approach is to use the specific level itself and have it

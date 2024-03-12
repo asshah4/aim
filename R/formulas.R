@@ -4,8 +4,6 @@
 #'
 #' @description
 #'
-#' `r lifecycle::badge('experimental')`
-#'
 #' This function defines a modified `formula` class that has been
 #' vectorized. The `fmls` serves as a set of instructions or a _script_ for the
 #' formula and its tm. It expands upon the functionality of formulas,
@@ -44,7 +42,7 @@
 #' \deqn{y = x3}
 #'
 #' @inheritSection tm Roles
-#' @inheritSection tm Pluralized Arguments
+#' @inheritSection tm Pluralized Labeling Arguments
 #'
 #' @param x Objects of the following types can be used as inputs
 #'

@@ -1,7 +1,7 @@
 #' Table of hazard ratios
 #'
 #' @description
-#' Function that takes a `mdl_tbl` object that includes survival-model data,
+#' Function that takes a `<mdl_tbl>` object that includes survival-model data,
 #' usually in the form of Cox proportional hazard models, and allows them to be
 #' displayed.
 #'
@@ -47,15 +47,15 @@ tbl_dichotomous_hazard <- function(object,
 
 	# Get relevant filtering variables
 	## Outcomes
-	out <- formulas_to_named_list(outcomes)
+	out <- labeled_formulas_to_named_list(outcomes)
 	out_nms <- names(out)
 	out_lab <- unlist(unname(out))
 	## Terms
-	tms <- formulas_to_named_list(terms)
+	tms <- labeled_formulas_to_named_list(terms)
 	tms_nms <- names(tms)
 	tms_lab <- unlist(unname(tms))
 	## Adjustment
-	lvl <- formulas_to_named_list(adjustment)
+	lvl <- labeled_formulas_to_named_list(adjustment)
 	lvl_nms <- names(lvl)
 	lvl_lab <- unlist(unname(lvl))
 
@@ -63,7 +63,7 @@ tbl_dichotomous_hazard <- function(object,
 	obj <-
 		object |>
 		dplyr::filter(grepl(paste0(out_nms, collapse = '|'), outcome)) |>
-		flatten_table() |>
+		flatten_models() |>
 		dplyr::filter(grepl(paste0(tms_nms, collapse = '|'), term)) |>
 		dplyr::select(number, outcome, term, estimate, conf_low, conf_high, p_value)
 
@@ -339,15 +339,15 @@ tbl_categorical_hazard <- function(object,
 
 	# Get relevant filtering variables
 	## Outcomes
-	out <- formulas_to_named_list(outcomes)
+	out <- labeled_formulas_to_named_list(outcomes)
 	out_nms <- names(out)
 	out_lab <- unlist(unname(out))
 	## Terms
-	tms <- formulas_to_named_list(terms)
+	tms <- labeled_formulas_to_named_list(terms)
 	tms_nms <- names(tms)
 	tms_lab <- unlist(unname(tms))
 	## Adjustment
-	lvl <- formulas_to_named_list(adjustment)
+	lvl <- labeled_formulas_to_named_list(adjustment)
 	lvl_nms <- names(lvl)
 	lvl_lab <- unlist(unname(lvl))
 
@@ -355,7 +355,7 @@ tbl_categorical_hazard <- function(object,
 	obj <-
 		object |>
 		dplyr::filter(grepl(paste0(out_nms, collapse = '|'), outcome)) |>
-		flatten_table() |>
+		flatten_models() |>
 		dplyr::filter(grepl(paste0(tms_nms, collapse = '|'), term)) |>
 		dplyr::select(number, outcome, term, estimate, conf_low, conf_high, p_value)
 
@@ -382,7 +382,6 @@ tbl_categorical_hazard <- function(object,
 	# 	Number of terms
 
 	# Get tables ready to be stored
-
 	tbl_tms <- list()
 	tbl_out <- list()
 

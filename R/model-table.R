@@ -600,16 +600,30 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 	mdl_tbl_cast(x, to, ...)
 }
 
-# Model Data -----------------------------------------------------------------
+# Model Table Helper Functions ------------------------------------------------
 
-#' Attach a dataset to a model table
+#' Model table helper functions
 #'
-#' @details
+#' @description
+#' These functions are used to help manage the `<mdl_tbl>` object. They allow
+#' for specific manipulation of the internal components, and are intended to
+#' generally extend the functionality of the object.
+#'
+#' - `attach_data()`: Attaches a dataset to a `<mdl_tbl>` object
+#' - `flatten_model()`: Flattens a `<mdl_tbl>` object down to its specific parameters
+#'
+#' # Attaching Data
+#'
 #' When models are built, oftentimes the included matrix of data is available
 #' within the raw model, however when handling many models, this can be
 #' expensive in terms of memory and space. By attaching datasets independently
 #' that persist regardless of the underlying models, and by knowing which models
 #' used which datasets, it can be ease to back-transform information.
+#'
+#' # Flattening Models
+#'
+#' A `<mdl_tbl>` object can be flattened to its specific parameters, their
+#' estimates, and model-level summary statistics.
 #'
 #' @param x a `<mdl_tbl>` object
 #'
@@ -618,7 +632,7 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #' @name model_table_helpers
 NULL
 
-#' @describeIn model_table_helpers
+#' @rdname model_table_helpers
 #' @export
 attach_data <- function(x, data, ...) {
 
@@ -640,16 +654,9 @@ attach_data <- function(x, data, ...) {
 	x
 }
 
-# Model Table Helper Functions ------------------------------------------------
-
-# Need to take model table
-# Select outcomes or exposures
-# Flatten it so you can actually analyze it
-
-#' Flatten model tables
-#' @param x a `<mdl_tbl>` object
+#' @rdname model_table_helpers
 #' @export
-flatten_models <- function(x) {
+flatten_models <- function(x, ...) {
 
 	validate_class(x, "mdl_tbl")
 

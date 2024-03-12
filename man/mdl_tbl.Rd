@@ -4,7 +4,6 @@
 \alias{mdl_tbl}
 \alias{model_table}
 \alias{is_model_table}
-\alias{new_model_table}
 \title{Model tables}
 \usage{
 mdl_tbl(..., data = NULL)
@@ -12,14 +11,6 @@ mdl_tbl(..., data = NULL)
 model_table(..., data = NULL)
 
 is_model_table(x)
-
-new_model_table(
-  x = list(),
-  formulaMatrix = data.frame(),
-  termTable = data.frame(),
-  dataList = list(),
-  ...
-)
 }
 \arguments{
 \item{...}{Named or unnamed \verb{<mdl>} or \verb{<fmls>}objects}

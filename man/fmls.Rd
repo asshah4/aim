@@ -36,8 +36,6 @@ covariates will incorporated. See the details for further explanation.
 An object of class \code{fmls}
 }
 \description{
-\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
-
 This function defines a modified \code{formula} class that has been
 vectorized. The \code{fmls} serves as a set of instructions or a \emph{script} for the
 formula and its tm. It expands upon the functionality of formulas,
@@ -104,11 +102,11 @@ assumed they are all on the same tier. Ex: \code{y ~ x1 + .g1(x2) + .g1(x3)}
 formula directly.
 }
 
-\section{Pluralized Arguments}{
+\section{Pluralized Labeling Arguments}{
 For a single argument, e.g. for the \code{tm.formula()} method, such as to
 identify variable \strong{X} as an exposure, a \code{formula} should be given with the
-term of interest on the LHS, and the description or instruction on the RHS.
-This would look like \code{role = X ~ "exposure"}.
+term of interest on the \emph{LHS}, and the description or instruction on the
+\emph{RHS}. This would look like \code{role = "exposure" ~ X}.
 
 For the arguments that would be dispatched for objects that are plural, e.g.
 containing multiple terms, each \code{formula()} should be placed within a
@@ -117,6 +115,6 @@ containing multiple terms, each \code{formula()} should be placed within a
 \code{role = list(X ~ "exposure", M ~ "mediator", C ~ "confounder")}
 
 Further implementation details can be seen in the implementation of
-\code{\link[=list_of_formulas]{list_of_formulas()}}.
+\code{\link[=labeled_formulas_to_named_list]{labeled_formulas_to_named_list()}}.
 }
 

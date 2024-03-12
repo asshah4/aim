@@ -9,21 +9,6 @@
 #'
 #' @inheritParams tbls
 #'
-#' @param columns Additional columns that help to describe the subgroup models.
-#'   At least one column should be selected from this list. The sequence listed
-#'   will reflect the sequence shown in the table. The current options are:
-#'
-#'   * beta = point estimate value, such as odds ratio or hazard ratio
-#'
-#'   * conf = inclusion of the confidence interval (presumed to be ~95%-ile)
-#'
-#'   * n = number of observations in each group or subset
-#'
-#'   * p = p_value for model or interaction term
-#'
-#'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
-#'
-#'
 #' @param invert A `<logical>` to determine if the odds or hazard ratio should
 #'   be shown as the reciprocal values. Instead of a decreasing hazard for every
 #'   unit increase, it describes an increasing hazard for every unit decrease.
@@ -115,7 +100,7 @@ tbl_interaction_forest <- function(object,
 	checkmate::assert_class(object, 'mdl_tbl')
 
 	## Outcomes = outcomes and how to rename
-	out <- formulas_to_named_list(outcomes)
+	out <- labeled_formulas_to_named_list(outcomes)
 	out_nms <- names(out)
 	out_lab <- unlist(unname(out))
 	checkmate::assert_true(all(out_nms %in% object$outcome))
@@ -125,13 +110,13 @@ tbl_interaction_forest <- function(object,
 	)
 
 	## Exposures
-	exp <- formulas_to_named_list(exposures)
+	exp <- labeled_formulas_to_named_list(exposures)
 	exp_nms <- names(exp)
 	exp_lab <- unlist(unname(exp))
 	checkmate::assert_true(all(exp_nms %in% object$exposure))
 
 	## Interactions
-	int <- formulas_to_named_list(interactions)
+	int <- labeled_formulas_to_named_list(interactions)
 	int_nms <- names(int)
 	int_lab <- unlist(unname(int))
 	it <- levels(interaction(exp_nms, int_nms, sep = ":"))
@@ -140,7 +125,7 @@ tbl_interaction_forest <- function(object,
 	## Levels
 	# Approach to relabeling interaction levels
 	# If multiple strata, may have multiple levels to relabel
-	lvl <- formulas_to_named_list(level_labels)
+	lvl <- labeled_formulas_to_named_list(level_labels)
 	lvl_nms <- names(lvl)
 	lvl_lab <-
 		lvl |>
@@ -222,7 +207,7 @@ tbl_interaction_forest <- function(object,
 	# Plot arguments ----
 
 	## Columns
-	cols <- formulas_to_named_list(columns)
+	cols <- labeled_formulas_to_named_list(columns)
 	estVar <- character()
 	modVar <- character()
 	if ("beta" %in% names(cols)) {
@@ -240,7 +225,7 @@ tbl_interaction_forest <- function(object,
 
 	## Column widths
 	colWidths <-
-		formulas_to_named_list(width) |>
+		labeled_formulas_to_named_list(width) |>
 		lapply(as.numeric)
 	if (is.null(colWidths$n)) {
 		colWidths$n <- 0.1
@@ -253,7 +238,7 @@ tbl_interaction_forest <- function(object,
 	}
 
 	## Axis arguments
-	x_vars <- formulas_to_named_list(axis)
+	x_vars <- labeled_formulas_to_named_list(axis)
 
 	if ("title" %in% names(x_vars)) {
 		title <- x_vars$title
@@ -305,7 +290,7 @@ tbl_interaction_forest <- function(object,
 	## Basic plots in table format
 	# Will inject the general sizing of plots here
 	# These options will scale with each other, and start and sensible default
-	forestOptions <- formulas_to_named_list(forest)
+	forestOptions <- labeled_formulas_to_named_list(forest)
 
 	# Default plot options
 	plotOptions <- list(

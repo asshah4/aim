@@ -4,6 +4,7 @@ test_that("for dichotomous variables", {
 	object <-
 		targets::tar_read(cox_mdls, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>
 		dplyr::filter(name == 'parsimonious')
+
 	data <-
 		targets::tar_read(clinical, store = '~/OneDrive - University of Illinois Chicago/targets/mims/') |>
 		dplyr::mutate(lf_delta_bin = factor(
@@ -16,12 +17,16 @@ test_that("for dichotomous variables", {
 			levels = c(1, 0),
 			labels = c('Yes', 'No')
 		))
+
 	outcomes <-
 		list('death_cv_yn' ~ 'Cardiovascular mortality',
 				 'death_any_yn' ~ 'All-cause mortality')
+
 	followup <- 'death_timeto'
+
 	terms <- list(lf_delta_bin ~ 'Mental stress-induced HRV decrease',
 								lf_rest_quartile ~ 'Low rest HRV')
+
 	adjustment <-
 		list(
 			3 ~ 'Unadjusted',
@@ -29,6 +34,7 @@ test_that("for dichotomous variables", {
 			7 ~ 'Adjust for above + clinical',
 			8 ~ 'Adjust for above + stress testing'
 		)
+
 	rate_difference <- TRUE
 
 	gtbl <- tbl_dichotomous_hazard(
