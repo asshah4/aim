@@ -42,7 +42,7 @@ test_that("linear regression can be made into gt table", {
 									p ~ "P value")
 
 	# Create the gt table
-	gtbl <- tbl_linear(
+	gtbl <- tbl_beta(
 		object = object,
 		data = data,
 		outcomes = outcomes,
@@ -99,14 +99,39 @@ test_that("complex test from AFEQT dataset works", {
 	)
 
 	columns = list(beta ~ "beta", conf ~ "95% CI", p ~ "p-value")
+	
+	accents = list(
+	  p < 0.05 ~ "bold"
+	)
+	
+	.suppress_column_labels = FALSE
 
 	# Create the gt table
-	gtbl <- tbl_linear(
+	gtbl <- tbl_beta(
 		object = object,
 		data = data,
 		outcomes = outcomes,
 		terms = terms,
 		adjustment = adjustment,
-		columns = columns
+		columns = columns,
+		accents = accents,
+		.suppress_column_labels = .suppress_column_labels
 	)
+	
+	# Now again with swapping of column labels
+	.suppress_column_labels = TRUE
+	columns = list(beta ~ "beta")
+	gtbl <- tbl_beta(
+		object = object,
+		data = data,
+		outcomes = outcomes,
+		terms = terms,
+		adjustment = adjustment,
+		columns = columns,
+		accents = accents,
+		.suppress_column_labels = .suppress_column_labels
+	)
+	
+	
 })
+

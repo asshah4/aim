@@ -65,9 +65,13 @@
 #'   should be used. The **LHS** is always the name of the variable that will be
 #'   selected. The **RHS** is the potential label for the output table.
 #'
-#' @param columns Additional columns that help to describe the subgroup models.
-#'   At least one column should be selected from this list. The sequence listed
-#'   will reflect the sequence shown in the table. The current options are:
+#' @param columns Columns that help to describe the individual terms of a model.
+#'   Generally describes the statistical estimates or properties of an  exposure
+#'   term. At least one column should likely be selected from this list. The
+#'   sequence listed will reflect the sequence shown in the table. This is given
+#'   as a `<formula>` or list of formulas, with the **LHS** is the name of an
+#'   acceptable variable, and the **RHS** is the potential column label. The
+#'   current options are:
 #'
 #'   * beta = point estimate value, such as odds ratio or hazard ratio
 #'
@@ -78,7 +82,48 @@
 #'   * p = p_value for model or interaction term
 #'
 #'   For example: `list(beta ~ "Hazard", conf ~ "95% CI" n ~ "No.")"`
+#'   
+#'   Notably, the columns do not describe the terms, but the data contained in
+#'   the rows below. The `terms` and `level_labels` arguments serve as the
+#'   spanning labels for the related columns. Please see [gt::tab_spanner()] for
+#'   more information on how spanners work.
 #'
+#' @param accents A `<formula>` or list of formulas that provide instructions
+#'   on how to emphasize or accentuate certain data cells within the table.
+#'   Similar to the `columns` argument, the **LHS** refers to the data available
+#'   in the columns, such as the *p* or *beta* value, but is stated as a
+#'   criteria, e.g. `p < 0.05`. The **RHS** is the instruction on what type of
+#'   accentuation to perform. This applies to *ALL* data columns of the table,
+#'   if the criteria are met.
+#'   
+#'   The **LHS** options are:
+#'   
+#'   * beta = point estimate value
+#'   
+#'   * conf_low = lower bound of the confidence interval
+#'   
+#'   * conf_high = upper bound of the confidence interval
+#'
+#'   * p = p-value for a model term
+#'   
+#'   The current **RHS** options are:
+#' 
+#'   * bold = apply bold labeling to text
+#'
+#' @param .suppress_column_labels A `<logical>` value that determines if the
+#'   column labels should be suppressed and replaced by the term labels. 
+#'   
+#'   This defaults to `TRUE` when only a single column label is chosen. In this
+#'   case, the individual term level labels are used, which are obtained either
+#'   explicitly through the **level_labels** argument or through the default
+#'   levels from the original data.
+#'   
+#'   If multiple columns are chosen to be displayed, then the column labels by
+#'   default are retained (argument is `FALSE`). Occasionally, several columns
+#'   will be initially selected and subsequently *hidden* by the user such that
+#'   only a single column (per term) remains. This is a use case to force the
+#'   column labels to be suppressed.
+#' 
 #' @name tbls
 NULL
 

@@ -54,9 +54,13 @@ The alternative approach is to use the specific level itself and have it
 re-labeled. \code{list(0 ~ "Absent")} would take all levels that are zero, and
 change their value.}
 
-\item{columns}{Additional columns that help to describe the subgroup models.
-At least one column should be selected from this list. The sequence listed
-will reflect the sequence shown in the table. The current options are:
+\item{columns}{Columns that help to describe the individual terms of a model.
+Generally describes the statistical estimates or properties of an  exposure
+term. At least one column should likely be selected from this list. The
+sequence listed will reflect the sequence shown in the table. This is given
+as a \verb{<formula>} or list of formulas, with the \strong{LHS} is the name of an
+acceptable variable, and the \strong{RHS} is the potential column label. The
+current options are:
 \itemize{
 \item beta = point estimate value, such as odds ratio or hazard ratio
 \item conf = inclusion of the confidence interval (presumed to be ~95\%-ile)
@@ -64,7 +68,12 @@ will reflect the sequence shown in the table. The current options are:
 \item p = p_value for model or interaction term
 }
 
-For example: \verb{list(beta ~ "Hazard", conf ~ "95\% CI" n ~ "No.")"}}
+For example: \verb{list(beta ~ "Hazard", conf ~ "95\% CI" n ~ "No.")"}
+
+Notably, the columns do not describe the terms, but the data contained in
+the rows below. The \code{terms} and \code{level_labels} arguments serve as the
+spanning labels for the related columns. Please see \code{\link[gt:tab_spanner]{gt::tab_spanner()}} for
+more information on how spanners work.}
 
 \item{axis}{Argument to help modify the forest plot itself. This is a
 \verb{<formula>} or list of formulas of the following parameters. If they are
