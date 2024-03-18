@@ -104,7 +104,7 @@ test_that("complex test from AFEQT dataset works", {
 	  p < 0.05 ~ "bold"
 	)
 	
-	.suppress_column_labels = FALSE
+	suppress_column_labels = FALSE
 
 	# Create the gt table
 	gtbl <- tbl_beta(
@@ -115,12 +115,12 @@ test_that("complex test from AFEQT dataset works", {
 		adjustment = adjustment,
 		columns = columns,
 		accents = accents,
-		.suppress_column_labels = .suppress_column_labels
+		suppress_column_labels = suppress_column_labels
 	)
 	
 	# Now again with swapping of column labels
-	.suppress_column_labels = TRUE
-	columns = list(beta ~ "beta")
+	suppress_column_labels = TRUE
+	columns = list(beta ~ "beta", conf ~ "95% CI")
 	gtbl <- tbl_beta(
 		object = object,
 		data = data,
@@ -129,7 +129,7 @@ test_that("complex test from AFEQT dataset works", {
 		adjustment = adjustment,
 		columns = columns,
 		accents = accents,
-		.suppress_column_labels = .suppress_column_labels
+		suppress_column_labels = suppress_column_labels
 	)
 	
 	

@@ -23,7 +23,7 @@ tbl_beta <- function(object,
 																		 conf ~ "95% CI",
 																		 p ~ "P value"),
 											accents = formula(),
-											.suppress_column_labels = FALSE,
+											suppress_column_labels = FALSE,
 											...) {
 
 	# Validation
@@ -72,10 +72,10 @@ tbl_beta <- function(object,
 	styleInstruction <- unname(unlist(style))
 	
 	# Check number of columns per term to be shown
-	if (.suppress_column_labels) {
+	if (suppress_column_labels) {
 	  message("Column labels have been explicitly suppressed. This may result in ambigious/duplicate column names if more than one column per display term has been chosen.")
 	} else if (length(cols) == 1) {
-	  .suppress_column_labels <- TRUE
+	  suppress_column_labels <- TRUE
 	} 
 
 	# Create subset of model_table
@@ -183,7 +183,7 @@ tbl_beta <- function(object,
 	gtbl <-
 		gt(tab, rowname_col = "number", groupname_col = "outcome") |>
 	  # Hide the unnecessary columns based on column selection
-	  cols_hide(!ends_with(c(estVar, statVar, modVar))) |>
+	  cols_hide(!ends_with(c("_ref", estVar, statVar, modVar))) |>
 		sub_missing(missing_text = "") |>
 		fmt_number(drop_trailing_zeros = FALSE,
 							 drop_trailing_dec_mark = FALSE,
@@ -192,7 +192,7 @@ tbl_beta <- function(object,
 	# Make changes to table programmatically by term
 	# Term distribution changes how each modification is made
 	# This depends on if column labels should be suppressed (or not)
-	if (.suppress_column_labels) {
+	if (suppress_column_labels) {
 	  for (t in tmsNames) {
   		# These are the levels and sublevels (if they exist) for the cont/cat vars
   		# Only would need levels if a variable is defined as a factor/character type
@@ -238,7 +238,7 @@ tbl_beta <- function(object,
   		  
 				# Add column labels for individual variables
 				varName <- vars[v]
-				varLabel <- lvls[v]
+				varLabel <- rev(lvls)[v]
 				gtbl <-
 				  gtbl |>
 				  cols_label(rlang::inject(starts_with(!!varName) ~ !!varLabel))
@@ -332,25 +332,28 @@ tbl_beta <- function(object,
   				gtbl <- gtbl |> cols_label(.list = colLabels)
   			}
   		}
+  		
   		if ("p_value" %in% statVar) {
   			colLabels <- rep(cols$p, length(vars))
   			names(colLabels) <- paste0(vars, "_p_value")
   			gtbl <- gtbl |> cols_label(.list = colLabels)
   		}
   	}
+	  
+  	# If using data column labels...
+  	# Cleanup titles and labels for columns
+  	# Convert beta to beta coefficient symbol if available
+  	# Add reference categories
+  	gtbl <-
+  		gtbl |>
+  		text_replace(
+  			locations = cells_column_labels(),
+  			pattern = "beta",
+  			replacement = gt::html("\u03B2")
+  		) |>
+  		cols_label(ends_with("_ref") ~ "Reference")
 	}
 	
-	# Cleanup titles and labels for columns
-	# Convert beta to beta coefficient symbol if available
-	# Add reference categories
-	gtbl <-
-		gtbl |>
-		text_replace(
-			locations = cells_column_labels(),
-			pattern = "beta",
-			replacement = gt::html("\u03B2")
-		) |>
-		cols_label(ends_with("_ref") ~ "Reference")
 
 	# Add in accents or style changes to the table
 	# Use style instructions and criteria to automate 

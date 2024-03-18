@@ -12,7 +12,7 @@ tbl_beta(
   adjustment = formula(),
   columns = list(beta ~ "Estimate", conf ~ "95\% CI", p ~ "P value"),
   accents = formula(),
-  .suppress_column_labels = FALSE,
+  suppress_column_labels = FALSE,
   ...
 )
 }
@@ -75,7 +75,7 @@ The current \strong{RHS} options are:
 \item bold = apply bold labeling to text
 }}
 
-\item{.suppress_column_labels}{A \verb{<logical>} value that determines if the
+\item{suppress_column_labels}{A \verb{<logical>} value that determines if the
 column labels should be suppressed and replaced by the term labels.
 
 This defaults to \code{TRUE} when only a single column label is chosen. In this

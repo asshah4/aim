@@ -110,7 +110,7 @@
 #' 
 #'   * bold = apply bold labeling to text
 #'
-#' @param .suppress_column_labels A `<logical>` value that determines if the
+#' @param suppress_column_labels A `<logical>` value that determines if the
 #'   column labels should be suppressed and replaced by the term labels. 
 #'   
 #'   This defaults to `TRUE` when only a single column label is chosen. In this
