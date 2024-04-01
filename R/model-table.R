@@ -83,12 +83,10 @@ mdl_tbl <- function(..., data = NULL) {
 
 	# Once it comes back as a new class, we need to add data if its available
 	if (!is.null(data)) {
-
 		datLs <- attr(mdTab, "dataList")
 		dataName <- as.character(mc$data)
 		datLs[[dataName]] <- data
 		attr(mdTab, "dataList") <- datLs
-
 	}
 
 	# Return new class
@@ -482,7 +480,7 @@ model_table_reconstructable <- function(x, to) {
 	} else {
 		return(FALSE)
 	}
-
+	
 }
 
 #' Model table object validation
@@ -522,7 +520,6 @@ validate_model_table <- function(x) {
 # Casting and coercion ---------------------------------------------------------
 
 # SELF
-
 
 #' @keywords internal
 mdl_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
@@ -636,9 +633,11 @@ NULL
 #' @export
 attach_data <- function(x, data, ...) {
 
-	checkmate::assert_class(x, "mdl_tbl")
-	checkmate::assert_class(data, "data.frame")
-
+  # TODO
+  # add messaging if spot for error
+  validate_class(x, "mdl_tbl")
+  validate_class(data, "data.frame")
+  
 	# Get name of object that will be the dataset
 	mc <- match.call()
 	datLs <- attr(x, 'dataList')
