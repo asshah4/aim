@@ -14,6 +14,8 @@ flatten_models(x, ...)
 \item{x}{a \verb{<mdl_tbl>} object}
 
 \item{data}{a \verb{<data.frame>} object that has been used by models}
+
+\item{...}{Arguments to be passed to or from other methods}
 }
 \description{
 These functions are used to help manage the \verb{<mdl_tbl>} object. They allow

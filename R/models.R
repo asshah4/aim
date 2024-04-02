@@ -39,6 +39,8 @@
 #' @param strata_level value of the level of the term specified by
 #'   `strata_variable`
 #'
+#' @param ... Arguments to be passed to or from other methods
+#'
 #' @name models
 #' @export
 mdl <- function(x = unspecified(), ...) {
@@ -63,7 +65,10 @@ mdl.character <- function(x,
 													...) {
 
 	# Is the specified model type/call currently accepted?
-	checkmate::assert_subset(x, .models)
+	stopifnot(
+		"The <character> specification of the model is not currently suppported"
+		= any(x %in% .models)
+	)
 
 	# Ensure equal length objects for the data frames
 	if (length(parameter_estimates) == 0) {
@@ -113,9 +118,9 @@ mdl.lm <- function(x = unspecified(),
 									 ...) {
 
 	# Class check
-	checkmate::assert_class(formulas, "fmls")
-	checkmate::assert_class(data_name, "character")
-	checkmate::assert_class(strata_variable, "character")
+	validate_class(formulas, "fmls")
+	validate_class(data_name, "character")
+	validate_class(strata_variable, "character")
 
 	# Model class/type
 	cl <- x$call
@@ -220,12 +225,12 @@ new_model <- function(modelCall = character(),
 	#		summaryInfo = model summary fit information, e.g. R-squared
 	#		dataArgs = how and what context the model was fit
 
-	checkmate::assert_class(modelCall, "character")
-	checkmate::assert_class(modelFormula, "fmls")
-	checkmate::assert_class(modelArgs, "list")
-	checkmate::assert_class(parameterEstimates, "data.frame")
-	checkmate::assert_class(summaryInfo, "list")
-	checkmate::assert_class(dataArgs, "list")
+	validate_class(modelCall, "character")
+	validate_class(modelFormula, "fmls")
+	validate_class(modelArgs, "list")
+	validate_class(parameterEstimates, "data.frame")
+	validate_class(summaryInfo, "list")
+	validate_class(dataArgs, "list")
 
 	if (length(modelCall) == 0) {
 		mc <- list()

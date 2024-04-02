@@ -257,3 +257,4 @@ test_that("model table can be filtered", {
 test_that("models with interactions can be made", {
 
 })
+

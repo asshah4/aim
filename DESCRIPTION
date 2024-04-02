@@ -22,27 +22,30 @@ RoxygenNote: 7.3.1
 Depends:
     R (>= 4.0.0),
     vctrs (>= 0.5.0),
-    tibble,
+    tibble (>= 3.0.0),
 Imports: 
     stats,
     utils,
     generics,
     methods,
     dplyr,
-    ggplot2,
     broom,
     tidyr,
     rlang,
     pillar,
-    survival,
-    gt,
-    lifecycle,
+    purrr,
+    janitor
 Suggests: 
     testthat (>= 3.0.0),
     covr,
     cli,
     rmarkdown,
-    knitr
+    knitr,
+    ggplot2,
+    gt,
+    survival,
+    cmprsk,
+    tidycmprsk
 VignetteBuilder: knitr
 URL: https://github.com/asshah4/vlndr
 BugReports: https://github.com/asshah4/vlndr/issues

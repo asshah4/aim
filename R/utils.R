@@ -1,6 +1,8 @@
 ### Formula Helpers -----------------------------------------------------------
 
 #' Tools for working with formula-like objects
+#' @param x A formula-like object
+#' @param ... Arguments to be passed to or from other methods
 #' @name formula_helpers
 #' @export
 lhs <- function(x, ...) {
@@ -95,6 +97,7 @@ lhs.formula <- function(x, ...) {
 #' @param x An argument that may represent a formula to label variables, or can
 #'   be converted to one. This includes, `list`, `formula`, or
 #'   `character` objects. Other types will error.
+#'
 #' @export
 labeled_formulas_to_named_list <- function(x) {
 

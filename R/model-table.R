@@ -3,7 +3,9 @@
 #' Model tables
 #'
 #' @description
+#'
 #' `r lifecycle::badge('experimental')`
+#'
 #' The `model_table()` or `mdl_tbl()` function creates a `<mdl_tbl>` object that
 #' is composed of either `<fmls>` objects or `<mdl>` objects, which are
 #' thin/informative wrappers for generic formulas and hypothesis-based models.
@@ -30,9 +32,15 @@
 #'
 #' @section Formula Matrix
 #'
-#' @param ... Named or unnamed `<mdl>` or `<fmls>`objects
+#' @param ... Named or unnamed `<mdl>` or `<fmls>` objects
+#'
+#' @param data A `<data.frame>` or `<tbl_df>` object, named correspondingly to
+#'   the underlying data used in the models (to help match)
+#'
+#' @param x A `<mdl_tbl>` object
 #'
 #' @name mdl_tbl
+#' @importFrom tibble tibble new_tibble
 #' @export
 mdl_tbl <- function(..., data = NULL) {
 
@@ -130,6 +138,9 @@ vec_ptype_abbr.mdl_tbl <- function(x, ...) {
 #' @param x Vector of `mdl` objects
 #' @keywords internal
 construct_table_from_models <- function(x, ...) {
+
+	# Global variables
+	role <- NULL
 
 	# Meta components of the models
 	obj <- x[[1]] # Removes it from its list
@@ -248,6 +259,9 @@ construct_table_from_models <- function(x, ...) {
 #' @keywords internal
 construct_table_from_formulas <- function(x, ...) {
 
+	# Global variables
+	role <- NULL
+
 	# Meta components of the models
 	obj <- x[[1]] # Removes it from its list
 	nm <- ifelse(is.null(names(x)), NA, ifelse(names(x) == "", NA, names(x)))
@@ -361,16 +375,15 @@ new_model_table <- function(x = list(),
 	#		Context: Formula (giving information on covariates) and Model Type
 	#		Fit: Individual parameters and model level estimates/statistics
 
-	checkmate::assert_class(formulaMatrix, "data.frame")
-	checkmate::assert_class(termTable, "data.frame")
-	checkmate::assert_class(dataList, "list")
-	checkmate::assert_list(
-		x,
-		types = c("character", "list", "factor", "logical", "numeric"),
-		len = 15
-	)
+	if (length(x) == 0) {
+		stop("No data was available to be coerced to a `<mdl_tbl>` object.")
+	}
 
-	new_tibble(
+	validate_class(formulaMatrix, "data.frame")
+	validate_class(termTable, "data.frame")
+	validate_class(dataList, "list")
+
+	tibble::new_tibble(
 		x,
 		formulaMatrix = formulaMatrix,
 		termTable = termTable,
@@ -408,6 +421,9 @@ model_table_reconstruct <- function(x, to) {
 #' @keywords internal
 df_reconstruct <- function(x, to) {
 
+	# Remove global variables
+	term <- role <- NULL
+
 	validate_model_table(to)
 
 	# Formula matrix
@@ -429,7 +445,7 @@ df_reconstruct <- function(x, to) {
 	med <- unique(to$mediator)
 	int <- unique(to$interaction)
 	sta <- unique(to$strata)
-	special <- na.omit(c(out, exp, med, int, sta))
+	special <- stats::na.omit(c(out, exp, med, int, sta))
 	others <- setdiff(names(newMat), special)
 
 	# Terms and term tables
@@ -480,7 +496,7 @@ model_table_reconstructable <- function(x, to) {
 	} else {
 		return(FALSE)
 	}
-	
+
 }
 
 #' Model table object validation
@@ -578,7 +594,7 @@ mdl_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 	  }()
 
   # Create a temporary/new structure of the table
-  mdTab <- tib_cast(x, to, ..., x_arg = x_arg, y_arg = y_arg)
+  mdTab <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
 
   # Output with correct scalar attributes
 	new_model_table(x = as.list(mdTab),
@@ -626,6 +642,8 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #'
 #' @param data a `<data.frame>` object that has been used by models
 #'
+#' @param ... Arguments to be passed to or from other methods
+#'
 #' @name model_table_helpers
 NULL
 
@@ -633,11 +651,9 @@ NULL
 #' @export
 attach_data <- function(x, data, ...) {
 
-  # TODO
-  # add messaging if spot for error
   validate_class(x, "mdl_tbl")
   validate_class(data, "data.frame")
-  
+
 	# Get name of object that will be the dataset
 	mc <- match.call()
 	datLs <- attr(x, 'dataList')
@@ -657,6 +673,10 @@ attach_data <- function(x, data, ...) {
 #' @export
 flatten_models <- function(x, ...) {
 
+	# Remove global variables
+	model_statistic <- model_p_value <- model_parameters <- model_summary <-
+		fit_status <- formula_call <- NULL
+
 	validate_class(x, "mdl_tbl")
 
 	x |>
@@ -669,23 +689,23 @@ flatten_models <- function(x, ...) {
 				labels() |>
 				length()
 		}, USE.NAMES = FALSE)) |>
-		dplyr::select(
-			formula_call,
-			model_call,
-			data_id,
-			name,
-			number,
-			outcome,
-			exposure,
-			mediator,
-			interaction,
-			strata,
-			level,
-			model_parameters,
-			model_summary
-		) |>
+		dplyr::select(dplyr::any_of(c(
+			"formula_call",
+			"model_call",
+			"data_id",
+			"name",
+			"number",
+			"outcome",
+			"exposure",
+			"mediator",
+			"interaction",
+			"strata",
+			"level",
+			"model_parameters",
+			"model_summary"
+		))) |>
 		tidyr::unnest_wider(model_summary) |>
-		dplyr::rename(any_of(c(
+		dplyr::rename(dplyr::any_of(c(
 			model_statistic = 'statistic',
 			model_p_value = 'p_value'
 		))) |>

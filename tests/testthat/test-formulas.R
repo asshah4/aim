@@ -53,6 +53,10 @@ test_that("fmls-fmls can be combined", {
 
 })
 
+test_that("fmls and formulas can be interchanged", {
+	skip() # not yet implemented, future TODO
+})
+
 test_that("tm can convert to fmls objects", {
 
 	t <- tm(.o(good) ~ .x(bad) + ugly)
@@ -135,10 +139,6 @@ test_that("strata terms can be kept within the formula appropriately", {
 
 
 # Special terms ----
-
-test_that("multiple interactions are treated appropriately", {
-
-})
 
 test_that("terms with multiple roles can be converted to formulas", {
 

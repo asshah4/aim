@@ -6,6 +6,17 @@
 \usage{
 estimate_interaction(object, exposure, interaction, conf_level = 0.95, ...)
 }
+\arguments{
+\item{object}{A \verb{<mdl_tbl>} object subset to a single row}
+
+\item{exposure}{The exposure variable in the model}
+
+\item{interaction}{The interaction variable in the model}
+
+\item{conf_level}{The confidence level for the confidence interval}
+
+\item{...}{Arguments to be passed to or from other methods}
+}
 \value{
 A \verb{<data.frame>} with \code{n = levels(interaction)} rows (for the
 presence or absence of the interaction term) and \code{n = 5} columns:
@@ -19,6 +30,8 @@ presence or absence of the interaction term) and \code{n = 5} columns:
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 When using categorical interaction terms in a \verb{<mdl_tbl>} object, estimates
 on interaction terms and their confidence intervals can be evaluated. The
 effect of interaction on the estimates is based on the levels of interaction
@@ -28,10 +41,11 @@ described by Figueiras et al. (1998).
 }
 \details{
 The \code{estimate_interaction()} requires a \verb{<mdl_tbl>} object that is a
-\emph{single row in length}. Filtering the \verb{<mdl_tbl>} should occur prior to passing
-it to this function. Additionally, this function assumes the interaction term
-is binary. If it is categorical, the current recommendation is to use dummy
-variables for the corresponding levels prior to modeling.
+single row in length. Filtering the \verb{<mdl_tbl>} should occur prior to
+passing it to this function. Additionally, this function assumes the
+interaction term is binary. If it is categorical, the current
+recommendation is to use dummy variables for the corresponding levels prior
+to modeling.
 }
 \references{
 A. Figueiras, J. M. Domenech-Massons, and Carmen Cadarso, 'Regression models:

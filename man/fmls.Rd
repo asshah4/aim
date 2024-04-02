@@ -2,6 +2,7 @@
 % Please edit documentation in R/formulas.R
 \name{fmls}
 \alias{fmls}
+\alias{is_fmls}
 \alias{key_terms}
 \title{Vectorized formulas}
 \usage{
@@ -10,6 +11,8 @@ fmls(
   pattern = c("direct", "sequential", "parallel", "fundamental"),
   ...
 )
+
+is_fmls(x)
 
 key_terms(x)
 }
@@ -46,7 +49,7 @@ tm.
 This is not meant to supersede a \code{\link[stats:formula]{stats::formula()}} object, but provide a
 series of relationships that can be helpful in causal modeling. All \code{fmls}
 can be converted to a traditional \code{formula} with ease. The base for this
-object is built on the \code{\link[=tmls]{tmls()}} object.
+object is built on the \code{\link[=tm]{tm()}} object.
 }
 \section{Patterns}{
 The expansion pattern allows for instructions on how the covariates should be

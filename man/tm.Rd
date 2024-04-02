@@ -48,6 +48,8 @@ is_tm(x)
 \arguments{
 \item{x}{An object that can be coerced to a \code{tm} object.}
 
+\item{...}{Arguments to be passed to or from other methods}
+
 \item{role}{Specific roles the variable plays within the formula. These are
 of particular importance, as they serve as special terms that can effect
 how a formula is interpreted. Please see the \emph{Roles} section below for

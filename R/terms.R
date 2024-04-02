@@ -105,6 +105,8 @@
 #' @param transformation Modification of the term to be applied when
 #'   combining with data
 #'
+#' @param ... Arguments to be passed to or from other methods
+#'
 #' @name tm
 #' @export
 tm <- function(x = unspecified(), ...) {
@@ -165,6 +167,7 @@ tm.character <- function(x,
 }
 
 #' @rdname tm
+#' @importFrom stats formula
 #' @export
 tm.formula <- function(x,
 											 role = formula(),
@@ -175,6 +178,9 @@ tm.formula <- function(x,
 											 description = formula(),
 											 transformation = formula(),
 											 ...) {
+
+	# Global variables
+
 
 	# Early Break if needed
 	if (length(x) == 0) {
@@ -689,7 +695,7 @@ vec_cast.tm.formula <- function(x, to, ...) {
 #' @export
 vec_cast.formula.tm <- function(x, to, ...) {
 	# order is flipped, such that `x` is tm
-	formula(x)
+	stats::formula(x)
 }
 
 # FMLS
@@ -748,14 +754,16 @@ formula.tm <- function(x, ...) {
 
 #' Update `tm` objects
 #'
-#' This updates properties or attributes of a `tm` vector. This only updates
-#' `tm` objects that already exist.
+#' This updates properties or attributes of a `<tm>` vector. This only updates
+#' objects that already exist.
+#'
+#' @param object A `<tm>` object
 #'
 #' @param ... A series of `field = term ~ value` pairs that represent the
 #'   attribute to be updated. Can have a value of __<NA>__ if the goal is to
 #'   remove an attribute or property.
 #'
-#' @return A `tm` object with updated attributes
+#' @return A `<tm>` object with updated attributes
 #' @export
 update.tm <- function(object, ...) {
 

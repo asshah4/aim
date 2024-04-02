@@ -7,6 +7,8 @@
 #' @noRd
 validate_model_compatability <- function(x) {
 
+	# Global variables
+
 	# Should be a list of model_archetypes
 	model_list <- list()
 
@@ -19,12 +21,20 @@ validate_model_compatability <- function(x) {
 		t <-
 			attr(x[[i]], "terms") |>
 			vec_data() |>
-			subset(select = c(term, side, role))
+			dplyr::select(c(
+				"term",
+				"side",
+				"role"
+			))
 
 		# Model information
 		m <-
 			vec_data(x[[i]]) |>
-			subset(select = c(tag, type, subtype))
+			dplyr::select(c(
+				"tag",
+				"type",
+				"subtype"
+			))
 
 		# Combine into list of data.frames
 		# Suppress warning about dropping row names

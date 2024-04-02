@@ -1,5 +1,9 @@
 #' Estimating interaction effect estimates
 #'
+#' @description
+#'
+#' `r lifecycle::badge("experimental")`
+#'
 #' When using categorical interaction terms in a `<mdl_tbl>` object, estimates
 #' on interaction terms and their confidence intervals can be evaluated. The
 #' effect of interaction on the estimates is based on the levels of interaction
@@ -7,12 +11,22 @@
 #' `estimate_interaction()` function. The approach is based on the method
 #' described by Figueiras et al. (1998).
 #'
-#' @details
-#' The `estimate_interaction()` requires a `<mdl_tbl>` object that is a
-#' *single row in length*. Filtering the `<mdl_tbl>` should occur prior to passing
-#' it to this function. Additionally, this function assumes the interaction term
-#' is binary. If it is categorical, the current recommendation is to use dummy
-#' variables for the corresponding levels prior to modeling.
+#' @details The `estimate_interaction()` requires a `<mdl_tbl>` object that is a
+#'   single row in length. Filtering the `<mdl_tbl>` should occur prior to
+#'   passing it to this function. Additionally, this function assumes the
+#'   interaction term is binary. If it is categorical, the current
+#'   recommendation is to use dummy variables for the corresponding levels prior
+#'   to modeling.
+#'
+#' @param object A `<mdl_tbl>` object subset to a single row
+#'
+#' @param exposure The exposure variable in the model
+#'
+#' @param interaction The interaction variable in the model
+#'
+#' @param conf_level The confidence level for the confidence interval
+#'
+#' @param ... Arguments to be passed to or from other methods
 #'
 #' @return A `<data.frame>` with `n = levels(interaction)` rows (for the
 #'   presence or absence of the interaction term) and `n = 5` columns:
@@ -40,6 +54,8 @@ estimate_interaction <- function(object,
 																 interaction,
 																 conf_level = 0.95,
 																 ...) {
+
+	# Remove global variables
 
   # TODO
   # For development of this, would need to add some way to generalize
@@ -75,13 +91,13 @@ estimate_interaction <- function(object,
   mod <-
     object |>
     flatten_models() |>
-    dplyr::select(model_call, number, outcome, exposure, interaction, term, estimate, conf_low, conf_high, p_value, nobs, degrees_freedom, var_cov)
+    dplyr::select(dplyr::any_of(c("model_call", "number", "outcome", "exposure", "interaction", "term", "estimate", "conf_low", "conf_high", "p_value", "nobs", "degrees_freedom", "var_cov")))
 
   # Beta coefficients are based on the model type
   coefs <- mod$estimate
   nms <- mod$term
   names(coefs) <- nms
-  
+
   # Interaction term and its levels in the dataset
   # The names may also ahve been adjusted from the modeling process
   # Use "closest match"
@@ -96,7 +112,7 @@ estimate_interaction <- function(object,
     "`estimate_interaction()` currently only accepts binary interaction terms."
     = length(lvls) == 2
   )
-  
+
   # Update interaction term to "actual" name from model
   it <- paste0(nms[expPos], ":", nms[intPos])
   itPos <- grep(it, nms)

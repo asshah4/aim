@@ -15,7 +15,7 @@
 #' This is not meant to supersede a [stats::formula()] object, but provide a
 #' series of relationships that can be helpful in causal modeling. All `fmls`
 #' can be converted to a traditional `formula` with ease. The base for this
-#' object is built on the [tmls()] object.
+#' object is built on the [tm()] object.
 #'
 #' # Patterns
 #'
@@ -151,6 +151,7 @@ new_fmls <- function(formulaMatrix = data.frame(),
 
 }
 
+#' @rdname fmls
 #' @export
 is_fmls <- function(x) {
 	inherits(x, "fmls")
@@ -159,6 +160,9 @@ is_fmls <- function(x) {
 #' @rdname fmls
 #' @export
 key_terms <- function(x) {
+
+	# Global variables
+	term <- NULL
 
 	# If a formula object, must pull only terms that are available
 	if (is_fmls(x)) {
@@ -256,7 +260,8 @@ methods::setOldClass(c("fmls", "vctrs_rcrd"))
 
 # SELF
 
-#' @export
+#' @keywords internal
+#' @noRd
 fmls_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
 	# Creates a "empty" data frame with appropraite fields
@@ -278,7 +283,8 @@ fmls_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 	new_fmls(newMatrix, termTable = newTmTab)
 }
 
-#' @export
+#' @keywords internal
+#' @noRd
 fmls_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 
 	# New terms that will be the key scalar attribute
@@ -345,12 +351,20 @@ vec_cast.character.fmls <- function(x, to, ...) {
 #' @export
 as.character.fmls <- function(x, ...) {
 	formulas_to_terms(x) |>
-		lapply(formula) |>
+		lapply(stats::formula) |>
 		sapply(deparse1)
 
 }
 
 # FORMULA
+
+#' @export
+formula.fmls <- function(x, ...) {
+	x |>
+		formulas_to_terms() |>
+		lapply(stats::as.formula, env = .GlobalEnv)
+}
+
 
 #' @export
 vec_ptype2.fmls.formula <- function(x, y, ...) {
@@ -366,7 +380,7 @@ vec_ptype2.formula.fmls <- function(x, y, ...) {
 vec_cast.formula.fmls <- function(x, to, ...) {
 	# Cast from `fmls` into `formula`
 	# Returns a list of formulas
-	formula(x)
+	stats::formula(x)
 
 }
 
@@ -395,7 +409,7 @@ check_mediation <- function(x, tbl) {
 	# Requires a table from the `apply_*_pattern()` functions
 	# Each row has been expanded for exposure and outcome
 	# This will triple the number of rows subsequently
-	checkmate::assert_tibble(tbl)
+	validate_class(tbl, "tbl_df")
 
 	# Mediation...
 	# 	The combinations of mediation are based on causal reasoning
@@ -433,6 +447,9 @@ check_mediation <- function(x, tbl) {
 #' @noRd
 check_groups <- function(x, tbl) {
 
+	# Global variables
+	group <- NULL
+
 	# Roles
 	tmTab <- vec_proxy(x)
 	out <- tmTab$term[tmTab$role == "outcome"]
@@ -444,7 +461,7 @@ check_groups <- function(x, tbl) {
 	sta <- tmTab$term[tmTab$role == "strata"]
 
 	# Requires a table from the `apply_*_pattern()` functions
-	checkmate::assert_tibble(tbl)
+	validate_class(tbl, "tbl_df")
 
 	# Grouping variables now must be assessed
 	# IF a group is present, the row must have its full group present OR ELSE
@@ -490,20 +507,11 @@ check_groups <- function(x, tbl) {
 
 }
 
-# Formula Helpers --------------------------------------------------------------
-
-#' @export
-formula.fmls <- function(x, ...) {
-	x |>
-		formulas_to_terms() |>
-		lapply(stats::as.formula, env = .GlobalEnv)
-}
-
 #' @keywords internal
 #' @noRd
 formulas_to_terms <- function(x) {
 
-	checkmate::assert_class(x, "fmls")
+	validate_class(x, "fmls")
 
 	fmMat <- vec_data(x)
 	tmTab <- attr(x, "termTable")
