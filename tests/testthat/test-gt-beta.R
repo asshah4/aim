@@ -61,9 +61,10 @@ test_that("complex test from AFEQT dataset works", {
 		targets::tar_read(afeqt_mdls, store = '~/OneDrive - University of Illinois Chicago/targets/aflubber/')
 
 	afeqt_dataset <-
-		targets::tar_read(afeqt_labeled, store = '~/OneDrive - University of Illinois Chicago/targets/aflubber/')
+		targets::tar_read(afeqt_labeled, store = '~/OneDrive - University of Illinois Chicago/targets/aflubber/') |>
+		dplyr::filter(cohort == "longitudinal")
 
-	object = filter(
+	object = dplyr::filter(
 		mdls,
 		name %in% c(
 			"total_by_traditional",
@@ -84,9 +85,8 @@ test_that("complex test from AFEQT dataset works", {
 
 	terms = list(
 		ndi_quartile ~ "NDI Quartile",
-		black ~ "Black",
+		ancestry ~ "Race-Ethnicity",
 		gender ~ "Sex",
-		hispanic ~ "Ethnicity",
 		insurance_grps ~ "Insurance",
 		language_grps ~ "Language"
 	)

@@ -142,10 +142,13 @@ tbl_beta <- function(object,
 			if (inherits(dat[[t]], c("factor", "character"))) {
 				vars <- unique(grep(t, obj$term, value = TRUE))
 				lvls <- levels(dat[[t]])
-				stopifnot(
-					"Levels of variables are not consistent within the specificed term"
-					= length(lvls) == length(vars) + 1
-				)
+				if (length(lvls) != length(vars) + 1) {
+					stop(paste0(
+						"Levels of variable `",
+						t,
+						"` are not consistent with the modeled levels."
+					))
+				}
 
 				ref_col <- paste0(t, "_", "ref")
 				tbl <- tibble::add_column(tbl, !!ref_col := NA)
