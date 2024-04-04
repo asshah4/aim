@@ -9,16 +9,19 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Github commit
 frequency](https://img.shields.io/github/commit-activity/w/asshah4/vlndr)](https://github.com/asshah4/vlndr/graphs/commit-activity)
-[![R-CMD-check](https://github.com/asshah4/vlndr/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/vlndr/actions)
+[![R-CMD-check](https://github.com/asshah4/vlndr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/asshah4/vlndr/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
 ## Installation
 
-This package has not yet been released on CRAN, but can be downloaded
-from Github.
+This package can be downloaded from CRAN or from
+[Github](https://github.com/asshah4/vlndr) as below
 
 ``` r
+# CRAN installation
+install.packages("vlndr")
+# Or remote/developmental version
 remotes::install_github("asshah4/vlndr")
 ```
 
