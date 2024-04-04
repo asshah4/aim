@@ -9,7 +9,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Github commit
 frequency](https://img.shields.io/github/commit-activity/w/asshah4/vlndr)](https://github.com/asshah4/vlndr/graphs/commit-activity)
-[![R-CMD-check](https://github.com/asshah4/vlndr/workflows/R-CMD-check/badge.svg)](https://github.com/asshah4/vlndr/actions)
+[![R-CMD-check](https://github.com/asshah4/vlndr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/asshah4/vlndr/actions/workflows/R-CMD-check.yaml)
 
 <!-- badges: end -->
 
