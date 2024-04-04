@@ -23,9 +23,12 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-This package has not yet been released on CRAN, but can be downloaded from Github.
+This package can be downloaded from CRAN or from [Github](https://github.com/asshah4/vlndr) as below
 
 ```{r, eval = FALSE}
+# CRAN installation
+install.packages("vlndr")
+# Or remote/developmental version
 remotes::install_github("asshah4/vlndr")
 ```
 

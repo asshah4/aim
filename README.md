@@ -15,10 +15,13 @@ frequency](https://img.shields.io/github/commit-activity/w/asshah4/vlndr)](https
 
 ## Installation
 
-This package has not yet been released on CRAN, but can be downloaded
-from Github.
+This package can be downloaded from CRAN or from
+[Github](https://github.com/asshah4/vlndr) as below
 
 ``` r
+# CRAN installation
+install.packages("vlndr")
+# Or remote/developmental version
 remotes::install_github("asshah4/vlndr")
 ```
 
