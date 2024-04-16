@@ -1,4 +1,4 @@
-Package: vlndr
+Package: rmdl
 Title: Language to Manage Many Models
 Version: 0.0.0.9000
 Authors@R: 
@@ -47,6 +47,6 @@ Suggests:
     cmprsk,
     tidycmprsk
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/vlndr
-BugReports: https://github.com/asshah4/vlndr/issues
+URL: https://github.com/asshah4/rmdl
+BugReports: https://github.com/asshah4/rmdl/issues
 Config/testthat/edition: 3

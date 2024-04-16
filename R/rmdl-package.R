@@ -1,7 +1,7 @@
-#' vlndr package
+#' rmdl package
 #'
 #' @docType package
-#' @aliases vlndr-package
+#' @aliases rmdl-package
 #' @keywords internal
 "_PACKAGE"
 
@@ -9,7 +9,7 @@
 #'
 #' @import vctrs
 #' @keywords internal
-#' @name vlndr-vctrs
+#' @name rmdl-vctrs
 NULL
 
 
