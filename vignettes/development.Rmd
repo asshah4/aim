@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-**Last updated on `r format(Sys.time(), "%B %d, %Y")`, although still is a work-in-progress.**
+Last updated on `r format(Sys.time(), "%B %d, %Y")`, although still is a work-in-progress.
 
 # Background
 
