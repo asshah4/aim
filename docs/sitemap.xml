@@ -1,273 +1,309 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://asshah4.github.io/volundr/404.html</loc>
+    <loc>https://asshah4.github.io/rmdl/404.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/LICENSE-text.html</loc>
+    <loc>https://asshah4.github.io/rmdl/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/LICENSE.html</loc>
+    <loc>https://asshah4.github.io/rmdl/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/articles/development.html</loc>
+    <loc>https://asshah4.github.io/rmdl/articles/development.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/articles/index.html</loc>
+    <loc>https://asshah4.github.io/rmdl/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/articles/octobeast.html</loc>
+    <loc>https://asshah4.github.io/rmdl/articles/octobeast.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/articles/octomod.html</loc>
+    <loc>https://asshah4.github.io/rmdl/articles/octomod.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/articles/overview.html</loc>
+    <loc>https://asshah4.github.io/rmdl/articles/overview.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/authors.html</loc>
+    <loc>https://asshah4.github.io/rmdl/authors.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/index.html</loc>
+    <loc>https://asshah4.github.io/rmdl/ex_reprex.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/news/index.html</loc>
+    <loc>https://asshah4.github.io/rmdl/index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/add_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/rmdl/news/index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/aim.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/add_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/arm.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/aim.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/as_tbl_graph.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/arm.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/ballistics.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/as_tbl_graph.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/bullet.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/ballistics.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/can_reconstruct_model_table.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/bullet.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/complexity.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/can_reconstruct_model_table.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/complexity.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct_dag.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct_map.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct_dag.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct_maps.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct_map.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct_models.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct_maps.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct_paths.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct_table_from_formulas.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct_paths.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/construct_table_from_models.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct_table_from_formulas.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/core.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/construct_table_from_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/create_study.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/core.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/dagger-package.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/create_study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/derive.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/dagger-package.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/describe.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/data_helpers.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/dplyr_extensions.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/derive.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/draw.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/describe.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/draw_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/df_reconstruct.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/equip.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/dplyr_extensions.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/expand_formula.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/draw.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/expand_paths.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/draw_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/extract.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/equip.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/extract_dag.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/estimate_interaction.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/extract_dagitty.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/expand_formula.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/extract_models.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/expand_paths.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/fetch.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/extract.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/find_confounders.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/extract_dag.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/find_significant.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/extract_dagitty.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/fire.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/extract_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/fit_calls.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/fetch.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/fit_parsnip_models.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/find_confounders.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/fmls.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/find_significant.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/forge.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/fire.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/formula_helpers.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/fit_calls.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/formulas_to_named_list.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/fit_parsnip_models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/hypothesize.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/fmls.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/index.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/forge.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/interaction_estimates.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/formula_helpers.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/is_dichotomous.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/formulas_to_named_list.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/make_hash.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/hypothesize.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/map_dag.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/md_tbl.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/interaction_estimates.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/models.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/is_dichotomous.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/modify_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/labeled_formulas_to_named_list.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/modify_study.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/make_hash.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/new_model_table.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/map_dag.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/number_of_missing.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/md_tbl.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/octomod.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/mdl_tbl.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/outfit.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/model_table_helpers.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/pipe.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/model_table_reconstructable.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/print.hypothesis.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/models.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/print.study.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/modify_hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/propose.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/modify_study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/reconstruct.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/new_model_table.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/reconstruct_map.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/number_of_missing.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/reexports.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/octomod.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/reload.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/outfit.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/retrieval.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/patterns.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/sharpen.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/pipe.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/specific_aims.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/print.hypothesis.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/strategize.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/print.study.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/study.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/propose.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/summary.study.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/reconstruct.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/tbl_forest.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/reconstruct_map.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/tbl_sequential.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/reexports.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/temper.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/reload.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/theme_gt_compact.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/retrieval.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/tidy_tests.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/rmdl-package.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/tm.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/rmdl-vctrs.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/update.tm.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/sharpen.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/update_hypothesis.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/specific_aims.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/volundr-package.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/strategize.html</loc>
   </url>
   <url>
-    <loc>https://asshah4.github.io/volundr/reference/volundr-vctrs.html</loc>
+    <loc>https://asshah4.github.io/rmdl/reference/study.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/summary.study.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/tbl_forest.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/tbl_sequential.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/temper.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/theme_gt_compact.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/tidy_tests.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/tm.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/update.tm.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/update_hypothesis.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/validate_model_table.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/volundr-package.html</loc>
+  </url>
+  <url>
+    <loc>https://asshah4.github.io/rmdl/reference/volundr-vctrs.html</loc>
   </url>
 </urlset>
