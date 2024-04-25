@@ -8,14 +8,20 @@
 \usage{
 attach_data(x, data, ...)
 
-flatten_models(x, ...)
+flatten_models(x, exponentiate = FALSE, which = NULL, ...)
 }
 \arguments{
-\item{x}{a \verb{<mdl_tbl>} object}
+\item{x}{A \verb{<mdl_tbl>} object}
 
-\item{data}{a \verb{<data.frame>} object that has been used by models}
+\item{data}{A \verb{<data.frame>} object that has been used by models}
 
 \item{...}{Arguments to be passed to or from other methods}
+
+\item{exponentiate}{A \verb{<logical>} value that determines whether to exponentiate
+the estimates of the models. Default is \code{FALSE}. If \code{TRUE}, the user can specify
+which models to exponentiate by name using the \strong{which} argument.}
+
+\item{which}{A \verb{<character>} vector of model names to exponentiate. Default is \code{NULL}. If \strong{exponentiate} is set to \code{TRUE} and \strong{which} is set to \code{NULL}, then all estimates will be exponentiated, which is often a \emph{bad idea}.}
 }
 \description{
 These functions are used to help manage the \verb{<mdl_tbl>} object. They allow
@@ -23,7 +29,7 @@ for specific manipulation of the internal components, and are intended to
 generally extend the functionality of the object.
 \itemize{
 \item \code{attach_data()}: Attaches a dataset to a \verb{<mdl_tbl>} object
-\item \code{flatten_model()}: Flattens a \verb{<mdl_tbl>} object down to its specific parameters
+\item \code{flatten_models()}: Flattens a \verb{<mdl_tbl>} object down to its specific parameters
 }
 }
 \section{Attaching Data}{
@@ -36,6 +42,8 @@ used which datasets, it can be ease to back-transform information.
 
 \section{Flattening Models}{
 A \verb{<mdl_tbl>} object can be flattened to its specific parameters, their
-estimates, and model-level summary statistics.
+estimates, and model-level summary statistics. This function additionally
+helps by allowing for exponentiation of estimates when deemed appropriate.
+The user can specify which models to exponentiate by name.
 }
 

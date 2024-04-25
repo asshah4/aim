@@ -227,6 +227,21 @@ test_that("table can be simplified or flattened", {
 	expect_equal(max(y$number), 3)
 	expect_type(y$var_cov[[1]], 'double')
 	expect_true(inherits(y$var_cov[[1]], 'matrix'))
+	
+	# Now for multiple tables and flatten_model selections
+	m1 <- 
+	  fmls(am ~ wt) |>
+	  fit(.fn = glm, family = "binomial", data = mtcars, raw = FALSE)
+	
+	m2 <-
+	  fmls(am ~ wt) |>
+	  fit(.fn = glm, family = "binomial", data = mtcars, raw = FALSE)
+	
+	mt <- model_table(log = m1, exp = m2)
+	fm <- flatten_models(mt, exponentiate = TRUE, which = "exp")
+	
+	expect_equal(exp(fm$estimate[2]), fm$estimate[4])
+	
 })
 
 test_that("model table can be filtered", {
