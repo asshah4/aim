@@ -13,6 +13,7 @@ tbl_beta(
   columns = list(beta ~ "Estimate", conf ~ "95\% CI", p ~ "P value"),
   accents = formula(),
   suppress_column_labels = FALSE,
+  exponentiate = FALSE,
   ...
 )
 }
@@ -89,11 +90,14 @@ will be initially selected and subsequently \emph{hidden} by the user such that
 only a single column (per term) remains. This is a use case to force the
 column labels to be suppressed.}
 
+\item{exponentiate}{A \verb{<logical>} value that determines if the point estimates
+should be exponentiated. This is useful for odds ratios or hazard ratios. It
+will apply to all estimate values, including confidence intervals, in a
+table. It is defaulted to \code{FALSE}.}
+
 \item{distribution}{A \verb{<character>} describes the distribution of the key
 exposure terms that are being displayed. Can either be \emph{continuous},
 \emph{dichotomous}, or \emph{categorical}.}
-
-\item{accent}{}
 }
 \description{
 A \verb{<mdl_tbl>} object of linear or generalized linear models. This serves as a

@@ -115,7 +115,8 @@ test_that("complex test from AFEQT dataset works", {
 		adjustment = adjustment,
 		columns = columns,
 		accents = accents,
-		suppress_column_labels = suppress_column_labels
+		suppress_column_labels = suppress_column_labels,
+		exponentiate = TRUE
 	)
 
 	# Now again with swapping of column labels

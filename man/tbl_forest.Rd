@@ -116,6 +116,11 @@ the visual aspects of the forest plot. The currently supported arguments:
 \item linewidth = Thickness of lines, for both vertical and horixontal axes
 }}
 
+\item{exponentiate}{A \verb{<logical>} value that determines if the point estimates
+should be exponentiated. This is useful for odds ratios or hazard ratios. It
+will apply to all estimate values, including confidence intervals, in a
+table. It is defaulted to \code{FALSE}.}
+
 \item{invert}{A \verb{<logical>} to determine if the odds or hazard ratio should
 be shown as the reciprocal values. Instead of a decreasing hazard for every
 unit increase, it describes an increasing hazard for every unit decrease.

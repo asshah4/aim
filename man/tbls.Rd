@@ -103,6 +103,11 @@ default are retained (argument is \code{FALSE}). Occasionally, several columns
 will be initially selected and subsequently \emph{hidden} by the user such that
 only a single column (per term) remains. This is a use case to force the
 column labels to be suppressed.}
+
+\item{exponentiate}{A \verb{<logical>} value that determines if the point estimates
+should be exponentiated. This is useful for odds ratios or hazard ratios. It
+will apply to all estimate values, including confidence intervals, in a
+table. It is defaulted to \code{FALSE}.}
 }
 \description{
 The related functions in this package combine multiple models to help show

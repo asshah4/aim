@@ -11,8 +11,6 @@
 #'   exposure terms that are being displayed. Can either be *continuous*,
 #'   *dichotomous*, or *categorical*.
 #'
-#' @param accent
-#'
 #' @export
 tbl_beta <- function(object,
 										 data,
@@ -24,6 +22,7 @@ tbl_beta <- function(object,
 										 							 p ~ "P value"),
 										 accents = formula(),
 										 suppress_column_labels = FALSE,
+										 exponentiate = FALSE,
 										 ...) {
 
 	# Validation
@@ -82,7 +81,7 @@ tbl_beta <- function(object,
 	obj <-
 		object |>
 		dplyr::filter(grepl(paste0(outNames, collapse = "|"), outcome)) |>
-		flatten_models() |>
+		flatten_models(exponentiate) |>
 		dplyr::filter(grepl(paste0(tmsNames, collapse = "|"), term)) |>
 		dplyr::select(number, outcome, term, estimate, conf_low, conf_high, p_value, dplyr::any_of(c(estVar, statVar, modVar)))
 

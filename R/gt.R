@@ -123,6 +123,11 @@
 #'   will be initially selected and subsequently *hidden* by the user such that
 #'   only a single column (per term) remains. This is a use case to force the
 #'   column labels to be suppressed.
+#'   
+#' @param exponentiate A `<logical>` value that determines if the point estimates
+#'  should be exponentiated. This is useful for odds ratios or hazard ratios. It
+#'  will apply to all estimate values, including confidence intervals, in a
+#'  table. It is defaulted to `FALSE`.
 #'
 #' @name tbls
 NULL
