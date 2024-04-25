@@ -725,7 +725,7 @@ flatten_models <- function(x, exponentiate = FALSE, which = NULL, ...) {
 		if (is.null(which)) {
 		  y <-
 		    y |>
-		    dplyr::mutate(across(c(estimate, conf_low, conf_higher), ~ exp(.x)))
+		    dplyr::mutate(across(c(estimate, conf_low, conf_high), ~ exp(.x)))
 		} else {
 		  y <-
 		    y |>
