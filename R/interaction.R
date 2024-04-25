@@ -4,21 +4,21 @@
 #'
 #' `r lifecycle::badge("experimental")`
 #'
-#' When using categorical interaction terms in a `<mdl_tbl>` object, estimates
+#' When using categorical interaction terms in a `mdl_tbl` object, estimates
 #' on interaction terms and their confidence intervals can be evaluated. The
 #' effect of interaction on the estimates is based on the levels of interaction
 #' term. The estimates and intervals can be derived through the
 #' `estimate_interaction()` function. The approach is based on the method
 #' described by Figueiras et al. (1998).
 #'
-#' @details The `estimate_interaction()` requires a `<mdl_tbl>` object that is a
-#'   single row in length. Filtering the `<mdl_tbl>` should occur prior to
+#' @details The `estimate_interaction()` requires a `mdl_tbl` object that is a
+#'   single row in length. Filtering the `mdl_tbl` should occur prior to
 #'   passing it to this function. Additionally, this function assumes the
 #'   interaction term is binary. If it is categorical, the current
 #'   recommendation is to use dummy variables for the corresponding levels prior
 #'   to modeling.
 #'
-#' @param object A `<mdl_tbl>` object subset to a single row
+#' @param object A `mdl_tbl` object subset to a single row
 #'
 #' @param exposure The exposure variable in the model
 #'
@@ -28,7 +28,7 @@
 #'
 #' @param ... Arguments to be passed to or from other methods
 #'
-#' @return A `<data.frame>` with `n = levels(interaction)` rows (for the
+#' @return A `data.frame` with `n = levels(interaction)` rows (for the
 #'   presence or absence of the interaction term) and `n = 5` columns:
 #'
 #'   - estimate: beta coefficient for the interaction effect based on level
@@ -65,9 +65,9 @@ estimate_interaction <- function(object,
   #   Simulation / bootstrapping methods
 
 	validate_class(object, "mdl_tbl")
-	# Check that only one row is being provided from the <mdl_tbl> object
+	# Check that only one row is being provided from the `mdl_tbl` object
 	if (nrow(object) > 1) {
-		stop("The <mdl_tbl> object must be subset to single row to estimate interactions.")
+		stop("The `mdl_tbl` object must be subset to single row to estimate interactions.")
 	}
 
   # Check exposure is in model table

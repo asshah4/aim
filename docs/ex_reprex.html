@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="index.html">rmdl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +30,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/development.html">Development Thoughts</a>
+    <a class="dropdown-item" href="articles/development.html">Development Log</a>
+    <a class="dropdown-item" href="articles/quick_start.html">Quick Start</a>
   </div>
 </li>
 <li class="nav-item">
@@ -57,9 +58,9 @@
     </div>
 
 
-<p><em>Local <code>.Rprofile</code> detected at <code>/Users/asshah4/projects/vlndr/.Rprofile</code></em></p>
+<p><em>Local <code>.Rprofile</code> detected at <code>/Users/asshah4/projects/rmdl/.Rprofile</code></em></p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/vlndr" class="external-link">vlndr</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/rmdl" class="external-link">rmdl</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: vctrs</span></span>
 <span><span class="co">#&gt; Loading required package: tibble</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -119,9 +120,9 @@
 <span></span>
 <span><span class="co">#&gt; Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred</span></span>
 <span></span>
-<span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="fu">vlndr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/vlndr/man/mdl_tbl.html" class="external-link">model_table</a></span><span class="op">(</span>one <span class="op">=</span> <span class="va">m1</span>, two <span class="op">=</span> <span class="va">m2</span><span class="op">)</span></span>
+<span><span class="va">mt</span> <span class="op">&lt;-</span> <span class="fu">rmdl</span><span class="fu">::</span><span class="fu"><a href="reference/mdl_tbl.html">model_table</a></span><span class="op">(</span>one <span class="op">=</span> <span class="va">m1</span>, two <span class="op">=</span> <span class="va">m2</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/vlndr/man/tbl_forest.html" class="external-link">tbl_interaction_forest</a></span><span class="op">(</span></span>
+<span><span class="fu">tbl_interaction_forest</span><span class="op">(</span></span>
 <span>    object <span class="op">=</span> <span class="va">mt</span>,</span>
 <span>    outcomes <span class="op">=</span> <span class="va">am</span> <span class="op">~</span> <span class="st">"Automatic"</span>,</span>
 <span>    exposures <span class="op">=</span> <span class="va">hp</span> <span class="op">~</span> <span class="st">'Horsepower'</span>,</span>

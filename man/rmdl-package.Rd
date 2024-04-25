@@ -6,7 +6,7 @@
 \alias{rmdl-package}
 \title{rmdl package}
 \description{
-Organize many models and hypotheses, generate directed acyclic graphs from these models, and cut out variables in a causality-based approach to analyses. The package consists of formulating hypothesis, testing the relationships, and analyzing the parameters. In causality-based studies, the focus is on understanding and contextualizing variables. This package provides methods to understand the relationships between outcomes, exposures, and other covariates.
+The language provided is intended to help organize many models that are generated in the process of causal inference in data analysis. The specific classes and functions emphasize the importance of variable relationships (e.g. exposure, outcome, confounding terms) and helps contextualize formulas and models.
 }
 \seealso{
 Useful links:
@@ -17,7 +17,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Anish Shah \email{ashah282@uic.edu} (\href{https://orcid.org/0000-0002-9729-1558}{ORCID})
+\strong{Maintainer}: Anish Shah \email{ashah282@uic.edu} (\href{https://orcid.org/0000-0002-9729-1558}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

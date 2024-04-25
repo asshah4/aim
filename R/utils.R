@@ -90,8 +90,8 @@ lhs.formula <- function(x, ...) {
 #'
 #' If no label is desired, then the *LHS* can be left empty, such as `~ x`.
 #'
-#' @return A named list with the index as a `<character>` representing the term
-#'   or variable of interest, and the value at that position as a `<character>`
+#' @return A named list with the index as a `character` representing the term
+#'   or variable of interest, and the value at that position as a `character`
 #'   representing the label value.
 #'
 #' @param x An argument that may represent a formula to label variables, or can
@@ -119,7 +119,7 @@ labeled_formulas_to_named_list <- function(x) {
 		y <- as.list(val)
 	} else if (inherits(x, "list")) { # If a list that contains formulas
 		# Confirm each item is formula
-		stopifnot("If a list is provided, each element must be a `<formula>`"
+		stopifnot("If a list is provided, each element must be a `formula`"
 							= all(sapply(x, inherits, "formula")))
 
 		y <- sapply(x, function(.x) {

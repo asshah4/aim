@@ -12,8 +12,8 @@ be converted to one. This includes, \code{list}, \code{formula}, or
 \code{character} objects. Other types will error.}
 }
 \value{
-A named list with the index as a \verb{<character>} representing the term
-or variable of interest, and the value at that position as a \verb{<character>}
+A named list with the index as a \code{character} representing the term
+or variable of interest, and the value at that position as a \code{character}
 representing the label value.
 }
 \description{

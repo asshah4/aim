@@ -1,7 +1,7 @@
-*Local `.Rprofile` detected at `/Users/asshah4/projects/vlndr/.Rprofile`*
+*Local `.Rprofile` detected at `/Users/asshah4/projects/rmdl/.Rprofile`*
 
 ``` r
-library(vlndr)
+library(rmdl)
 #> Loading required package: vctrs
 #> Loading required package: tibble
 #> 
@@ -61,7 +61,7 @@ m2 <-
 
 #> Warning: glm.fit: fitted probabilities numerically 0 or 1 occurred
 
-mt <- vlndr::model_table(one = m1, two = m2)
+mt <- rmdl::model_table(one = m1, two = m2)
 
 tbl_interaction_forest(
     object = mt,

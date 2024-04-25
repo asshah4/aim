@@ -2,20 +2,20 @@
 
 #' Apply patterns to formulas
 #'
-#' The family of `apply_*_pattern()` functions that are used to expand `<fmls>`
+#' The family of `apply_*_pattern()` functions that are used to expand `fmls`
 #' by specified patterns. These functions are not intended to be used directly
 #' but as internal functions. They have been exposed to allow for potential
 #' user-defined use cases.
 #'
 #' Currently supported patterns are: `r paste(.patterns)`.
 #'
-#' @return Returns a `<tbl_df>` object that has special column names and rows.
+#' @return Returns a `tbl_df` object that has special column names and rows.
 #'   Each row is essentially a precursor to a new formula.
 #'
 #'   These columns and rows must be present to be used with the `fmls()`
 #'   function, and generally are the expected result of the specified pattern.
 #'   They will undergo further internal modification prior to being turned into
-#'   a `<fmls>` object, but this is an developer consideration. If developing a
+#'   a `fmls` object, but this is an developer consideration. If developing a
 #'   pattern, please use this guide to ensure that the output is compatible with
 #'   the `fmls()` function.
 #'
@@ -25,13 +25,13 @@
 #'
 #'   - covariate_*: the covariates expand based on the number that are present (e.g. "covariate_1", "covariate_2", etc)
 #'
-#' @param x A `<tm>` object
+#' @param x A `tm` object
 #' @param pattern A character string that specifies the pattern to use
 #' @name patterns
 #' @export
 apply_pattern <- function(x, pattern) {
 
-	# Only accept objects as <tm> objects
+	# Only accept objects as `tm` objects
 	validate_class(x, "tm")
 
 	# Send to appropriate function
@@ -164,7 +164,7 @@ apply_sequential_pattern <- function(x) {
 	## Covariate order
 	# Covariates are all predictors on RHS
 	# They need to be the same order as the original terms however
-	# Cool enough, 'x' as a <tm> works for matching as a <character>
+	# Cool enough, 'x' as a `tm` works for matching as a `character`
 	# Interaction terms should be placed next to each other
 
 	cov <- c(prd, con, int)

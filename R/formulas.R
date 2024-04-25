@@ -50,7 +50,7 @@
 #'
 #'   - `formula`
 #'
-#' @param pattern A `<character>` from the following choices for pattern
+#' @param pattern A `character` from the following choices for pattern
 #'   expansion. This is how the formula will be expanded, and decides how the
 #'   covariates will incorporated. See the details for further explanation.
 #'
@@ -498,7 +498,7 @@ check_groups <- function(x, tbl) {
 	ntbl <- tbl[badRows,]
 	tbl <- suppressMessages(dplyr::anti_join(tbl, ntbl))
 	stopifnot(
-		"Based on restrictions from the chosen terms and pattern, no <fmls> can be generated."
+		"Based on restrictions from the chosen terms and pattern, no `fmls` can be generated."
 		= nrow(tbl) > 0
 	)
 
