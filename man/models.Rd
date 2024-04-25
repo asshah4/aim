@@ -62,7 +62,7 @@ model(x = unspecified(), ...)
 
 \item{formulas}{formula given as either an \code{formula} or as a \code{fmls} object}
 
-\item{parameter_estimates}{<data.frame> that contains columns
+\item{parameter_estimates}{\code{data.frame} that contains columns
 representing terms and individual estimates or coefficients, can be
 accompanied by additional statistic columns. By default, assumes
 \itemize{
@@ -70,7 +70,7 @@ accompanied by additional statistic columns. By default, assumes
 \item \strong{estimate} = estimate or coefficient
 }}
 
-\item{summary_info}{\if{html}{\out{<list>}} that contains columns representing
+\item{summary_info}{\code{list} that contains columns representing
 summary statistic of a model. By default, assumes...
 \itemize{
 \item \strong{nobs} = number of observations

@@ -1,4 +1,4 @@
-library(vlndr)
+library(rmdl)
 
 cars <-
 	mtcars |>
@@ -11,7 +11,7 @@ m2 <-
 	fmls(heavy ~ .x(hp) + .i(am)) |>
 	fit(.fn = glm, family = 'binomial', data = cars, raw = FALSE)
 
-mt <- vlndr::model_table(one = m1, two = m2, data = cars)
+mt <- rmdl::model_table(one = m1, two = m2, data = cars)
 
 tbl_interaction_forest(
 	object = mt,

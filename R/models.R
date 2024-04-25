@@ -10,7 +10,7 @@
 #'
 #' @param formulas formula given as either an `formula` or as a `fmls` object
 #'
-#' @param parameter_estimates <data.frame> that contains columns
+#' @param parameter_estimates `data.frame` that contains columns
 #'   representing terms and individual estimates or coefficients, can be
 #'   accompanied by additional statistic columns. By default, assumes
 #'
@@ -18,7 +18,7 @@
 #'
 #'  * __estimate__ = estimate or coefficient
 #'
-#' @param summary_info <list> that contains columns representing
+#' @param summary_info `list` that contains columns representing
 #'   summary statistic of a model. By default, assumes...
 #'
 #' * __nobs__ = number of observations
@@ -66,7 +66,7 @@ mdl.character <- function(x,
 
 	# Is the specified model type/call currently accepted?
 	stopifnot(
-		"The <character> specification of the model is not currently suppported"
+		"The `character` specification of the model is not currently suppported"
 		= any(x %in% .models)
 	)
 

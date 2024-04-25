@@ -1,26 +1,24 @@
 Package: rmdl
 Title: Language to Manage Many Models
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person(given = "Anish",
            family = "Shah",
-           role = c("aut", "cre"),
+           role = c("aut", "cre", "cph"),
            email = "ashah282@uic.edu",
            comment = c(ORCID = "0000-0002-9729-1558"))
-Description: Organize many models and hypotheses, generate directed acyclic 
-    graphs from these models, and cut out variables in a causality-based 
-    approach to analyses. The package consists of formulating hypothesis, 
-    testing the relationships, and analyzing the parameters. In causality-based 
-    studies, the focus is on understanding and contextualizing variables. This
-    package provides methods to understand the relationships between outcomes, 
-    exposures, and other covariates.
+Description: The language provided is intended to help organize many models that
+    are generated in the process of causal inference in data analysis. The 
+    specific classes and functions emphasize the importance of variable
+    relationships (e.g. exposure, outcome, confounding terms) and helps 
+    contextualize formulas and models.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
 Depends:
-    R (>= 4.0.0),
+    R (>= 4.1.0),
     vctrs (>= 0.5.0),
     tibble (>= 3.0.0),
 Imports: 

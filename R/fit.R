@@ -44,7 +44,7 @@ fit.fmls <- function(object,
 			x$call[["formula"]] <- str2lang(deparse1(x$call[["formula"]]))
 			x$call[["data"]] <- as.name(dataName)
 
-			# Handle model list based on how output (list or <mdl>)
+			# Handle model list based on how output (list or `mdl`)
 			if (raw) {
 				y <- list(x)
 				ml <- append(ml, y)
@@ -69,7 +69,7 @@ fit.fmls <- function(object,
     			x$call[["formula"]] <- str2lang(deparse1(x$call[["formula"]]))
     			x$call[["data"]] <- as.name(dataName)
 
-					# Handle model list based on how output (list or <mdl>)
+					# Handle model list based on how output (list or `mdl`)
 					if (raw) {
 						y <- list(x)
 						ml <- append(ml, y)
@@ -91,7 +91,7 @@ fit.fmls <- function(object,
 
 	}
 
-	# Return the models in either list form or modified as <mdl>
+	# Return the models in either list form or modified as `mdl`
 	ml
 
 }

@@ -23,18 +23,18 @@ apply_parallel_pattern(x)
 apply_rolling_interaction_pattern(x)
 }
 \arguments{
-\item{x}{A \verb{<tm>} object}
+\item{x}{A \code{tm} object}
 
 \item{pattern}{A character string that specifies the pattern to use}
 }
 \value{
-Returns a \verb{<tbl_df>} object that has special column names and rows.
+Returns a \code{tbl_df} object that has special column names and rows.
 Each row is essentially a precursor to a new formula.
 
 These columns and rows must be present to be used with the \code{fmls()}
 function, and generally are the expected result of the specified pattern.
 They will undergo further internal modification prior to being turned into
-a \verb{<fmls>} object, but this is an developer consideration. If developing a
+a \code{fmls} object, but this is an developer consideration. If developing a
 pattern, please use this guide to ensure that the output is compatible with
 the \code{fmls()} function.
 \itemize{
@@ -44,7 +44,7 @@ the \code{fmls()} function.
 }
 }
 \description{
-The family of \verb{apply_*_pattern()} functions that are used to expand \verb{<fmls>}
+The family of \verb{apply_*_pattern()} functions that are used to expand \code{fmls}
 by specified patterns. These functions are not intended to be used directly
 but as internal functions. They have been exposed to allow for potential
 user-defined use cases.
