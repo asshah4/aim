@@ -16,11 +16,6 @@ knitr::opts_chunk$set(
 # rmdl
 
 <!-- badges: start -->
-
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental) 
-[![Github commit frequency](https://img.shields.io/github/commit-activity/w/asshah4/rmdl)](https://github.com/asshah4/rmdl/graphs/commit-activity) 
-[![R-CMD-check](https://github.com/asshah4/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/asshah4/rmdl/actions/workflows/R-CMD-check.yaml)
-[![test-coverage](https://github.com/asshah4/vlndr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/asshah4/vlndr/actions/workflows/test-coverage.yaml)
 <!-- badges: end -->
 
 ## Installation
