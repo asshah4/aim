@@ -1,17 +1,8 @@
-# vlndr 0.0.0.9000
+# rmdl (development version)
 
-This is current developmental version. 
+Currently the developmental version is up-to-date with the CRAN release.
 
-## Next Steps
+# rmdl 0.1.0
 
-- Method for incorporation of other testing mechanisms (e.g. `lm()` and `t.test()`)
-- Development of path-based functions
-- Addition of confounding measurements based on hypothesis
-- Regeneration of hypotheses and functions
-
-## Features
-
-These functions are currently stable, and should continue to have similar inputs and outputs. Over time, there should be expansion in their use.
-
-1
+* This first CRAN release contains the basic functions for the package, and introduces the new classes.
 

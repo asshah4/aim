@@ -623,7 +623,7 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #' generally extend the functionality of the object.
 #'
 #' - `attach_data()`: Attaches a dataset to a `<mdl_tbl>` object
-#' - `flatten_model()`: Flattens a `<mdl_tbl>` object down to its specific parameters
+#' - `flatten_models()`: Flattens a `<mdl_tbl>` object down to its specific parameters
 #'
 #' # Attaching Data
 #'
@@ -636,13 +636,21 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #' # Flattening Models
 #'
 #' A `<mdl_tbl>` object can be flattened to its specific parameters, their
-#' estimates, and model-level summary statistics.
+#' estimates, and model-level summary statistics. This function additionally
+#' helps by allowing for exponentiation of estimates when deemed appropriate.
+#' The user can specify which models to exponentiate by name. 
 #'
-#' @param x a `<mdl_tbl>` object
+#' @param x A `<mdl_tbl>` object
 #'
-#' @param data a `<data.frame>` object that has been used by models
+#' @param data A `<data.frame>` object that has been used by models
+#' 
+#' @param exponentiate A `<logical>` value that determines whether to exponentiate
+#' the estimates of the models. Default is `FALSE`. If `TRUE`, the user can specify
+#' which models to exponentiate by name using the __which__ argument. 
+#' 
+#' @param which A `<character>` vector of model names to exponentiate. Default is `NULL`. If __exponentiate__ is set to `TRUE` and __which__ is set to `NULL`, then all estimates will be exponentiated, which is often a *bad idea*.
 #'
-#' @param ... Arguments to be passed to or from other methods
+#' @param ... Arguments to be passed to or from other methods 
 #'
 #' @name model_table_helpers
 NULL
@@ -671,7 +679,7 @@ attach_data <- function(x, data, ...) {
 
 #' @rdname model_table_helpers
 #' @export
-flatten_models <- function(x, ...) {
+flatten_models <- function(x, exponentiate = FALSE, which = NULL, ...) {
 
 	# Remove global variables
 	model_statistic <- model_p_value <- model_parameters <- model_summary <-
@@ -679,7 +687,8 @@ flatten_models <- function(x, ...) {
 
 	validate_class(x, "mdl_tbl")
 
-	x |>
+	y <-
+	  x |>
 		tibble::tibble() |>
 		dplyr::filter(fit_status == TRUE) |>
 		dplyr::mutate(number = sapply(formula_call, function(.x) {
@@ -710,5 +719,21 @@ flatten_models <- function(x, ...) {
 			model_p_value = 'p_value'
 		))) |>
 		tidyr::unnest(model_parameters)
+	
+	# Exponentiate estimates based on user input
+	if (exponentiate) {
+		if (is.null(which)) {
+		  y <-
+		    y |>
+		    dplyr::mutate(across(c(estimate, conf_low, conf_higher), ~ exp(.x)))
+		} else {
+		  y <-
+		    y |>
+		    dplyr::mutate(across(c(estimate, conf_low, conf_high), ~ dplyr::if_else(name %in% which, exp(.x), .x)))
+		}
+	}
+	
+	# Return
+	y
 
 }
