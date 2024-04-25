@@ -6,10 +6,10 @@
 #'
 #' `r lifecycle::badge('experimental')`
 #'
-#' The `model_table()` or `mdl_tbl()` function creates a `<mdl_tbl>` object that
-#' is composed of either `<fmls>` objects or `<mdl>` objects, which are
+#' The `model_table()` or `mdl_tbl()` function creates a `mdl_tbl` object that
+#' is composed of either `fmls` objects or `mdl` objects, which are
 #' thin/informative wrappers for generic formulas and hypothesis-based models.
-#' The `<mdl_tbl>` is a data frame of model information, such as model fit,
+#' The `mdl_tbl` is a data frame of model information, such as model fit,
 #' parameter estimates, and summary statistics about a model, or a formula if it
 #' has not yet been fit.
 #'
@@ -32,12 +32,12 @@
 #'
 #' @section Formula Matrix
 #'
-#' @param ... Named or unnamed `<mdl>` or `<fmls>` objects
+#' @param ... Named or unnamed `mdl` or `fmls` objects
 #'
-#' @param data A `<data.frame>` or `<tbl_df>` object, named correspondingly to
+#' @param data A `data.frame` or `tbl_df` object, named correspondingly to
 #'   the underlying data used in the models (to help match)
 #'
-#' @param x A `<mdl_tbl>` object
+#' @param x A `mdl_tbl` object
 #'
 #' @name mdl_tbl
 #' @importFrom tibble tibble new_tibble
@@ -376,7 +376,7 @@ new_model_table <- function(x = list(),
 	#		Fit: Individual parameters and model level estimates/statistics
 
 	if (length(x) == 0) {
-		stop("No data was available to be coerced to a `<mdl_tbl>` object.")
+		stop("No data was available to be coerced to a `mdl_tbl` object.")
 	}
 
 	validate_class(formulaMatrix, "data.frame")
@@ -411,7 +411,7 @@ model_table_reconstruct <- function(x, to) {
 	} else {
 		# Return without reconstructing...
 		x <- as.data.frame(x)
-		message("Removing invariant columns in `<mdl_tbl>` returns `<data.frame>` object")
+		message("Removing invariant columns in `mdl_tbl` returns `data.frame` object")
 		x
 	}
 
@@ -618,12 +618,12 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #' Model table helper functions
 #'
 #' @description
-#' These functions are used to help manage the `<mdl_tbl>` object. They allow
+#' These functions are used to help manage the `mdl_tbl` object. They allow
 #' for specific manipulation of the internal components, and are intended to
 #' generally extend the functionality of the object.
 #'
-#' - `attach_data()`: Attaches a dataset to a `<mdl_tbl>` object
-#' - `flatten_models()`: Flattens a `<mdl_tbl>` object down to its specific parameters
+#' - `attach_data()`: Attaches a dataset to a `mdl_tbl` object
+#' - `flatten_models()`: Flattens a `mdl_tbl` object down to its specific parameters
 #'
 #' # Attaching Data
 #'
@@ -635,20 +635,20 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #'
 #' # Flattening Models
 #'
-#' A `<mdl_tbl>` object can be flattened to its specific parameters, their
+#' A `mdl_tbl` object can be flattened to its specific parameters, their
 #' estimates, and model-level summary statistics. This function additionally
 #' helps by allowing for exponentiation of estimates when deemed appropriate.
 #' The user can specify which models to exponentiate by name.
 #'
-#' @param x A `<mdl_tbl>` object
+#' @param x A `mdl_tbl` object
 #'
-#' @param data A `<data.frame>` object that has been used by models
+#' @param data A `data.frame` object that has been used by models
 #'
-#' @param exponentiate A `<logical>` value that determines whether to exponentiate
+#' @param exponentiate A `logical` value that determines whether to exponentiate
 #' the estimates of the models. Default is `FALSE`. If `TRUE`, the user can specify
 #' which models to exponentiate by name using the __which__ argument.
 #'
-#' @param which A `<character>` vector of model names to exponentiate. Default is `NULL`. If __exponentiate__ is set to `TRUE` and __which__ is set to `NULL`, then all estimates will be exponentiated, which is often a *bad idea*.
+#' @param which A `character` vector of model names to exponentiate. Default is `NULL`. If __exponentiate__ is set to `TRUE` and __which__ is set to `NULL`, then all estimates will be exponentiated, which is often a *bad idea*.
 #'
 #' @param ... Arguments to be passed to or from other methods
 #'

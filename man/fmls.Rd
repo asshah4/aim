@@ -23,7 +23,7 @@ key_terms(x)
 \item \code{formula}
 }}
 
-\item{pattern}{A \verb{<character>} from the following choices for pattern
+\item{pattern}{A \code{character} from the following choices for pattern
 expansion. This is how the formula will be expanded, and decides how the
 covariates will incorporated. See the details for further explanation.
 \itemize{

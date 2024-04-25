@@ -754,16 +754,16 @@ formula.tm <- function(x, ...) {
 
 #' Update `tm` objects
 #'
-#' This updates properties or attributes of a `<tm>` vector. This only updates
+#' This updates properties or attributes of a `tm` vector. This only updates
 #' objects that already exist.
 #'
-#' @param object A `<tm>` object
+#' @param object A `tm` object
 #'
 #' @param ... A series of `field = term ~ value` pairs that represent the
-#'   attribute to be updated. Can have a value of __<NA>__ if the goal is to
+#'   attribute to be updated. Can have a value of `NA` if the goal is to
 #'   remove an attribute or property.
 #'
-#' @return A `<tm>` object with updated attributes
+#' @return A `tm` object with updated attributes
 #' @export
 update.tm <- function(object, ...) {
 

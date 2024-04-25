@@ -7,7 +7,7 @@
 estimate_interaction(object, exposure, interaction, conf_level = 0.95, ...)
 }
 \arguments{
-\item{object}{A \verb{<mdl_tbl>} object subset to a single row}
+\item{object}{A \code{mdl_tbl} object subset to a single row}
 
 \item{exposure}{The exposure variable in the model}
 
@@ -18,7 +18,7 @@ estimate_interaction(object, exposure, interaction, conf_level = 0.95, ...)
 \item{...}{Arguments to be passed to or from other methods}
 }
 \value{
-A \verb{<data.frame>} with \code{n = levels(interaction)} rows (for the
+A \code{data.frame} with \code{n = levels(interaction)} rows (for the
 presence or absence of the interaction term) and \code{n = 5} columns:
 \itemize{
 \item estimate: beta coefficient for the interaction effect based on level
@@ -32,7 +32,7 @@ presence or absence of the interaction term) and \code{n = 5} columns:
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-When using categorical interaction terms in a \verb{<mdl_tbl>} object, estimates
+When using categorical interaction terms in a \code{mdl_tbl} object, estimates
 on interaction terms and their confidence intervals can be evaluated. The
 effect of interaction on the estimates is based on the levels of interaction
 term. The estimates and intervals can be derived through the
@@ -40,8 +40,8 @@ term. The estimates and intervals can be derived through the
 described by Figueiras et al. (1998).
 }
 \details{
-The \code{estimate_interaction()} requires a \verb{<mdl_tbl>} object that is a
-single row in length. Filtering the \verb{<mdl_tbl>} should occur prior to
+The \code{estimate_interaction()} requires a \code{mdl_tbl} object that is a
+single row in length. Filtering the \code{mdl_tbl} should occur prior to
 passing it to this function. Additionally, this function assumes the
 interaction term is binary. If it is categorical, the current
 recommendation is to use dummy variables for the corresponding levels prior

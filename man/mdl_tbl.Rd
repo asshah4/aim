@@ -13,20 +13,20 @@ model_table(..., data = NULL)
 is_model_table(x)
 }
 \arguments{
-\item{...}{Named or unnamed \verb{<mdl>} or \verb{<fmls>} objects}
+\item{...}{Named or unnamed \code{mdl} or \code{fmls} objects}
 
-\item{data}{A \verb{<data.frame>} or \verb{<tbl_df>} object, named correspondingly to
+\item{data}{A \code{data.frame} or \code{tbl_df} object, named correspondingly to
 the underlying data used in the models (to help match)}
 
-\item{x}{A \verb{<mdl_tbl>} object}
+\item{x}{A \code{mdl_tbl} object}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 
-The \code{model_table()} or \code{mdl_tbl()} function creates a \verb{<mdl_tbl>} object that
-is composed of either \verb{<fmls>} objects or \verb{<mdl>} objects, which are
+The \code{model_table()} or \code{mdl_tbl()} function creates a \code{mdl_tbl} object that
+is composed of either \code{fmls} objects or \code{mdl} objects, which are
 thin/informative wrappers for generic formulas and hypothesis-based models.
-The \verb{<mdl_tbl>} is a data frame of model information, such as model fit,
+The \code{mdl_tbl} is a data frame of model information, such as model fit,
 parameter estimates, and summary statistics about a model, or a formula if it
 has not yet been fit.
 }

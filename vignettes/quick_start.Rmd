@@ -14,26 +14,15 @@ knitr::opts_chunk$set(
 )
 ```
 
+The package is simple to use. 
+First, lets load the basic packages. 
+
 ```{r setup}
 library(rmdl)
 ```
 
-The package is simple to use. 
-First, lets load the basic packages. 
 The `mtcars` dataset will serve as the example, and we will use linear regressions as the primary test.
-
-```{r}
-library(rmdl)
-```
-
-There are several important extended classes that this package introduces, however they are primarily used for internal validation and for shortcuts to allow more effective communication.
-
-- `<fmls>` are a *version* of the base `R` formula object, but contain additional information and have extra features
-- `<tm>` are atomic elements used to describe individual variables, and departs from how terms are generally treated in the `{stats}` package
-- `<mdl>` and `<mdl_tbl>` exist primarily as *tidy* versions of class regression modeling
-
-We will see how they come together below. 
-Next, we will evaluate a toy dataset and evaluate how a `<fmls>` object is generated.
+Next, we will evaluate a toy dataset and evaluate how a `fmls` object is generated.
 
 ```{r}
 # Look at potential data from the `mtcars` dataset
@@ -58,7 +47,7 @@ listModels <-
 ```
 
 For our purposes though, we want to use the custom fit method, which retains more key information.
-This creates a `<mdl>` object, which is simply a wrapper around base or package-specific models.
+This creates a `mdl` object, which is simply a wrapper around base or package-specific models.
 
 ```{r}
 # Uses a custom fit function 
@@ -70,7 +59,7 @@ rModel
 ```
 
 The model wrapper is helpful in that it can be unpacked into a table of elements, which then stores our model for later usage in a research workflow.
-For this purpose, we introduce the `<mdl_tbl>` class, which another core class with specific and generic dispatch methods.
+For this purpose, we introduce the `mdl_tbl` class, which another core class with specific and generic dispatch methods.
 
 ```{r}
 # An additional model to work with
@@ -86,7 +75,7 @@ rTable <- model_table(mileage = rModel, automatic = r2Model)
 rTable
 ```
 
-The `<mdl_tbl>` class is a useful way to store and manage multiple models, and can be used to generate tables for publication or for internal use.
+The `mdl_tbl` class is a useful way to store and manage multiple models, and can be used to generate tables for publication or for internal use.
 To quickly access the content (e.g. estimates, standard errors, etc.), there is an experimental function called `flatten_models()` that can be used.
 Note that we are also exponentiating the coefficients for the logistic regression models (called by name).
 

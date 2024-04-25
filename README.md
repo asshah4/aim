@@ -4,6 +4,15 @@
 # rmdl
 
 <!-- badges: start -->
+
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/asshah4/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/asshah4/rmdl/actions/workflows/R-CMD-check.yaml)
+[![Github commit
+frequency](https://img.shields.io/github/commit-activity/w/asshah4/rmdl)](https://github.com/asshah4/rmdl/graphs/commit-activity)
+[![test-coverage](https://github.com/asshah4/rmdl/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/asshah4/rmdl/actions/workflows/test-coverage.yaml)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/rmdl)](https://CRAN.R-project.org/package=rmdl)
 <!-- badges: end -->
 
 ## Installation
@@ -69,11 +78,11 @@ There are several important extended classes that this package
 introduces, however they are primarily used for internal validation and
 for shortcuts to allow more effective communication.
 
-- `<fmls>` are a *version* of the base `R` formula object, but contain
+- `fmls` are a *version* of the base `R` formula object, but contain
   additional information and have extra features
-- `<tm>` are atomic elements used to describe individual variables, and
+- `tm` are atomic elements used to describe individual variables, and
   departs from how terms are generally treated in the `{stats}` package
-- `<mdl>` and `<mdl_tbl>` exist primarily as *tidy* versions of class
+- `mdl` and `mdl_tbl` exist primarily as *tidy* versions of class
   regression modeling
 
 ## Advanced Usage

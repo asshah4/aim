@@ -1,0 +1,11 @@
+pandoc: 3.1.13
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  development: development.html
+  quick_start: quick_start.html
+last_built: 2024-04-25T15:30Z
+urls:
+  reference: https://asshah4.github.io/rmdl/reference
+  article: https://asshah4.github.io/rmdl/articles
+
