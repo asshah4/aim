@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">rmdl</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -87,6 +87,8 @@
 
     
     
+<p>The package is simple to use. First, lets load the basic
+packages.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/rmdl" class="external-link">rmdl</a></span><span class="op">)</span></span>
 <span><span class="co">#&gt; Loading required package: vctrs</span></span>
@@ -96,31 +98,11 @@
 <span><span class="co">#&gt; The following object is masked from 'package:vctrs':</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;     data_frame</span></span></code></pre></div>
-<p>The package is simple to use. First, lets load the basic packages.
-The <code>mtcars</code> dataset will serve as the example, and we will
-use linear regressions as the primary test.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/asshah4/rmdl" class="external-link">rmdl</a></span><span class="op">)</span></span></code></pre></div>
-<p>There are several important extended classes that this package
-introduces, however they are primarily used for internal validation and
-for shortcuts to allow more effective communication.</p>
-<ul>
-<li>
-<code>&lt;fmls&gt;</code> are a <em>version</em> of the base
-<code>R</code> formula object, but contain additional information and
-have extra features</li>
-<li>
-<code>&lt;tm&gt;</code> are atomic elements used to describe
-individual variables, and departs from how terms are generally treated
-in the <code>{stats}</code> package</li>
-<li>
-<code>&lt;mdl&gt;</code> and <code>&lt;mdl_tbl&gt;</code> exist
-primarily as <em>tidy</em> versions of class regression modeling</li>
-</ul>
-<p>We will see how they come together below. Next, we will evaluate a
-toy dataset and evaluate how a <code>&lt;fmls&gt;</code> object is
+<p>The <code>mtcars</code> dataset will serve as the example, and we
+will use linear regressions as the primary test. Next, we will evaluate
+a toy dataset and evaluate how a <code>fmls</code> object is
 generated.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look at potential data from the `mtcars` dataset</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></span>
 <span><span class="co">#&gt;                    mpg cyl disp  hp drat    wt  qsec vs am gear carb</span></span>
@@ -142,16 +124,15 @@ linear regression. The option to return the model as raw or not is
 given. If <code>TRUE</code>, the default, then the expected result from
 the modeling fit will be returned in the form of a list of models, based
 on the fitting function provided.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Uses a custom fit function to return linear models</span></span>
 <span><span class="va">listModels</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">rFormula</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html" class="external-link">fit</a></span><span class="op">(</span>.fn <span class="op">=</span> <span class="va">lm</span>, data <span class="op">=</span> <span class="va">mtcars</span>, raw <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>For our purposes though, we want to use the custom fit method, which
-retains more key information. This creates a <code>&lt;mdl&gt;</code>
-object, which is simply a wrapper around base or package-specific
-models.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+retains more key information. This creates a <code>mdl</code> object,
+which is simply a wrapper around base or package-specific models.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Uses a custom fit function </span></span>
 <span><span class="va">rModel</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">rFormula</span> <span class="op">|&gt;</span></span>
@@ -162,10 +143,9 @@ models.</p>
 <span><span class="co">#&gt; lm(mpg ~ wt + hp)</span></span></code></pre></div>
 <p>The model wrapper is helpful in that it can be unpacked into a table
 of elements, which then stores our model for later usage in a research
-workflow. For this purpose, we introduce the
-<code>&lt;mdl_tbl&gt;</code> class, which another core class with
-specific and generic dispatch methods.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+workflow. For this purpose, we introduce the <code>mdl_tbl</code> class,
+which another core class with specific and generic dispatch methods.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># An additional model to work with</span></span>
 <span><span class="va">r2Model</span> <span class="op">&lt;-</span></span>
 <span>  <span class="fu"><a href="../reference/fmls.html">fmls</a></span><span class="op">(</span><span class="va">am</span> <span class="op">~</span> <span class="va">cyl</span> <span class="op">+</span> <span class="va">hp</span>, pattern <span class="op">=</span> <span class="st">"sequential"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -189,14 +169,14 @@ specific and generic dispatch methods.</p>
 <span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: mediator &lt;chr&gt;, interaction &lt;chr&gt;, strata &lt;lgl&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   level &lt;lgl&gt;, model_parameters &lt;list&gt;, model_summary &lt;list&gt;,</span></span></span>
 <span><span class="co">#&gt; <span style="color: #949494;">#   fit_status &lt;lgl&gt;</span></span></span></code></pre></div>
-<p>The <code>&lt;mdl_tbl&gt;</code> class is a useful way to store and
-manage multiple models, and can be used to generate tables for
-publication or for internal use. To quickly access the content
-(e.g. estimates, standard errors, etc.), there is an experimental
-function called <code><a href="../reference/model_table_helpers.html">flatten_models()</a></code> that can be used. Note
-that we are also exponentiating the coefficients for the logistic
-regression models (called by name).</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<p>The <code>mdl_tbl</code> class is a useful way to store and manage
+multiple models, and can be used to generate tables for publication or
+for internal use. To quickly access the content (e.g. estimates,
+standard errors, etc.), there is an experimental function called
+<code><a href="../reference/model_table_helpers.html">flatten_models()</a></code> that can be used. Note that we are also
+exponentiating the coefficients for the logistic regression models
+(called by name).</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fTable</span> <span class="op">&lt;-</span></span>
 <span>  <span class="va">rTable</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="../reference/model_table_helpers.html">flatten_models</a></span><span class="op">(</span>exponentiate <span class="op">=</span> <span class="cn">TRUE</span>, which <span class="op">=</span> <span class="st">"automatic"</span><span class="op">)</span> </span>
