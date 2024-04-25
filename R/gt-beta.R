@@ -359,36 +359,38 @@ tbl_beta <- function(object,
 
 	# Add in accents or style changes to the table
 	# Use style instructions and criteria to automate
-	if (grepl("^p\ ", styleCriteria)) {
-		comp <- str2lang(styleCriteria)[[1]]
-		crit <- str2lang(styleCriteria)[[3]]
-		pval <- grep("_p_value$", gtbl$`_boxhead`$var, value = TRUE)
-
-
-		for (i in seq_along(pval)) {
-			pcomp <- str2lang(paste(paste0("`", pval[i], "`"), comp, crit))
-			gtbl <-
-				gtbl |>
-				tab_style(
-					style = cell_text(weight = "bold"),
-					locations = cells_body(columns = pval[i],
-																 rows = !!pcomp)
-				)
-		}
-
-		if ("estimate" %in% estVar) {
-			est <- grep("_estimate$", gtbl$`_boxhead`$var, value = TRUE)
-			for (i in seq_along(pval)) {
-				pcomp <- str2lang(paste(paste0("`", pval[i], "`"), comp, crit))
-				gtbl <-
-					gtbl |>
-					tab_style(
-						style = cell_text(weight = "bold"),
-						locations = cells_body(columns = est[i],
-																	 rows = !!pcomp)
-					)
-			}
-		}
+	if (length(accents) > 0) {
+  	if (grepl("^p\ ", styleCriteria)) {
+  		comp <- str2lang(styleCriteria)[[1]]
+  		crit <- str2lang(styleCriteria)[[3]]
+  		pval <- grep("_p_value$", gtbl$`_boxhead`$var, value = TRUE)
+  
+  
+  		for (i in seq_along(pval)) {
+  			pcomp <- str2lang(paste(paste0("`", pval[i], "`"), comp, crit))
+  			gtbl <-
+  				gtbl |>
+  				tab_style(
+  					style = cell_text(weight = "bold"),
+  					locations = cells_body(columns = pval[i],
+  																 rows = !!pcomp)
+  				)
+  		}
+  
+  		if ("estimate" %in% estVar) {
+  			est <- grep("_estimate$", gtbl$`_boxhead`$var, value = TRUE)
+  			for (i in seq_along(pval)) {
+  				pcomp <- str2lang(paste(paste0("`", pval[i], "`"), comp, crit))
+  				gtbl <-
+  					gtbl |>
+  					tab_style(
+  						style = cell_text(weight = "bold"),
+  						locations = cells_body(columns = est[i],
+  																	 rows = !!pcomp)
+  					)
+  			}
+  		}
+  	}
 	}
 
 	# Visual modifications
