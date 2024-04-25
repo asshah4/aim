@@ -1,10 +1,5 @@
 ---
-title: "Development Thoughts"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Development Thoughts}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+title: "Development Log"
 ---
 
 ```{r, include = FALSE}
@@ -12,6 +7,10 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+```
+
+```{r setup}
+library(rmdl)
 ```
 
 Last updated on `r format(Sys.time(), "%B %d, %Y")`, although still is a work-in-progress.
