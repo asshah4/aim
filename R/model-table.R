@@ -3,7 +3,9 @@
 #' Model tables
 #'
 #' @description
+#'
 #' `r lifecycle::badge('experimental')`
+#'
 #' The `model_table()` or `mdl_tbl()` function creates a `<mdl_tbl>` object that
 #' is composed of either `<fmls>` objects or `<mdl>` objects, which are
 #' thin/informative wrappers for generic formulas and hypothesis-based models.
@@ -30,9 +32,15 @@
 #'
 #' @section Formula Matrix
 #'
-#' @param ... Named or unnamed `<mdl>` or `<fmls>`objects
+#' @param ... Named or unnamed `<mdl>` or `<fmls>` objects
+#'
+#' @param data A `<data.frame>` or `<tbl_df>` object, named correspondingly to
+#'   the underlying data used in the models (to help match)
+#'
+#' @param x A `<mdl_tbl>` object
 #'
 #' @name mdl_tbl
+#' @importFrom tibble tibble new_tibble
 #' @export
 mdl_tbl <- function(..., data = NULL) {
 
@@ -83,12 +91,10 @@ mdl_tbl <- function(..., data = NULL) {
 
 	# Once it comes back as a new class, we need to add data if its available
 	if (!is.null(data)) {
-
 		datLs <- attr(mdTab, "dataList")
 		dataName <- as.character(mc$data)
 		datLs[[dataName]] <- data
 		attr(mdTab, "dataList") <- datLs
-
 	}
 
 	# Return new class
@@ -131,8 +137,10 @@ vec_ptype_abbr.mdl_tbl <- function(x, ...) {
 #' Passes information to `new_model_table()` for initialization
 #' @param x Vector of `mdl` objects
 #' @keywords internal
-#' @export
 construct_table_from_models <- function(x, ...) {
+
+	# Global variables
+	role <- NULL
 
 	# Meta components of the models
 	obj <- x[[1]] # Removes it from its list
@@ -249,8 +257,10 @@ construct_table_from_models <- function(x, ...) {
 #' Restructure formulas to fit within a model table
 #' @param x Vector of `fmls` objects
 #' @keywords internal
-#' @export
 construct_table_from_formulas <- function(x, ...) {
+
+	# Global variables
+	role <- NULL
 
 	# Meta components of the models
 	obj <- x[[1]] # Removes it from its list
@@ -348,8 +358,7 @@ construct_table_from_formulas <- function(x, ...) {
 									dataList = datLs)
 }
 
-#' @rdname mdl_tbl
-#' @export
+#' @keywords internal
 new_model_table <- function(x = list(),
 														formulaMatrix = data.frame(),
 														termTable = data.frame(),
@@ -366,16 +375,15 @@ new_model_table <- function(x = list(),
 	#		Context: Formula (giving information on covariates) and Model Type
 	#		Fit: Individual parameters and model level estimates/statistics
 
-	checkmate::assert_class(formulaMatrix, "data.frame")
-	checkmate::assert_class(termTable, "data.frame")
-	checkmate::assert_class(dataList, "list")
-	checkmate::assert_list(
-		x,
-		types = c("character", "list", "factor", "logical", "numeric"),
-		len = 15
-	)
+	if (length(x) == 0) {
+		stop("No data was available to be coerced to a `<mdl_tbl>` object.")
+	}
 
-	new_tibble(
+	validate_class(formulaMatrix, "data.frame")
+	validate_class(termTable, "data.frame")
+	validate_class(dataList, "list")
+
+	tibble::new_tibble(
 		x,
 		formulaMatrix = formulaMatrix,
 		termTable = termTable,
@@ -396,7 +404,7 @@ dplyr_row_slice.mdl_tbl <- function(data, i, ...) {
 	model_table_reconstruct(vec_slice(data, i), data)
 }
 
-#' @export
+#' @keywords internal
 model_table_reconstruct <- function(x, to) {
 	if (model_table_reconstructable(x, to)) {
 		df_reconstruct(x, to)
@@ -411,8 +419,10 @@ model_table_reconstruct <- function(x, to) {
 
 #' If objects are model tables, attributes are carried over to subset object
 #' @keywords internal
-#' @noRd
 df_reconstruct <- function(x, to) {
+
+	# Remove global variables
+	term <- role <- NULL
 
 	validate_model_table(to)
 
@@ -435,7 +445,7 @@ df_reconstruct <- function(x, to) {
 	med <- unique(to$mediator)
 	int <- unique(to$interaction)
 	sta <- unique(to$strata)
-	special <- na.omit(c(out, exp, med, int, sta))
+	special <- stats::na.omit(c(out, exp, med, int, sta))
 	others <- setdiff(names(newMat), special)
 
 	# Terms and term tables
@@ -476,7 +486,6 @@ df_reconstruct <- function(x, to) {
 #' @keywords internal
 #' @param x data frame that will have invariants checked
 #' @param to the tibble subclass of `mdl_tbl` that would be reconstructed
-#' @export
 model_table_reconstructable <- function(x, to) {
 
 	# Invariant columns must be present
@@ -493,7 +502,6 @@ model_table_reconstructable <- function(x, to) {
 #' Model table object validation
 #' @keywords internal
 #' @param x data frame that will have invariants checked
-#' @export
 validate_model_table <- function(x) {
 
 	# Invariant columns must be present
@@ -529,7 +537,7 @@ validate_model_table <- function(x) {
 
 # SELF
 
-#' @export
+#' @keywords internal
 mdl_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
   # Create a temporary/new structure of the table
@@ -566,7 +574,7 @@ mdl_tbl_ptype2 <- function(x, y, ..., x_arg = "", y_arg = "") {
 
 }
 
-#' @export
+#' @keywords internal
 mdl_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 
 	# Terms must be coalesced together
@@ -586,7 +594,7 @@ mdl_tbl_cast <- function(x, to, ..., x_arg = "", to_arg = "") {
 	  }()
 
   # Create a temporary/new structure of the table
-  mdTab <- tib_cast(x, to, ..., x_arg = x_arg, y_arg = y_arg)
+  mdTab <- tib_cast(x, to, ..., x_arg = x_arg, to_arg = to_arg)
 
   # Output with correct scalar attributes
 	new_model_table(x = as.list(mdTab),
@@ -605,24 +613,54 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 	mdl_tbl_cast(x, to, ...)
 }
 
-# Model Data -----------------------------------------------------------------
+# Model Table Helper Functions ------------------------------------------------
 
-#' Attach a dataset to a model table
+#' Model table helper functions
 #'
-#' @details
+#' @description
+#' These functions are used to help manage the `<mdl_tbl>` object. They allow
+#' for specific manipulation of the internal components, and are intended to
+#' generally extend the functionality of the object.
+#'
+#' - `attach_data()`: Attaches a dataset to a `<mdl_tbl>` object
+#' - `flatten_models()`: Flattens a `<mdl_tbl>` object down to its specific parameters
+#'
+#' # Attaching Data
+#'
 #' When models are built, oftentimes the included matrix of data is available
 #' within the raw model, however when handling many models, this can be
 #' expensive in terms of memory and space. By attaching datasets independently
 #' that persist regardless of the underlying models, and by knowing which models
 #' used which datasets, it can be ease to back-transform information.
 #'
-#' @param x a `<mdl_tbl>` object
-#' @param data a `<data.frame>` object that has been used by models
+#' # Flattening Models
+#'
+#' A `<mdl_tbl>` object can be flattened to its specific parameters, their
+#' estimates, and model-level summary statistics. This function additionally
+#' helps by allowing for exponentiation of estimates when deemed appropriate.
+#' The user can specify which models to exponentiate by name. 
+#'
+#' @param x A `<mdl_tbl>` object
+#'
+#' @param data A `<data.frame>` object that has been used by models
+#' 
+#' @param exponentiate A `<logical>` value that determines whether to exponentiate
+#' the estimates of the models. Default is `FALSE`. If `TRUE`, the user can specify
+#' which models to exponentiate by name using the __which__ argument. 
+#' 
+#' @param which A `<character>` vector of model names to exponentiate. Default is `NULL`. If __exponentiate__ is set to `TRUE` and __which__ is set to `NULL`, then all estimates will be exponentiated, which is often a *bad idea*.
+#'
+#' @param ... Arguments to be passed to or from other methods 
+#'
+#' @name model_table_helpers
+NULL
+
+#' @rdname model_table_helpers
 #' @export
 attach_data <- function(x, data, ...) {
 
-	checkmate::assert_class(x, "mdl_tbl")
-	checkmate::assert_class(data, "data.frame")
+  validate_class(x, "mdl_tbl")
+  validate_class(data, "data.frame")
 
 	# Get name of object that will be the dataset
 	mc <- match.call()
@@ -639,19 +677,18 @@ attach_data <- function(x, data, ...) {
 	x
 }
 
-# Model Table Helper Functions ------------------------------------------------
-
-# Need to take model table
-# Select outcomes or exposures
-# Flatten it so you can actually analyze it
-
-#' Flatten model tables
+#' @rdname model_table_helpers
 #' @export
-flatten_models <- function(x) {
+flatten_models <- function(x, exponentiate = FALSE, which = NULL, ...) {
+
+	# Remove global variables
+	model_statistic <- model_p_value <- model_parameters <- model_summary <-
+		fit_status <- formula_call <- NULL
 
 	validate_class(x, "mdl_tbl")
 
-	x |>
+	y <-
+	  x |>
 		tibble::tibble() |>
 		dplyr::filter(fit_status == TRUE) |>
 		dplyr::mutate(number = sapply(formula_call, function(.x) {
@@ -661,26 +698,42 @@ flatten_models <- function(x) {
 				labels() |>
 				length()
 		}, USE.NAMES = FALSE)) |>
-		dplyr::select(
-			formula_call,
-			model_call,
-			data_id,
-			name,
-			number,
-			outcome,
-			exposure,
-			mediator,
-			interaction,
-			strata,
-			level,
-			model_parameters,
-			model_summary
-		) |>
+		dplyr::select(dplyr::any_of(c(
+			"formula_call",
+			"model_call",
+			"data_id",
+			"name",
+			"number",
+			"outcome",
+			"exposure",
+			"mediator",
+			"interaction",
+			"strata",
+			"level",
+			"model_parameters",
+			"model_summary"
+		))) |>
 		tidyr::unnest_wider(model_summary) |>
-		dplyr::rename(any_of(c(
+		dplyr::rename(dplyr::any_of(c(
 			model_statistic = 'statistic',
 			model_p_value = 'p_value'
 		))) |>
 		tidyr::unnest(model_parameters)
+	
+	# Exponentiate estimates based on user input
+	if (exponentiate) {
+		if (is.null(which)) {
+		  y <-
+		    y |>
+		    dplyr::mutate(across(c(estimate, conf_low, conf_higher), ~ exp(.x)))
+		} else {
+		  y <-
+		    y |>
+		    dplyr::mutate(across(c(estimate, conf_low, conf_high), ~ dplyr::if_else(name %in% which, exp(.x), .x)))
+		}
+	}
+	
+	# Return
+	y
 
 }

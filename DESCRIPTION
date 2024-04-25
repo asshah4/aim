@@ -1,4 +1,4 @@
-Package: vlndr
+Package: rmdl
 Title: Language to Manage Many Models
 Version: 0.0.0.9000
 Authors@R: 
@@ -18,29 +18,35 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.0
+RoxygenNote: 7.3.1
 Depends:
     R (>= 4.0.0),
     vctrs (>= 0.5.0),
-    tibble,
+    tibble (>= 3.0.0),
 Imports: 
+    stats,
+    utils,
     generics,
-    lifecycle,
     methods,
     dplyr,
     broom,
     tidyr,
     rlang,
     pillar,
-    gt,
-    survival,
+    purrr,
+    janitor
 Suggests: 
     testthat (>= 3.0.0),
     covr,
     cli,
     rmarkdown,
-    knitr
+    knitr,
+    ggplot2,
+    gt,
+    survival,
+    cmprsk,
+    tidycmprsk
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/vlndr
-BugReports: https://github.com/asshah4/vlndr/issues
+URL: https://github.com/asshah4/rmdl
+BugReports: https://github.com/asshah4/rmdl/issues
 Config/testthat/edition: 3

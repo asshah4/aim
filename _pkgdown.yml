@@ -2,14 +2,23 @@ template:
   bootstrap: 5
   bootswatch: flatly
   theme: solarized-light
+  bslib:
+    primary: "#984340"
+    secondary: "#eeb954"
+    success: "#d75b4c"
+    info: "#f8e584"
+    warning: "#532d1f"
+    danger: "#e58c51"
+    light: "#ffffcc"
+    dark: "#191900"
 
 destination: docs
 
-url: https://asshah4.github.io/volundr/
+url: https://asshah4.github.io/rmdl/
 
 home:
-  title: Forging many models together
-  description: A way to handle many models
+  title: Language to Manage Many Models
+  description: Remodeling formulas and models in R
   sidebar:
     structure: [links, license, community, citation, authors, dev]
 
@@ -26,4 +35,4 @@ navbar:
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/asshah4/volundr/
+      href: https://github.com/asshah4/rmdl/

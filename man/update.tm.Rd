@@ -7,14 +7,16 @@
 \method{update}{tm}(object, ...)
 }
 \arguments{
+\item{object}{A \verb{<tm>} object}
+
 \item{...}{A series of \code{field = term ~ value} pairs that represent the
 attribute to be updated. Can have a value of \strong{\if{html}{\out{<NA>}}} if the goal is to
 remove an attribute or property.}
 }
 \value{
-A \code{tm} object with updated attributes
+A \verb{<tm>} object with updated attributes
 }
 \description{
-This updates properties or attributes of a \code{tm} vector. This only updates
-\code{tm} objects that already exist.
+This updates properties or attributes of a \verb{<tm>} vector. This only updates
+objects that already exist.
 }

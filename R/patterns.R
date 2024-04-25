@@ -32,7 +32,7 @@
 apply_pattern <- function(x, pattern) {
 
 	# Only accept objects as <tm> objects
-	checkmate::assert_class(x, "tm")
+	validate_class(x, "tm")
 
 	# Send to appropriate function
 	if (pattern == "direct") {

@@ -16,6 +16,11 @@ rhs(x, ...)
 
 \method{lhs}{formula}(x, ...)
 }
+\arguments{
+\item{x}{A formula-like object}
+
+\item{...}{Arguments to be passed to or from other methods}
+}
 \description{
 Tools for working with formula-like objects
 }

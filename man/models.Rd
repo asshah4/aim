@@ -58,6 +58,8 @@ model(x = unspecified(), ...)
 \arguments{
 \item{x}{model object or representation}
 
+\item{...}{Arguments to be passed to or from other methods}
+
 \item{formulas}{formula given as either an \code{formula} or as a \code{fmls} object}
 
 \item{parameter_estimates}{<data.frame> that contains columns

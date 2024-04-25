@@ -48,6 +48,8 @@ is_tm(x)
 \arguments{
 \item{x}{An object that can be coerced to a \code{tm} object.}
 
+\item{...}{Arguments to be passed to or from other methods}
+
 \item{role}{Specific roles the variable plays within the formula. These are
 of particular importance, as they serve as special terms that can effect
 how a formula is interpreted. Please see the \emph{Roles} section below for
@@ -126,11 +128,11 @@ assumed they are all on the same tier. Ex: \code{y ~ x1 + .g1(x2) + .g1(x3)}
 formula directly.
 }
 
-\section{Pluralized Arguments}{
+\section{Pluralized Labeling Arguments}{
 For a single argument, e.g. for the \code{tm.formula()} method, such as to
 identify variable \strong{X} as an exposure, a \code{formula} should be given with the
-term of interest on the LHS, and the description or instruction on the RHS.
-This would look like \code{role = X ~ "exposure"}.
+term of interest on the \emph{LHS}, and the description or instruction on the
+\emph{RHS}. This would look like \code{role = "exposure" ~ X}.
 
 For the arguments that would be dispatched for objects that are plural, e.g.
 containing multiple terms, each \code{formula()} should be placed within a
@@ -139,6 +141,6 @@ containing multiple terms, each \code{formula()} should be placed within a
 \code{role = list(X ~ "exposure", M ~ "mediator", C ~ "confounder")}
 
 Further implementation details can be seen in the implementation of
-\code{\link[=list_of_formulas]{list_of_formulas()}}.
+\code{\link[=labeled_formulas_to_named_list]{labeled_formulas_to_named_list()}}.
 }
 

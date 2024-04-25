@@ -4,7 +4,6 @@
 \alias{mdl_tbl}
 \alias{model_table}
 \alias{is_model_table}
-\alias{new_model_table}
 \title{Model tables}
 \usage{
 mdl_tbl(..., data = NULL)
@@ -12,20 +11,18 @@ mdl_tbl(..., data = NULL)
 model_table(..., data = NULL)
 
 is_model_table(x)
-
-new_model_table(
-  x = list(),
-  formulaMatrix = data.frame(),
-  termTable = data.frame(),
-  dataList = list(),
-  ...
-)
 }
 \arguments{
-\item{...}{Named or unnamed \verb{<mdl>} or \verb{<fmls>}objects}
+\item{...}{Named or unnamed \verb{<mdl>} or \verb{<fmls>} objects}
+
+\item{data}{A \verb{<data.frame>} or \verb{<tbl_df>} object, named correspondingly to
+the underlying data used in the models (to help match)}
+
+\item{x}{A \verb{<mdl_tbl>} object}
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 The \code{model_table()} or \code{mdl_tbl()} function creates a \verb{<mdl_tbl>} object that
 is composed of either \verb{<fmls>} objects or \verb{<mdl>} objects, which are
 thin/informative wrappers for generic formulas and hypothesis-based models.

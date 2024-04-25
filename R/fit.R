@@ -9,6 +9,9 @@ fit.fmls <- function(object,
 										 data,
 										 raw = TRUE) {
 
+	# Global variables
+	role <- NULL
+
 	cl <- match.call()
 	dots <- list(...)
 

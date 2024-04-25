@@ -42,12 +42,12 @@
 #' __Warning__: Only a single shortcut can be applied to a variable within a
 #' formula directly.
 #'
-#' # Pluralized Arguments
+#' # Pluralized Labeling Arguments
 #'
 #' For a single argument, e.g. for the `tm.formula()` method, such as to
 #' identify variable __X__ as an exposure, a `formula` should be given with the
-#' term of interest on the LHS, and the description or instruction on the RHS.
-#' This would look like `role = X ~ "exposure"`.
+#' term of interest on the *LHS*, and the description or instruction on the
+#' *RHS*. This would look like `role = "exposure" ~ X`.
 #'
 #' For the arguments that would be dispatched for objects that are plural, e.g.
 #' containing multiple terms, each `formula()` should be placed within a
@@ -56,7 +56,7 @@
 #' `role = list(X ~ "exposure", M ~ "mediator", C ~ "confounder")`
 #'
 #' Further implementation details can be seen in the implementation of
-#' [list_of_formulas()].
+#' [labeled_formulas_to_named_list()].
 #'
 #' @param x An object that can be coerced to a `tm` object.
 #'
@@ -104,6 +104,8 @@
 #'
 #' @param transformation Modification of the term to be applied when
 #'   combining with data
+#'
+#' @param ... Arguments to be passed to or from other methods
 #'
 #' @name tm
 #' @export
@@ -165,6 +167,7 @@ tm.character <- function(x,
 }
 
 #' @rdname tm
+#' @importFrom stats formula
 #' @export
 tm.formula <- function(x,
 											 role = formula(),
@@ -175,6 +178,9 @@ tm.formula <- function(x,
 											 description = formula(),
 											 transformation = formula(),
 											 ...) {
+
+	# Global variables
+
 
 	# Early Break if needed
 	if (length(x) == 0) {
@@ -191,13 +197,13 @@ tm.formula <- function(x,
 	validate_classes(namedArgs, what = c("list", "formula"))
 
 	# Turn all formula-based arguments into named lists
-	role <- formulas_to_named_list(role)
-	label <- formulas_to_named_list(label)
-	group <- formulas_to_named_list(group)
-	type <- formulas_to_named_list(type)
-	distribution <- formulas_to_named_list(distribution)
-	description <- formulas_to_named_list(description)
-	transformation <- formulas_to_named_list(transformation)
+	role <- labeled_formulas_to_named_list(role)
+	label <- labeled_formulas_to_named_list(label)
+	group <- labeled_formulas_to_named_list(group)
+	type <- labeled_formulas_to_named_list(type)
+	distribution <- labeled_formulas_to_named_list(distribution)
+	description <- labeled_formulas_to_named_list(description)
+	transformation <- labeled_formulas_to_named_list(transformation)
 
 	# Get actual formula components
 	# Check to see if the RHS has any shortcut variables attached
@@ -689,7 +695,7 @@ vec_cast.tm.formula <- function(x, to, ...) {
 #' @export
 vec_cast.formula.tm <- function(x, to, ...) {
 	# order is flipped, such that `x` is tm
-	formula(x)
+	stats::formula(x)
 }
 
 # FMLS
@@ -748,14 +754,16 @@ formula.tm <- function(x, ...) {
 
 #' Update `tm` objects
 #'
-#' This updates properties or attributes of a `tm` vector. This only updates
-#' `tm` objects that already exist.
+#' This updates properties or attributes of a `<tm>` vector. This only updates
+#' objects that already exist.
+#'
+#' @param object A `<tm>` object
 #'
 #' @param ... A series of `field = term ~ value` pairs that represent the
 #'   attribute to be updated. Can have a value of __<NA>__ if the goal is to
 #'   remove an attribute or property.
 #'
-#' @return A `tm` object with updated attributes
+#' @return A `<tm>` object with updated attributes
 #' @export
 update.tm <- function(object, ...) {
 
@@ -776,7 +784,7 @@ update.tm <- function(object, ...) {
 		if (!is.null(dots[[i]])) {
 			newProps <-
 				dots[[i]] |>
-				formulas_to_named_list()
+				labeled_formulas_to_named_list()
 
 			# Term management loop
 			for (j in names(newProps)) {
@@ -799,11 +807,6 @@ update.tm <- function(object, ...) {
 #' @inheritParams dplyr::filter
 #'
 #' @seealso [dplyr::filter()] for examples of generic implementation
-#'
-#' @examples
-#' # Filter by role
-#' object <- tm(output ~ input + .c(modifier))
-#' filter(object, role == "outcome")
 #'
 #' @name dplyr_extensions
 #' @importFrom dplyr filter

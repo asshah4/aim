@@ -1,4 +1,4 @@
 library(testthat)
-library(vlndr)
+library(rmdl)
 
-test_check("vlndr")
+test_check("rmdl")
