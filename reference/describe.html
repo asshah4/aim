@@ -78,7 +78,34 @@
 object: role, side, label, group, description, type, distribution</p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
 
+<p>A list of <code>term = property</code> pairs, where the term is the name of the
+element (e.g. could be the `role' of the term).</p>
+    </div>
+
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">f</span> <span class="op">&lt;-</span> <span class="fu">.o</span><span class="op">(</span><span class="va">output</span><span class="op">)</span> <span class="op">~</span> <span class="fu">.x</span><span class="op">(</span><span class="va">input</span><span class="op">)</span> <span class="op">+</span> <span class="fu">.m</span><span class="op">(</span><span class="va">mediator</span><span class="op">)</span> <span class="op">+</span> <span class="va">random</span></span></span>
+<span class="r-in"><span><span class="va">t</span> <span class="op">&lt;-</span> <span class="fu"><a href="tm.html">tm</a></span><span class="op">(</span><span class="va">f</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">describe</span><span class="op">(</span><span class="va">t</span>, <span class="st">"role"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $output</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "outcome"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $input</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "exposure"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $mediator</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "mediator"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $random</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "predictor"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
