@@ -1,6 +1,5 @@
 ^rmdl\.Rproj$
 ^\.Rproj\.user$
-^\.Rprofile$
 ^LICENSE\.md$
 ^README\.Rmd$
 ^_pkgdown\.yml$
@@ -20,4 +19,3 @@
 ^ex_reprex.md$
 ^R\/dev\.R$
 ^vignettes/articles$
-^themes$
