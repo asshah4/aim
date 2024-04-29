@@ -61,12 +61,12 @@ print(mt)
 #> <mdl_tbl>
 #>   id        formula_index data_id name  model_call formula_call outcome exposure
 #>   <chr>     <list>        <chr>   <chr> <chr>      <chr>        <chr>   <chr>   
-#> 1 b4845f79… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
-#> 2 7830bcbe… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
-#> 3 e3cf8431… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
-#> 4 9a66d0e5… <dbl [6]>     mtcars  mile… lm         hp ~ wt + d… hp      wt      
-#> 5 62f89920… <dbl [6]>     mtcars  mile… lm         hp ~ wt + c… hp      wt      
-#> 6 193d7c3e… <dbl [6]>     mtcars  mile… lm         hp ~ wt + am hp      wt      
+#> 1 e7917486… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
+#> 2 1aa061f3… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
+#> 3 6654904e… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
+#> 4 17bdd25a… <dbl [6]>     mtcars  mile… lm         hp ~ wt + d… hp      wt      
+#> 5 c274aaad… <dbl [6]>     mtcars  mile… lm         hp ~ wt + c… hp      wt      
+#> 6 0a46fdfb… <dbl [6]>     mtcars  mile… lm         hp ~ wt + am hp      wt      
 #> # ℹ 7 more variables: mediator <chr>, interaction <chr>, strata <lgl>,
 #> #   level <lgl>, model_parameters <list>, model_summary <list>,
 #> #   fit_status <lgl>
