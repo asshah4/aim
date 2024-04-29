@@ -40,6 +40,10 @@
 #'   `strata_variable`
 #'
 #' @param ... Arguments to be passed to or from other methods
+#' 
+#' @return An object of the `mdl` class, which is essentially an equal-length
+#'   list of parameters that describe a single model. It retains the original
+#'   formula call and the related roles in the formula.
 #'
 #' @name models
 #' @export

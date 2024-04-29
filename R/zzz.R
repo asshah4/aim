@@ -9,6 +9,7 @@
 		possible_glance <-
 			purrr::possibly(my_glance, otherwise = NA, quiet = FALSE)
 	}
+  
 }
 
 # nocov end

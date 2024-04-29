@@ -88,6 +88,11 @@ variable}
 \item{strata_level}{value of the level of the term specified by
 \code{strata_variable}}
 }
+\value{
+An object of the \code{mdl} class, which is essentially an equal-length
+list of parameters that describe a single model. It retains the original
+formula call and the related roles in the formula.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }

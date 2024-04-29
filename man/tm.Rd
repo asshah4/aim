@@ -88,6 +88,11 @@ the tm, potentially part of a data dictionary}
 \item{transformation}{Modification of the term to be applied when
 combining with data}
 }
+\value{
+A \code{tm} object, which is a series of individual terms with
+corresponding attributes, including the role, formula side, label,
+grouping, and other related features.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 }

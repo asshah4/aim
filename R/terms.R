@@ -106,6 +106,10 @@
 #'   combining with data
 #'
 #' @param ... Arguments to be passed to or from other methods
+#' 
+#' @return A `tm` object, which is a series of individual terms with
+#'   corresponding attributes, including the role, formula side, label,
+#'   grouping, and other related features.
 #'
 #' @name tm
 #' @export
@@ -727,7 +731,7 @@ vec_cast.fmls.tm <- function(x, to, ...) {
 ### Term Helpers ---------------------------------------------------------------
 
 #' @export
-formula.tm <- function(x, ...) {
+formula.tm <- function(x, env = parent.frame(), ...) {
 
 	# Create vec_data / proxy to help re-arrange terms as needed
 	# Lose information when converting to just character
@@ -748,7 +752,8 @@ formula.tm <- function(x, ...) {
   						sep = " ~ ",
   						paste0(right, collapse = " + "))
 
-  stats::formula(f, env = .GlobalEnv)
+  #stats::formula(f, env = .GlobalEnv)
+  stats::formula(f, env = env)
 
 }
 
@@ -800,9 +805,17 @@ update.tm <- function(object, ...) {
 #' Extending `dplyr` for `tm` class
 #'
 #' The `filter()` function extension subsets `tm` that satisfy set conditions.
-#' To be retained, the `tm` must prodcue a value of `TRUE` for all conditions.
-#' Note that when a condition evalutes to `NA`, the row will be dropped, unlike
+#' To be retained, the `tm` object must produce a value of `TRUE` for all conditions.
+#' Note that when a condition evaluates to `NA`, the row will be dropped, unlike
 #' base subsetting with `[`.
+#'
+#' @return An object of the same type as `.data`. The output as the following properties:
+#' 
+#' * `tm` objects are a subset of the input, but appear in the same order
+#' 
+#' * Underlying `data.frame` columns are not modified
+#' 
+#' * Underlying `data.frame` object's attributes are preserved
 #'
 #' @inheritParams dplyr::filter
 #'
@@ -828,6 +841,15 @@ filter.tm <- function(.data, ...) {
 #'
 #' @param property A character vector of the following attributes of a `tm`
 #'   object: role, side, label, group, description, type, distribution
+#'   
+#' @return A list of `term = property` pairs, where the term is the name of the
+#'   element (e.g. could be the `role' of the term).
+#'
+#' @examples
+#' f <- .o(output) ~ .x(input) + .m(mediator) + random
+#' t <- tm(f)
+#' describe(t, "role")
+#' 
 #' @export
 describe <- function(x, property) {
 

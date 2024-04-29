@@ -23,7 +23,16 @@ which models to exponentiate by name using the \strong{which} argument.}
 
 \item{which}{A \code{character} vector of model names to exponentiate. Default is \code{NULL}. If \strong{exponentiate} is set to \code{TRUE} and \strong{which} is set to \code{NULL}, then all estimates will be exponentiated, which is often a \emph{bad idea}.}
 }
+\value{
+When using \code{attach_data()}, this returns a modified version of the
+\code{mdl_tbl} object however with the dataset attached. When using the
+\code{flatten_models()} function, this returns a simplified \code{data.frame} of the
+original model table that contains the model-level and parameter-level
+statistics.
+}
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
+
 These functions are used to help manage the \code{mdl_tbl} object. They allow
 for specific manipulation of the internal components, and are intended to
 generally extend the functionality of the object.
@@ -44,6 +53,7 @@ used which datasets, it can be ease to back-transform information.
 A \code{mdl_tbl} object can be flattened to its specific parameters, their
 estimates, and model-level summary statistics. This function additionally
 helps by allowing for exponentiation of estimates when deemed appropriate.
-The user can specify which models to exponentiate by name.
+The user can specify which models to exponentiate by name. This heavily
+relies on the \code{\link[broom:reexports]{broom::tidy()}} functionality.
 }
 
