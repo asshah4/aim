@@ -50,5 +50,5 @@ but as internal functions. They have been exposed to allow for potential
 user-defined use cases.
 }
 \details{
-Currently supported patterns are: fundamental, direct, sequential, parallel, rolling_interaction.
+Currently supported patterns are: fundamental, direct, sequential, parallel.
 }
