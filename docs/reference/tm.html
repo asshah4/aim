@@ -19,7 +19,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="external-link nav-link" href="https://asshah4.github.io/">
+  <a class="external-link nav-link" href="https://shah-in-boots.github.io/">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
@@ -31,7 +31,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/development.html">Development Log</a>
-    <a class="dropdown-item" href="../articles/quick_start.html">Quick Start</a>
+    <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
   </div>
 </li>
 <li class="nav-item">
@@ -41,7 +41,7 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/asshah4/rmdl/">
+  <a class="external-link nav-link" href="https://github.com/shah-in-boots/rmdl/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -54,7 +54,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Create vectorized terms</h1>
-      <small class="dont-index">Source: <a href="https://github.com/asshah4/rmdl/blob/HEAD/R/terms.R" class="external-link"><code>R/terms.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/shah-in-boots/rmdl/blob/HEAD/R/terms.R" class="external-link"><code>R/terms.R</code></a></small>
       <div class="d-none name"><code>tm.Rd</code></div>
     </div>
 
@@ -168,6 +168,14 @@ combining with data</p></dd>
 
 </dl></div>
     <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>A <code>tm</code> object, which is a series of individual terms with
+corresponding attributes, including the role, formula side, label,
+grouping, and other related features.</p>
+    </div>
+    <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>A vectorized term object that allows for additional information to be carried
 with the variable name.</p>
@@ -178,7 +186,7 @@ it using additional information that is more informative for causal modeling.</p
     <h2 id="roles">Roles<a class="anchor" aria-label="anchor" href="#roles"></a></h2>
     <p>Specific roles the variable plays within the formula. These are of particular
 importance, as they serve as special terms that can effect how a formula is
-interpreted.</p><table class="table table"><tr><td>Role</td><td>Shortcut</td><td>Description</td></tr><tr><td>outcome</td><td><code>.o(...)</code></td><td>exposure → <strong>outcome</strong></td></tr><tr><td>exposure</td><td><code>.x(...)</code></td><td><strong>exposure</strong> → outcome</td></tr><tr><td>predictor</td><td><code>.p(...)</code></td><td>exposure + <strong>predictor</strong> → outcome</td></tr><tr><td>confounder</td><td><code>.c(...)</code></td><td>exposure ← <strong>confounder</strong> → outcome</td></tr><tr><td>mediator</td><td><code>.m(...)</code></td><td>exposure → <strong>mediator</strong> → outcome</td></tr><tr><td>interaction</td><td><code>.i(...)</code></td><td>exposure × <strong>interaction</strong> → outcome</td></tr><tr><td>strata</td><td><code>.s(...)</code></td><td>exposure ÷ <strong>strata</strong> → outcome</td></tr><tr><td>group</td><td><code>.g(...)</code></td><td>exposure + <strong>group</strong> → outcome</td></tr><tr><td><em>unknown</em></td><td><code>-</code></td><td>not yet assigned</td></tr></table><p>Formulas can be condensed by applying their specific role to individual runes
+interpreted.</p><table class="table table"><tr><td>Role</td><td>Shortcut</td><td>Description</td></tr><tr><td>outcome</td><td><code>.o(...)</code></td><td><strong>outcome</strong> ~ exposure</td></tr><tr><td>exposure</td><td><code>.x(...)</code></td><td>outcome ~ <strong>exposure</strong></td></tr><tr><td>predictor</td><td><code>.p(...)</code></td><td>outcome ~ exposure + <strong>predictor</strong></td></tr><tr><td>confounder</td><td><code>.c(...)</code></td><td>outcome + exposure ~ <strong>confounder</strong></td></tr><tr><td>mediator</td><td><code>.m(...)</code></td><td>outcome <strong>mediator</strong> exposure</td></tr><tr><td>interaction</td><td><code>.i(...)</code></td><td>outcome ~ exposure * <strong>interaction</strong></td></tr><tr><td>strata</td><td><code>.s(...)</code></td><td>outcome ~ exposure / <strong>strata</strong></td></tr><tr><td>group</td><td><code>.g(...)</code></td><td>outcome ~ exposure + <strong>group</strong></td></tr><tr><td><em>unknown</em></td><td><code>-</code></td><td>not yet assigned</td></tr></table><p>Formulas can be condensed by applying their specific role to individual runes
 as a function/wrapper. For example, <code>y ~ .x(x1) + x2 + x3</code>. This would
 signify that <code>x1</code> has the specific role of an <em>exposure</em>.</p>
 <p>Grouped variables are slightly different in that they are placed together in

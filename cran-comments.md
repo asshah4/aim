@@ -4,9 +4,9 @@
 
 0 errors | 0 warnings | 1 note
 
-* This is a new submission (R1)
+* This is a new submission (R2)
 
-We have additionally responded to the initial manual review:
+We have additionally responded to the errors that occurred when attempting to build the manual. Per Uwe Ligges, it appears that the latex symbol "\rightarrow" is problematic, and thus have removed it from the documentation. 
 
 1. The DESCRIPTION file was modified to include references in the format suggested.
 

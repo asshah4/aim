@@ -27,7 +27,7 @@ tm."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="external-link nav-link" href="https://asshah4.github.io/">
+  <a class="external-link nav-link" href="https://shah-in-boots.github.io/">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
@@ -39,7 +39,7 @@ tm."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/development.html">Development Log</a>
-    <a class="dropdown-item" href="../articles/quick_start.html">Quick Start</a>
+    <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
   </div>
 </li>
 <li class="nav-item">
@@ -49,7 +49,7 @@ tm."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/asshah4/rmdl/">
+  <a class="external-link nav-link" href="https://github.com/shah-in-boots/rmdl/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -62,7 +62,7 @@ tm."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Vectorized formulas</h1>
-      <small class="dont-index">Source: <a href="https://github.com/asshah4/rmdl/blob/HEAD/R/formulas.R" class="external-link"><code>R/formulas.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/shah-in-boots/rmdl/blob/HEAD/R/formulas.R" class="external-link"><code>R/formulas.R</code></a></small>
       <div class="d-none name"><code>fmls.Rd</code></div>
     </div>
 
@@ -96,7 +96,7 @@ tm.</p>
 
 
 <dt>pattern</dt>
-<dd><p>A <code>&lt;character&gt;</code> from the following choices for pattern
+<dd><p>A <code>character</code> from the following choices for pattern
 expansion. This is how the formula will be expanded, and decides how the
 covariates will incorporated. See the details for further explanation.</p><ul><li><p>direct: the covariates will all be included in each formula</p></li>
 <li><p>sequential: the covariates will be added sequentially, one by one, or by groups, as indicated</p></li>
@@ -145,7 +145,7 @@ $$y = x3$$</p>
     <h2 id="roles">Roles<a class="anchor" aria-label="anchor" href="#roles"></a></h2>
     <p>Specific roles the variable plays within the formula. These are of particular
 importance, as they serve as special terms that can effect how a formula is
-interpreted.</p><table class="table table"><tr><td>Role</td><td>Shortcut</td><td>Description</td></tr><tr><td>outcome</td><td><code>.o(...)</code></td><td>exposure → <strong>outcome</strong></td></tr><tr><td>exposure</td><td><code>.x(...)</code></td><td><strong>exposure</strong> → outcome</td></tr><tr><td>predictor</td><td><code>.p(...)</code></td><td>exposure + <strong>predictor</strong> → outcome</td></tr><tr><td>confounder</td><td><code>.c(...)</code></td><td>exposure ← <strong>confounder</strong> → outcome</td></tr><tr><td>mediator</td><td><code>.m(...)</code></td><td>exposure → <strong>mediator</strong> → outcome</td></tr><tr><td>interaction</td><td><code>.i(...)</code></td><td>exposure × <strong>interaction</strong> → outcome</td></tr><tr><td>strata</td><td><code>.s(...)</code></td><td>exposure ÷ <strong>strata</strong> → outcome</td></tr><tr><td>group</td><td><code>.g(...)</code></td><td>exposure + <strong>group</strong> → outcome</td></tr><tr><td><em>unknown</em></td><td><code>-</code></td><td>not yet assigned</td></tr></table><p>Formulas can be condensed by applying their specific role to individual runes
+interpreted.</p><table class="table table"><tr><td>Role</td><td>Shortcut</td><td>Description</td></tr><tr><td>outcome</td><td><code>.o(...)</code></td><td><strong>outcome</strong> ~ exposure</td></tr><tr><td>exposure</td><td><code>.x(...)</code></td><td>outcome ~ <strong>exposure</strong></td></tr><tr><td>predictor</td><td><code>.p(...)</code></td><td>outcome ~ exposure + <strong>predictor</strong></td></tr><tr><td>confounder</td><td><code>.c(...)</code></td><td>outcome + exposure ~ <strong>confounder</strong></td></tr><tr><td>mediator</td><td><code>.m(...)</code></td><td>outcome <strong>mediator</strong> exposure</td></tr><tr><td>interaction</td><td><code>.i(...)</code></td><td>outcome ~ exposure * <strong>interaction</strong></td></tr><tr><td>strata</td><td><code>.s(...)</code></td><td>outcome ~ exposure / <strong>strata</strong></td></tr><tr><td>group</td><td><code>.g(...)</code></td><td>outcome ~ exposure + <strong>group</strong></td></tr><tr><td><em>unknown</em></td><td><code>-</code></td><td>not yet assigned</td></tr></table><p>Formulas can be condensed by applying their specific role to individual runes
 as a function/wrapper. For example, <code>y ~ .x(x1) + x2 + x3</code>. This would
 signify that <code>x1</code> has the specific role of an <em>exposure</em>.</p>
 <p>Grouped variables are slightly different in that they are placed together in

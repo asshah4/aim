@@ -11,8 +11,8 @@ A system for describing and manipulating the many models that are generated in c
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/asshah4/rmdl}
-  \item Report bugs at \url{https://github.com/asshah4/rmdl/issues}
+  \item \url{https://github.com/shah-in-boots/rmdl}
+  \item Report bugs at \url{https://github.com/shah-in-boots/rmdl/issues}
 }
 
 }
