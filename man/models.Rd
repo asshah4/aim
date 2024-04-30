@@ -56,13 +56,13 @@ mdl(x = unspecified(), ...)
 model(x = unspecified(), ...)
 }
 \arguments{
-\item{x}{model object or representation}
+\item{x}{Model object or representation}
 
 \item{...}{Arguments to be passed to or from other methods}
 
-\item{formulas}{formula given as either an \code{formula} or as a \code{fmls} object}
+\item{formulas}{Formula(s) given as either an \code{formula} or as a \code{fmls} object}
 
-\item{parameter_estimates}{\code{data.frame} that contains columns
+\item{parameter_estimates}{A \code{data.frame} that contains columns
 representing terms and individual estimates or coefficients, can be
 accompanied by additional statistic columns. By default, assumes
 \itemize{
@@ -70,7 +70,7 @@ accompanied by additional statistic columns. By default, assumes
 \item \strong{estimate} = estimate or coefficient
 }}
 
-\item{summary_info}{\code{list} that contains columns representing
+\item{summary_info}{A \code{list} that contains columns representing
 summary statistic of a model. By default, assumes...
 \itemize{
 \item \strong{nobs} = number of observations
@@ -80,12 +80,12 @@ summary statistic of a model. By default, assumes...
 \item \strong{var_cov} = variance-covariance matrix for predicted coefficients
 }}
 
-\item{data_name}{string representing name of dataset that was used}
+\item{data_name}{String representing name of dataset that was used}
 
-\item{strata_variable}{string of a term that served as a stratifying
+\item{strata_variable}{String of a term that served as a stratifying
 variable}
 
-\item{strata_level}{value of the level of the term specified by
+\item{strata_level}{Value of the level of the term specified by
 \code{strata_variable}}
 }
 \value{

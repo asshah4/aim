@@ -6,11 +6,11 @@
 #'
 #' `r lifecycle::badge('experimental')`
 #'
-#' @param x model object or representation
+#' @param x Model object or representation
 #'
-#' @param formulas formula given as either an `formula` or as a `fmls` object
+#' @param formulas Formula(s) given as either an `formula` or as a `fmls` object
 #'
-#' @param parameter_estimates `data.frame` that contains columns
+#' @param parameter_estimates A `data.frame` that contains columns
 #'   representing terms and individual estimates or coefficients, can be
 #'   accompanied by additional statistic columns. By default, assumes
 #'
@@ -18,7 +18,7 @@
 #'
 #'  * __estimate__ = estimate or coefficient
 #'
-#' @param summary_info `list` that contains columns representing
+#' @param summary_info A `list` that contains columns representing
 #'   summary statistic of a model. By default, assumes...
 #'
 #' * __nobs__ = number of observations
@@ -31,16 +31,16 @@
 #'
 #' * __var_cov__ = variance-covariance matrix for predicted coefficients
 #'
-#' @param data_name string representing name of dataset that was used
+#' @param data_name String representing name of dataset that was used
 #'
-#' @param strata_variable string of a term that served as a stratifying
+#' @param strata_variable String of a term that served as a stratifying
 #'   variable
 #'
-#' @param strata_level value of the level of the term specified by
+#' @param strata_level Value of the level of the term specified by
 #'   `strata_variable`
 #'
 #' @param ... Arguments to be passed to or from other methods
-#' 
+#'
 #' @return An object of the `mdl` class, which is essentially an equal-length
 #'   list of parameters that describe a single model. It retains the original
 #'   formula call and the related roles in the formula.
