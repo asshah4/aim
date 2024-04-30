@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   development: development.html
   getting_started: getting_started.html
-last_built: 2024-04-30T14:29Z
+last_built: 2024-04-30T14:33Z
 urls:
   reference: https://shah-in-boots.github.io/rmdl/reference
   article: https://shah-in-boots.github.io/rmdl/articles
