@@ -53,6 +53,6 @@ Suggests:
     cmprsk,
     tidycmprsk
 VignetteBuilder: knitr
-URL: https://github.com/asshah4/rmdl
-BugReports: https://github.com/asshah4/rmdl/issues
+URL: https://github.com/shah-in-boots/rmdl
+BugReports: https://github.com/shah-in-boots/rmdl/issues
 Config/testthat/edition: 3
