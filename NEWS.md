@@ -1,4 +1,4 @@
-# rmdl (development version)
+# rmdl 0.1.0.900
 
 Currently the developmental version is up-to-date with the CRAN release.
 
