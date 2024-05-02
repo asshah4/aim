@@ -74,7 +74,7 @@ that may apply globally to other terms.}
 
 \item{group}{Grouping variable name for modeling or placing terms together.
 An integer value is given to identify which group the term will be in. The
-hierarchy will be \code{1} → \code{n} incrementally.}
+hierarchy will be \code{1} to \code{n} incrementally.}
 
 \item{type}{Type of variable, either categorical (qualitative) or
 continuous (quantitative)}

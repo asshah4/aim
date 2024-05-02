@@ -91,7 +91,7 @@
 #'
 #' @param group Grouping variable name for modeling or placing terms together.
 #'   An integer value is given to identify which group the term will be in. The
-#'   hierarchy will be `1` &rarr; `n` incrementally.
+#'   hierarchy will be `1` to `n` incrementally.
 #'
 #' @param type Type of variable, either categorical (qualitative) or
 #'   continuous (quantitative)
