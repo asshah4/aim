@@ -3,14 +3,14 @@ template:
   bootswatch: flatly
   theme: solarized-light
   bslib:
-    primary: "#ee7733"
-    secondary: "#0077bb"
-    success: "#ee3377"
-    info: "#33bbee"
-    warning: "#009988"
-    danger: "#cc3311"
-    light: "#ffffff"
-    dark: "#bbbbbb"
+    primary: "#1c6897"
+    secondary: "#0097b4"
+    success: "#16bab3"
+    info: "#95d9bf"
+    warning: "#433e6c"
+    danger: "#351d3b"
+    light: "#e0f7e1"
+    dark: "#070707"
 
 
 destination: docs
