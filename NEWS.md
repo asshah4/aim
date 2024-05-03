@@ -1,6 +1,6 @@
-# rmdl 0.1.0.900
+# rmdl (developmental version)
 
-Currently the developmental version is up-to-date with the CRAN release.
+This development is working on expanding the formula expansion methods, allowing custom patterns, and introducing the second major sets of classes for visualizing data.
 
 # rmdl 0.1.0
 
