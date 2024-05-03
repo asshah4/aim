@@ -80,14 +80,14 @@ Specific roles the variable plays within the formula. These are of particular
 importance, as they serve as special terms that can effect how a formula is
 interpreted.\tabular{lll}{
    Role \tab Shortcut \tab Description \cr
-   outcome \tab \code{.o(...)} \tab exposure → \strong{outcome} \cr
-   exposure \tab \code{.x(...)} \tab \strong{exposure} → outcome \cr
-   predictor \tab \code{.p(...)} \tab exposure + \strong{predictor} → outcome \cr
-   confounder \tab \code{.c(...)} \tab exposure ← \strong{confounder} → outcome \cr
-   mediator \tab \code{.m(...)} \tab exposure → \strong{mediator} → outcome \cr
-   interaction \tab \code{.i(...)} \tab exposure × \strong{interaction} → outcome \cr
-   strata \tab \code{.s(...)} \tab exposure ÷ \strong{strata} → outcome \cr
-   group \tab \code{.g(...)} \tab exposure + \strong{group} → outcome \cr
+   outcome \tab \code{.o(...)} \tab \strong{outcome} ~ exposure \cr
+   exposure \tab \code{.x(...)} \tab outcome ~ \strong{exposure} \cr
+   predictor \tab \code{.p(...)} \tab outcome ~ exposure + \strong{predictor} \cr
+   confounder \tab \code{.c(...)} \tab outcome + exposure ~ \strong{confounder} \cr
+   mediator \tab \code{.m(...)} \tab outcome \strong{mediator} exposure \cr
+   interaction \tab \code{.i(...)} \tab outcome ~ exposure * \strong{interaction} \cr
+   strata \tab \code{.s(...)} \tab outcome ~ exposure / \strong{strata} \cr
+   group \tab \code{.g(...)} \tab outcome ~ exposure + \strong{group} \cr
    \emph{unknown} \tab \code{-} \tab not yet assigned \cr
 }
 

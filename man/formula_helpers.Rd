@@ -21,6 +21,9 @@ rhs(x, ...)
 
 \item{...}{Arguments to be passed to or from other methods}
 }
+\value{
+A \code{character} describing part of a \code{formula} or \code{fmls} object
+}
 \description{
 Tools for working with formula-like objects
 }

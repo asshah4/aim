@@ -3,17 +3,14 @@
 	'model_fit',
 	'lm',
 	'glm',
-	'coxph',
-	'crr',
-	'tidycrr'
+	'coxph'
 )
 
 .patterns <- c(
 	'fundamental',
 	'direct',
 	'sequential',
-	'parallel',
-	'rolling_interaction'
+	'parallel'
 )
 
 .transformations <- c(

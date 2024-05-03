@@ -7,10 +7,10 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/asshah4/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/asshah4/rmdl/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml)
 [![Github commit
-frequency](https://img.shields.io/github/commit-activity/w/asshah4/rmdl)](https://github.com/asshah4/rmdl/graphs/commit-activity)
-[![test-coverage](https://github.com/asshah4/rmdl/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/asshah4/rmdl/actions/workflows/test-coverage.yaml)
+frequency](https://img.shields.io/github/commit-activity/w/shah-in-boots/rmdl)](https://github.com/shah-in-boots/rmdl/graphs/commit-activity)
+[![test-coverage](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rmdl)](https://CRAN.R-project.org/package=rmdl)
 <!-- badges: end -->
@@ -18,13 +18,13 @@ status](https://www.r-pkg.org/badges/version/rmdl)](https://CRAN.R-project.org/p
 ## Installation
 
 This package can be downloaded from CRAN or from
-[Github](https://github.com/asshah4/rmdl) as below
+[Github](https://github.com/shah-in-boots/rmdl) as below
 
 ``` r
 # CRAN installation
 install.packages("rmdl")
 # Or remote/developmental version
-remotes::install_github("asshah4/rmdl")
+remotes::install_github("shah-in-boots/rmdl")
 ```
 
 ## Introduction

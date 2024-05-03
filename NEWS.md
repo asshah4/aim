@@ -1,12 +1,13 @@
-# rmdl (development version)
+# rmdl (developmental version)
 
-Currently the developmental version is up-to-date with the CRAN release.
+This development is working on expanding the formula expansion methods, allowing custom patterns, and introducing the second major sets of classes for visualizing data.
 
 # rmdl 0.1.0
 
-## RMD check results
+This first CRAN release contains the basic functions for the package, and introduces the new basic classes. 
 
-0 errors | 0 warnings | 0 note
+* `tm` gives variables in formulas specific roles and behaviors (vectorized)
 
-* This first CRAN release contains the basic functions for the package, and introduces the new classes.
+* `fmls` expands the base formula class into a list of related formulas (vectorized)
 
+* `mdl` are a thin wrapper (vectorized) for statistical models, with important metadata maintained, and are used to generate `mdl_tbl` objects, which serve as a reference `data.frame` of a family of modeling objects

@@ -18,10 +18,18 @@ return a logical value, and are defined in terms of the variables in
 \code{&} operator. Only rows for which all conditions evaluate to \code{TRUE} are
 kept.}
 }
+\value{
+An object of the same type as \code{.data}. The output as the following properties:
+\itemize{
+\item \code{tm} objects are a subset of the input, but appear in the same order
+\item Underlying \code{data.frame} columns are not modified
+\item Underlying \code{data.frame} object's attributes are preserved
+}
+}
 \description{
 The \code{filter()} function extension subsets \code{tm} that satisfy set conditions.
-To be retained, the \code{tm} must prodcue a value of \code{TRUE} for all conditions.
-Note that when a condition evalutes to \code{NA}, the row will be dropped, unlike
+To be retained, the \code{tm} object must produce a value of \code{TRUE} for all conditions.
+Note that when a condition evaluates to \code{NA}, the row will be dropped, unlike
 base subsetting with \code{[}.
 }
 \seealso{
