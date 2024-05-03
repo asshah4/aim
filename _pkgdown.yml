@@ -12,10 +12,16 @@ template:
     light: "#e0f7e1"
     dark: "#070707"
 
-
 destination: docs
 
+development:
+  mode: auto
+
 url: https://shah-in-boots.github.io/rmdl/
+
+authors: 
+  Anish S. Shah, MD, MS:
+    href: https://shah-in-boots.github.io/
 
 home:
   title: Language to Manage Many Models
