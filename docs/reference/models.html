@@ -19,7 +19,7 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto"><li class="nav-item">
-  <a class="external-link nav-link" href="https://asshah4.github.io/">
+  <a class="external-link nav-link" href="https://shah-in-boots.github.io/">
     <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
@@ -31,7 +31,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/development.html">Development Log</a>
-    <a class="dropdown-item" href="../articles/quick_start.html">Quick Start</a>
+    <a class="dropdown-item" href="../articles/getting_started.html">Getting Started</a>
   </div>
 </li>
 <li class="nav-item">
@@ -41,7 +41,7 @@
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
       <ul class="navbar-nav"><li class="nav-item">
-  <a class="external-link nav-link" href="https://github.com/asshah4/rmdl/">
+  <a class="external-link nav-link" href="https://github.com/shah-in-boots/rmdl/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -54,7 +54,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Model Prototypes</h1>
-      <small class="dont-index">Source: <a href="https://github.com/asshah4/rmdl/blob/HEAD/R/models.R" class="external-link"><code>R/models.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/shah-in-boots/rmdl/blob/HEAD/R/models.R" class="external-link"><code>R/models.R</code></a></small>
       <div class="d-none name"><code>models.Rd</code></div>
     </div>
 
@@ -117,7 +117,7 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>x</dt>
-<dd><p>model object or representation</p></dd>
+<dd><p>Model object or representation</p></dd>
 
 
 <dt>...</dt>
@@ -125,11 +125,11 @@
 
 
 <dt>formulas</dt>
-<dd><p>formula given as either an <code>formula</code> or as a <code>fmls</code> object</p></dd>
+<dd><p>Formula(s) given as either an <code>formula</code> or as a <code>fmls</code> object</p></dd>
 
 
 <dt>parameter_estimates</dt>
-<dd><p>&lt;data.frame&gt; that contains columns
+<dd><p>A <code>data.frame</code> that contains columns
 representing terms and individual estimates or coefficients, can be
 accompanied by additional statistic columns. By default, assumes</p><ul><li><p><strong>term</strong> = term name</p></li>
 <li><p><strong>estimate</strong> = estimate or coefficient</p></li>
@@ -137,8 +137,8 @@ accompanied by additional statistic columns. By default, assumes</p><ul><li><p><
 
 
 <dt>summary_info</dt>
-<dd><p><list> that contains columns representing
-summary statistic of a model. By default, assumes...</list></p><ul><li><p><strong>nobs</strong> = number of observations</p></li>
+<dd><p>A <code>list</code> that contains columns representing
+summary statistic of a model. By default, assumes...</p><ul><li><p><strong>nobs</strong> = number of observations</p></li>
 <li><p><strong>degrees_freedom</strong> = degrees of freedom</p></li>
 <li><p><strong>statistic</strong> = test statistic</p></li>
 <li><p><strong>p_value</strong> = p-value for overall model</p></li>
@@ -147,26 +147,34 @@ summary statistic of a model. By default, assumes...</list></p><ul><li><p><stron
 
 
 <dt>data_name</dt>
-<dd><p>string representing name of dataset that was used</p></dd>
+<dd><p>String representing name of dataset that was used</p></dd>
 
 
 <dt>strata_variable</dt>
-<dd><p>string of a term that served as a stratifying
+<dd><p>String of a term that served as a stratifying
 variable</p></dd>
 
 
 <dt>strata_level</dt>
-<dd><p>value of the level of the term specified by
+<dd><p>Value of the level of the term specified by
 <code>strata_variable</code></p></dd>
 
 </dl></div>
+    <div class="section level2">
+    <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
+    
+
+<p>An object of the <code>mdl</code> class, which is essentially an equal-length
+list of parameters that describe a single model. It retains the original
+formula call and the related roles in the formula.</p>
+    </div>
 
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Anish Shah.</p>
+  <p></p><p>Developed by Anish S. Shah.</p>
 </div>
 
 <div class="pkgdown-footer-right">

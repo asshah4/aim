@@ -38,6 +38,10 @@
 #'   the underlying data used in the models (to help match)
 #'
 #' @param x A `mdl_tbl` object
+#' 
+#' @return A `mdl_tbl` object, which is essentially a `data.frame` with
+#'   additional information on the relevant data, terms, and formulas used to
+#'   generate the models.
 #'
 #' @name mdl_tbl
 #' @importFrom tibble tibble new_tibble
@@ -394,8 +398,8 @@ new_model_table <- function(x = list(),
 
 #' @importFrom dplyr dplyr_reconstruct
 #' @export
-dplyr_reconstruct.mdl_tbl <- function(data, template) { # nolint
-	model_table_reconstruct(x = data, to = template)
+dplyr_reconstruct.mdl_tbl <- function(data, template) {
+  model_table_reconstruct(x = data, to = template)
 }
 
 #' @importFrom dplyr dplyr_row_slice
@@ -618,6 +622,9 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #' Model table helper functions
 #'
 #' @description
+#'
+#' `r lifecycle::badge('experimental')`
+#' 
 #' These functions are used to help manage the `mdl_tbl` object. They allow
 #' for specific manipulation of the internal components, and are intended to
 #' generally extend the functionality of the object.
@@ -638,7 +645,8 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #' A `mdl_tbl` object can be flattened to its specific parameters, their
 #' estimates, and model-level summary statistics. This function additionally
 #' helps by allowing for exponentiation of estimates when deemed appropriate.
-#' The user can specify which models to exponentiate by name.
+#' The user can specify which models to exponentiate by name. This heavily
+#' relies on the [broom::tidy()] functionality.
 #'
 #' @param x A `mdl_tbl` object
 #'
@@ -652,6 +660,12 @@ vec_cast.mdl_tbl.mdl_tbl <- function(x, to, ...) {
 #'
 #' @param ... Arguments to be passed to or from other methods
 #'
+#' @return When using `attach_data()`, this returns a modified version of the
+#'   `mdl_tbl` object however with the dataset attached. When using the
+#'   `flatten_models()` function, this returns a simplified `data.frame` of the
+#'   original model table that contains the model-level and parameter-level
+#'   statistics. 
+#'   
 #' @name model_table_helpers
 NULL
 

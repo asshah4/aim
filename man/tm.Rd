@@ -74,7 +74,7 @@ that may apply globally to other terms.}
 
 \item{group}{Grouping variable name for modeling or placing terms together.
 An integer value is given to identify which group the term will be in. The
-hierarchy will be \code{1} → \code{n} incrementally.}
+hierarchy will be \code{1} to \code{n} incrementally.}
 
 \item{type}{Type of variable, either categorical (qualitative) or
 continuous (quantitative)}
@@ -87,6 +87,11 @@ the tm, potentially part of a data dictionary}
 
 \item{transformation}{Modification of the term to be applied when
 combining with data}
+}
+\value{
+A \code{tm} object, which is a series of individual terms with
+corresponding attributes, including the role, formula side, label,
+grouping, and other related features.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
@@ -103,14 +108,14 @@ Specific roles the variable plays within the formula. These are of particular
 importance, as they serve as special terms that can effect how a formula is
 interpreted.\tabular{lll}{
    Role \tab Shortcut \tab Description \cr
-   outcome \tab \code{.o(...)} \tab exposure → \strong{outcome} \cr
-   exposure \tab \code{.x(...)} \tab \strong{exposure} → outcome \cr
-   predictor \tab \code{.p(...)} \tab exposure + \strong{predictor} → outcome \cr
-   confounder \tab \code{.c(...)} \tab exposure ← \strong{confounder} → outcome \cr
-   mediator \tab \code{.m(...)} \tab exposure → \strong{mediator} → outcome \cr
-   interaction \tab \code{.i(...)} \tab exposure × \strong{interaction} → outcome \cr
-   strata \tab \code{.s(...)} \tab exposure ÷ \strong{strata} → outcome \cr
-   group \tab \code{.g(...)} \tab exposure + \strong{group} → outcome \cr
+   outcome \tab \code{.o(...)} \tab \strong{outcome} ~ exposure \cr
+   exposure \tab \code{.x(...)} \tab outcome ~ \strong{exposure} \cr
+   predictor \tab \code{.p(...)} \tab outcome ~ exposure + \strong{predictor} \cr
+   confounder \tab \code{.c(...)} \tab outcome + exposure ~ \strong{confounder} \cr
+   mediator \tab \code{.m(...)} \tab outcome \strong{mediator} exposure \cr
+   interaction \tab \code{.i(...)} \tab outcome ~ exposure * \strong{interaction} \cr
+   strata \tab \code{.s(...)} \tab outcome ~ exposure / \strong{strata} \cr
+   group \tab \code{.g(...)} \tab outcome ~ exposure + \strong{group} \cr
    \emph{unknown} \tab \code{-} \tab not yet assigned \cr
 }
 

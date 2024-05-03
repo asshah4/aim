@@ -6,6 +6,7 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^\.gitsubmodules$
 ^\.travis\.yml$
 ^codecov\.yml$
 ^sandbox.R$
@@ -18,3 +19,4 @@
 ^ex_reprex.md$
 ^R\/dev\.R$
 ^vignettes/articles$
+^CRAN-SUBMISSION$

@@ -6,18 +6,18 @@
 \alias{rmdl-package}
 \title{rmdl package}
 \description{
-The language provided is intended to help organize many models that are generated in the process of causal inference in data analysis. The specific classes and functions emphasize the importance of variable relationships (e.g. exposure, outcome, confounding terms) and helps contextualize formulas and models.
+A system for describing and manipulating the many models that are generated in causal inference and data analysis projects, as based on the causal theory and criteria of Austin Bradford Hill (1965) \doi{10.1177/003591576505800503}. This system includes the addition of formal attributes that modify base `R` objects, including terms and formulas, with a focus on variable roles in the "do-calculus" of modeling, as described in Pearl (2010) \doi{10.2202/1557-4679.1203}. For example, the definition of exposure, outcome, and interaction are implicit in the roles variables take in a formula. These premises allow for a more fluent modeling approach focusing on variable relationships, and assessing effect modification, as described by VanderWeele and Robins (2007) \doi{10.1097/EDE.0b013e318127181b}. The essential goal is to help contextualize formulas and models in causality-oriented workflows.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/asshah4/rmdl}
-  \item Report bugs at \url{https://github.com/asshah4/rmdl/issues}
+  \item \url{https://github.com/shah-in-boots/rmdl}
+  \item Report bugs at \url{https://github.com/shah-in-boots/rmdl/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: Anish Shah \email{ashah282@uic.edu} (\href{https://orcid.org/0000-0002-9729-1558}{ORCID}) [copyright holder]
+\strong{Maintainer}: Anish S. Shah \email{ashah282@uic.edu} (\href{https://orcid.org/0000-0002-9729-1558}{ORCID}) [copyright holder]
 
 }
 \keyword{internal}

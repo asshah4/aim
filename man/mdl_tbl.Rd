@@ -20,6 +20,11 @@ the underlying data used in the models (to help match)}
 
 \item{x}{A \code{mdl_tbl} object}
 }
+\value{
+A \code{mdl_tbl} object, which is essentially a \code{data.frame} with
+additional information on the relevant data, terms, and formulas used to
+generate the models.
+}
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 

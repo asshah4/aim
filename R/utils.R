@@ -1,9 +1,17 @@
 ### Formula Helpers -----------------------------------------------------------
 
 #' Tools for working with formula-like objects
+#' 
+#' @return A `character` describing part of a `formula` or `fmls` object
+#'
 #' @param x A formula-like object
+#'
 #' @param ... Arguments to be passed to or from other methods
+#'
 #' @name formula_helpers
+NULL
+
+#' @rdname formula_helpers
 #' @export
 lhs <- function(x, ...) {
 	UseMethod("lhs", object = x)

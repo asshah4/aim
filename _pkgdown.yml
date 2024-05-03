@@ -3,23 +3,36 @@ template:
   bootswatch: flatly
   theme: solarized-light
   bslib:
-    primary: "#ee7733"
-    secondary: "#0077bb"
-    success: "#ee3377"
-    info: "#33bbee"
-    warning: "#009988"
-    danger: "#cc3311"
-    light: "#ffffff"
-    dark: "#bbbbbb"
+    primary: "#1c6897"
+    secondary: "#0097b4"
+    success: "#16bab3"
+    info: "#95d9bf"
+    warning: "#433e6c"
+    danger: "#351d3b"
+    light: "#e0f7e1"
+    dark: "#070707"
 
 
 destination: docs
 
-url: https://asshah4.github.io/rmdl/
+url: https://shah-in-boots.github.io/rmdl/
 
 home:
   title: Language to Manage Many Models
-  description: Remodeling formulas and models in R
+  description: >
+    A system for describing and manipulating the many models that are
+    generated in causal inference and data analysis projects, as based on the
+    causal theory and criteria of Austin Bradford Hill (1965) 
+    <doi:10.1177/003591576505800503>. This system includes the addition of 
+    formal attributes that modify base `R` objects, including terms and 
+    formulas, with a focus on variable roles in the "do-calculus" of modeling, 
+    as described in Pearl (2010) <doi:10.2202/1557-4679.1203>. For example, 
+    the  definition of exposure, outcome, and interaction are implicit in the 
+    roles  variables take in a formula. These premises allow for a more fluent 
+    modeling approach focusing on variable relationships, and assessing effect 
+    modification, as described by VanderWeele and Robins (2007) 
+    <doi:10.1097/EDE.0b013e318127181b>. The essential goal is to help
+    contextualize formulas and models in causality-oriented workflows.
   sidebar:
     structure: [links, license, community, citation, authors, dev]
 
@@ -30,10 +43,10 @@ navbar:
   components:
     home:
       icon: fas fa-home fa-lg
-      href: https://asshah4.github.io/
+      href: https://shah-in-boots.github.io/
     reference:
       text: Reference
       href: reference/index.html
     github:
       icon: fab fa-github fa-lg
-      href: https://github.com/asshah4/rmdl/
+      href: https://github.com/shah-in-boots/rmdl/

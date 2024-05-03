@@ -12,6 +12,16 @@ describe(x, property)
 \item{property}{A character vector of the following attributes of a \code{tm}
 object: role, side, label, group, description, type, distribution}
 }
+\value{
+A list of \code{term = property} pairs, where the term is the name of the
+element (e.g. could be the `role' of the term).
+}
 \description{
 Describe attributes of a \code{tm} vector
+}
+\examples{
+f <- .o(output) ~ .x(input) + .m(mediator) + random
+t <- tm(f)
+describe(t, "role")
+
 }
