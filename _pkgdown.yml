@@ -3,19 +3,24 @@ template:
   bootswatch: flatly
   theme: solarized-light
   bslib:
+    bg: "#ffffff"
+    fg: "#070707"
     primary: "#1c6897"
     secondary: "#0097b4"
     success: "#16bab3"
+    danger: "#f33e6c"
     info: "#95d9bf"
-    warning: "#433e6c"
-    danger: "#351d3b"
+    warning: "#351d3b"
     light: "#e0f7e1"
     dark: "#070707"
-
 
 destination: docs
 
 url: https://shah-in-boots.github.io/rmdl/
+
+authors: 
+  Anish S. Shah, MD, MS:
+    href: https://shah-in-boots.github.io/
 
 home:
   title: Language to Manage Many Models
@@ -50,3 +55,11 @@ navbar:
     github:
       icon: fab fa-github fa-lg
       href: https://github.com/shah-in-boots/rmdl/
+
+footer:
+  structure:
+    left: developed_by
+    right: [built_with, colors]
+  components:
+    colors: Colorspace from the **mako** palette
+
