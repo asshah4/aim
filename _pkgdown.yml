@@ -3,19 +3,18 @@ template:
   bootswatch: flatly
   theme: solarized-light
   bslib:
+    bg: "#ffffff"
+    fg: "#070707"
     primary: "#1c6897"
     secondary: "#0097b4"
     success: "#16bab3"
+    danger: "#f33e6c"
     info: "#95d9bf"
-    warning: "#433e6c"
-    danger: "#351d3b"
+    warning: "#351d3b"
     light: "#e0f7e1"
     dark: "#070707"
 
 destination: docs
-
-development:
-  mode: auto
 
 url: https://shah-in-boots.github.io/rmdl/
 
@@ -60,6 +59,7 @@ navbar:
 footer:
   structure:
     left: developed_by
-    right: [built_with, theme]
+    right: [built_with, colors]
   components:
-    theme: Colorspace from the **mako** palette
+    colors: Colorspace from the **mako** palette
+
