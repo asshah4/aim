@@ -1,10 +1,10 @@
 pandoc: 3.1.13
-pkgdown: 2.0.7
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   development: development.html
   getting_started: getting_started.html
-last_built: 2024-05-02T18:34Z
+last_built: 2024-05-03T18:25Z
 urls:
   reference: https://shah-in-boots.github.io/rmdl/reference
   article: https://shah-in-boots.github.io/rmdl/articles
