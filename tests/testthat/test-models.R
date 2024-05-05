@@ -78,6 +78,7 @@ test_that("cox models can be made from survival package", {
 
 test_that("competing risk models can be made", {
 
+	skip_on_cran()
 	skip_if_not_installed("cmprsk")
 	skip_if_not_installed("tidycmprsk")
 
