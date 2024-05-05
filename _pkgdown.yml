@@ -19,7 +19,7 @@ destination: docs
 url: https://shah-in-boots.github.io/rmdl/
 
 home:
-  title: Language to Manage Many Models
+  title: A Causality-Informed Modeling Approach
   description: >
     A system for describing and manipulating the many models that are
     generated in causal inference and data analysis projects, as based on the
