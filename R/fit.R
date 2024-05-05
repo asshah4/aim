@@ -111,7 +111,7 @@ my_tidy <- function(x,
 							conf.int = conf.int,
 							conf.level = conf.level,
 							exponentiate = FALSE) |>
-		janitor::clean_names()
+		dplyr::rename_with(.fn = ~ gsub("\\.", "_", x = .x))
 }
 
 #' Local load of it if not when package starts
@@ -127,7 +127,7 @@ generics::glance
 #' @noRd
 my_glance <- function(x, ...) {
 	broom::glance(x) |>
-		janitor::clean_names()
+		dplyr::rename_with(.fn = ~ gsub("\\.", "_", x = .x))
 }
 
 #' Local load of it if not when package starts
