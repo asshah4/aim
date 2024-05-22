@@ -1,5 +1,5 @@
 Package: rmdl
-Title: Language to Manage Many Models
+Title: A Causality-Informed Modeling Approach
 Version: 0.1.0.9000
 Authors@R: 
     person(given = "Anish S.",
