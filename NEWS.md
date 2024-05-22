@@ -2,7 +2,7 @@
 
 This development is working on expanding the formula expansion methods, allowing custom patterns, and introducing the second major sets of classes for visualizing data.
 
-* Remove additional imports, e.g. `{janitor}`, with bespoke function rewrites, to help decrease depency burden
+* Remove additional imports, e.g. `{janitor}`, with bespoke function rewrites, to help decrease dependency burden
 
 * Updated package title as software has evolved
 
