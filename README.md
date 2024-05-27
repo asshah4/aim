@@ -15,7 +15,7 @@ status](https://www.r-pkg.org/badges/version/rmdl)](https://CRAN.R-project.org/p
 coverage](https://codecov.io/gh/shah-in-boots/rmdl/branch/main/graph/badge.svg)](https://app.codecov.io/gh/shah-in-boots/rmdl?branch=main)
 [![Github commit
 frequency](https://img.shields.io/github/commit-activity/w/shah-in-boots/rmdl)](https://github.com/shah-in-boots/rmdl/graphs/commit-activity)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/card?color=blue)](https://cran.r-project.org/package=rmdl)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/rmdl?color=blue)](https://cran.r-project.org/package=rmdl)
 <!-- badges: end -->
 
 ## Installation
