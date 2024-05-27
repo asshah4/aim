@@ -7,12 +7,15 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![R-CMD-check](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml)
-[![Github commit
-frequency](https://img.shields.io/github/commit-activity/w/shah-in-boots/rmdl)](https://github.com/shah-in-boots/rmdl/graphs/commit-activity)
-[![test-coverage](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rmdl)](https://CRAN.R-project.org/package=rmdl)
+[![R-CMD-check](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml)
+[![test-coverage](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml)
+[![Codecov test
+coverage](https://codecov.io/gh/shah-in-boots/rmdl/branch/main/graph/badge.svg)](https://app.codecov.io/gh/shah-in-boots/rmdl?branch=main)
+[![Github commit
+frequency](https://img.shields.io/github/commit-activity/w/shah-in-boots/rmdl)](https://github.com/shah-in-boots/rmdl/graphs/commit-activity)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/rmdl?color=blue)](https://cran.r-project.org/package=rmdl)
 <!-- badges: end -->
 
 ## Installation
@@ -29,7 +32,7 @@ remotes::install_github("shah-in-boots/rmdl")
 
 ## Introduction
 
-The package `rmdl` was intended as a way to handle causal- and
+The package `{rmdl}` was intended as a way to handle causal- and
 epidemiology-based modeling by the following principles:
 
 1.  Role determination of variables
@@ -87,6 +90,6 @@ for shortcuts to allow more effective communication.
 
 ## Advanced Usage
 
-The `{rmdl}` package is intended to be flexible, extensible, and
-easy-to-use (albeit opinionated). Please see the vignettes for
-additional information.
+The [`{rmdl}`](https://cran.r-project.org/package=rmdl) package is
+intended to be flexible, extensible, and easy-to-use (albeit
+opinionated). Please see the vignettes for additional information.
