@@ -11,9 +11,11 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/rmdl)](https://CRAN.R-project.org/package=rmdl)
 [![R-CMD-check](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml)
 [![test-coverage](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml)
-[![codecov](https://codecov.io/github/shah-in-boots/rmdl/graph/badge.svg?token=wCMv6VGRMq)](https://codecov.io/github/shah-in-boots/rmdl)
+[![Codecov test
+coverage](https://codecov.io/gh/shah-in-boots/rmdl/branch/main/graph/badge.svg)](https://app.codecov.io/gh/shah-in-boots/rmdl?branch=main)
 [![Github commit
 frequency](https://img.shields.io/github/commit-activity/w/shah-in-boots/rmdl)](https://github.com/shah-in-boots/rmdl/graphs/commit-activity)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/card?color=blue)](https://cran.r-project.org/package=rmdl)
 <!-- badges: end -->
 
 ## Installation
