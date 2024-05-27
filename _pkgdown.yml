@@ -4,15 +4,15 @@ template:
   theme: solarized-light
   bslib:
     bg: "#ffffff"
-    fg: "#070707"
-    primary: "#1c6897"
-    secondary: "#0097b4"
-    success: "#16bab3"
-    danger: "#f33e6c"
-    info: "#95d9bf"
-    warning: "#351d3b"
-    light: "#e0f7e1"
-    dark: "#070707"
+    fg: "#000000"
+    primary: "#00767d"
+    secondary: "#42a7c6"
+    success: "#42a7c6"
+    info: "#dee6e7"
+    warning: "#f57634"
+    danger: "#d11807"
+    light: "#dee6e7"
+    dark: "#125a56"
 
 destination: docs
 
@@ -23,15 +23,15 @@ home:
   description: >
     A system for describing and manipulating the many models that are
     generated in causal inference and data analysis projects, as based on the
-    causal theory and criteria of Austin Bradford Hill (1965) 
-    <doi:10.1177/003591576505800503>. This system includes the addition of 
-    formal attributes that modify base `R` objects, including terms and 
-    formulas, with a focus on variable roles in the "do-calculus" of modeling, 
-    as described in Pearl (2010) <doi:10.2202/1557-4679.1203>. For example, 
-    the  definition of exposure, outcome, and interaction are implicit in the 
-    roles  variables take in a formula. These premises allow for a more fluent 
-    modeling approach focusing on variable relationships, and assessing effect 
-    modification, as described by VanderWeele and Robins (2007) 
+    causal theory and criteria of Austin Bradford Hill (1965)
+    <doi:10.1177/003591576505800503>. This system includes the addition of
+    formal attributes that modify base `R` objects, including terms and
+    formulas, with a focus on variable roles in the "do-calculus" of modeling,
+    as described in Pearl (2010) <doi:10.2202/1557-4679.1203>. For example,
+    the  definition of exposure, outcome, and interaction are implicit in the
+    roles  variables take in a formula. These premises allow for a more fluent
+    modeling approach focusing on variable relationships, and assessing effect
+    modification, as described by VanderWeele and Robins (2007)
     <doi:10.1097/EDE.0b013e318127181b>. The essential goal is to help
     contextualize formulas and models in causality-oriented workflows.
   sidebar:
@@ -57,5 +57,5 @@ footer:
     left: developed_by
     right: [built_with, colors]
   components:
-    colors: Colorspace from the **mako** palette
+    colors: Colorspace from **nightfall** palette
 
