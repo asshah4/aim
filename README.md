@@ -9,13 +9,14 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/rmdl)](https://CRAN.R-project.org/package=rmdl)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/rmdl?color=blue)](https://cran.r-project.org/package=rmdl)
 [![R-CMD-check](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/shah-in-boots/rmdl/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/pkgdown.yaml)
 [![test-coverage](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/shah-in-boots/rmdl/actions/workflows/test-coverage.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/shah-in-boots/rmdl/branch/main/graph/badge.svg)](https://app.codecov.io/gh/shah-in-boots/rmdl?branch=main)
 [![Github commit
 frequency](https://img.shields.io/github/commit-activity/w/shah-in-boots/rmdl)](https://github.com/shah-in-boots/rmdl/graphs/commit-activity)
-[![](http://cranlogs.r-pkg.org/badges/grand-total/rmdl?color=blue)](https://cran.r-project.org/package=rmdl)
 <!-- badges: end -->
 
 ## Installation
@@ -64,12 +65,12 @@ print(mt)
 #> <mdl_tbl>
 #>   id        formula_index data_id name  model_call formula_call outcome exposure
 #>   <chr>     <list>        <chr>   <chr> <chr>      <chr>        <chr>   <chr>   
-#> 1 b4845f79… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
-#> 2 7830bcbe… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
-#> 3 e3cf8431… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
-#> 4 9a66d0e5… <dbl [6]>     mtcars  mile… lm         hp ~ wt + d… hp      wt      
-#> 5 62f89920… <dbl [6]>     mtcars  mile… lm         hp ~ wt + c… hp      wt      
-#> 6 193d7c3e… <dbl [6]>     mtcars  mile… lm         hp ~ wt + am hp      wt      
+#> 1 47f9ee4e… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
+#> 2 9a36f9dd… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
+#> 3 00960980… <dbl [6]>     mtcars  mile… lm         mpg ~ wt + … mpg     wt      
+#> 4 4266ee6e… <dbl [6]>     mtcars  mile… lm         hp ~ wt + d… hp      wt      
+#> 5 490332f2… <dbl [6]>     mtcars  mile… lm         hp ~ wt + c… hp      wt      
+#> 6 a070ec58… <dbl [6]>     mtcars  mile… lm         hp ~ wt + am hp      wt      
 #> # ℹ 7 more variables: mediator <chr>, interaction <chr>, strata <lgl>,
 #> #   level <lgl>, model_parameters <list>, model_summary <list>,
 #> #   fit_status <lgl>
